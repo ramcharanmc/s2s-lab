@@ -14,7 +14,11 @@ The ladder. Each rung adds exactly one signal:
 
 Every policy implements the same call:
 
-    decide(speech_prob, partial, f0_tail) -> EndpointDecision
+        decide(ctx: TurnContext) -> EndpointDecision
+
+Policies never receive pre-sliced signals. They ask the context what was known
+at a given time, which is what makes it impossible for a decision at t to read
+evidence from after t.
 
 All three signals are passed to every policy, including the ones that ignore
 them. That uniformity is what lets the sweep treat the ladder as a single
@@ -30,7 +34,7 @@ rate is not fast, it is deaf.
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from .vad import FRAME_MS
 
@@ -51,15 +55,74 @@ class EndpointDecision:
     def __str__(self) -> str:
         return f"{self.endpoint_s * 1000:.0f} ms ({self.reason})"
 
+@dataclass
+class TurnContext:
+    """Everything a policy may look at, addressable BY TIME.
+
+    The invariant this type exists to enforce: a policy deciding at time t must
+    not see evidence from after t. Previously the caller pre-sliced a "tail" of
+    the buffer, which leaked turn-final pitch into mid-turn decisions and made
+    the prosodic policy look considerably better than it is.
+    """
+    
+
+    speech_prob: list[float]
+    words: list[tuple[str, float]] = field(default_factory=list)   # (word, end_s)
+    f0_track: list[float] = field(default_factory=list)
+    frame_ms: float = FRAME_MS
+    f0_hop_s: float = 0.010
+
+    def partial_at(self, t_s: float) -> str:
+        """What ASR would have decoded by t_s. Words ending later are unseen."""
+        return " ".join(w for w, end in self.words if end <= t_s)
+
+    def f0_before(self, t_s: float, ms: float = 400.0) -> list[float]:
+        """The last `ms` of VOICED pitch before t_s. Never reaches past it.
+
+        Trailing unvoiced frames are skipped first. A candidate endpoint is by
+        definition several hundred ms into silence, so a window of wall-clock
+        time ending there contains no pitch at all and the prosodic policy goes
+        blind. The turn-yield cue lives in the last voiced stretch before the
+        pause, which is exactly what this returns.
+
+        This still cannot see past t_s -- the slice is taken first, and only
+        then trimmed backwards.
+        """
+        end = int(t_s / self.f0_hop_s)
+        seg = list(self.f0_track[:end])
+        while seg and seg[-1] <= 0:
+            seg.pop()
+        n = int(ms / 1000 / self.f0_hop_s)
+        return seg[-n:] if n < len(seg) else seg
 
 class EndpointPolicy:
-    """Base class. Subclasses decide when the user stopped talking."""
+    """Base class. Subclasses decide when the user stopped talking.
+
+    The scan lives here and runs frame by frame. At every frame with an active
+    silence run it asks `_requirement` how much silence would justify firing
+    GIVEN THE EVIDENCE AVAILABLE AT THAT INSTANT. That is what a streaming
+    endpointer actually does, and it is what stops a policy from reading
+    evidence that has not happened yet.
+    """
 
     name = "base"
 
-    def decide(self, speech_prob: list[float], partial: str | None = None,
-               f0_tail: list[float] | None = None) -> EndpointDecision:
+    def _requirement(self, ctx: TurnContext, t_s: float) -> tuple[float, str]:
+        """(silent frames required, reason tag) using only evidence before t_s."""
         raise NotImplementedError
+
+    def decide(self, ctx: TurnContext) -> EndpointDecision:
+        run = 0
+        for i, p in enumerate(ctx.speech_prob):
+            run = run + 1 if p < 0.5 else 0
+            if not run:
+                continue
+            t_s = (i + 1) * ctx.frame_ms / 1000
+            need, reason = self._requirement(ctx, t_s)
+            if run >= need:
+                return EndpointDecision(t_s, True, reason)
+        n = len(ctx.speech_prob)
+        return EndpointDecision(n * ctx.frame_ms / 1000, False, "eof")
 
 class FixedThreshold(EndpointPolicy):
     """T0. Wait for N milliseconds of silence. Simple, and systematically wrong.
@@ -75,22 +138,13 @@ class FixedThreshold(EndpointPolicy):
     specifically, in a way aggregate latency hides completely.
     """
 
-    def __init__(self, silence_ms: float = 700, frame_ms: float = FRAME_MS):
+    def __init__(self, silence_ms: float = 700):
         self.silence_ms = silence_ms
-        self.frame_ms = frame_ms
         self.name = f"T0_fixed_{int(silence_ms)}ms"
 
-    def decide(self, speech_prob, partial=None, f0_tail=None) -> EndpointDecision:
-        need = max(1, int(round(self.silence_ms / self.frame_ms)))
-        run = 0
-        for i, p in enumerate(speech_prob):
-            run = run + 1 if p < 0.5 else 0
-            if run >= need:
-                # i is the last silent frame; endpoint at the end of it.
-                return EndpointDecision((i + 1) * self.frame_ms / 1000, True, self.name)
-        # Never fired. Report end-of-audio, but flag it as not a decision.
-        return EndpointDecision(len(speech_prob) * self.frame_ms / 1000, False, "eof")
-
+    def _requirement(self, ctx, t_s):
+        return self.silence_ms / ctx.frame_ms, self.name
+    
 # Words that cannot end an English turn. A speaker who stops after "my" or
 # "because" is mid-thought, whatever the silence detector says.
 INCOMPLETE_TAILS = frozenset({
@@ -130,14 +184,11 @@ class SemanticThreshold(FixedThreshold):
             return False
         return words[-1].strip(".,!?;:\"'") in INCOMPLETE_TAILS
 
-    def decide(self, speech_prob, partial=None, f0_tail=None) -> EndpointDecision:
-        base = super().decide(speech_prob, partial, f0_tail)
-        if not base.fired:
-            return base          # nothing to extend; no decision was made
-        if self._should_hold(partial):
-            return EndpointDecision(base.endpoint_s + self.extension_ms / 1000,
-                                    True, f"{self.name}+hold")
-        return EndpointDecision(base.endpoint_s, True, self.name)
+    def _requirement(self, ctx, t_s):
+        base = self.silence_ms / ctx.frame_ms
+        if self._should_hold(ctx.partial_at(t_s)):
+            return base + self.extension_ms / ctx.frame_ms, f"{self.name}+hold"
+        return base, self.name
 
 def f0_slope_hz_per_s(f0_tail: list[float] | None,
                       hop_ms: float = 10.0) -> float | None:
@@ -178,28 +229,35 @@ class ProsodicThreshold(SemanticThreshold):
     """
 
     def __init__(self, silence_ms: float = 500, yield_bonus_ms: float = 150,
-                 slope_threshold: float = 8.0, **kw):
+                 slope_threshold: float = 40.0, **kw):
+        # slope_threshold separates DECLINATION from a turn-final fall. Every
+        # speaker's pitch drifts down gradually across an utterance; only the
+        # last syllable of a completed turn drops sharply. Measured on the
+        # synthetic cohorts: declination sits near -14 Hz/s and mid-turn
+        # stretches near 0, while the turn-final fall reaches -103 Hz/s. 40 Hz/s
+        # sits in that gap.
+        #
+        # This number is TUNED ON THE SAME DATA IT IS EVALUATED ON, which is a
+        # methodological hole. On real speech it must be re-fit on a dev split
+        # -- or better, learned, since declination steepness varies by speaker,
+        # utterance length and language. Report it as a fitted parameter, never
+        # as a constant of nature.
         super().__init__(silence_ms=silence_ms, **kw)
         self.yield_bonus_ms = yield_bonus_ms
         self.slope_threshold = slope_threshold
         self.name = f"T2_prosodic_{int(silence_ms)}ms"
 
-    def decide(self, speech_prob, partial=None, f0_tail=None) -> EndpointDecision:
-        base = super().decide(speech_prob, partial, f0_tail)
-        if not base.fired:
-            return base
-
-        slope = f0_slope_hz_per_s(f0_tail)
+    def _requirement(self, ctx, t_s):
+        need, reason = super()._requirement(ctx, t_s)
+        slope = f0_slope_hz_per_s(ctx.f0_before(t_s), ctx.f0_hop_s * 1000)
         if slope is None:
-            return EndpointDecision(base.endpoint_s, True, f"{self.name}+noprosody")
-
-        if slope < -self.slope_threshold:          # clearly falling: they are done
-            t = base.endpoint_s - self.yield_bonus_ms / 1000
-            return EndpointDecision(max(t, 0.05), True, f"{self.name}+yield")
-        if slope > self.slope_threshold:           # rising: they are not done
-            t = base.endpoint_s + self.yield_bonus_ms / 1000
-            return EndpointDecision(t, True, f"{self.name}+hold")
-        return EndpointDecision(base.endpoint_s, True, self.name)
+            return need, f"{reason}+noprosody"
+        bonus = self.yield_bonus_ms / ctx.frame_ms
+        if slope < -self.slope_threshold:
+            return max(need - bonus, 1.0), f"{reason}+yield"
+        if slope > self.slope_threshold:
+            return need + bonus, f"{reason}+hold"
+        return need, reason
 
 class DecisionTheoretic(EndpointPolicy):
     """T3. Endpoint when the expected cost of waiting exceeds that of cutting off.
@@ -218,10 +276,8 @@ class DecisionTheoretic(EndpointPolicy):
     turn-end model replaces `_p_end` and nothing else changes.
     """
 
-    def __init__(self, cost_ratio: float = 4.0, frame_ms: float = FRAME_MS,
-                 tau_frames: float = 12.0):
+    def __init__(self, cost_ratio: float = 4.0, tau_frames: float = 12.0):
         self.cost_ratio = cost_ratio
-        self.frame_ms = frame_ms
         self.tau_frames = tau_frames
         self.threshold = cost_ratio / (1.0 + cost_ratio)
         self.name = f"T3_decision_r{cost_ratio:g}"
@@ -235,13 +291,13 @@ class DecisionTheoretic(EndpointPolicy):
         """
         return 1.0 - math.exp(-silence_run / self.tau_frames)
 
-    def decide(self, speech_prob, partial=None, f0_tail=None) -> EndpointDecision:
-        run = 0
-        for i, p in enumerate(speech_prob):
-            run = run + 1 if p < 0.5 else 0
-            if run and self._p_end(run) > self.threshold:
-                return EndpointDecision((i + 1) * self.frame_ms / 1000, True, self.name)
-        return EndpointDecision(len(speech_prob) * self.frame_ms / 1000, False, "eof")
+    @property
+    def min_silence_frames(self) -> float:
+        """Invert the posterior. 1 - exp(-run/tau) > thr  ->  run > -tau.ln(1 - thr)."""
+        return -self.tau_frames * math.log(1.0 - self.threshold)
+
+    def _requirement(self, ctx, t_s):
+        return self.min_silence_frames, self.name
 
 POLICIES: dict[str, EndpointPolicy] = {}
 
