@@ -18,8 +18,9 @@ import pytest
 
 from s2slab.policies import POLICIES, get
 from s2slab.simulate import make_cohort
-from s2slab.sweep import (PolicyResult, evaluate, format_cohort,
-                          pareto_frontier, run_sweep, write_results)
+from s2slab.sweep import (COMPARISONS, PolicyResult, evaluate, format_cohort,
+                          format_comparisons, pareto_frontier, run_comparisons,
+                          run_sweep, write_results)
 from s2slab.timing import summarize
 
 
@@ -239,3 +240,121 @@ def test_results_file_records_what_produced_it(tmp_path):
 def test_results_file_creates_its_directory(tmp_path):
     path = write_results(run_sweep(5, 8), 5, 8, str(tmp_path / "a" / "b.json"))
     assert path.exists()
+
+
+# --------------------------------------------------------------------------- #
+# cut_mask -- the per-turn record the paired tests depend on
+# --------------------------------------------------------------------------- #
+
+
+def test_cut_mask_has_one_entry_per_turn_and_agrees_with_the_count():
+    utts = make_cohort("disfluent", 30, seed=31)
+    r = evaluate(get("T0_fixed_500ms"), utts)
+    assert len(r.cut_mask) == r.n == 30
+    assert sum(r.cut_mask) == r.n_cutoff
+
+
+def test_cut_mask_follows_the_order_of_the_turns():
+    """The pairing contract: entry i must be turn i. Reverse the turns and the
+    mask must reverse with them."""
+    utts = make_cohort("disfluent", 20, seed=32)
+    fwd = evaluate(get("T0_fixed_500ms"), utts).cut_mask
+    rev = evaluate(get("T0_fixed_500ms"), list(reversed(utts))).cut_mask
+    assert rev == tuple(reversed(fwd))
+
+
+def test_cut_mask_stays_out_of_the_printout():
+    """250 bools in every repr would bury everything else."""
+    r = evaluate(get("T0_fixed_500ms"), make_cohort("clean", 5, seed=33))
+    assert "cut_mask" not in repr(r)
+
+
+def test_t1_can_never_interrupt_a_turn_t0_spared():
+    """WHY THE '0' IN '41 / 0' IS NOT EVIDENCE.
+
+    At the same base threshold T1 can only ever require MORE silence than T0,
+    never less, so it can only fire later. A turn T0 did not interrupt, T1
+    cannot interrupt either -- the zero is guaranteed by the code. What the
+    comparison actually measures is the other number: how many of T0's
+    interruptions T1 rescues. If this test ever fails, the hold has started
+    subtracting silence and T1 is no longer a strict extension of T0.
+    """
+    for cohort in ("disfluent", "slow"):
+        utts = make_cohort(cohort, 40, seed=34)
+        t0 = evaluate(get("T0_fixed_500ms"), utts).cut_mask
+        t1 = evaluate(get("T1_semantic_500ms"), utts).cut_mask
+        assert all(t0_i or not t1_i for t0_i, t1_i in zip(t0, t1)), cohort
+
+
+def test_known_simulator_flattery_t2_never_changes_who_is_interrupted():
+    """Documents a limitation of the SIMULATOR, not a virtue of T2.
+
+    In synthetic turns the only sharp pitch fall is at the true end of the
+    turn, so T2's early commit can never land mid-turn and T2 interrupts
+    exactly the turns T1 does. Real speech falls at clause boundaries in the
+    middle of a turn too. On real audio this assertion should FAIL -- and the
+    size of that failure is the real cost of committing early on pitch.
+    """
+    for cohort in ("disfluent", "slow"):
+        utts = make_cohort(cohort, 40, seed=35)
+        t1 = evaluate(get("T1_semantic_500ms"), utts).cut_mask
+        t2 = evaluate(get("T2_prosodic_500ms"), utts).cut_mask
+        assert t1 == t2, f"{cohort}: T2 now changes who is interrupted -- update this test"
+
+
+# --------------------------------------------------------------------------- #
+# run_comparisons / format_comparisons
+# --------------------------------------------------------------------------- #
+
+
+def test_one_comparison_per_declared_pair_per_cohort():
+    comps = run_comparisons(run_sweep(n_per_cohort=15, seed=36))
+    assert len(comps) == 3 * len(COMPARISONS)
+    assert {c.cohort for c in comps} == {"clean", "disfluent", "slow"}
+
+
+def test_every_comparison_is_adjusted_as_one_family():
+    """Holm runs once over all nine, so every adjusted p is filled in and none
+    is smaller than its raw p."""
+    import math
+    comps = run_comparisons(run_sweep(n_per_cohort=15, seed=37))
+    for c in comps:
+        assert not math.isnan(c.p_adjusted)
+        assert c.p_adjusted >= c.test.p - 1e-12
+
+
+def test_comparisons_compare_the_same_turns():
+    comps = run_comparisons(run_sweep(n_per_cohort=15, seed=38))
+    assert all(c.n == 15 for c in comps)
+
+
+def test_a_pair_naming_an_unswept_policy_is_skipped_not_crashed():
+    results = run_sweep(n_per_cohort=5, seed=39)
+    assert run_comparisons(results, pairs=[("T0_fixed_500ms", "T9_nope")]) == []
+
+
+def test_comparison_table_has_one_row_per_comparison():
+    comps = run_comparisons(run_sweep(n_per_cohort=15, seed=40))
+    table = format_comparisons(comps)
+    rows = [ln for ln in table.splitlines()
+            if ln.startswith("| ") and not ln.startswith("| cohort")]
+    assert len(rows) == len(comps)
+    assert f"Holm-adjusted across {len(comps)}" in table
+
+
+def test_comparisons_are_saved_with_the_results(tmp_path):
+    results = run_sweep(n_per_cohort=10, seed=41)
+    comps = run_comparisons(results)
+    blob = json.loads(write_results(results, 10, 41, str(tmp_path / "s.json"),
+                                    comparisons=comps).read_text())
+    assert len(blob["comparisons"]) == len(comps)
+    row = blob["comparisons"][0]
+    for key in ("cohort", "a", "b", "only_a", "only_b", "p", "p_holm", "ci", "verdict"):
+        assert key in row
+
+
+def test_results_without_comparisons_still_write(tmp_path):
+    """The old four-argument call must keep working."""
+    blob = json.loads(write_results(run_sweep(5, 42), 5, 42,
+                                    str(tmp_path / "s.json")).read_text())
+    assert blob["comparisons"] == []
