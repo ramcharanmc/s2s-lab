@@ -358,3 +358,49 @@ def test_results_without_comparisons_still_write(tmp_path):
     blob = json.loads(write_results(run_sweep(5, 42), 5, 42,
                                     str(tmp_path / "s.json")).read_text())
     assert blob["comparisons"] == []
+
+
+# --------------------------------------------------------------------------- #
+# Sentence split: reproduction, provenance, and the EVAL lock
+# --------------------------------------------------------------------------- #
+
+
+def test_default_split_reproduces_the_published_seed0_numbers():
+    """Notion page 18 section 7 reports 206 and 158 of 250 disfluent turns at
+    seed 0. The DEV split keeps the same sentences and the same random draw, so
+    those numbers must not move."""
+    from s2slab.simulate import make_all
+    utts = make_all(250, seed=0)["disfluent"]
+    assert evaluate(get("T0_fixed_500ms"), utts).n_cutoff == 206
+    assert evaluate(get("T1_semantic_500ms"), utts).n_cutoff == 158
+
+
+def test_results_file_records_the_split(tmp_path):
+    blob = json.loads(write_results(run_sweep(5, 60), 5, 60,
+                                    str(tmp_path / "s.json")).read_text())
+    assert blob["split"] == "dev"
+    assert blob["registration"] is None
+
+
+def test_results_file_records_a_registration(tmp_path):
+    blob = json.loads(write_results(run_sweep(5, 61), 5, 61,
+                                    str(tmp_path / "s.json"),
+                                    split="dev", registration="PR-001").read_text())
+    assert blob["registration"] == "PR-001"
+
+
+def test_command_line_refuses_eval_without_a_registration():
+    """The EVAL lock. Runs the real command; it must exit before generating any
+    audio, so no policy is ever scored on the EVAL sentences by accident."""
+    import os
+    import pathlib
+    import subprocess
+    import sys
+
+    root = pathlib.Path(__file__).resolve().parents[1]
+    env = {**os.environ, "PYTHONPATH": str(root / "src")}
+    proc = subprocess.run(
+        [sys.executable, "-m", "s2slab.sweep", "--split", "eval", "--n", "1"],
+        cwd=root, env=env, capture_output=True, text=True, timeout=60)
+    assert proc.returncode == 2
+    assert "reserved for a registered confirmation run" in proc.stderr

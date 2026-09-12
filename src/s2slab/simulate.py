@@ -150,16 +150,37 @@ def _voiced_burst(duration_s: float, f0: float) -> np.ndarray:
 # One word per syllable, roughly. What matters is that FUNCTION WORDS are
 # scattered through each sentence, so whether a pause lands on a syntactically
 # incomplete tail depends on WHERE the pause fell -- not on whether the turn
-# has a pause at all. The previous version leaked exactly that.
-_SENTENCES = [
-    "my account number is four seven two nine and the code is alpha bravo",
-    "i wanted to ask about the appointment that was scheduled for next tuesday morning",
-    "the thing is i have been feeling tired and it has not really improved",
-]
+# has a pause at all.
+#
+# Two splits, required by PR-001 (docs/preregistration.md):
+#   dev   the three sentences every published result so far used, in the same
+#         order, so seeds 0 and 1000 reproduce exactly. Develop against these.
+#   eval  written and committed BEFORE any completeness check beyond T1 exists,
+#         and used by no run until a registered confirmation. With only three
+#         sentences, a check tuned on them could simply memorise them.
+# The share of function words is similar in both (dev ~40%, eval ~36%), so the
+# eval set is not easier for T1. Every sentence has at least 14 words, so no
+# turn wraps around to the start of its sentence.
+SENTENCES: dict[str, list[str]] = {
+    "dev": [
+        "my account number is four seven two nine and the code is alpha bravo",
+        "i wanted to ask about the appointment that was scheduled for next tuesday morning",
+        "the thing is i have been feeling tired and it has not really improved",
+    ],
+    "eval": [
+        "could you tell me when the pharmacy opens because i need my refill today",
+        "we moved here last month so the bill still goes to the old address",
+        "my daughter usually helps me with the phone but she is away this week",
+        "the doctor said i should call back if the pain in my knee gets worse",
+        "the reference number they gave me is three one eight five and then a letter",
+        "can someone explain why my card was declined at the store this morning please",
+    ],
+}
 
 
 def synth_utterance(spec: CohortSpec, rng: np.random.Generator,
-                    trailing_silence_s: float = 1.5) -> Utterance:
+                    trailing_silence_s: float = 1.5,
+                    split: str = "dev") -> Utterance:
     """One turn from a cohort. `true_end_s` is exact by construction.
 
     Trailing silence is 1.5 s so that even the 900 ms threshold can fire. A
@@ -185,7 +206,10 @@ def synth_utterance(spec: CohortSpec, rng: np.random.Generator,
     f0_track: list[float] = []
     pauses: list[float] = []
     t = 0.0
-    sentence = _SENTENCES[int(rng.integers(0, len(_SENTENCES)))].split()
+    if split not in SENTENCES:
+        raise KeyError(f"unknown sentence split {split!r}; have: {sorted(SENTENCES)}")
+    pool = SENTENCES[split]
+    sentence = pool[int(rng.integers(0, len(pool)))].split()
     words: list[tuple[str, float]] = []
 
     for i in range(n_syll):
@@ -221,7 +245,7 @@ def synth_utterance(spec: CohortSpec, rng: np.random.Generator,
         f0_track=f0_track,
     )
 
-def make_cohort(name: str, n: int = 50, seed: int = 0) -> list[Utterance]:
+def make_cohort(name: str, n: int = 50, seed: int = 0, split: str = "dev") -> list[Utterance]:
     """`n` utterances from one cohort. Deterministic given `seed`.
 
     Seeded from an explicit integer, never from `hash()` -- Python salts string
@@ -231,13 +255,14 @@ def make_cohort(name: str, n: int = 50, seed: int = 0) -> list[Utterance]:
     if name not in COHORTS:
         raise KeyError(f"unknown cohort {name!r}; have: {sorted(COHORTS)}")
     rng = np.random.default_rng(seed)
-    return [synth_utterance(COHORTS[name], rng) for _ in range(n)]
+    return [synth_utterance(COHORTS[name], rng, split=split) for _ in range(n)]
 
 
-def make_all(n_per_cohort: int = 50, seed: int = 0) -> dict[str, list[Utterance]]:
+def make_all(n_per_cohort: int = 50, seed: int = 0,
+             split: str = "dev") -> dict[str, list[Utterance]]:
     """Every cohort, each with its own derived seed so adding a cohort does not
     change the utterances generated for the existing ones."""
-    return {name: make_cohort(name, n_per_cohort, seed + i)
+    return {name: make_cohort(name, n_per_cohort, seed + i, split=split)
             for i, name in enumerate(sorted(COHORTS))}
 
 

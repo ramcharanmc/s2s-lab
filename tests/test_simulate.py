@@ -319,3 +319,69 @@ def test_cutoff_rate_falls_monotonically_as_the_threshold_grows():
                   if policy.decide(u.context()).endpoint_s < u.true_end_s)
         rates.append(bad / len(disfl))
     assert all(b <= a for a, b in zip(rates, rates[1:])), rates
+
+
+# --------------------------------------------------------------------------- #
+# DEV / EVAL sentence split (PR-001, requirement V1)
+# --------------------------------------------------------------------------- #
+
+
+def _spoken(u) -> str:
+    return " ".join(w for w, _ in u.words)
+
+
+def test_default_cohorts_use_only_dev_sentences():
+    """Every result published so far used the three DEV sentences. A default
+    cohort must never contain an EVAL sentence."""
+    from s2slab.simulate import SENTENCES
+    for name in COHORTS:
+        for u in make_cohort(name, 30, seed=50):
+            assert any(s.startswith(_spoken(u)) for s in SENTENCES["dev"]), _spoken(u)
+
+
+def test_dev_split_is_the_default():
+    a = make_all(20, seed=51)
+    b = make_all(20, seed=51, split="dev")
+    for name in COHORTS:
+        assert [_spoken(u) for u in a[name]] == [_spoken(u) for u in b[name]]
+
+
+def test_eval_split_draws_only_eval_sentences():
+    """Plumbing check only: builds EVAL turns but scores NO policy on them, so
+    it does not use the EVAL set in the PR-001 sense."""
+    from s2slab.simulate import SENTENCES
+    for u in make_cohort("disfluent", 20, seed=52, split="eval"):
+        assert any(s.startswith(_spoken(u)) for s in SENTENCES["eval"]), _spoken(u)
+
+
+def test_the_splits_share_no_sentence():
+    from s2slab.simulate import SENTENCES
+    assert not set(SENTENCES["dev"]) & set(SENTENCES["eval"])
+
+
+def test_no_sentence_is_short_enough_to_wrap():
+    """synth_utterance takes word i % len(sentence); a sentence shorter than the
+    longest turn would silently repeat its opening words."""
+    from s2slab.simulate import SENTENCES
+    longest_turn = max(spec.n_syllables[1] for spec in COHORTS.values())
+    for split, pool in SENTENCES.items():
+        for s in pool:
+            assert len(s.split()) >= longest_turn, (split, s)
+
+
+def test_eval_is_not_easier_for_t1_than_dev():
+    """If EVAL had far more function words, T1 would hold more often there and
+    the confirmation run would flatter it. The shares must stay close."""
+    from s2slab.policies import INCOMPLETE_TAILS
+    from s2slab.simulate import SENTENCES
+
+    def share(pool):
+        words = [w for s in pool for w in s.split()]
+        return sum(w in INCOMPLETE_TAILS for w in words) / len(words)
+
+    assert abs(share(SENTENCES["dev"]) - share(SENTENCES["eval"])) < 0.10
+
+
+def test_unknown_split_raises_helpfully():
+    with pytest.raises(KeyError, match="unknown sentence split"):
+        make_cohort("clean", 1, seed=0, split="test")
