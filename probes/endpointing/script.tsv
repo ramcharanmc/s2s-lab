@@ -1,0 +1,31 @@
+id	type	text
+f01	function	i would like to change the | delivery address for my order
+f02	function	the appointment is on | the fourteenth at half past two
+f03	function	my date of birth is | march the | third nineteen seventy one
+f04	function	can you send it to | my work email instead of my personal one
+f05	function	i was calling about | a refund for the duplicate charge
+f06	function	the medication i take is | a blood thinner twice a day
+f07	function	we have been waiting for | a technician to call us back
+f08	function	i think the problem is | that the router keeps restarting
+f09	function	my husband and | i both need to be on the account
+f10	function	i need to speak to someone about | my mother's prescription
+f11	function	the pain started when | i was lifting a box at work
+f12	function	i would prefer an appointment in | the morning if that is possible
+c01	content	my account number is four seven | two nine | one one
+c02	content	my phone number is oh seven seven | nine one two | four three six
+c03	content	i live at forty two | ashford road | in croydon
+c04	content	the medicine is called metformin | five hundred | milligrams
+c05	content	i spoke to a man called david | last thursday | about the bill
+c06	content	my daughter's name is emily | roberts and she is my carer
+c07	content	the order was placed on monday | morning around ten
+c08	content	the error message says connection | failed please try again
+c09	content	i have had this cough for three | weeks and it is getting worse
+c10	content	the flight number is victor two | seven eight
+c11	content	i need a new charger for my laptop | the silver one
+c12	content	the total came to eighty four | pounds and fifty pence
+n01	natural	[make up an address and give it as if someone is writing it down over the phone]
+n02	natural	[read out a made-up eleven-digit phone number, slowly enough to be written down]
+n03	natural	[explain why you are calling about a delivery that is three days late]
+n04	natural	[describe a made-up pain: where it is, when it started, and what makes it worse]
+n05	natural	[spell a made-up surname, then give a made-up date of birth]
+n06	natural	[list three things you need to pick up from the pharmacy]
