@@ -48,25 +48,74 @@ is the question the simulator cannot answer at all.
 2. **Room:** quiet, same room and microphone for every item. Note the
    microphone at the bottom of this file.
 3. **Each item:**
-   - about 1 second of silence,
-   - say the line; at each `|`, **pause for about one second** (silently count
-     "one-and-two"),
-   - finish the sentence, then **stay silent for at least 2 seconds** before
+   - say the line, pausing at each `|` for the length its number calls for
+     (table below),
+   - finish the sentence, then **stay silent for at least 3 seconds** before
      stopping.
 
-   The 2 seconds matter. The slowest policy needs 900 ms of silence to decide.
-   Stop too early and it never fires, and that item stops measuring anything.
+   The trailing silence matters. The slowest possible decision on the ladder
+   needs just over a second of silence, and a stop click inside that window
+   resets it. Stop too early and the item never gets a decision.
+
+   | Items | Pause at each mark | Silently count |
+   |---|---|---|
+   | 01, 04, 07, 10 | **long**, about 1.2 s | "one-and-two-and" |
+   | 02, 05, 08, 11 | **short**, about 0.4 s | "one" |
+   | 03, 06, 09, 12 | **medium**, about 0.7 s | "one-and" |
+
+   The same rule covers both `f` and `c` items. You won't hit the lengths
+   exactly, and don't need to: the loader measures every real pause from the
+   labels, and the analysis groups turns by the pause you actually made. The
+   rotation only makes sure the pauses spread across the range where the
+   policies disagree.
 4. **Natural items** have no `|` marks. Don't plan pauses; say it as you would
-   on the phone. You'll mark where you actually paused when you label.
+   on the phone.
 5. **Export** each item as WAV (signed 16-bit PCM), named by its id:
-   `endpointing/audio/f01.wav`, `c01.wav`, `n01.wav`, and so on.
+   `endpointing/audio/f02.wav`, and so on. **Never edit the audio** — no
+   trimming, no noise removal. The loader crops before your first word itself,
+   and a frozen set's checksums must describe what you actually recorded.
 
-### Pilot first
+### Labelling
 
-Record **f01, c01 and n01 only**, then stop. The loader and the labelling tool
-get built and checked against those three before you spend an afternoon on the
-other 27. A wrong sample rate or a clipped microphone is cheap to find at three
-items and expensive at thirty.
+1. **Draft:** `PYTHONPATH=src python -m s2slab.probes propose f02 f03 ...`
+   It skips any item that already has a label file, so it never overwrites your
+   corrections. Use `--force` only to redraft one item on purpose.
+2. **Correct in Audacity:** open the WAV, import its label file, and make each
+   region **start at the first word of its chunk and end where its last word
+   ends**. The end of the last region is the true end of turn. Keep breaths and
+   clicks outside every region.
+3. **Natural items:** replace each `?` with the words you said, writing numbers
+   as spoken ("seven four two", not "742").
+4. **Export** the labels over the same file, then run
+   `PYTHONPATH=src python -m s2slab.probes check`.
+
+### Pilot result (2026-09-13) — why the pause rule changed
+
+The pilot (f01, c01, n01) was recorded with every pause at "about one second".
+The measured pauses were 1.14–1.52 s, longer than the longest wait of any
+policy tested (900 ms), so **every policy interrupted every item**:
+
+| item | pauses s | T0 500 | T0 700 | T0 900 | T1 500 | T2 500 |
+|---|---|---|---|---|---|---|
+| f01 | 1.34 | CUT after 'the' | CUT | CUT | CUT | CUT |
+| c01 | 1.52, 1.26 | CUT after 'seven' | CUT | CUT | CUT | CUT |
+| n01 | 1.14 | CUT after 'terrace' | CUT | CUT | CUT | CUT |
+
+A probe set on which every policy fails the same way cannot tell them apart.
+The policies disagree for pauses between about 0.5 and 0.9 s — T0 at 500 ms
+cuts, T1 holds after a function word — so the pause rule now spreads pauses
+across that band. The pilot takes are kept: f01 and c01 are "long" items under
+the new rule. The one unprompted pause (n01, 1.14 s, after "terrace") is a
+single data point that a natural hesitation can outlast every threshold.
+
+The pilot also caught three problems, all fixed before the other 27:
+
+- a click before c01's first word, followed by 860 ms of silence, which would
+  have made every policy "end the turn" before speech began (the loader now
+  crops, and labels must start at the first word);
+- a `propose` command that overwrote hand-corrected labels (it now refuses);
+- a first n01 take with only 0.74 s after the last word (the loader now refuses
+  any item with too little).
 
 ### Layout
 
