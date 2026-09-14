@@ -40,7 +40,11 @@ def _tone(seconds: float, f0: float = 150.0, amp: float = 0.3) -> np.ndarray:
 
 
 def make_recording(layout, seed: int = 0):
-    """layout: [("speech" | "gap", seconds), ...] -> (audio, speech spans)."""
+    """layout: [("speech" | "gap" | "noise", seconds), ...] -> (audio, speech spans).
+
+    "noise" is loud but has no pitch -- a stand-in for the record click, a
+    breath or a stop click. It is not counted as a speech span.
+    """
     rng = np.random.default_rng(seed)
     parts, spans, t = [], [], 0.0
     for kind, secs in layout:
@@ -48,6 +52,8 @@ def make_recording(layout, seed: int = 0):
         if kind == "speech":
             seg = seg + _tone(secs)[: len(seg)]
             spans.append((t, t + secs))
+        elif kind == "noise":
+            seg = seg + (0.15 * rng.standard_normal(len(seg))).astype("float32")
         parts.append(seg)
         t += secs
     return np.concatenate(parts), spans
@@ -395,3 +401,74 @@ def test_the_pilot_recordings_load_and_validate():
     assert {"f01", "c01", "n01"} <= set(items)
     for u in items.values():
         assert len(u.audio) / u.sr - u.true_end_s >= MIN_TRAIL_S
+
+
+# --------------------------------------------------------------------------- #
+# Voice-aware drafting: clicks, breaths and noise have no pitch
+# --------------------------------------------------------------------------- #
+
+
+def test_voiced_seconds_hears_a_tone_and_not_noise():
+    from s2slab.probes import _pitch_track, _voiced_s
+    audio, _ = make_recording([("gap", 0.2), ("speech", 1.0), ("noise", 1.0), ("gap", 0.2)])
+    track = _pitch_track(audio)
+    assert _voiced_s(track, 0.2, 1.2) > 0.8        # the tone: nearly all voiced
+    assert _voiced_s(track, 1.2, 2.2) < 0.10       # loud noise: no voice
+
+
+def test_first_voiced_run_ignores_a_stray_voiced_frame():
+    """One frame of 'pitch' found in noise must not count as the voice starting."""
+    from s2slab.probes import _first_voiced_run_s
+    track = [0.0, 0.0, 150.0, 0.0, 0.0, 0.0] + [150.0] * 10
+    assert _first_voiced_run_s(track, 0.0, 1.0) == pytest.approx(0.06)
+    assert _first_voiced_run_s([0.0, 150.0, 150.0, 0.0] * 5, 0.0, 1.0) is None
+
+
+def test_noise_before_speech_is_left_out_of_the_draft(tmp_path):
+    """The record click and room noise at the start of most f recordings."""
+    layout = [("noise", 0.8), ("gap", 0.6), ("speech", 1.0), ("gap", 0.7),
+              ("speech", 1.0), ("gap", 1.5)]
+    root = make_probe_root(tmp_path, {"t01": ("function", FUNCTION_TEXT, layout, None)})
+    chunks = read_labels(propose_labels("t01", root))
+    assert [c.text for c in chunks] == ["i would like to change the", "delivery address"]
+    assert chunks[0].start_s == pytest.approx(1.4, abs=0.06)
+
+
+def test_a_stray_sound_after_the_end_is_not_taken_as_the_pause(tmp_path):
+    """REGRESSION: in f02, f07, f09, f10 and f12 a stop click seconds after the
+    last word was its own region, the gap before it was the longest, and the
+    draft chose THAT gap as the pause -- merging away the real one."""
+    layout = [("gap", 0.3), ("speech", 1.0), ("gap", 0.7), ("speech", 1.0),
+              ("gap", 2.5), ("noise", 0.3), ("gap", 1.5)]
+    root = make_probe_root(tmp_path, {"t01": ("function", FUNCTION_TEXT, layout, None)})
+    chunks = read_labels(propose_labels("t01", root))
+    assert len(chunks) == 2
+    assert chunks[0].end_s == pytest.approx(1.3, abs=0.06)       # the real pause...
+    assert chunks[1].start_s == pytest.approx(2.0, abs=0.06)     # ...is the one kept
+    assert chunks[1].end_s == pytest.approx(3.0, abs=0.06)       # not the stop click
+
+
+def test_noise_running_into_the_first_word_is_trimmed_off(tmp_path):
+    """Noise less than a pause away from speech is merged into the same span
+    by detect_chunks, so dropping voice-less spans is not enough: the first
+    region is also started at the voice."""
+    layout = [("gap", 0.3), ("noise", 0.8), ("gap", 0.1), ("speech", 1.0),
+              ("gap", 0.7), ("speech", 1.0), ("gap", 1.5)]
+    root = make_probe_root(tmp_path, {"t01": ("function", FUNCTION_TEXT, layout, None)})
+    start = read_labels(propose_labels("t01", root))[0].start_s
+    voice = 0.3 + 0.8 + 0.1
+    assert voice - 0.10 <= start <= voice
+
+
+def test_draft_lead_in_plus_crop_stays_under_the_shortest_threshold(tmp_path):
+    """The draft starts a little before the voice and the loader keeps
+    LEAD_KEEP_S more. Together they must stay under the shortest policy wait,
+    or a policy could end the turn before the first word."""
+    layout = [("noise", 0.8), ("gap", 0.6), ("speech", 1.0), ("gap", 0.7),
+              ("speech", 1.0), ("gap", 1.5)]
+    root = make_probe_root(tmp_path, {"t01": ("function", FUNCTION_TEXT, layout, None)})
+    propose_labels("t01", root)
+    u = load_item("t01", root)
+    first_speech = next(i for i, p in enumerate(u.context().speech_prob) if p >= 0.5)
+    shortest = min(p.silence_ms for p in POLICIES.values() if isinstance(p, FixedThreshold))
+    assert first_speech * 20.0 < shortest

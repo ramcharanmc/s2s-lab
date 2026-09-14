@@ -48,6 +48,7 @@ LEAD_KEEP_S = 0.10     # silence kept before the first word after cropping
 MIN_TRAIL_S = 1.2      # slowest decision: T2 after a function word with rising pitch, 500+400+150 = 1050 ms, plus margin
 MIN_PAUSE_S = 0.30     # a gap shorter than this is not a pause
 MIN_CHUNK_S = 0.15     # a sound shorter than this is a click, not a word
+MIN_VOICED_S = 0.10    # a stretch with less voice than this is a click, breath or noise
 
 def read_script(path: pathlib.Path = PROBE_ROOT / "script.tsv") -> dict[str, dict]:
     """The recording script, keyed by item id.
@@ -147,6 +148,38 @@ def detect_chunks(audio: np.ndarray, sr: int = TARGET_SR) -> list[tuple[float, f
             merged.append(r)
     return [(a, b) for a, b in merged if b - a >= MIN_CHUNK_S]
 
+def _voiced_s(track: list[float], start_s: float, end_s: float,
+              hop_s: float = 0.010) -> float:
+    """Seconds of detectable voice (pitch) between start_s and end_s.
+
+    Takes:   a pitch track from _pitch_track() and a time span.
+    Returns: the number of voiced frames in the span, times hop_s.
+
+    A click, a breath or a burst of room noise is loud but has no pitch, so
+    energy calls it speech and this calls it nothing.
+    """
+    return sum(1 for f in track[int(start_s / hop_s): int(end_s / hop_s)] if f > 0) * hop_s
+
+
+def _first_voiced_run_s(track: list[float], start_s: float, end_s: float,
+                        hop_s: float = 0.010, run: int = 5) -> float | None:
+    """Start of the first stretch of `run` consecutive voiced frames in a span.
+
+    Takes:   a pitch track and a time span.
+    Returns: that start in seconds, or None if the span never holds voice
+             for run x hop_s (50 ms) in a row.
+
+    Requiring 50 ms in a row skips the odd single frame the pitch tracker
+    finds in noise -- f04 has two before your first word, which would
+    otherwise pull the start back into the noise.
+    """
+    count = 0
+    for k in range(int(start_s / hop_s), min(int(end_s / hop_s), len(track))):
+        count = count + 1 if track[k] > 0 else 0
+        if count == run:
+            return (k - run + 1) * hop_s
+    return None
+
 def propose_labels(item_id: str, root: pathlib.Path = PROBE_ROOT,
                    overwrite: bool = False) -> pathlib.Path:
     """Write a first-draft label file for one recording, for you to correct.
@@ -163,7 +196,11 @@ def propose_labels(item_id: str, root: pathlib.Path = PROBE_ROOT,
     """
     item = read_script(root / "script.tsv")[item_id]
     audio = load_wav(root / "audio" / f"{item_id}.wav")
-    spans = detect_chunks(audio)
+    track = _pitch_track(audio)
+    # Drop stretches with no voice in them: the record click, a breath, a stop
+    # click after you finish. Left in, the gap before a stray sound at the end
+    # is often the longest one, and the draft picks it as "the pause".
+    spans = [s for s in detect_chunks(audio) if _voiced_s(track, *s) >= MIN_VOICED_S]
     if not spans:
         raise ValueError(f"{item_id}: no speech detected")
 
@@ -177,6 +214,13 @@ def propose_labels(item_id: str, root: pathlib.Path = PROBE_ROOT,
             merged.append((spans[first][0], spans[i][1]))
             first = i + 1
         spans = merged
+
+    # Start the first region where the voice starts, not at the record click
+    # or breath before it. 30 ms of margin: a crop keeps LEAD_KEEP_S more, and
+    # the two together must stay under the shortest policy threshold (150 ms).
+    onset = _first_voiced_run_s(track, *spans[0])
+    if onset is not None:
+        spans[0] = (max(spans[0][0], onset - 0.03), spans[0][1])
 
     texts = expected if len(expected) == len(spans) else ["?"] * len(spans)
     out = root / "labels" / f"{item_id}.txt"
