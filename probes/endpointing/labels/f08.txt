@@ -1,0 +1,2 @@
+1.390381	2.951195	i think the problem is
+3.336913	5.300000	that the router keeps restarting

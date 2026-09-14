@@ -1,0 +1,2 @@
+1.340000	3.100000	the medication i take is
+4.080000	5.960000	a blood thinner twice a day
