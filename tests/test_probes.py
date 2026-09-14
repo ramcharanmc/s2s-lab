@@ -10,15 +10,19 @@ absent.
 
 from __future__ import annotations
 
+import hashlib
+import json
+
 import numpy as np
 import pytest
 import soundfile as sf
 
 from s2slab.policies import (INCOMPLETE_TAILS, POLICIES, DecisionTheoretic,
                              FixedThreshold)
-from s2slab.probes import (LEAD_KEEP_S, MIN_TRAIL_S, PROBE_ROOT, TARGET_SR, Chunk,
-                           check, detect_chunks, load_item, load_set, load_wav,
-                           propose_labels, read_labels, read_script, write_labels)
+from s2slab.probes import (LEAD_KEEP_S, MANIFEST, MIN_TRAIL_S, PROBE_ROOT, TARGET_SR,
+                           Chunk, check, detect_chunks, freeze, load_item, load_set,
+                           load_wav, propose_labels, read_labels, read_script,
+                           verify, write_labels)
 
 SR = TARGET_SR
 
@@ -472,3 +476,92 @@ def test_draft_lead_in_plus_crop_stays_under_the_shortest_threshold(tmp_path):
     first_speech = next(i for i, p in enumerate(u.context().speech_prob) if p >= 0.5)
     shortest = min(p.silence_ms for p in POLICIES.values() if isinstance(p, FixedThreshold))
     assert first_speech * 20.0 < shortest
+
+    
+# --------------------------------------------------------------------------- #
+# Freezing: once the checksums are written, any change to a file is visible
+# --------------------------------------------------------------------------- #
+
+LABELS = ["i would like to change the", "delivery address"]
+
+
+def test_freeze_records_the_checksum_of_every_file(tmp_path):
+    root = labelled_item(tmp_path)
+    manifest = json.loads(freeze(root).read_text(encoding="utf-8"))
+    item = manifest["items"]["t01"]
+    assert item["type"] == "function"
+    assert item["wav_sha256"] == hashlib.sha256((root / "audio" / "t01.wav").read_bytes()).hexdigest()
+    assert item["labels_sha256"] == hashlib.sha256((root / "labels" / "t01.txt").read_bytes()).hexdigest()
+    assert manifest["version"] == 1
+
+
+def test_a_freshly_frozen_set_verifies_clean(tmp_path):
+    root = labelled_item(tmp_path)
+    freeze(root)
+    assert verify(root) == []
+
+
+def test_freeze_refuses_to_overwrite_a_manifest(tmp_path):
+    """A frozen set never changes; a changed set is a new version."""
+    root = labelled_item(tmp_path)
+    freeze(root)
+    with pytest.raises(FileExistsError):
+        freeze(root)
+
+
+def test_freeze_refuses_an_unfinished_set_and_writes_nothing(tmp_path):
+    root = make_probe_root(tmp_path, {
+        "t01": ("function", FUNCTION_TEXT, TWO_CHUNKS, LABELS),
+        "t02": ("function", FUNCTION_TEXT, TWO_CHUNKS, None),      # recorded, not labelled
+    })
+    with pytest.raises(ValueError, match="t02"):
+        freeze(root)
+    assert not (root / MANIFEST).exists()
+
+
+def test_verify_notices_one_changed_bit_in_a_recording(tmp_path):
+    """Noise removal, a trim, a re-export: all of them change the bytes."""
+    root = labelled_item(tmp_path)
+    freeze(root)
+    wav = root / "audio" / "t01.wav"
+    data = bytearray(wav.read_bytes())
+    data[-1] ^= 1                          # the lowest bit of the last sample
+    wav.write_bytes(bytes(data))
+    assert verify(root) == ["t01: recording changed"]
+
+
+def test_verify_notices_edited_labels(tmp_path):
+    root = labelled_item(tmp_path)
+    freeze(root)
+    lab = root / "labels" / "t01.txt"
+    lab.write_text(lab.read_text(encoding="utf-8").replace("delivery", "billing"), encoding="utf-8")
+    assert verify(root) == ["t01: labels changed"]
+
+def test_label_checksums_ignore_windows_line_endings(tmp_path):
+    """REGRESSION: labels saved by Audacity on Windows end lines with CRLF; git
+    stores them with LF. The same labels must verify from either copy."""
+    root = labelled_item(tmp_path)
+    freeze(root)
+    lab = root / "labels" / "t01.txt"
+    lab.write_bytes(lab.read_bytes().replace(b"\n", b"\r\n"))
+    assert verify(root) == []
+
+
+def test_verify_notices_a_missing_recording(tmp_path):
+    root = labelled_item(tmp_path)
+    freeze(root)
+    (root / "audio" / "t01.wav").unlink()
+    assert verify(root) == ["t01: recording missing"]
+
+
+def test_verify_says_so_when_the_set_is_not_frozen(tmp_path):
+    root = labelled_item(tmp_path)
+    assert verify(root) == [f"no {MANIFEST}: the set is not frozen yet"]
+
+
+@pytest.mark.skipif(not (PROBE_ROOT / MANIFEST).exists()
+                    or not all((PROBE_ROOT / "audio" / f"{i}.wav").exists() for i in read_script()),
+                    reason="the real set is not frozen, or its recordings are not on this machine")
+def test_the_real_recordings_still_match_their_manifest():
+    """Runs on every `pytest` from now on: the frozen set cannot change unnoticed."""
+    assert verify() == []

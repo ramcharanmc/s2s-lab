@@ -9,4 +9,4 @@
 36.160000	38.560000	the spike in discomfort is immediate
 39.100000	43.800000	What makes it completely unbearable is rapid horizontal eye movement
 45.360000	54.820000	 looking up at fluorescent lighting or honestly even taking a quick sip of an ice cold drink It just sets off the whole 
-55.220000	56.640000	ah nerve off
+55.220000	56.400000	ah nerve off

@@ -34,6 +34,9 @@ Paths are relative to the repo root; run everything from there.
 from __future__ import annotations
 
 import csv
+import datetime
+import hashlib
+import json
 import math
 import pathlib
 from dataclasses import dataclass
@@ -49,6 +52,7 @@ MIN_TRAIL_S = 1.2      # slowest decision: T2 after a function word with rising 
 MIN_PAUSE_S = 0.30     # a gap shorter than this is not a pause
 MIN_CHUNK_S = 0.15     # a sound shorter than this is a click, not a word
 MIN_VOICED_S = 0.10    # a stretch with less voice than this is a click, breath or noise
+MANIFEST = "manifest.json"   # checksums of a frozen set, written by freeze()
 
 def read_script(path: pathlib.Path = PROBE_ROOT / "script.tsv") -> dict[str, dict]:
     """The recording script, keyed by item id.
@@ -366,6 +370,96 @@ def check(root: pathlib.Path = PROBE_ROOT) -> str:
                      + " | ".join(cells) + " |")
     return "\n".join(lines)
 
+def sha256_file(path: pathlib.Path, text: bool = False) -> str:
+    """The SHA-256 of a file's bytes, as 64 hex characters.
+
+    Change a single bit anywhere in the file and roughly half of those
+    characters change. With text=True, Windows line endings (CRLF) are read as
+    LF first: Audacity on Windows saves labels with CRLF, git stores them with
+    LF, and both copies must get the same checksum.
+    """
+    data = path.read_bytes()
+    if text:
+        data = data.replace(b"\r\n", b"\n")
+    return hashlib.sha256(data).hexdigest()
+
+
+def _fingerprints(root: pathlib.Path) -> dict:
+    """What a frozen set pins down: the script, and each item's two files.
+
+    Returns: {"script_sha256": "...",
+              "items": {"f01": {"type": "function",
+                                "wav_sha256": "..." or None,
+                                "labels_sha256": "..." or None}, ...}}
+             None marks a file that does not exist.
+    """
+    items = {}
+    for item_id, item in read_script(root / "script.tsv").items():
+        wav = root / "audio" / f"{item_id}.wav"
+        lab = root / "labels" / f"{item_id}.txt"
+        items[item_id] = {"type": item["type"],
+                          "wav_sha256": sha256_file(wav) if wav.exists() else None,
+                        "labels_sha256": sha256_file(lab, text=True) if lab.exists() else None}
+    return {"script_sha256": sha256_file(root / "script.tsv", text=True), "items": items}
+
+
+def freeze(root: pathlib.Path = PROBE_ROOT) -> pathlib.Path:
+    """Write manifest.json: a checksum of every recording and label file.
+
+    Takes:   the probe folder. Every item in script.tsv must have a recording
+             and labels that pass load_item's checks.
+    Calls:   _fingerprints(); load_item() on every item.
+    Returns: the manifest's path.
+    Raises:  FileExistsError if the set is already frozen: a frozen set never
+             changes, and additions become a new version. ValueError if any
+             item is unrecorded or unlabelled. Either way, nothing is written.
+    """
+    path = root / MANIFEST
+    if path.exists():
+        raise FileExistsError(f"{path} exists: a frozen set never changes")
+    fp = _fingerprints(root)
+    missing = [i for i, v in fp["items"].items()
+               if v["wav_sha256"] is None or v["labels_sha256"] is None]
+    if missing:
+        raise ValueError(f"cannot freeze: no recording or labels for {', '.join(missing)}")
+    for item_id in fp["items"]:
+        load_item(item_id, root)          # raises if an item's labels are unusable
+    manifest = {"set": root.name, "version": 1,
+                "frozen": datetime.date.today().isoformat(), **fp}
+    path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    return path
+
+
+def verify(root: pathlib.Path = PROBE_ROOT) -> list[str]:
+    """Compare every file against the manifest.
+
+    Takes:   the probe folder.
+    Calls:   _fingerprints() to hash the files as they are now.
+    Returns: one line per problem, e.g. "c05: recording changed" or
+             "f03: labels missing". An empty list means the set is intact.
+    """
+    path = root / MANIFEST
+    if not path.exists():
+        return [f"no {MANIFEST}: the set is not frozen yet"]
+    want = json.loads(path.read_text(encoding="utf-8"))
+    have = _fingerprints(root)
+    problems = []
+    if have["script_sha256"] != want["script_sha256"]:
+        problems.append("script.tsv changed")
+    for item_id, w in want["items"].items():
+        h = have["items"].get(item_id)
+        if h is None:
+            problems.append(f"{item_id}: removed from script.tsv")
+            continue
+        for key, what in (("wav_sha256", "recording"), ("labels_sha256", "labels")):
+            if h[key] is None:
+                problems.append(f"{item_id}: {what} missing")
+            elif h[key] != w[key]:
+                problems.append(f"{item_id}: {what} changed")
+    for item_id in have["items"]:
+        if item_id not in want["items"]:
+            problems.append(f"{item_id}: not in the manifest")
+    return problems
 
 
 if __name__ == "__main__":
@@ -389,6 +483,16 @@ if __name__ == "__main__":
             print(f"{item_id}: {n_found} chunks -> {path}{note}")
     elif cmd == "check":
         print(check())
+    elif cmd == "freeze":
+        path = freeze()
+        n = len(json.loads(path.read_text(encoding="utf-8"))["items"])
+        print(f"froze {n} items -> {path}")
+    elif cmd == "verify":
+        problems = verify()
+        print("\n".join(problems) or "intact: every recording and label file matches the manifest")
+        sys.exit(1 if problems else 0)
     else:
         print("usage: python -m s2slab.probes propose f01 c01 n01\n"
-              "       python -m s2slab.probes check")
+              "       python -m s2slab.probes check\n"
+              "       python -m s2slab.probes freeze\n"
+              "       python -m s2slab.probes verify")

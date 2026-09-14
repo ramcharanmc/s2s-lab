@@ -89,6 +89,14 @@ is the question the simulator cannot answer at all.
 4. **Export** the labels over the same file, then run
    `PYTHONPATH=src python -m s2slab.probes check`.
 
+### Freezing
+
+When every item loads, `PYTHONPATH=src python -m s2slab.probes freeze` writes
+`endpointing/manifest.json`: the SHA-256 of the script and of every recording
+and label file. Commit it. From then on `PYTHONPATH=src python -m s2slab.probes verify`,
+and one test in `pytest`, fail if a single byte changes. To change the set,
+make a new version. Never re-freeze this one.
+
 ### Pilot result (2026-09-13) — why the pause rule changed
 
 The pilot (f01, c01, n01) was recorded with every pause at "about one second".

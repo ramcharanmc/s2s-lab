@@ -12,12 +12,16 @@ each of those turns individually and asks, at the moment of the cut:
     2. How long was the pause the cut landed in, as the VAD saw it?
 
 WHAT THIS CAN AND CANNOT TELL YOU. The simulator places mid-turn pauses at
-random word boundaries. Real hesitations are not random: research on speech
-hesitation has long found that pauses cluster just BEFORE content words --
-"the ... appointment" -- which is right AFTER a function word, exactly where
-T1's list does catch them. So "most failures follow a content word" is partly a
-fact about the simulator's pause placement, not about speakers. The simulator
-probably flatters T2 (see test_sweep) and UNDERSTATES T1.
+random word boundaries, so "most failures follow a content word" could have
+been an artefact of that placement: hesitation research finds pauses
+clustering just BEFORE content words ("the ... appointment"), right after a
+function word, where T1's list does catch them. The real recordings in probes/
+(2026-09-14) point the other way for the turns this system serves. In
+dictation and read speech -- addresses, phone numbers, spelled names, lists --
+35 of 36 unprompted pauses followed a CONTENT word, at a phrase or list
+boundary, where T1 is blind. That is one speaker performing a task, not a
+sample of disfluent speakers, but for this kind of turn the simulator does not
+understate T1's problem.
 
 Run this on EXPLORATORY data (seed 0). Anything you change because of what it
 shows has to be confirmed on a seed nobody has looked at -- 1000 is now used.
