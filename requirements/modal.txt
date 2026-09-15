@@ -1,0 +1,2 @@
+# The Modal client, run on the laptop. The image it builds pins its own packages.
+modal==1.5.5
