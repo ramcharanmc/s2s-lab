@@ -3,7 +3,8 @@
 # Install torch FIRST, the right build for the machine:
 #   laptop / WSL, CPU only:
 #     pip install torch==2.14.0 --index-url https://download.pytorch.org/whl/cpu
-#   Colab: torch is preinstalled with CUDA -- do not reinstall it.
+#   Colab: torch is preinstalled with CUDA -- do not reinstall it. Colab runs
+#   Python 3.13, which kokoro and misaki refuse on paper: see docs/colab.md.
 # The default Linux torch wheel bundles about 2.5 GB of CUDA libraries that an
 # AMD laptop GPU cannot use.
 faster-whisper==1.2.1
