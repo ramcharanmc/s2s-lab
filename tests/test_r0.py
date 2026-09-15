@@ -23,6 +23,7 @@ import pytest
 from s2slab.probes import PROBE_ROOT
 from s2slab.r0 import (ASR_SR, ESPEAK_PATH_MAX, KokoroTTS, NaiveCascade, clean_for_speech,
                        espeak_path_problem)
+from s2slab.rungs import get
 
 OUT_SR = KokoroTTS.SR
 ONE_SECOND = np.zeros(ASR_SR, dtype=np.float32)
@@ -128,6 +129,18 @@ def test_load_loads_every_model_once_and_warms_up_before_the_clock():
 def test_r0_refuses_audio_at_the_wrong_rate():
     with pytest.raises(ValueError, match="16000"):
         fake_r0().respond(np.zeros(8_000, dtype=np.float32), 8_000)
+
+@pytest.mark.parametrize("rung_id, asr_model, llm_model", [
+    ("r0-gpu", "base.en", "Qwen/Qwen2.5-0.5B-Instruct"),
+    ("r0-gpu-bigger", "small.en", "Qwen/Qwen2.5-1.5B-Instruct"),
+])
+def test_gpu_variants_are_registered_with_every_model_on_cuda(rung_id, asr_model, llm_model):
+    """Built, not loaded: this runs on a laptop with no GPU and no model library."""
+    rung = get(rung_id)
+    assert rung.rung_id == rung_id
+    assert (rung.asr.model_name, rung.llm.model_name) == (asr_model, llm_model)
+    assert {rung.asr.device, rung.llm.device, rung.tts.device} == {"cuda"}
+    assert rung.asr.compute_type == "float16"
 
 
 # --------------------------------------------------------------------------- #

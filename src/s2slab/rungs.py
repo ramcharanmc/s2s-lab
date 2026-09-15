@@ -180,6 +180,8 @@ class StubRung(Rung):
 RUNGS = {
     "stub": "s2slab.rungs:StubRung",
     "r0": "s2slab.r0:NaiveCascade",
+    "r0-gpu": "s2slab.r0:NaiveCascadeGPU",
+    "r0-gpu-bigger": "s2slab.r0:NaiveCascadeGPUBigger",
 }
 
 def get(rung_id: str) -> Rung:

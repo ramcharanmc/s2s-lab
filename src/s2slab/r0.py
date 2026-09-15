@@ -223,6 +223,35 @@ class NaiveCascade(Rung):
         return Reply(reply, self.tts.SR, transcript, reply_text) 
        
 
+class NaiveCascadeGPU(NaiveCascade):
+    """R0 with the same three models on a CUDA GPU: the hardware effect alone.
+
+    GPU work is asynchronous -- a CUDA call returns before the GPU finishes.
+    The stage times stay honest because every stage hands back host-side data:
+    a string, or audio Kokoro has already copied to the CPU. That copy waits
+    for the GPU, so each stage's time is spent inside its own stage.
+    """
+
+    rung_id = "r0-gpu"
+    description = "R0, same models on a CUDA GPU (fp16)"
+
+    def __init__(self):
+        super().__init__(WhisperASR(device="cuda", compute_type="float16"),
+                         QwenLLM(device="cuda"), KokoroTTS(device="cuda"))
+
+
+class NaiveCascadeGPUBigger(NaiveCascade):
+    """R0 on a GPU with larger ASR and LLM models: what the headroom buys."""
+
+    rung_id = "r0-gpu-bigger"
+    description = "R0 on a CUDA GPU: Whisper small.en -> Qwen2.5-1.5B -> Kokoro-82M (fp16)"
+
+    def __init__(self):
+        super().__init__(WhisperASR("small.en", device="cuda", compute_type="float16"),
+                         QwenLLM("Qwen/Qwen2.5-1.5B-Instruct", device="cuda"),
+                         KokoroTTS(device="cuda"))
+
+
 if __name__ == "__main__":
     import pathlib
     import sys
@@ -230,15 +259,17 @@ if __name__ == "__main__":
     import soundfile as sf
 
     from .probes import load_wav
+    from .rungs import get
 
-    if len(sys.argv) != 2:
-        sys.exit("usage: PYTHONPATH=src python -m s2slab.r0 path/to/turn.wav")
+    if len(sys.argv) not in (2, 3):
+        sys.exit("usage: PYTHONPATH=src python -m s2slab.r0 path/to/turn.wav [rung id, default r0]")
     src = pathlib.Path(sys.argv[1])
-    rung = NaiveCascade()
+    rung = get(sys.argv[2] if len(sys.argv) == 3 else "r0")
+    print(f"{rung.rung_id}: {rung.description}")
     print("loading models (the first run downloads about 1.5 GB) ...")
     print(f"load: {rung.load():.0f} ms")
     turn = rung.respond(load_wav(src), ASR_SR)
-    out = pathlib.Path("results/r0") / f"{src.stem}.reply.wav"
+    out = pathlib.Path("results") / rung.rung_id / f"{src.stem}.reply.wav"
     out.parent.mkdir(parents=True, exist_ok=True)
     sf.write(str(out), turn.audio, turn.sr)
     print(f"heard: {turn.transcript}")
