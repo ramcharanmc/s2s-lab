@@ -179,8 +179,8 @@ class StubRung(Rung):
 # asked for, so the stub, the tests and the whole CPU track never import torch.
 RUNGS = {
     "stub": "s2slab.rungs:StubRung",
+    "r0": "s2slab.r0:NaiveCascade",
 }
-
 
 def get(rung_id: str) -> Rung:
     """A fresh, unloaded instance of the named rung."""

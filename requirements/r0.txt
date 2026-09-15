@@ -1,0 +1,19 @@
+# R0's model libraries, tested together on 2026-09-14 (WSL, Python 3.10, CPU).
+#
+# Install torch FIRST, the right build for the machine:
+#   laptop / WSL, CPU only:
+#     pip install torch==2.14.0 --index-url https://download.pytorch.org/whl/cpu
+#   Colab: torch is preinstalled with CUDA -- do not reinstall it.
+# The default Linux torch wheel bundles about 2.5 GB of CUDA libraries that an
+# AMD laptop GPU cannot use.
+faster-whisper==1.2.1
+transformers==5.17.0
+kokoro==0.9.4
+# kokoro's pronunciation stack, pinned because the espeak-ng path limit
+# (r0.ESPEAK_PATH_MAX) was measured with exactly these
+misaki==0.9.4
+phonemizer-fork==3.3.2
+espeakng-loader==0.2.4
+# misaki pip-installs this English model on first use if it is missing --
+# listed here so the install happens now, visibly, and not inside a load()
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
