@@ -59,6 +59,11 @@ image = (
     .pip_install("numpy==2.2.6", "scipy==1.15.3", "soundfile==0.14.0",
                  "praat-parselmouth==0.4.7")
     .run_function(download_weights)
+    # torch 2.14 runs some small GPU ops through Triton kernels, which compile
+    # a C helper on first use; the CUDA runtime image has no C compiler. Colab
+    # has one, so the same kernels ran there. Added after the weights so every
+    # layer above stays cached. (Kill switch instead: TORCH_DISABLE_NATIVE_JIT=1.)
+    .apt_install("gcc")
     .env({"HF_HUB_OFFLINE": "1"})
     # Added last and at container start, so editing code never rebuilds the image.
     .add_local_dir(REPO / "src" / "s2slab", "/root/s2slab", ignore=["**/__pycache__"])
