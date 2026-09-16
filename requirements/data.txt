@@ -1,0 +1,4 @@
+# Needed only to BUILD the eval set (python -m s2slab.evalset build).
+# Loading it, and everything else, needs only requirements/base.txt.
+huggingface_hub==1.31.0
+pyarrow==25.0.1
