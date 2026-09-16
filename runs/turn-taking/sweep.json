@@ -1,0 +1,607 @@
+{
+  "commit": "6a0741e",
+  "n_per_cohort": 250,
+  "seed": 1000,
+  "results": [
+    {
+      "policy": "T0_fixed_150ms",
+      "cohort": "clean",
+      "n": 250,
+      "cutoff_rate": 0.036,
+      "no_fire_rate": 0.0,
+      "n_scored": 241,
+      "latency_p50": 160.00000000000037,
+      "latency_p90": 175.93888939148349,
+      "latency_p99": 179.13612553707125,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_300ms",
+      "cohort": "clean",
+      "n": 250,
+      "cutoff_rate": 0.0,
+      "no_fire_rate": 0.0,
+      "n_scored": 250,
+      "latency_p50": 300.0000000000003,
+      "latency_p90": 316.7510771396684,
+      "latency_p99": 319.28933937140556,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_500ms",
+      "cohort": "clean",
+      "n": 250,
+      "cutoff_rate": 0.0,
+      "no_fire_rate": 0.0,
+      "n_scored": 250,
+      "latency_p50": 500.00000000000045,
+      "latency_p90": 516.7510771396682,
+      "latency_p99": 519.2893393714055,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_700ms",
+      "cohort": "clean",
+      "n": 250,
+      "cutoff_rate": 0.0,
+      "no_fire_rate": 0.0,
+      "n_scored": 250,
+      "latency_p50": 700.0000000000005,
+      "latency_p90": 716.7510771396684,
+      "latency_p99": 719.2893393714056,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_900ms",
+      "cohort": "clean",
+      "n": 250,
+      "cutoff_rate": 0.0,
+      "no_fire_rate": 0.0,
+      "n_scored": 250,
+      "latency_p50": 900.0000000000003,
+      "latency_p90": 916.7510771396685,
+      "latency_p99": 919.2893393714056,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T1_semantic_500ms",
+      "cohort": "clean",
+      "n": 250,
+      "cutoff_rate": 0.0,
+      "no_fire_rate": 0.0,
+      "n_scored": 250,
+      "latency_p50": 508.7004900001586,
+      "latency_p90": 903.3239856141666,
+      "latency_p99": 917.3188571090799,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T2_prosodic_500ms",
+      "cohort": "clean",
+      "n": 250,
+      "cutoff_rate": 0.0,
+      "no_fire_rate": 0.0,
+      "n_scored": 250,
+      "latency_p50": 368.7004900001585,
+      "latency_p90": 763.3239856141665,
+      "latency_p99": 777.3188571090801,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T3_decision_r2",
+      "cohort": "clean",
+      "n": 250,
+      "cutoff_rate": 0.0,
+      "no_fire_rate": 0.0,
+      "n_scored": 250,
+      "latency_p50": 280.0000000000002,
+      "latency_p90": 296.7510771396684,
+      "latency_p99": 299.28933937140556,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T3_decision_r4",
+      "cohort": "clean",
+      "n": 250,
+      "cutoff_rate": 0.0,
+      "no_fire_rate": 0.0,
+      "n_scored": 250,
+      "latency_p50": 400.00000000000034,
+      "latency_p90": 416.7510771396685,
+      "latency_p99": 419.2893393714056,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T3_decision_r8",
+      "cohort": "clean",
+      "n": 250,
+      "cutoff_rate": 0.0,
+      "no_fire_rate": 0.0,
+      "n_scored": 250,
+      "latency_p50": 540.0000000000005,
+      "latency_p90": 556.7510771396683,
+      "latency_p99": 559.2893393714055,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_150ms",
+      "cohort": "disfluent",
+      "n": 250,
+      "cutoff_rate": 1.0,
+      "no_fire_rate": 0.0,
+      "n_scored": 0,
+      "latency_p50": NaN,
+      "latency_p90": NaN,
+      "latency_p99": NaN,
+      "latency_unsupported": [
+        "p50",
+        "p90",
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_300ms",
+      "cohort": "disfluent",
+      "n": 250,
+      "cutoff_rate": 0.992,
+      "no_fire_rate": 0.0,
+      "n_scored": 2,
+      "latency_p50": 304.2405118222804,
+      "latency_p90": 304.5030682386102,
+      "latency_p99": 304.56214343228436,
+      "latency_unsupported": [
+        "p50",
+        "p90",
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_500ms",
+      "cohort": "disfluent",
+      "n": 250,
+      "cutoff_rate": 0.836,
+      "no_fire_rate": 0.0,
+      "n_scored": 41,
+      "latency_p50": 507.51485414637364,
+      "latency_p90": 516.1482016937615,
+      "latency_p99": 519.3505819700829,
+      "latency_unsupported": [
+        "p90",
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_700ms",
+      "cohort": "disfluent",
+      "n": 250,
+      "cutoff_rate": 0.488,
+      "no_fire_rate": 0.0,
+      "n_scored": 128,
+      "latency_p50": 708.7402916864571,
+      "latency_p90": 717.9286984905884,
+      "latency_p99": 719.5178694461567,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_900ms",
+      "cohort": "disfluent",
+      "n": 250,
+      "cutoff_rate": 0.276,
+      "no_fire_rate": 0.0,
+      "n_scored": 181,
+      "latency_p50": 908.615398940709,
+      "latency_p90": 917.5788408838619,
+      "latency_p99": 919.5794450375247,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T1_semantic_500ms",
+      "cohort": "disfluent",
+      "n": 250,
+      "cutoff_rate": 0.672,
+      "no_fire_rate": 0.0,
+      "n_scored": 82,
+      "latency_p50": 511.8603454600113,
+      "latency_p90": 911.2855659191191,
+      "latency_p99": 916.0201045071642,
+      "latency_unsupported": [
+        "p90",
+        "p99"
+      ]
+    },
+    {
+      "policy": "T2_prosodic_500ms",
+      "cohort": "disfluent",
+      "n": 250,
+      "cutoff_rate": 0.672,
+      "no_fire_rate": 0.0,
+      "n_scored": 82,
+      "latency_p50": 377.59125922149474,
+      "latency_p90": 773.9936497136521,
+      "latency_p99": 915.0135610740746,
+      "latency_unsupported": [
+        "p90",
+        "p99"
+      ]
+    },
+    {
+      "policy": "T3_decision_r2",
+      "cohort": "disfluent",
+      "n": 250,
+      "cutoff_rate": 0.992,
+      "no_fire_rate": 0.0,
+      "n_scored": 2,
+      "latency_p50": 284.2405118222804,
+      "latency_p90": 284.5030682386101,
+      "latency_p99": 284.5621434322843,
+      "latency_unsupported": [
+        "p50",
+        "p90",
+        "p99"
+      ]
+    },
+    {
+      "policy": "T3_decision_r4",
+      "cohort": "disfluent",
+      "n": 250,
+      "cutoff_rate": 0.96,
+      "no_fire_rate": 0.0,
+      "n_scored": 10,
+      "latency_p50": 404.4411691152521,
+      "latency_p90": 412.8949391660877,
+      "latency_p99": 417.06698955677024,
+      "latency_unsupported": [
+        "p50",
+        "p90",
+        "p99"
+      ]
+    },
+    {
+      "policy": "T3_decision_r8",
+      "cohort": "disfluent",
+      "n": 250,
+      "cutoff_rate": 0.772,
+      "no_fire_rate": 0.0,
+      "n_scored": 57,
+      "latency_p50": 548.3244061015693,
+      "latency_p90": 556.7011413007732,
+      "latency_p99": 559.2996309473059,
+      "latency_unsupported": [
+        "p90",
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_150ms",
+      "cohort": "slow",
+      "n": 250,
+      "cutoff_rate": 0.98,
+      "no_fire_rate": 0.0,
+      "n_scored": 5,
+      "latency_p50": 171.91894885299507,
+      "latency_p90": 174.1895367730927,
+      "latency_p99": 174.99991194643488,
+      "latency_unsupported": [
+        "p50",
+        "p90",
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_300ms",
+      "cohort": "slow",
+      "n": 250,
+      "cutoff_rate": 0.668,
+      "no_fire_rate": 0.0,
+      "n_scored": 83,
+      "latency_p50": 309.18442792438583,
+      "latency_p90": 318.08026952387786,
+      "latency_p99": 319.5007457409954,
+      "latency_unsupported": [
+        "p90",
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_500ms",
+      "cohort": "slow",
+      "n": 250,
+      "cutoff_rate": 0.184,
+      "no_fire_rate": 0.0,
+      "n_scored": 204,
+      "latency_p50": 510.1923526476104,
+      "latency_p90": 517.993934391181,
+      "latency_p99": 519.4807504994022,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_700ms",
+      "cohort": "slow",
+      "n": 250,
+      "cutoff_rate": 0.016,
+      "no_fire_rate": 0.0,
+      "n_scored": 246,
+      "latency_p50": 710.5384624513947,
+      "latency_p90": 717.9999079203094,
+      "latency_p99": 719.4727332251948,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T0_fixed_900ms",
+      "cohort": "slow",
+      "n": 250,
+      "cutoff_rate": 0.0,
+      "no_fire_rate": 0.0,
+      "n_scored": 250,
+      "latency_p50": 910.5228457691953,
+      "latency_p90": 917.9606235855875,
+      "latency_p99": 919.4719696752702,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T1_semantic_500ms",
+      "cohort": "slow",
+      "n": 250,
+      "cutoff_rate": 0.112,
+      "no_fire_rate": 0.0,
+      "n_scored": 222,
+      "latency_p50": 516.548272687548,
+      "latency_p90": 914.2951333514316,
+      "latency_p99": 919.3783777481864,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T2_prosodic_500ms",
+      "cohort": "slow",
+      "n": 250,
+      "cutoff_rate": 0.112,
+      "no_fire_rate": 0.0,
+      "n_scored": 222,
+      "latency_p50": 503.5188659059129,
+      "latency_p90": 901.3181913927324,
+      "latency_p99": 918.0778369763614,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T3_decision_r2",
+      "cohort": "slow",
+      "n": 250,
+      "cutoff_rate": 0.744,
+      "no_fire_rate": 0.0,
+      "n_scored": 64,
+      "latency_p50": 289.1395454649563,
+      "latency_p90": 298.1649538746059,
+      "latency_p99": 299.52124735231973,
+      "latency_unsupported": [
+        "p90",
+        "p99"
+      ]
+    },
+    {
+      "policy": "T3_decision_r4",
+      "cohort": "slow",
+      "n": 250,
+      "cutoff_rate": 0.384,
+      "no_fire_rate": 0.0,
+      "n_scored": 154,
+      "latency_p50": 410.1766719748332,
+      "latency_p90": 417.5881866744598,
+      "latency_p99": 419.47120612534565,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T3_decision_r8",
+      "cohort": "slow",
+      "n": 250,
+      "cutoff_rate": 0.144,
+      "no_fire_rate": 0.0,
+      "n_scored": 214,
+      "latency_p50": 550.2936493727268,
+      "latency_p90": 557.7936451166237,
+      "latency_p99": 559.4788416245908,
+      "latency_unsupported": [
+        "p99"
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "cohort": "clean",
+      "a": "T0_fixed_500ms",
+      "b": "T1_semantic_500ms",
+      "n": 250,
+      "rate_a": 0.0,
+      "rate_b": 0.0,
+      "only_a": 0,
+      "only_b": 0,
+      "p": 1.0,
+      "p_holm": 1.0,
+      "diff": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "verdict": "identical: same turns interrupted"
+    },
+    {
+      "cohort": "clean",
+      "a": "T1_semantic_500ms",
+      "b": "T2_prosodic_500ms",
+      "n": 250,
+      "rate_a": 0.0,
+      "rate_b": 0.0,
+      "only_a": 0,
+      "only_b": 0,
+      "p": 1.0,
+      "p_holm": 1.0,
+      "diff": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "verdict": "identical: same turns interrupted"
+    },
+    {
+      "cohort": "clean",
+      "a": "T0_fixed_700ms",
+      "b": "T2_prosodic_500ms",
+      "n": 250,
+      "rate_a": 0.0,
+      "rate_b": 0.0,
+      "only_a": 0,
+      "only_b": 0,
+      "p": 1.0,
+      "p_holm": 1.0,
+      "diff": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "verdict": "identical: same turns interrupted"
+    },
+    {
+      "cohort": "disfluent",
+      "a": "T0_fixed_500ms",
+      "b": "T1_semantic_500ms",
+      "n": 250,
+      "rate_a": 0.836,
+      "rate_b": 0.672,
+      "only_a": 41,
+      "only_b": 0,
+      "p": 9.094947017729282e-13,
+      "p_holm": 8.185452315956354e-12,
+      "diff": 0.164,
+      "ci": [
+        0.12,
+        0.212
+      ],
+      "verdict": "T1_semantic_500ms interrupts less"
+    },
+    {
+      "cohort": "disfluent",
+      "a": "T1_semantic_500ms",
+      "b": "T2_prosodic_500ms",
+      "n": 250,
+      "rate_a": 0.672,
+      "rate_b": 0.672,
+      "only_a": 0,
+      "only_b": 0,
+      "p": 1.0,
+      "p_holm": 1.0,
+      "diff": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "verdict": "identical: same turns interrupted"
+    },
+    {
+      "cohort": "disfluent",
+      "a": "T0_fixed_700ms",
+      "b": "T2_prosodic_500ms",
+      "n": 250,
+      "rate_a": 0.488,
+      "rate_b": 0.672,
+      "only_a": 11,
+      "only_b": 57,
+      "p": 1.2750032374450517e-08,
+      "p_holm": 1.0200025899560414e-07,
+      "diff": -0.184,
+      "ci": [
+        -0.244,
+        -0.124
+      ],
+      "verdict": "T0_fixed_700ms interrupts less"
+    },
+    {
+      "cohort": "slow",
+      "a": "T0_fixed_500ms",
+      "b": "T1_semantic_500ms",
+      "n": 250,
+      "rate_a": 0.184,
+      "rate_b": 0.112,
+      "only_a": 18,
+      "only_b": 0,
+      "p": 7.62939453125e-06,
+      "p_holm": 4.57763671875e-05,
+      "diff": 0.072,
+      "ci": [
+        0.04,
+        0.104
+      ],
+      "verdict": "T1_semantic_500ms interrupts less"
+    },
+    {
+      "cohort": "slow",
+      "a": "T1_semantic_500ms",
+      "b": "T2_prosodic_500ms",
+      "n": 250,
+      "rate_a": 0.112,
+      "rate_b": 0.112,
+      "only_a": 0,
+      "only_b": 0,
+      "p": 1.0,
+      "p_holm": 1.0,
+      "diff": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "verdict": "identical: same turns interrupted"
+    },
+    {
+      "cohort": "slow",
+      "a": "T0_fixed_700ms",
+      "b": "T2_prosodic_500ms",
+      "n": 250,
+      "rate_a": 0.016,
+      "rate_b": 0.112,
+      "only_a": 1,
+      "only_b": 25,
+      "p": 8.046627044677734e-07,
+      "p_holm": 5.632638931274414e-06,
+      "diff": -0.096,
+      "ci": [
+        -0.136,
+        -0.06
+      ],
+      "verdict": "T0_fixed_700ms interrupts less"
+    }
+  ]
+}
