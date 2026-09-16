@@ -35,3 +35,12 @@ def test_the_image_holds_every_model_the_gpu_rungs_load(r0_bench, rung_id):
     assert f"Systran/faster-whisper-{rung.asr.model_name}" in r0_bench.MODELS
     assert rung.llm.model_name in r0_bench.MODELS
     assert f"voices/{rung.tts.voice}.pt" in r0_bench.MODELS["hexgrad/Kokoro-82M"]
+
+def test_a_full_eval_run_is_saved_as_evidence_and_a_smoke_test_is_not(r0_bench):
+    """The full run lands in runs/, which is committed; a --limit run lands in
+    the ignored results/, so a smoke test can never pass for the real row."""
+    full = r0_bench.results_path("r0-gpu")
+    smoke = r0_bench.results_path("r0-gpu", limit=8)
+    assert full.relative_to(ROOT).parts == ("runs", "r0-gpu", "evalset-modal-t4.json")
+    assert smoke.relative_to(ROOT).parts[0] == "results"
+    assert "limit8" in smoke.name
