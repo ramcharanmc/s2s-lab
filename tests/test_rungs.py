@@ -48,6 +48,24 @@ class SleepyRung(Rung):
             time.sleep(self.llm_s)
         return Reply(audio, sr, "heard", "said")
 
+class StreamyRung(Rung):
+    """Hands its reply out in two half-second pieces: the first after first_s,
+    the second rest_s later -- the shape of R1."""
+
+    rung_id = "streamy"
+
+    def __init__(self, first_s=0.02, rest_s=0.03):
+        self.first_s, self.rest_s = first_s, rest_s
+
+    def _respond(self, audio, sr, sink):
+        with stage("tts", sink):
+            time.sleep(self.first_s)
+        self.emit(_tone(0.5))
+        with stage("tts", sink):
+            time.sleep(self.rest_s)
+        self.emit(_tone(0.5))
+        return Reply(None, OUT_SR, "heard", "said")
+
 
 def _tone(seconds: float, amp: float = 0.3) -> np.ndarray:
     t = np.arange(int(seconds * OUT_SR)) / OUT_SR
@@ -162,6 +180,107 @@ def test_a_reply_that_never_speaks_has_no_leading_silence():
     assert math.isnan(silence_before_speech_ms(np.zeros(OUT_SR, np.float32), OUT_SR))
     assert math.isnan(silence_before_speech_ms(np.zeros(0, np.float32), OUT_SR))
 
+# --------------------------------------------------------------------------- #
+# First audio and first sound: when the caller starts hearing the reply
+# --------------------------------------------------------------------------- #
+
+
+def test_a_batch_reply_first_exists_when_the_turn_ends():
+    """R0's case, with no change to R0: returned audio existed only at the end."""
+    turn = SleepyRung().respond(ONE_SECOND, SR)
+    assert turn.first_audio_ms == turn.total_ms
+    assert turn.chunks == [(turn.total_ms, SR)]
+
+
+def test_a_streamed_reply_first_exists_when_its_first_piece_does():
+    turn = StreamyRung(first_s=0.02, rest_s=0.08).respond(ONE_SECOND, SR)
+    (first_ms, n1), (second_ms, n2) = turn.chunks
+    assert 20 <= turn.first_audio_ms == first_ms < second_ms <= turn.total_ms
+    assert second_ms - first_ms >= 80
+    assert n1 == n2 == OUT_SR // 2
+    assert len(turn.audio) == OUT_SR and turn.sr == OUT_SR    # the pieces, joined in order
+
+
+def test_first_sound_of_a_batch_reply_adds_its_leading_silence():
+    class Padded(SleepyRung):
+        def _respond(self, audio, sr, sink):
+            super()._respond(audio, sr, sink)
+            return Reply(_silence_then_tone(0.3), OUT_SR, "heard", "said")
+
+    turn = Padded().respond(ONE_SECOND, SR)
+    assert turn.first_sound_ms == pytest.approx(turn.total_ms + 300, abs=20)
+
+
+def test_first_sound_waits_for_the_chunk_that_holds_the_first_word():
+    """First piece: 0.1 s of pure padding, handed out at once. The voice is in
+    the second piece, 150 ms later. Playback would reach the voice after 100 ms,
+    but it cannot play what does not exist yet -- so the caller hears it when
+    the second piece arrives, not at first audio + 100 ms."""
+    class PadThenVoice(Rung):
+        rung_id = "pad-then-voice"
+
+        def _respond(self, audio, sr, sink):
+            self.emit(np.zeros(int(0.1 * OUT_SR), np.float32))
+            time.sleep(0.15)
+            self.emit(_tone(0.5))
+            return Reply(None, OUT_SR, "heard", "said")
+
+    turn = PadThenVoice().respond(ONE_SECOND, SR)
+    (first_ms, _), (second_ms, _) = turn.chunks
+    assert turn.first_sound_ms == second_ms
+    assert turn.first_sound_ms - turn.first_audio_ms >= 150
+
+
+def test_a_reply_that_never_speaks_has_no_first_sound():
+    assert math.isnan(StubRung().respond(ONE_SECOND, SR).first_sound_ms)
+
+
+def test_empty_pieces_are_not_first_audio():
+    class LateStart(StreamyRung):
+        def _respond(self, audio, sr, sink):
+            self.emit(np.zeros(0, np.float32))          # nothing yet
+            return super()._respond(audio, sr, sink)
+
+    turn = LateStart(first_s=0.03).respond(ONE_SECOND, SR)
+    assert len(turn.chunks) == 2 and turn.first_audio_ms >= 30
+
+
+def test_a_rung_that_emits_nothing_has_no_first_audio():
+    class Mute(Rung):
+        rung_id = "mute"
+
+        def _respond(self, audio, sr, sink):
+            return Reply(None, OUT_SR, "heard", "")
+
+    turn = Mute().respond(ONE_SECOND, SR)
+    assert len(turn.audio) == 0 and math.isnan(turn.first_audio_ms)
+
+
+def test_emitting_and_returning_audio_is_refused():
+    """Two sources of the same reply: which one did the caller hear?"""
+    class Both(StreamyRung):
+        def _respond(self, audio, sr, sink):
+            super()._respond(audio, sr, sink)
+            return Reply(_tone(0.1), OUT_SR, "heard", "said")
+
+    with pytest.raises(ValueError, match="emitted audio AND returned it"):
+        Both().respond(ONE_SECOND, SR)
+
+
+def test_emit_outside_a_turn_is_refused_even_after_a_turn_failed():
+    class Broken(StreamyRung):
+        def _respond(self, audio, sr, sink):
+            self.emit(_tone(0.1))
+            raise RuntimeError("model crashed")
+
+    rung = Broken()
+    with pytest.raises(RuntimeError, match="only works inside respond"):
+        rung.emit(_tone(0.1))
+    with pytest.raises(RuntimeError, match="model crashed"):
+        rung.respond(ONE_SECOND, SR)
+    with pytest.raises(RuntimeError, match="only works inside respond"):
+        rung.emit(_tone(0.1))
+
 
 # --------------------------------------------------------------------------- #
 # The registry
@@ -203,11 +322,18 @@ def test_run_turns_keeps_clip_ids_and_order():
     assert list(turns) == ["b", "a"]
 
 
-def test_summary_has_each_stage_plus_untimed_and_total():
+def test_summary_has_each_stage_plus_untimed_total_and_first_audio():
+    """The stub replies with silence, so it has a first audio but no first sound
+    -- and that row is left out rather than printed as nan."""
     turns = run_turns(StubRung(), {f"c{i}": ONE_SECOND for i in range(5)}, SR)
     summary = summarize_turns(turns)
-    assert set(summary) == {"asr", "llm", "tts", "(untimed)", "total"}
+    assert set(summary) == {"asr", "llm", "tts", "(untimed)", "total", "first audio"}
     assert all(s.n == 5 for s in summary.values())
+
+
+def test_summary_includes_first_sound_once_a_reply_speaks():
+    turns = run_turns(StreamyRung(), {f"c{i}": ONE_SECOND for i in range(3)}, SR)
+    assert summarize_turns(turns)["first sound"].n == 3
 
 
 def test_report_prints_the_table_load_time_and_leading_silence():

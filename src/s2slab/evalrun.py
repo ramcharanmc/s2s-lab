@@ -36,8 +36,7 @@ from .timing import summarize
 from .wer import format_table as wer_format
 from .wer import references, score
 
-RESULTS_ROOT = pathlib.Path("results")
-
+FIRST_KEYS = {"first_audio_ms": "first audio", "first_sound_ms": "first sound"}
 
 def _finite(x: float) -> float | None:
     """NaN is not JSON. A reply that never speaks has no leading silence, and
@@ -69,7 +68,9 @@ def run(rung, root=EVAL_ROOT, cohorts=None, limit: int | None = None, machine: s
                           "untimed_ms": round(turn.untimed_ms, 1),
                           "total_ms": round(turn.total_ms, 1),
                           "reply_s": round(turn.reply_s, 3),
-                          "leading_silence_ms": _finite(turn.leading_silence_ms)}
+                          "leading_silence_ms": _finite(turn.leading_silence_ms),
+                          "first_audio_ms": _finite(round(turn.first_audio_ms, 1)),
+                          "first_sound_ms": _finite(round(turn.first_sound_ms, 1))}
     return {"rung": rung.rung_id, "description": rung.description,
             "commit": _git_commit(), "machine": machine,
             "ran": datetime.date.today().isoformat(), "load_ms": round(load_ms, 1),
@@ -84,8 +85,9 @@ def save(results: dict, path=None) -> pathlib.Path:
     return path
 
 
-def latency_table(results: dict) -> str:
-    """Processing time per cohort, and over the whole set.
+def latency_table(results: dict, key: str = "total_ms") -> str:
+    """One timing per cohort, and over the whole set: total_ms by default,
+    or first_audio_ms / first_sound_ms. None (a reply that never spoke) is left out.
 
     A cohort has 50 turns: enough for a median, not for a p90. All 200 together
     support a p90; timing.py prints an em-dash for whatever the sample cannot
@@ -93,8 +95,10 @@ def latency_table(results: dict) -> str:
     """
     groups: dict[str, list[float]] = {}
     for turn in results["turns"].values():
-        groups.setdefault(turn["cohort"], []).append(turn["total_ms"])
-    groups["all"] = [t["total_ms"] for t in results["turns"].values()]
+        groups.setdefault(turn["cohort"], [])
+        if turn[key] is not None:
+            groups[turn["cohort"]].append(turn[key])
+    groups["all"] = [v for vs in groups.values() for v in vs]
     lines = ["| cohort | turns | p50 ms | p90 ms | p99 ms |", "|---|---:|---:|---:|---:|"]
     for name, values in groups.items():
         s = summarize(values)
@@ -113,7 +117,16 @@ def stage_table(results: dict) -> str:
             rows.setdefault(name, []).append(ms)
         rows.setdefault("(untimed)", []).append(turn["untimed_ms"])
         rows.setdefault("total", []).append(turn["total_ms"])
+        for key, name in FIRST_KEYS.items():
+            if turn.get(key) is not None:
+                rows.setdefault(name, []).append(turn[key])
     return stage_format({name: summarize(v) for name, v in rows.items()})
+
+
+def has_first_audio(results: dict) -> bool:
+    """Runs saved before first audio was measured (runs/r0*, 2026-09-15/16) have
+    no such field. They are still reported -- just without those tables."""
+    return all("first_audio_ms" in t for t in results["turns"].values())
 
 def wer_tables(results: dict, root=EVAL_ROOT) -> str:
     """WER per cohort, plus the disfluent cohort against its tidied reference."""
@@ -138,9 +151,15 @@ def report(results: dict, root=EVAL_ROOT) -> str:
                 if t["leading_silence_ms"] is not None]
     tail = f"reply leading silence: {summarize(silences)}" if silences else \
            "no reply ever spoke, so there is no leading silence"
-    return "\n\n".join([head, "### Processing time", latency_table(results),
-                        "### Where the time went", stage_table(results),
-                        wer_tables(results, root), tail])
+    parts = [head, "### Processing time", latency_table(results)]
+    if has_first_audio(results):
+        parts += ["### First audio: when the first piece of the reply existed",
+                  latency_table(results, "first_audio_ms"),
+                  "### First sound: first audio plus the silence before the first word",
+                  latency_table(results, "first_sound_ms")]
+    parts += ["### Where the time went", stage_table(results),
+              wer_tables(results, root), tail]
+    return "\n\n".join(parts)
 
 if __name__ == "__main__":
     import argparse

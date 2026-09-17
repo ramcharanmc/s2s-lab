@@ -27,12 +27,23 @@ clock starts. Folding that into the first turn would make its number describe
 the disk rather than the pipeline. Load time is reported on its own line: it is
 the cold-start cost the plan measures in week 8.
 
+FIRST AUDIO. A caller starts hearing the reply when its first piece exists,
+not its last. Two ways to hand audio back, and the clock sees both:
+  * batch (R0)      return the whole reply in Reply.audio. It exists when
+                    _respond() returns, so first audio = total, by construction.
+  * streaming (R1)  call self.emit(chunk) the moment each piece exists, and
+                    return Reply(None, ...). The base class stamps each chunk
+                    and joins them.
+Turn.first_audio_ms is when the first piece existed; Turn.first_sound_ms adds
+the silence before the first voiced sample -- what the caller waits to HEAR.
+
 respond(audio, sr)
  ├─ load()                            once per rung, BEFORE the clock starts
  ├─ t0 = perf_counter()
- ├─ self._respond(audio, sr, sink)    subclass: each stage inside stage(name, sink)
- │    → Reply(audio, sr, transcript, reply_text)
- └─ Turn(..., stages_ms=per_stage_ms(sink), total_ms=perf_counter() - t0)
+ ├─ self._respond(audio, sr, sink)    subclass: each stage inside stage(name, sink);
+ │    → Reply(audio, sr, ...)         streaming rungs call self.emit(chunk) as they go
+ └─ Turn(..., stages_ms=per_stage_ms(sink), total_ms=perf_counter() - t0,
+         chunks=[(ms when it existed, samples), ...])
 """
 
 from __future__ import annotations
@@ -71,7 +82,7 @@ def silence_before_speech_ms(audio: np.ndarray, sr: int) -> float:
 class Reply(NamedTuple):
     """What a rung's _respond() hands back to respond()."""
 
-    audio: np.ndarray
+    audio: np.ndarray | None  # the whole reply; None if it was handed out through emit()    
     sr: int
     transcript: str | None    # what it heard; None if the input never becomes text (R3 up)
     reply_text: str | None    # what it chose to say; None if it speaks without text (R4, R5)
@@ -87,6 +98,7 @@ class Turn:
     reply_text: str | None
     stages_ms: dict[str, float]   # {"asr": 810.4, "llm": 1432.9, "tts": 655.1}, in run order
     total_ms: float               # the whole turn, on the same clock as the stages
+    chunks: list[tuple[float, int]]  # [(ms when it existed, samples)], non-empty pieces only
 
     @property
     def untimed_ms(self) -> float:
@@ -107,6 +119,31 @@ class Turn:
     def leading_silence_ms(self) -> float:
         return silence_before_speech_ms(self.audio, self.sr)
 
+    @property
+    def first_audio_ms(self) -> float:
+        """When the first piece of reply audio existed. NaN if there was none."""
+        return self.chunks[0][0] if self.chunks else math.nan
+
+    @property
+    def first_sound_ms(self) -> float:
+        """When the caller would first HEAR the reply, in ms from the turn's start.
+
+        Playback starts at first_audio_ms, so the first voiced sample plays
+        leading_silence_ms later -- unless the chunk holding it did not exist
+        yet, in which case it plays when that chunk arrives. Batch: total +
+        leading silence. NaN if the reply never speaks.
+        """
+        lead_ms = self.leading_silence_ms
+        if math.isnan(lead_ms):
+            return math.nan
+        voice_at = int(lead_ms / 1000 * self.sr)       # first voiced sample, in the joined reply
+        start = 0
+        for made_ms, n in self.chunks:
+            if voice_at < start + n:
+                return max(self.first_audio_ms + lead_ms, made_ms)
+            start += n
+        return math.nan
+
 class Rung:
     """Base class for every rung. Subclasses set rung_id and implement _respond().
 
@@ -116,6 +153,8 @@ class Rung:
     rung_id = "?"
     description = ""
     _loaded = False
+    _emitted: list | None = None     # [(ms, audio)] during a turn; None outside respond()
+    _t0 = 0.0
 
     def load(self) -> float:
         """Initialise the rung, once.
@@ -145,11 +184,41 @@ class Rung:
             raise ValueError(f"expected mono audio, got shape {audio.shape}")
         self.load()
         sink: list = []
-        t0 = time.perf_counter()
-        reply = self._respond(audio, sr, sink)
-        total_ms = (time.perf_counter() - t0) * 1000
-        return Turn(np.asarray(reply.audio, dtype=np.float32), reply.sr,
-                    reply.transcript, reply.reply_text, per_stage_ms(sink), total_ms)
+        self._emitted = []
+        self._t0 = t0 = time.perf_counter()
+        try:
+            reply = self._respond(audio, sr, sink)
+            total_ms = (time.perf_counter() - t0) * 1000
+            emitted = self._emitted
+        finally:
+            self._emitted = None                  # emit() outside a turn is now an error
+        if reply.audio is None:                   # streaming: the pieces are the reply
+            pieces = emitted
+            out = (np.concatenate([a for _, a in pieces]) if pieces
+                   else np.zeros(0, dtype=np.float32))
+        elif emitted:
+            raise ValueError(f"{self.rung_id}: emitted audio AND returned it; "
+                             "a streaming rung returns Reply(None, ...)")
+        else:                                     # batch: all of it existed at the end
+            out = np.asarray(reply.audio, dtype=np.float32)
+            pieces = [(total_ms, out)]
+        chunks = [(ms, len(a)) for ms, a in pieces if len(a)]
+        return Turn(out, reply.sr, reply.transcript, reply.reply_text,
+                    per_stage_ms(sink), total_ms, chunks)
+
+    def emit(self, chunk: np.ndarray) -> None:
+        """Hand out one piece of reply audio the moment it exists (streaming rungs).
+
+        Takes:   float32 mono audio at the rung's output rate.
+        Calls:   nothing -- it stamps the time and keeps the piece.
+        Returns: nothing. respond() joins the pieces into Turn.audio.
+        """
+        if self._emitted is None:
+            raise RuntimeError("emit() only works inside respond()")
+        chunk = np.asarray(chunk, dtype=np.float32)
+        if chunk.ndim != 1:
+            raise ValueError(f"expected mono audio, got shape {chunk.shape}")
+        self._emitted.append(((time.perf_counter() - self._t0) * 1000, chunk))
 
     def _respond(self, audio: np.ndarray, sr: int, sink: list) -> Reply:
         raise NotImplementedError
@@ -200,14 +269,19 @@ def run_turns(rung: Rung, clips: dict[str, np.ndarray], sr: int) -> dict[str, Tu
 
 
 def summarize_turns(turns: dict[str, Turn]) -> dict[str, LatencySummary]:
-    """Percentiles for each stage across turns, plus '(untimed)' and 'total'."""
+    """Percentiles for each stage across turns, plus '(untimed)', 'total',
+    'first audio' and 'first sound'. A row with no finite value at all -- first
+    sound for a rung that never speaks -- is left out rather than printed as nan."""
     rows: dict[str, list[float]] = {}
     for t in turns.values():
         for name, ms in t.stages_ms.items():
             rows.setdefault(name, []).append(ms)
         rows.setdefault("(untimed)", []).append(t.untimed_ms)
         rows.setdefault("total", []).append(t.total_ms)
-    return {name: summarize(values) for name, values in rows.items()}
+        rows.setdefault("first audio", []).append(t.first_audio_ms)
+        rows.setdefault("first sound", []).append(t.first_sound_ms)
+    summaries = {name: summarize(values) for name, values in rows.items()}
+    return {name: s for name, s in summaries.items() if s.n}
 
 
 def probe_clips(root=None) -> dict[str, np.ndarray]:
