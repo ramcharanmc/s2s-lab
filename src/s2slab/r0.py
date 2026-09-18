@@ -136,28 +136,38 @@ class QwenLLM:
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name, dtype=dtype).to(self.device).eval()
 
-    def reply(self, user_text: str) -> str:
-        """Takes: what the user said. Returns: the assistant's reply.
+    def inputs(self, user_text: str):
+        """Takes: what the user said. Returns: the tokenized prompt, on the device.
 
         apply_chat_template wraps the messages in Qwen's own turn markers
         (<|im_start|>system ... <|im_end|>); add_generation_prompt opens the
-        assistant's turn, so the model continues as the assistant. generate()
-        returns the prompt followed by the new tokens; only the new ones are
-        decoded.
+        assistant's turn, so the model continues as the assistant. Shared with
+        R1's streaming reply, so both rungs send the model exactly the same prompt.
         """
-        import torch
         messages = [{"role": "system", "content": SYSTEM_PROMPT},
                     {"role": "user", "content": user_text}]
         prompt = self.tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True)
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
+        return self.tokenizer(prompt, return_tensors="pt").to(self.device)
+
+    def generate_kwargs(self) -> dict:
+        """Greedy decoding, capped. Also shared with R1: same settings, same words."""
+        return dict(max_new_tokens=self.max_new_tokens, do_sample=False,
+                    temperature=None, top_p=None, top_k=None)   # greedy: unset the sampling defaults
+
+    def reply(self, user_text: str) -> str:
+        """Takes: what the user said. Returns: the assistant's reply.
+
+        generate() returns the prompt followed by the new tokens; only the new
+        ones are decoded.
+        """
+        import torch
+        inputs = self.inputs(user_text)
         with torch.inference_mode():
-            out = self.model.generate(
-                **inputs, max_new_tokens=self.max_new_tokens, do_sample=False,
-                temperature=None, top_p=None, top_k=None)   # greedy: unset the sampling defaults
+            out = self.model.generate(**inputs, **self.generate_kwargs())
         new_tokens = out[0, inputs["input_ids"].shape[1]:]
         return self.tokenizer.decode(new_tokens, skip_special_tokens=True).strip()
-
+    
 class KokoroTTS:
     """Kokoro-82M: small enough to speak faster than real time on a CPU."""
 
@@ -278,3 +288,6 @@ if __name__ == "__main__":
           + f"   | total {turn.total_ms:.0f} ms, untimed {turn.untimed_ms:.1f} ms")
     print(f"reply: {turn.reply_s:.1f} s of audio, silent for its first "
           f"{turn.leading_silence_ms:.0f} ms -> {out}")
+    print(f"first audio {turn.first_audio_ms:.0f} ms, first sound {turn.first_sound_ms:.0f} ms; "
+          f"{len(turn.chunks)} piece(s): "
+          + ", ".join(f"{n / turn.sr:.1f} s at {ms:.0f} ms" for ms, n in turn.chunks))

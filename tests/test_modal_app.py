@@ -26,7 +26,7 @@ def r0_bench():
     return module
 
 
-@pytest.mark.parametrize("rung_id", ["r0-gpu", "r0-gpu-bigger"])
+@pytest.mark.parametrize("rung_id", ["r0-gpu", "r0-gpu-bigger", "r1-gpu"])
 def test_the_image_holds_every_model_the_gpu_rungs_load(r0_bench, rung_id):
     """The container runs with HF_HUB_OFFLINE=1, so a model missing from MODELS
     fails at load instead of downloading on the GPU's meter. This catches it

@@ -251,6 +251,8 @@ RUNGS = {
     "r0": "s2slab.r0:NaiveCascade",
     "r0-gpu": "s2slab.r0:NaiveCascadeGPU",
     "r0-gpu-bigger": "s2slab.r0:NaiveCascadeGPUBigger",
+    "r1": "s2slab.r1:StreamingCascade",
+    "r1-gpu": "s2slab.r1:StreamingCascadeGPU",
 }
 
 def get(rung_id: str) -> Rung:
