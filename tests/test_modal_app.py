@@ -44,3 +44,21 @@ def test_a_full_eval_run_is_saved_as_evidence_and_a_smoke_test_is_not(r0_bench):
     assert full.relative_to(ROOT).parts == ("runs", "r0-gpu", "evalset-modal-t4.json")
     assert smoke.relative_to(ROOT).parts[0] == "results"
     assert "limit8" in smoke.name
+
+def test_a_tag_names_the_run_and_keeps_the_untagged_name_unchanged(r0_bench):
+    assert r0_bench.results_path("r0-gpu").name == "evalset-modal-t4.json"
+    assert r0_bench.results_path("r1-gpu", tag="pr002").relative_to(ROOT).parts == \
+        ("runs", "r1-gpu", "evalset-modal-t4-pr002.json")
+    assert r0_bench.results_path("r1-gpu", limit=8, tag="pr002").name == \
+        "evalset-modal-t4-pr002-limit8.json"
+
+
+def test_recorded_evidence_is_never_overwritten(r0_bench):
+    """runs/r0-gpu/evalset-modal-t4.json is committed. A second run under the
+    same name must stop before it costs anything; scratch may be overwritten."""
+    recorded = r0_bench.results_path("r0-gpu")
+    assert recorded.exists(), "the committed R0 run is missing"
+    with pytest.raises(SystemExit, match="never overwritten"):
+        r0_bench.refuse_to_overwrite([recorded])
+    r0_bench.refuse_to_overwrite([r0_bench.results_path("r0-gpu", tag="not-run-yet")])
+    r0_bench.refuse_to_overwrite([r0_bench.results_path("r0-gpu", limit=8)])

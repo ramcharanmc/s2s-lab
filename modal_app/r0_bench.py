@@ -9,7 +9,10 @@ together with what it cost.
     modal run modal_app/r0_bench.py --rung r0-gpu-bigger
     modal run modal_app/r0_bench.py --evalset --limit 8         # eval-set smoke test
     modal run modal_app/r0_bench.py --evalset                   # all 200 clips: p90 and WER
-
+    modal run modal_app/r0_bench.py --rung r0-gpu,r1-gpu        # two rungs, ONE container: probe clips
+    modal run modal_app/r0_bench.py --rung r0-gpu,r1-gpu --evalset --tag pr002
+                                                                # the PR-002 run: same container, same GPU
+    
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
            saves the run's JSON and prints the report (scoring needs no GPU)
@@ -18,7 +21,13 @@ What happens where:
   T4       loads the models from the image and runs the turns
 
 The full eval-set run is evidence, so its JSON goes to runs/<rung>/, which is
-committed. A --limit smoke test goes to results/, which is not.
+committed. A --limit smoke test goes to results/, which is not. Evidence is never
+overwritten: if the file already exists, the run stops before any GPU time is
+spent, and --tag gives the new run its own name.
+
+Several rungs (comma-separated) run one after another inside one container
+call, so they share the GPU, the image and the cold start, and their numbers
+can be compared turn by turn (v1 rule 7; PR-002's V1).
 
 Cost guardrails (v1 §5.1): an explicit timeout; no container kept warm
 (min_containers stays 0); scale down 60 s after the last call; weights fetched
@@ -90,34 +99,48 @@ def _gpu_name() -> str:
                           capture_output=True, text=True).stdout.strip()
 
 
-@app.function(gpu="T4", timeout=20 * 60, scaledown_window=60)
-def bench(rung_id: str) -> dict:
-    """Load one rung and run the 30 probe clips through it, on the T4.
+def _free_gpu() -> None:
+    """Drop the last rung's models before loading the next, so the second rung
+    does not run in whatever memory the first left over."""
+    import gc
 
-    Takes:   a registered rung id.
-    Returns: {"gpu": name and driver, "table": the stage table from
-             rungs.report(), "seconds": time spent inside this function}.
+    import torch
+    gc.collect()
+    torch.cuda.empty_cache()
+
+
+@app.function(gpu="T4", timeout=20 * 60, scaledown_window=60)
+def bench(rung_ids: list[str]) -> dict:
+    """Load each rung in turn and run the 30 probe clips through it, on the T4.
+
+    Takes:   registered rung ids, run in the order given, one container.
+    Returns: {"gpu": name and driver, "tables": {rung id: the stage table from
+             rungs.report()}, "seconds": time spent inside this function}.
     """
     import os
     os.chdir("/root")                       # probes.PROBE_ROOT is relative to here
     from s2slab.probes import TARGET_SR
     from s2slab.rungs import probe_clips, report
     t0 = time.perf_counter()
-    table = report(rung_id, probe_clips(), TARGET_SR)
-    return {"gpu": _gpu_name(), "table": table, "seconds": time.perf_counter() - t0}
+    tables = {}
+    for rung_id in rung_ids:
+        tables[rung_id] = report(rung_id, probe_clips(), TARGET_SR)
+        _free_gpu()
+    return {"gpu": _gpu_name(), "tables": tables, "seconds": time.perf_counter() - t0}
 
 
 @app.function(gpu="T4", timeout=20 * 60, scaledown_window=60)
-def evaluate(rung_id: str, commit: str, limit: int = 0) -> dict:
-    """Run one rung over the frozen eval set, on the T4.
+def evaluate(rung_ids: list[str], commit: str, limit: int = 0) -> dict:
+    """Run each rung in turn over the frozen eval set, on the T4.
 
-    Takes:   a registered rung id; the laptop's commit (the container has no
-             git, so the commit that sent the code has to travel with it); an
-             optional limit for a smoke test (0 = all 200).
+    Takes:   registered rung ids, run in the order given, one container; the
+             laptop's commit (the container has no git, so the commit that sent
+             the code has to travel with it); an optional limit for a smoke
+             test (0 = all 200).
     Calls:   evalset.verify() first -- a WAV that differs from the manifest
              means this is not the frozen set, and the run stops before any
-             GPU time is spent on it; then evalrun.run().
-    Returns: {"results": the evalrun results dict, "seconds": time inside}.
+             GPU time is spent on it; then evalrun.run() per rung.
+    Returns: {"results": {rung id: the evalrun results dict}, "seconds": time inside}.
     """
     import os
     os.chdir("/root")                       # evalset.EVAL_ROOT is relative to here
@@ -128,45 +151,68 @@ def evaluate(rung_id: str, commit: str, limit: int = 0) -> dict:
         raise RuntimeError("the eval set on Modal is not the frozen set:\n  "
                            + "\n  ".join(problems[:10]))
     t0 = time.perf_counter()
-    results = run(rung_id, limit=limit or None, machine=f"Modal {_gpu_name()}")
-    results["commit"] = commit
+    machine = f"Modal {_gpu_name()}"
+    if len(rung_ids) > 1:
+        machine += f", one container: {' then '.join(rung_ids)}"
+    results = {}
+    for rung_id in rung_ids:
+        results[rung_id] = run(rung_id, limit=limit or None, machine=machine)
+        results[rung_id]["commit"] = commit
+        _free_gpu()
     return {"results": results, "seconds": time.perf_counter() - t0}
 
 
-def results_path(rung_id: str, limit: int = 0) -> pathlib.Path:
+def results_path(rung_id: str, limit: int = 0, tag: str = "") -> pathlib.Path:
     """Where a Modal eval-set run is saved on the laptop.
 
     The full run is evidence for the one table, so it goes to runs/, which is
     committed. A --limit smoke test proves nothing, so it goes to the ignored
-    results/ folder and can never be mistaken for the real run.
+    results/ folder and can never be mistaken for the real run. A tag names a
+    run after what it is for: evalset-modal-t4-pr002.json.
     """
+    suffix = f"-{tag}" if tag else ""
     if limit:
-        return REPO / "results" / rung_id / f"evalset-modal-t4-limit{limit}.json"
-    return REPO / "runs" / rung_id / "evalset-modal-t4.json"
+        return REPO / "results" / rung_id / f"evalset-modal-t4{suffix}-limit{limit}.json"
+    return REPO / "runs" / rung_id / f"evalset-modal-t4{suffix}.json"
+
+
+def refuse_to_overwrite(paths: list[pathlib.Path]) -> None:
+    """Evidence is written once. Checked BEFORE the remote call, so a name clash
+    costs nothing; results/ is scratch and may be overwritten freely."""
+    taken = [p for p in paths if p.exists() and (REPO / "runs") in p.parents]
+    if taken:
+        raise SystemExit("already recorded, and evidence is never overwritten:\n  "
+                         + "\n  ".join(str(p.relative_to(REPO)) for p in taken)
+                         + "\nGive this run its own name with --tag.")
 
 
 @app.local_entrypoint()
-def main(rung: str = "r0-gpu", evalset: bool = False, limit: int = 0):
+def main(rung: str = "r0-gpu", evalset: bool = False, limit: int = 0, tag: str = ""):
+    rung_ids = [r.strip() for r in rung.split(",") if r.strip()]
     commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
                             capture_output=True, text=True).stdout.strip()
+    if evalset:
+        refuse_to_overwrite([results_path(r, limit, tag) for r in rung_ids])
     t0 = time.time()
     if evalset:
-        out = evaluate.remote(rung, commit, limit)
+        out = evaluate.remote(rung_ids, commit, limit)
     else:
-        out = bench.remote(rung)
+        out = bench.remote(rung_ids)
     wall = time.time() - t0
 
     if evalset:
         # Scoring happens here, from the JSON alone -- the same code that scores
-        # the laptop run, so both rows of the table are scored identically.
+        # the laptop run, so every row of the table is scored identically.
         sys.path.insert(0, str(REPO / "src"))
         from s2slab.evalrun import report, save
-        path = save(out["results"], results_path(rung, limit))
-        print(report(out["results"], root=REPO / "evalset"))
-        print(f"\nsaved -> {path.relative_to(REPO)}")
+        for rung_id, results in out["results"].items():
+            path = save(results, results_path(rung_id, limit, tag))
+            print(report(results, root=REPO / "evalset"))
+            print(f"\nsaved -> {path.relative_to(REPO)}\n")
     else:
-        print(out["table"])
-        print(f"\ncommit {commit} · GPU {out['gpu']}")
+        for table in out["tables"].values():
+            print(table, "\n")
+        print(f"commit {commit} · GPU {out['gpu']}")
     print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end "
           f"(queue, cold start and run): about ${wall / 3600 * T4_DOLLARS_PER_HOUR:.3f} "
           f"at the T4 rate. Modal's dashboard has the exact bill.")
