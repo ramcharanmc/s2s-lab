@@ -147,3 +147,133 @@ can.
 ### Results
 
 *Not yet run.*
+
+
+---
+
+## PR-002 — Does streaming the reply cut the wait for first audio?
+
+**Registered:** 2026-09-18, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+R0 (naive cascade) on the frozen 200-clip eval set, Modal T4, commit `0af142a`:
+processing p50 655 ms, p90 1130 ms. LLM + TTS time correlates 0.97 with the
+number of words in the reply, so the tail is set by reply length. R0's first
+audio is its total: nothing exists until everything does.
+
+R1 (commits `3780e89` → `b83bb84`) keeps R0's three models, prompt and greedy
+decoding. It streams the LLM's tokens, cuts them into clauses at punctuation
+(`chunking.py`: `. ! ?` always, `, ; :` after `MIN_WORDS = 4`, abbreviations
+excepted), and synthesizes and emits each clause while the next is written.
+
+Development data, **the 30 probe clips on a laptop CPU only**:
+
+- first audio p50 3467 ms against R0's 5292 (66%); r(first audio, reply words) = 0.07;
+- 11 of 30 replies are a single short sentence with no boundary, and gain nothing;
+- the first clause is long, 10.5 words at the median;
+- 7 of 30 turns **stall**: the next piece did not exist when the one before
+  finished playing (up to 1.8 s of dead air, in no saved WAV);
+- the author listened to c12 and n04: an audible pause and pitch reset at each
+  seam, noticeable on a call, not annoying, possibly helping intelligibility.
+  R1's reply audio runs 0.3–0.6 s longer per seam (Kokoro pads every piece).
+
+The thresholds below were set after this probe-clip run and **before any R1
+run on the eval set**. What was already known about the eval set: R0's reply
+*lengths* (word counts, for the 0.93 / 0.97 correlations). R0's eval-set reply
+texts were not read and no split statistics were computed on them.
+
+### Question
+
+On the same clips, models and GPU, does R1 deliver its first audio reliably
+sooner than R0 delivers its reply, without saying different words, slowing the
+whole turn, or stalling during playback?
+
+### Validity requirements
+
+| | Requirement |
+|---|---|
+| **V1 · Same run** | `r0-gpu` then `r1-gpu` over all 200 clips inside **one Modal container call**, same T4, same image. R0 is re-run; the saved `0af142a` run is not the comparator. |
+| **V2 · Frozen code** | `chunking.py`, `r1.py`, `r0.py` and `rungs.py` are unchanged between this commit and the run. Only `modal_app/` and the analysis script may change. The run's commit is recorded below. |
+| **V3 · Same words** | R1's reply has the same words as R0's (`split()` equal) on **at least 190 of 200** turns. Fewer means streaming changed *what* is said, the timing comparison is confounded, and PR-002 is reported as **not a valid test**; the matching subset may then be analysed, labelled exploratory. |
+| **V4 · Whole set, one run** | All 200 clips, the first complete run. No clip is dropped and no run is repeated to improve a number; a crashed run is reported as such and repeated once, in full. |
+
+### Primary outcome
+
+`first_audio_ms`: from the rung receiving the finished turn to its first
+non-empty piece of reply audio existing. For R0 this equals `total_ms`.
+Compared turn by turn on the same 200 clips.
+
+### Success criterion — all five must hold
+
+| | Criterion |
+|---|---|
+| **S1 · Median** | R1 first-audio p50 ≤ **75%** of R0's p50. |
+| **S2 · Tail** | R1 first-audio p90 ≤ **70%** of R0's p90. |
+| **S3 · Reply length no longer sets the wait** | Pearson r between R1's first audio and its reply word count is **< 0.3**, and its 95% interval lies entirely below R0's r for total time. |
+| **S4 · Speed guardrail** | R1 total p50 ≤ **1.15×** R0's total p50. |
+| **S5 · Stall guardrail** | At most **20 of 200** R1 turns stall at all (`stall_ms > 0`), and at most **10 of 200** stall for more than 200 ms. |
+
+**Confidence.** For S1, S2 and S4 the statistic is a ratio of percentiles. A
+paired bootstrap resamples the 200 clip ids with replacement (10,000
+resamples, seed 0, percentile interval), recomputing both rungs' percentiles
+on each resample. The criterion holds only if the **upper end of the 95%
+interval** is at or below the threshold. S3 uses the same resampling. S5 is a
+count and is taken as observed.
+
+**No multiplicity correction:** success needs all five at once, so testing each
+at 95% cannot inflate the chance of a false pass.
+
+**Why 75% and 70%.** R1 adds a thread, a chunker, audible seams and the risk of
+stalls. A quarter off the median wait, and more off the tail where R0 hurts
+most, is the least that would justify them. ASR and one synthesis are fixed
+costs streaming cannot shrink, so 50% is not available with these models.
+
+**Why the guardrails carry weight.** First audio can be made arbitrarily early
+by emitting tiny first pieces. S4 and S5 are what make an early start count
+only if the rest of the reply keeps up.
+
+**If V3 holds and any of S1–S5 fails,** PR-002 is reported as *not supported*,
+with the failing criterion, and a breakdown by number of pieces per reply.
+
+### Predictions, recorded but not criteria
+
+- S1 ratio about 0.70: **the criterion most likely to fail**, since its interval must clear 0.75.
+- S2 ratio about 0.60. S3 r about 0.1. S4 about 1.05: one GPU cannot overlap LLM and TTS the way 16 CPU threads did, where R1's total *fell* 10%.
+- Stalls on fewer than 5% of turns: the T4 synthesizes about 10× faster than the laptop.
+- About a third of replies will be one piece and gain nothing.
+
+### Reported alongside, descriptively
+
+First sound (first audio + leading silence); per-cohort medians; pieces per
+reply; the stall distribution; reply audio length R1 − R0 per seam; WER of both
+rungs (expected equal; any gap is run-to-run fp16 noise); the run's cost.
+
+### Analysis plan
+
+1. Commit this entry. Code under V2 is frozen from here.
+2. Add the two-rung Modal entry point and the comparison script; test both on fake runs.
+3. Run once on Modal (V1, V4). Save both JSONs to `runs/`.
+4. Run the comparison script; record its output below, verbatim.
+5. Only after step 4: any further look at the eval-set replies, labelled exploratory.
+
+### What this cannot show
+
+- **Not what a caller experiences end to end.** Processing time only: no
+  endpointer wait, no network, no audio device. Stalls are modelled (pieces
+  played back to back from the first), not heard.
+- **Not seam quality.** No metric here scores the pause and pitch reset at
+  each join. One listener, two dev clips, is an anecdote.
+- **Not reply quality.** Both rungs say the same words, good or bad.
+- **Order.** R0 runs before R1 in the container; a warm-up or thermal drift
+  between the two halves would land in the comparison.
+- **One GPU type, small models, one run.** Run-to-run spread on Modal is unmeasured.
+
+### Deviations
+
+*None.*
+
+### Results
+
+*Not yet run.*
