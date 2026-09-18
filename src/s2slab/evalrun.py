@@ -70,7 +70,9 @@ def run(rung, root=EVAL_ROOT, cohorts=None, limit: int | None = None, machine: s
                           "reply_s": round(turn.reply_s, 3),
                           "leading_silence_ms": _finite(turn.leading_silence_ms),
                           "first_audio_ms": _finite(round(turn.first_audio_ms, 1)),
-                          "first_sound_ms": _finite(round(turn.first_sound_ms, 1))}
+                          "first_sound_ms": _finite(round(turn.first_sound_ms, 1)),
+                          "stall_ms": round(turn.stall_ms, 1),
+                          "chunks": [[round(ms, 1), n] for ms, n in turn.chunks]}
     return {"rung": rung.rung_id, "description": rung.description,
             "commit": _git_commit(), "machine": machine,
             "ran": datetime.date.today().isoformat(), "load_ms": round(load_ms, 1),
@@ -157,6 +159,10 @@ def report(results: dict, root=EVAL_ROOT) -> str:
                   latency_table(results, "first_audio_ms"),
                   "### First sound: first audio plus the silence before the first word",
                   latency_table(results, "first_sound_ms")]
+    stalls = [t["stall_ms"] for t in results["turns"].values() if "stall_ms" in t]
+    if stalls:
+        tail += (f"\nplayback stall: {summarize(stalls)}  "
+                 f"({sum(s > 0 for s in stalls)} of {len(stalls)} turns ran dry)")
     parts += ["### Where the time went", stage_table(results),
               wer_tables(results, root), tail]
     return "\n\n".join(parts)

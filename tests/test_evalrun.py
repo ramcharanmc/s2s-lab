@@ -143,6 +143,15 @@ def test_a_run_records_first_audio_and_first_sound(tmp_path):
     assert turn["first_audio_ms"] == pytest.approx(turn["total_ms"], abs=0.1)
     assert turn["first_sound_ms"] is None
 
+def test_a_run_records_each_piece_and_the_playback_stall(tmp_path):
+    """The pieces are saved, not just the summary, so a stall can be re-derived
+    from the file -- and a different playback model tried -- without a GPU."""
+    results = run(EchoRung(["a", "b", "c"]), tiny_evalset(tmp_path))
+    turn = results["turns"]["clean-00"]
+    assert turn["stall_ms"] == 0.0                     # batch: one piece
+    assert turn["chunks"] == [[turn["first_audio_ms"], 12_000]]
+    assert "playback stall:" in report(results, tiny_evalset(tmp_path))
+
 
 def test_report_shows_first_audio_tables_when_the_run_has_them(tmp_path):
     root = tiny_evalset(tmp_path)
@@ -157,10 +166,11 @@ def test_a_run_saved_before_first_audio_existed_still_reports(tmp_path):
     root = tiny_evalset(tmp_path)
     old = run(EchoRung(["a", "b", "c"]), root)
     for turn in old["turns"].values():
-        del turn["first_audio_ms"], turn["first_sound_ms"]
+        del turn["first_audio_ms"], turn["first_sound_ms"], turn["stall_ms"], turn["chunks"]
     text = report(old, root)
     assert "### Processing time" in text and "Word error rate" in text
     assert "First audio" not in text and "| first audio |" not in text
+    assert "playback stall" not in text
 
 
 def test_report_states_the_machine_and_the_eval_set_it_used(tmp_path):

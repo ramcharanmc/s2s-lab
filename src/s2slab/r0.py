@@ -290,4 +290,5 @@ if __name__ == "__main__":
           f"{turn.leading_silence_ms:.0f} ms -> {out}")
     print(f"first audio {turn.first_audio_ms:.0f} ms, first sound {turn.first_sound_ms:.0f} ms; "
           f"{len(turn.chunks)} piece(s): "
-          + ", ".join(f"{n / turn.sr:.1f} s at {ms:.0f} ms" for ms, n in turn.chunks))
+          + ", ".join(f"{n / turn.sr:.1f} s at {ms:.0f} ms" for ms, n in turn.chunks)
+          + f"; playback stall {turn.stall_ms:.0f} ms")

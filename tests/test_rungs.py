@@ -230,6 +230,36 @@ def test_first_sound_waits_for_the_chunk_that_holds_the_first_word():
     assert turn.first_sound_ms == second_ms
     assert turn.first_sound_ms - turn.first_audio_ms >= 150
 
+def test_a_batch_reply_never_stalls():
+    assert SleepyRung().respond(ONE_SECOND, SR).stall_ms == 0.0
+
+
+def test_a_piece_that_arrives_while_the_last_is_still_playing_does_not_stall():
+    """Half a second of audio, and the next piece 80 ms later: playback never runs dry."""
+    assert StreamyRung(rest_s=0.08).respond(ONE_SECOND, SR).stall_ms == 0.0
+
+
+def test_a_piece_that_arrives_after_the_last_finished_playing_stalls():
+    """c12 on the laptop: 1.6 s of audio at 2165 ms, the next piece at 4668 ms --
+    the caller hears 903 ms of silence that is in no WAV file."""
+    class Slow(Rung):
+        rung_id = "slow-second-piece"
+
+        def _respond(self, audio, sr, sink):
+            self.emit(_tone(0.1))                   # plays for 100 ms
+            time.sleep(0.25)                        # the next piece is 250 ms away
+            self.emit(_tone(0.1))
+            return Reply(None, OUT_SR, "heard", "said")
+
+    turn = Slow().respond(ONE_SECOND, SR)
+    (first_ms, _), (second_ms, _) = turn.chunks
+    assert turn.stall_ms == pytest.approx(second_ms - first_ms - 100, abs=1)
+    assert turn.stall_ms >= 150
+
+
+def test_report_prints_the_playback_stall():
+    assert "playback stall:" in report("stub", {"c1": ONE_SECOND}, SR)
+
 
 def test_a_reply_that_never_speaks_has_no_first_sound():
     assert math.isnan(StubRung().respond(ONE_SECOND, SR).first_sound_ms)

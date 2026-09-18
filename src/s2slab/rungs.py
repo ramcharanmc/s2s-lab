@@ -144,6 +144,25 @@ class Turn:
             start += n
         return math.nan
 
+
+    @property
+    def stall_ms(self) -> float:
+        """How long playback would run dry waiting for the next piece, in ms.
+
+        Play the pieces back to back from the moment the first one exists. If
+        the next piece does not exist when the one before finishes playing, the
+        caller hears extra silence until it does; this adds those waits up. A
+        batch reply is one piece, so 0.0. An early first sound bought with
+        stalls later is not a win, so every streaming result reports both.
+        """
+        stall, cursor = 0.0, None
+        for made_ms, n in self.chunks:
+            if cursor is not None and made_ms > cursor:
+                stall += made_ms - cursor
+                cursor = made_ms
+            cursor = (made_ms if cursor is None else cursor) + n / self.sr * 1000
+        return stall
+
 class Rung:
     """Base class for every rung. Subclasses set rung_id and implement _respond().
 
@@ -317,7 +336,10 @@ def report(rung_id: str, clips: dict[str, np.ndarray], sr: int) -> str:
         "",
         f"load: {load_ms:.0f} ms, once, before the first turn (in no row above)",
         f"reply leading silence: {summarize(t.leading_silence_ms for t in turns.values())}",
+        f"playback stall: {summarize(t.stall_ms for t in turns.values())}  "
+        f"({sum(t.stall_ms > 0 for t in turns.values())} of {len(turns)} turns ran dry)",
     ])
+
 
 
 if __name__ == "__main__":
