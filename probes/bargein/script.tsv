@@ -1,0 +1,21 @@
+id	cell	kind	agent	after	text
+sl01	stop-long	speech	A1	this Thursday	oh no, Thursday does not work, nobody will be home until the weekend
+sl02	stop-long	speech	A2	wait thirty seconds	sorry, can you slow down, I need to find the cable first
+sl03	stop-long	speech	A3	half past two	no sorry, that is the wrong day, I asked for Thursday
+sl04	stop-long	speech	A4	arrives at noon	actually that first one sounds good, can you book that one
+sl05	stop-long	speech	A5	postcode on the account	yes it is, um, let me think, I moved recently so it might be the old one
+ss01	stop-short	speech	A1	with the courier	hang on
+ss02	stop-short	speech	A2	plug it back in	wait, wait
+ss03	stop-short	speech	A3	the fourteenth	no, wait
+ss04	stop-short	speech	A4	has one change	sorry?
+ss05	stop-short	speech	A5	the phone number	one second
+cs01	continue-short	speech	A1	placed on Monday	mm-hm
+cs02	continue-short	noise	A2	turn green	[cough]
+cs03	continue-short	speech	A3	half past two	right
+cs04	continue-short	noise	A4	seven in the morning	[short laugh]
+cs05	continue-short	speech	A5	a few details	okay
+cl01	continue-long	speech	A1	between nine and five	okay, yeah, that works for me
+cl02	continue-long	speech	A2	power cable	okay, yep, doing that now
+cl03	continue-long	speech	A3	ten minutes early	okay yeah, that is fine, got it
+cl04	continue-long	speech	A4	three options for your trip	oh great, okay, go ahead
+cl05	continue-long	speech	A5	changes to the account	sure, yeah, no problem at all

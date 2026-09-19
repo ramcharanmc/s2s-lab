@@ -9,7 +9,7 @@ acoustics, real pitch and a real VAD do at those pauses.
 |---|---:|---|---|
 | **Endpointing** | 30 | Turn-taking, T0–T3 and PR-001 | **Now** |
 | Prosody | 30 | R3 speech-LLM probe (sincere vs distressed delivery) | Before R3 |
-| Barge-in | 20 | R1 barge-in (genuine interruption vs backchannel) | Before R1 |
+| **Barge-in** | 20 | R1 part 2: stop for an interruption, keep going for a backchannel | **Now** |
 
 ## Rules
 
@@ -142,3 +142,114 @@ probes/
 - Microphone: *(fill in)*
 - Room: *(fill in)*
 - Date recorded: *(fill in)*
+
+---
+
+## Barge-in probe set
+
+While the agent is speaking, the caller makes a sound. Either the agent should
+**stop** (a genuine interruption) or **keep going** (a backchannel such as
+"mm-hm"). `bargein/script.tsv` has 20 items, half of each, crossed with how
+long the caller speaks:
+
+| Cell | Items | Example | A duration threshold… |
+|---|---:|---|---|
+| `stop-long` | 5 | "no sorry, that is the wrong day, I asked for Thursday" | gets it right |
+| `stop-short` | 5 | "no, wait" | misses it, if set long |
+| `continue-short` | 5 | "mm-hm", a cough | false-stops, if set short |
+| `continue-long` | 5 | "okay yeah, that is fine, got it" | false-stops at any setting |
+
+The first policy anyone writes is "stop if the caller speaks for more than N
+ms". This set says in advance where that policy must fail: whatever N is, it
+gets `stop-short` or `continue-short` wrong, and `continue-long` always. A
+policy that reads the words, or the pitch, has something to win. Two of the
+`continue-short` items are not speech at all (`kind` = `noise`: a cough, a
+short laugh), the classic cause of a false barge-in; they are reported
+separately from the spoken backchannels.
+
+**What it makes measurable:** false barge-in rate, missed-interruption rate,
+stop latency (caller starts → agent stops), and which of the agent's words had
+been played when it stopped, which is what state truncation needs (v2 §4, R1).
+
+### How it is built
+
+- **The agent's side is pre-rendered.** `bargein/agent.tsv` holds five replies
+  of 10–12 s. They are synthesized once with Kokoro `af_heart`, the voice R0
+  and R1 use, into `bargein/agent/A1.wav` … `A5.wav`. Each reply is used by four
+  items, one per cell; the `after` column is the phrase the caller comes in
+  after, and it occurs exactly once in its reply.
+- **Only the caller's side is recorded**, over headphones, while the agent WAV
+  plays. The recording starts when the agent's reply starts, so the recording's
+  timeline *is* the playback timeline, and "when did the caller come in" is a
+  label time.
+- **Out of scope, stated loudly: echo.** The two channels here are clean and
+  separate. On a real phone the agent's voice leaks into the caller's
+  microphone, and barge-in detection needs echo cancellation in front of it.
+  This set tests the decision, not the echo canceller (v1 §6 scopes the client
+  transport out).
+- **One speaker performing interruptions**, as in the endpointing set. It is
+  not a sample of how callers interrupt.
+
+### How to record
+
+1. **Render the agent lines** (tool added in the next commit):
+   `PYTHONPATH=src python -m s2slab.bargein render`
+2. **Audacity:** project rate **16000 Hz**, mono recording. Turn **overdub on**
+   (Transport → Transport Options → "Hear other tracks during recording") and
+   software playthrough **off**. Wear **headphones**: the agent must not reach
+   the microphone.
+3. **Calibrate, once per session.** Import `agent/A3.wav`, put the cursor at
+   the start (Home), hold one headphone cup against the microphone, and record
+   while the line plays. Export the recorded track as
+   `bargein/audio/calibration.wav`, then
+   `PYTHONPATH=src python -m s2slab.bargein calibrate` reports how many
+   milliseconds the recording lags the playback. Write it in the notes below.
+4. **Each item:**
+   - new project; import the item's agent WAV (`cs03` uses `agent/A3.wav`);
+   - cursor at the start (Home), press Record, listen;
+   - right after the `after` phrase, say the item's `text`, **talking over the
+     agent**: it will not stop for you, which feels odd and is correct;
+   - for `[cough]` and `[short laugh]`, do that, once;
+   - then stay silent until the agent's reply has finished, plus two seconds.
+5. **Export the recorded track only:** mute the agent track, then export the
+   whole project as WAV (signed 16-bit PCM) to `bargein/audio/<id>.wav`. The
+   export must start at time zero. **Never edit the audio**: no trimming, no
+   noise removal, no re-timing.
+6. **Pilot first:** `sl03`, `ss03`, `cs03`, `cl03` and the calibration. They are
+   reviewed before the other 16 are recorded; the endpointing pilot changed
+   that set's protocol, and this one may too.
+
+### Labelling
+
+One region per item: from the start of your first sound to the end of your
+last. `python -m s2slab.bargein propose` drafts it; correct it in Audacity as
+for the endpointing set, keeping breaths and clicks outside the region. The
+region's start is the interruption onset; its length decides whether a "short"
+item really was short, and the analysis uses the measured length, not the
+cell's name.
+
+### Freezing
+
+`python -m s2slab.bargein freeze` writes `bargein/manifest.json`: checksums of
+both TSV files, the five agent WAVs, the 20 recordings and the 20 label files.
+The agent WAVs are hashed because another machine's Kokoro may differ in the
+last bit, and the labels are only meaningful against the audio that was playing.
+
+### Layout
+
+```
+probes/bargein/
+├── agent.tsv          what the agent says (committed)
+├── script.tsv         what the caller does, and when (committed)
+├── agent/             A1.wav … A5.wav, rendered once (NOT committed)
+├── audio/             your recordings, and calibration.wav (NOT committed)
+├── labels/            one region per item (committed)
+└── manifest.json      SHA-256 of all of the above, written when the set freezes
+```
+
+### Recording notes
+
+- Microphone and headphones: *(fill in)*
+- Room: *(fill in)*
+- Date recorded: *(fill in)*
+- Overdub lag from `calibrate`: *(fill in)* ms
