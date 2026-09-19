@@ -16,8 +16,7 @@ Rules, from the v1 Research plan (§8):
 |---|---|---|---|
 | PR-000 | T0 vs T1, T1 vs T2, T0 700 vs T2 on the seed-1000 confirmation run | **Not verifiably** — see entry | Reported, Notion page 18 §6 |
 | PR-001 | Does a phrase-level completeness check reduce disfluent interruptions beyond T1? | The commit that adds this entry | Open |
-| PR-002 | Does streaming the reply (R1) cut the wait for first audio against R0, without changing the words, slowing the turn or stalling playback? | The commit that adds this entry | Open |
-
+| PR-002 | Does streaming the reply (R1) cut the wait for first audio against R0, without changing the words, slowing the turn or stalling playback? | `194e2bb` | **Reported: not supported** (S1, S2, S3 failed; S4, S5 and validity held) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -273,8 +272,77 @@ rungs (expected equal; any gap is run-to-run fp16 noise); the run's cost.
 
 ### Deviations
 
-*None.*
+- **2026-09-18, registry row.** The PR-002 row in the Registry table was left
+  out of the registering commit `194e2bb` and added by `23ecc0f`. The entry,
+  including every threshold, is unchanged since `194e2bb`.
+- **2026-09-18, smoke test.** Between registration and the run, both rungs ran
+  once on the 30 probe clips on a Modal T4 (commit `b107927`), to check R1 on a
+  GPU. Development data; no eval-set clip was run before the registered run.
 
 ### Results
 
-*Not yet run.*
+**Run:** 2026-09-18, commit `b107927`, Modal T4 (driver 580.95.05), one container
+call: `r0-gpu` then `r1-gpu`, all 200 clips each, first and only run. 324 s
+inside the function, about \$0.055. Files: `runs/r0-gpu/evalset-modal-t4-pr002.json`,
+`runs/r1-gpu/evalset-modal-t4-pr002.json`. V1, V2 (zero changed lines in the
+four frozen files since `194e2bb`), V3 and V4 held.
+
+**Verdict: NOT SUPPORTED.** Output of `python -m s2slab.compare`, verbatim:
+
+```text
+PR-002: r1-gpu against r0-gpu
+  r0-gpu: commit b107927 · Modal Tesla T4, 580.95.05, one container: r0-gpu then r1-gpu · run 2026-09-18
+  r1-gpu: commit b107927 · Modal Tesla T4, 580.95.05, one container: r0-gpu then r1-gpu · run 2026-09-18
+  paired bootstrap: 10000 resamples of 200 clips, seed 0
+
+V3 same words        PASS  same words on 200 of 200 turns; needs >= 190
+S1 median            FAIL  first-audio p50 ratio 0.744 [95% CI 0.697, 0.812]; needs upper end <= 0.75
+S2 tail              FAIL  first-audio p90 ratio 0.655 [95% CI 0.591, 0.743]; needs upper end <= 0.7
+S3 reply length      FAIL  r(first audio, reply words) 0.455 [95% CI 0.308, 0.593]; needs r < 0.3 and upper end below the batch rung's r(total, reply words) = 0.975
+S4 speed guardrail   PASS  total p50 ratio 1.030 [95% CI 1.007, 1.084]; needs upper end <= 1.15
+S5 stall guardrail   PASS  0 turns stall (max 20), 0 for more than 200 ms (max 10)
+
+NOT SUPPORTED: failed S1 median, S2 tail, S3 reply length
+
+Descriptive, not criteria:
+  ms, p50 / p90                  r1-gpu           r0-gpu
+  first audio               491 /   732      660 /  1118
+  total                     680 /  1181      660 /  1118
+  first sound p50                   806              973
+  first-audio p50 by cohort: clean 541 vs 647, accented 434 vs 669, disfluent 486 vs 689, slow 500 vs 616
+  pieces per reply (turns, median first-audio ratio): 1: 95 turns, 0.98, 2: 75 turns, 0.65, 3: 22 turns, 0.46, 4+: 8 turns, 0.31
+  stalls: 0 turns
+  extra reply audio per seam: 0.39 s (median, same-words turns)
+  identical transcripts: 200 of 200
+  WER normalized, r0-gpu: 11.9%
+  WER normalized, r1-gpu: 11.9%
+```
+
+**The registered breakdown, by pieces per reply.** 95 of 200 replies were a
+single piece, and for those R1 is R0 (ratio 0.98). Replies that split reached
+0.65, 0.46 and 0.31. R1 is faster (first audio 491 vs 660 ms; first sound 806
+vs 973 ms) but not by the margin, or with the reliability, registered here.
+
+**Predictions, scored.** S1 about 0.70: observed 0.744, and it was named the
+criterion most likely to fail. S2 about 0.60: observed 0.655. **S3 r about 0.1:
+observed 0.455, wrong.** S4 about 1.05: observed 1.030. Stalls under 5%: none.
+**"About a third of replies will be one piece": 47.5%, wrong, and the root of
+the failure.**
+
+**What I got wrong.**
+1. *The development data was not representative.* Replies to the probe clips (a
+   caller's dictated requests) split 63% of the time; replies to eval-set
+   utterances (audiobook sentences, conversation fragments) split 52%. S1–S3
+   were set from the wrong distribution.
+2. *Punctuation-only splitting* left every single-sentence reply unsplit. A
+   forced split inside long sentences was considered and rejected before
+   registration, to protect prosody.
+3. *r = 0.07 on 30 clips was over-read.* Its own 95% interval is about ±0.36.
+
+**Exploratory, after the registered analysis** (not evidence for or against
+PR-002): among the 105 replies that split, first audio still correlates 0.57
+with reply length, because longer replies open with longer first sentences; so
+S3 would likely have failed even with fewer one-piece replies. One-piece share
+by cohort: clean 52%, accented 30%, disfluent 50%, slow 58%. R0's re-run
+reproduces `0af142a`: p50 660 vs 655 ms, median per-turn difference 10 ms, 200
+of 200 replies and transcripts identical.

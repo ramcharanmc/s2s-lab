@@ -11,6 +11,8 @@ Smoke tests, `--limit` runs and reply WAVs go to `results/`, which is ignored.
 | `turn-taking/sweep.json` | T0–T3 endpointing sweep, 250 per cohort, seed 1000 | `6a0741e` | laptop CPU | page 18 |
 | `r0/evalset-laptop-cpu.json` | R0 over the 200-clip eval set | `eb57bf9` | laptop CPU (WSL, 16 threads) | page 20 §5 |
 | `r0-gpu/evalset-modal-t4.json` | R0 (fp16) over the 200-clip eval set | `0af142a` | Modal Tesla T4 | page 20 §5 |
+| `r0-gpu/evalset-modal-t4-pr002.json` | R0 re-run for PR-002, same container as the row below | `b107927` | Modal Tesla T4 | page 20 §9 |
+| `r1-gpu/evalset-modal-t4-pr002.json` | R1 streaming over the 200-clip eval set, the PR-002 run | `b107927` | Modal Tesla T4 | page 20 §9 |
 
 ## What an eval-set run holds
 
