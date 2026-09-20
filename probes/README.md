@@ -192,18 +192,25 @@ been played when it stopped, which is what state truncation needs (v2 §4, R1).
 
 ### How to record
 
-1. **Render the agent lines** (tool added in the next commit):
+1. **Render the agent lines, once:**
    `PYTHONPATH=src python -m s2slab.bargein render`
 2. **Audacity:** project rate **16000 Hz**, mono recording. Turn **overdub on**
    (Transport → Transport Options → "Hear other tracks during recording") and
-   software playthrough **off**. Wear **headphones**: the agent must not reach
-   the microphone.
+   software playthrough **off**. Listen on **earbuds, at the lowest volume you
+   can still follow** (the pilot used system volume 1): the agent must not
+   reach the microphone. **Test it before each session:** record
+   `agent/A3.wav` playing while you stay silent, export it as
+   `bargein/audio/leaktest.wav`, and run
+   `PYTHONPATH=src python -m s2slab.bargein leak`. It must say "clean".
 3. **Calibrate, once per session.** Import `agent/A3.wav`, put the cursor at
-   the start (Home), hold one headphone cup against the microphone, and record
-   while the line plays. Export the recorded track as
-   `bargein/audio/calibration.wav`, then
+   the start (Home), turn the volume up for this take only, hold an earbud
+   against the microphone, and record while the line plays. Export the recorded
+   track as `bargein/audio/calibration.wav`, then
    `PYTHONPATH=src python -m s2slab.bargein calibrate` reports how many
-   milliseconds the recording lags the playback. Write it in the notes below.
+   milliseconds the recording lags the playback. **Turn the volume back down.**
+   The set uses one lag for all 20 items: if a later session's figure differs
+   from the committed `calibration.json` by more than 10 ms, stop and find out
+   why before recording.
 4. **Each item:**
    - new project; import the item's agent WAV (`cs03` uses `agent/A3.wav`);
    - cursor at the start (Home), press Record, listen;
@@ -215,18 +222,62 @@ been played when it stopped, which is what state truncation needs (v2 §4, R1).
    whole project as WAV (signed 16-bit PCM) to `bargein/audio/<id>.wav`. The
    export must start at time zero. **Never edit the audio**: no trimming, no
    noise removal, no re-timing.
-6. **Pilot first:** `sl03`, `ss03`, `cs03`, `cl03` and the calibration. They are
-   reviewed before the other 16 are recorded; the endpointing pilot changed
-   that set's protocol, and this one may too.
+6. **After each session:** `PYTHONPATH=src python -m s2slab.bargein check`. It
+   flags a take to re-record (agent leak, a peak at full scale), a short item
+   that ran long, and any file in `audio/` that is not an item id. **The ids
+   use the letter l, not the digit 1:** `sl03`, not `s103`.
+
+### Pilot result (2026-09-19) — why the protocol changed
+
+Four items on A3 (`sl03`, `ss03`, `cs03`, `cl03`), recorded twice.
+
+**Round one, over-ear headphones: the agent leaked into the microphone.** With
+the caller silent, the level while the agent spoke was 7 to 19 dB above the
+room, and it lined up with the agent's audio (cross-correlation sharpness 24 to
+76). It was 30 dB under the caller's voice, inaudible on playback. But the VAD
+every policy uses calls anything 10 dB over the noise floor speech, so a
+barge-in policy would have heard the *agent* as the caller: the echo problem
+this set scopes out, arriving through the headphones. It also broke the draft
+labels: leak and voice fused into one 3-second "sound".
+
+**Round two, earbuds at system volume 1: clean.** Level while the agent speaks
++2.5 to +7.3 dB, match with the agent's audio 3 to 6. The +7.3 dB take was two
+breaths, which is why a take counts as leaking only if it is loud **and**
+matches the agent.
+
+| item | lasts | came in after the phrase by | agent words heard |
+|---|---:|---:|---:|
+| `sl03` stop-long | 3.80 s | −157 ms | 11 of 33 |
+| `ss03` stop-short | 0.70 s | +240 ms | 9 of 33 |
+| `cs03` continue-short | 0.26 s | −97 ms | 11 of 33 |
+| `cl03` continue-long | 2.04 s | +308 ms | 17 of 33 |
+
+(From draft labels, before hand correction.) Both interruptions of "half past
+two" begin before the agent has finished the word: real callers anticipate.
+Already on four items, no duration threshold is right: 200 ms stops for
+"right", 800 ms misses "no, wait", and the long acknowledgement fools all four.
+
+What the pilot changed:
+- **Playback is earbuds at the lowest volume that can be followed**, with a
+  silent leak test before each session (step 2).
+- **The overdub lag belongs to the machine, not the headphones:** 202.1 ms with
+  the over-ear pair, 202.4 ms with the earbuds, and 202 to 206 ms recovered
+  from the leak in each round-one take. One calibration per session is enough.
+- Tools: `leak`, the leak and clipping checks in `check` and `freeze`, draft
+  labels gated on the caller's own level, and a warning for misnamed files
+  (two pilot takes were saved as `s103.wav` and `c103.wav` and silently skipped).
+- One take peaked at 0.997 of full scale; `check` now flags that too.
 
 ### Labelling
 
 One region per item: from the start of your first sound to the end of your
-last. `python -m s2slab.bargein propose` drafts it; correct it in Audacity as
-for the endpointing set, keeping breaths and clicks outside the region. The
-region's start is the interruption onset; its length decides whether a "short"
-item really was short, and the analysis uses the measured length, not the
-cell's name.
+last. `python -m s2slab.bargein propose` drafts it, but **the draft's edges are
+approximate**: it only keeps sound within 25 dB of the take's loudest moment,
+which clips the soft start and tail of a word (the pilot's "right" was drafted
+at 0.26 s). Correct every region in Audacity as for the endpointing set,
+keeping breaths and clicks outside it. The region's start is the interruption
+onset; its length decides whether a "short" item really was short, and the
+analysis uses the measured length, not the cell's name.
 
 ### Freezing
 
@@ -249,7 +300,7 @@ probes/bargein/
 
 ### Recording notes
 
-- Microphone and headphones: *(fill in)*
-- Room: *(fill in)*
-- Date recorded: *(fill in)*
-- Overdub lag from `calibrate`: *(fill in)* ms
+- Microphone: *(fill in)* · Playback: **earbuds at system volume 1** (see Pilot result)
+- Room: *(fill in)* · measured room level −59 to −70 dB re full scale
+- Date recorded: pilot 2026-09-19; the rest *(fill in)*
+- Overdub lag from `calibrate`: **202.4 ms** (sharpness 78), 2026-09-19

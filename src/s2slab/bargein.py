@@ -7,6 +7,7 @@ crossed with a short or a long sound from the caller.
 
     python -m s2slab.bargein render        the five agent replies -> agent/A1.wav ...
     python -m s2slab.bargein calibrate     how far the recording lags the playback
+    python -m s2slab.bargein leak          how much of the agent reaches your microphone
     python -m s2slab.bargein propose       a first-draft label per recording
     python -m s2slab.bargein check         every item, and what a duration threshold does
     python -m s2slab.bargein freeze        checksums of everything -> manifest.json
@@ -39,8 +40,9 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from .probes import (MIN_VOICED_S, TARGET_SR, Chunk, _pitch_track, _voiced_s, detect_chunks,
+from .probes import (MIN_PAUSE_S, MIN_VOICED_S, TARGET_SR, Chunk, _pitch_track, _voiced_s,
                      load_wav, read_labels, sha256_file, write_labels)
+from .vad import FRAME_MS, frame_rms
 
 BARGEIN_ROOT = pathlib.Path("probes/bargein")
 MANIFEST = "manifest.json"
@@ -53,6 +55,13 @@ EARLY_S = 0.5                          # a sound this long before the phrase end
 MAX_LAG_S = 1.0                        # calibrate looks for the lag within +/- this
 MIN_SHARPNESS = 8.0                    # correlation peak over its background; below this, redo it
 THRESHOLDS_MS = (200, 400, 800, 1500)  # the naive policy previewed by check()
+GATE_DB = 25.0                         # a draft label only looks at sound this close to the loudest frame
+MIN_SOUND_S = 0.08                     # a louder blip shorter than this is a click
+LEAK_MAX_DB = 6.0                      # level above the room while the agent speaks; the VAD calls +10 dB speech
+LEAK_MATCH_MIN = 10.0                  # ...and only if that sound lines up with the agent's audio this sharply
+CLIP_PEAK = 0.98                       # a sample this close to full scale: the take is too hot
+QUIET_MARGIN_S = 0.5                   # kept clear of the caller's sound when measuring the leak
+NOT_ITEMS = ("calibration", "leaktest")
 
 
 
@@ -230,6 +239,9 @@ def measure_lag(recorded: np.ndarray, played: np.ndarray, sr: int = TARGET_SR) -
 def calibrate(root: pathlib.Path = BARGEIN_ROOT, agent_id: str = "A3") -> str:
     """Measure the overdub lag from audio/calibration.wav and write calibration.json."""
     root = pathlib.Path(root)
+    if not (root / "audio" / "calibration.wav").exists():
+        raise FileNotFoundError("no audio/calibration.wav yet: record the calibration take first "
+                                "(probes/README.md, 'How to record')")
     lag_ms, sharpness = measure_lag(load_wav(root / "audio" / "calibration.wav"),
                                     load_wav(root / "agent" / f"{agent_id}.wav"))
     if sharpness < MIN_SHARPNESS:
@@ -248,19 +260,122 @@ def read_lag_s(root: pathlib.Path = BARGEIN_ROOT) -> float:
         raise FileNotFoundError(f"no {CALIBRATION}: run `python -m s2slab.bargein calibrate` first")
     return json.loads(path.read_text(encoding="utf-8"))["lag_ms"] / 1000
 
+# --------------------------------------------------------------------------- #
+# Leak: how much of the agent reaches the caller's microphone
+# --------------------------------------------------------------------------- #
+
+
+def _frame_db(audio: np.ndarray) -> np.ndarray:
+    return 20 * np.log10(frame_rms(audio, TARGET_SR) + 1e-9)
+
+
+def agent_leak_db(audio: np.ndarray, agent_s: float, lag_s: float,
+                  caller: tuple[float, float] | None = None) -> float:
+    """How far the level rises above the room while the agent is speaking.
+
+    Takes:   a recording; how long the agent's reply is; the overdub lag; and
+             the caller's own sound (start, end) to leave out, if there is one.
+    Returns: dB. The 90th-percentile frame level while the agent speaks and the
+             caller does not, minus the median level after the agent has
+             finished -- the room. About +3 is a clean take (a percentile of
+             noise sits a little above its median). The VAD calls a frame
+             speech from about +10, so a leak near that makes every policy
+             hear the AGENT as the caller. NaN if the take has no quiet tail.
+    """
+    db = _frame_db(audio)
+    t = np.arange(len(db)) * FRAME_MS / 1000
+    speaking = (t > 0.5) & (t < agent_s + lag_s)
+    if caller is not None:
+        speaking &= (t < caller[0] - QUIET_MARGIN_S) | (t > caller[1] + QUIET_MARGIN_S)
+    room = t > agent_s + lag_s + QUIET_MARGIN_S
+    if caller is not None:
+        room &= t > caller[1] + QUIET_MARGIN_S
+    if speaking.sum() < 10 or room.sum() < 10:
+        return float("nan")
+    return float(np.percentile(db[speaking], 90) - np.median(db[room]))
+
+
+def agent_match(audio: np.ndarray, agent_audio: np.ndarray,
+                caller: tuple[float, float] | None = None) -> float:
+    """Is the sound under the caller's voice the AGENT, or just a breath?
+
+    Takes:   a recording, the agent audio that was playing (both 16 kHz), and
+             the caller's own sound (start, end), which is silenced first.
+    Returns: measure_lag()'s sharpness -- how clearly what is left lines up
+             with the agent's audio. Pilot: 4-8 for clean takes, whatever their
+             level; 13-76 for takes where the agent leaked.
+    """
+    rest = np.array(audio, dtype=np.float32)
+    if caller is not None:
+        a = max(0, int((caller[0] - QUIET_MARGIN_S) * TARGET_SR))
+        rest[a: int((caller[1] + QUIET_MARGIN_S) * TARGET_SR)] = 0
+    return measure_lag(rest, agent_audio)[1]
+
+
+def leak_problem(leak_db: float, match: float) -> str | None:
+    """A take leaks only if it is loud while the agent speaks AND that sound is
+    the agent. Level alone also catches breaths and a creaking chair; the match
+    alone also catches a leak too faint to matter."""
+    if leak_db > LEAK_MAX_DB and match >= LEAK_MATCH_MIN:
+        return (f"agent leak {leak_db:+.0f} dB above the room, matching the agent's audio "
+                f"(sharpness {match:.0f})")
+    return None
+
+
+def leak(root: pathlib.Path = BARGEIN_ROOT, name: str = "leaktest", agent_id: str = "A3") -> str:
+    """Measure the leak in a take where you stayed silent while the agent played."""
+    import soundfile as sf
+
+    root = pathlib.Path(root)
+    path = root / "audio" / f"{name}.wav"
+    if not path.exists():
+        raise FileNotFoundError(f"no audio/{name}.wav: record {agent_id} playing while you stay silent")
+    agent_s = sf.info(str(root / "agent" / f"{agent_id}.wav")).duration
+    lag_s = read_lag_s(root) if (root / CALIBRATION).exists() else 0.0
+    audio = load_wav(path)
+    db = agent_leak_db(audio, agent_s, lag_s)
+    match = agent_match(audio, load_wav(root / "agent" / f"{agent_id}.wav"))
+    verdict = ("too much: turn the playback down, or use earbuds, and try again"
+               if leak_problem(db, match) else "clean")
+    return (f"while the agent speaks: {db:+.1f} dB above the room (a leak if over {LEAK_MAX_DB:+.0f}) and "
+            f"match with the agent's audio {match:.0f} (a leak if {LEAK_MATCH_MIN:.0f} or more) -- {verdict}")
+
+
 
 
 # --------------------------------------------------------------------------- #
 # The caller's side
 # --------------------------------------------------------------------------- #
 
+def loud_spans(audio: np.ndarray, gate_db: float = GATE_DB) -> list[tuple[float, float]]:
+    """Stretches of sound within gate_db of the take's loudest frame.
+
+    Takes:   a recording. Returns: [(start_s, end_s), ...], with stretches less
+             than MIN_PAUSE_S apart joined and blips under MIN_SOUND_S dropped.
+
+    The caller is the loudest thing in a take by 25 dB or more; a leak of the
+    agent, a breath or the room is not. The policies' own VAD measures against
+    the noise floor instead, and in the pilot it fused a leak 30 dB below the
+    voice with the voice into one 3-second "sound".
+    """
+    db = _frame_db(audio)
+    if db.size == 0:
+        return []
+    step = FRAME_MS / 1000
+    spans: list[list[float]] = []
+    for k in np.flatnonzero(db >= db.max() - gate_db):
+        if spans and k * step - spans[-1][1] < MIN_PAUSE_S:
+            spans[-1][1] = (k + 1) * step
+        else:
+            spans.append([k * step, (k + 1) * step])
+    return [(a, b) for a, b in spans if b - a >= MIN_SOUND_S]
+
 
 def propose_label(item_id: str, root: pathlib.Path = BARGEIN_ROOT, overwrite: bool = False) -> pathlib.Path:
     """Write a first-draft label for one recording: one region, first sound to last.
 
-    Calls:   probes.detect_chunks() (the same VAD the policies use) and, for
-             speech items, the pitch check that tells a voice from a click. A
-             cough has no pitch, so `noise` items skip that check.
+    Calls:   loud_spans(), and for speech items the pitch check that tells a
+             voice from a click. A cough has no pitch, so `noise` items skip it.
     Ignores: anything that starts more than EARLY_S before the agent finishes
              the `after` phrase -- the record click, a breath while listening.
     """
@@ -272,7 +387,7 @@ def propose_label(item_id: str, root: pathlib.Path = BARGEIN_ROOT, overwrite: bo
                               f"use --force to replace it with a fresh draft")
     audio = load_wav(root / "audio" / f"{item_id}.wav")
     earliest = phrase_span_s(read_agent_words(root)[item["agent"]], item["after"])[1] - EARLY_S
-    spans = [s for s in detect_chunks(audio) if s[0] >= earliest]
+    spans = [s for s in loud_spans(audio) if s[0] >= earliest]
     if item["kind"] == "speech":
         track = _pitch_track(audio)
         spans = [s for s in spans if _voiced_s(track, *s) >= MIN_VOICED_S]
@@ -296,6 +411,16 @@ class BargeIn:
     entry_delay_s: float      # onset minus the end of the `after` phrase
     agent_s: float            # how long the agent's reply is
     agent_words: list[Word]
+    leak_db: float            # level above the room while the agent speaks, away from the caller's sound
+    leak_match: float         # how sharply that sound lines up with the agent's audio
+    peak: float               # largest sample in the file, 1.0 = full scale
+
+    def problems(self) -> list[str]:
+        """What makes this take unfit to freeze, in words. Empty if nothing."""
+        out = [p for p in [leak_problem(self.leak_db, self.leak_match)] if p]
+        if self.peak >= CLIP_PEAK:
+            out.append(f"peak {self.peak:.2f}: at full scale, probably clipped")
+        return out
 
     def words_finished_by(self, t_s: float) -> int:
         """How many agent words had been fully spoken by time t -- what the
@@ -334,8 +459,11 @@ def load_item(item_id: str, root: pathlib.Path = BARGEIN_ROOT) -> BargeIn:
         raise ValueError(f"{item_id}: the recording ends before the agent's reply does "
                          f"({len(audio) / TARGET_SR:.1f} s against {agent_s:.1f} s) -- re-record it")
     return BargeIn(item_id, item["cell"], item["kind"], item["should_stop"], item["agent"], audio,
-                   onset_s, region.end_s - region.start_s, onset_s - after_end, agent_s, words)
-
+                   onset_s, region.end_s - region.start_s, onset_s - after_end, agent_s, words,
+                   agent_leak_db(audio, agent_s, lag_s, (region.start_s, region.end_s)),
+                   agent_match(audio, load_wav(root / "agent" / f"{item['agent']}.wav"),
+                               (region.start_s, region.end_s)),
+                   float(np.abs(audio).max()))
 
 def load_set(root: pathlib.Path = BARGEIN_ROOT) -> dict[str, BargeIn]:
     """Every item that has a recording and a label, in script order."""
@@ -358,23 +486,28 @@ def check(root: pathlib.Path = BARGEIN_ROOT) -> str:
     """Every loadable item, then what a duration threshold would do with them."""
     root = pathlib.Path(root)
     script, lines, loaded = read_script(root), [], []
-    lines += ["| item | cell | kind | onset s | lasts s | after the phrase by | agent words heard | note |",
-              "|---|---|---|---:|---:|---:|---:|---|"]
+    lines += ["| item | cell | kind | onset s | lasts s | after the phrase by | agent words heard | level while agent speaks | matches agent | note |",
+              "|---|---|---|---:|---:|---:|---:|---:|---:|---|"]
     for item_id in script:
         if not (root / "audio" / f"{item_id}.wav").exists():
             continue
         try:
             it = load_item(item_id, root)
         except (ValueError, FileNotFoundError) as e:
-            lines.append(f"| {item_id} | {script[item_id]['cell']} | | | | | | **{e}** |")
+            lines.append(f"| {item_id} | {script[item_id]['cell']} | | | | | | | | **{e}** |")
             continue
         loaded.append(it)
         short = it.cell.endswith("short")
-        note = ("longer than a short item should be" if short and it.duration_s > SHORT_MAX_S else
-                "shorter than a long item should be" if not short and it.duration_s < LONG_MIN_S else "")
+        notes = [f"**RE-RECORD: {p}**" for p in it.problems()]
+        notes += ["longer than a short item should be"] if short and it.duration_s > SHORT_MAX_S else []
+        notes += ["shorter than a long item should be"] if not short and it.duration_s < LONG_MIN_S else []
         lines.append(f"| {it.id} | {it.cell} | {it.kind} | {it.onset_s:.2f} | {it.duration_s:.2f} | "
                      f"{it.entry_delay_s * 1000:+.0f} ms | {it.words_finished_by(it.onset_s)} of "
-                     f"{len(it.agent_words)} | {note} |")
+                     f"{len(it.agent_words)} | {it.leak_db:+.1f} dB | {it.leak_match:.0f} | {'; '.join(notes)} |")
+    strays = sorted(p.name for p in (root / "audio").glob("*.wav")
+                    if p.stem not in script and p.stem not in NOT_ITEMS) if (root / "audio").exists() else []
+    if strays:
+        lines += ["", "**Not item ids, so ignored (the letter l for the digit 1?):** " + ", ".join(strays)]
     lines += ["", f"{len(loaded)} of {len(script)} items load.", "",
               "Wrong decisions if the agent stops whenever the caller's sound lasts at least N ms:", "",
               "| N ms | " + " | ".join(CELLS) + " | total |", "|---:|" + "---:|" * (len(CELLS) + 1)]
@@ -405,7 +538,8 @@ def _fingerprints(root: pathlib.Path) -> dict:
 
 
 def freeze(root: pathlib.Path = BARGEIN_ROOT) -> pathlib.Path:
-    """Write manifest.json. Refuses if one exists, or if any item does not load."""
+    """Write manifest.json. Refuses if one exists, if any item does not load,
+    or if any take has too much agent leak or is clipped."""
     root = pathlib.Path(root)
     out = root / MANIFEST
     if out.exists():
@@ -414,8 +548,9 @@ def freeze(root: pathlib.Path = BARGEIN_ROOT) -> pathlib.Path:
                or not (root / "labels" / f"{i}.txt").exists()]
     if missing:
         raise FileNotFoundError(f"not recorded and labelled yet: {', '.join(missing)}")
-    for item_id in read_script(root):
-        load_item(item_id, root)
+    unfit = [f"{i}: {p}" for i in read_script(root) for p in load_item(i, root).problems()]
+    if unfit:
+        raise ValueError("not fit to freeze -- re-record:\n  " + "\n  ".join(unfit))
     out.write_text(json.dumps({"set": "bargein", "version": 1,
                                "frozen": datetime.date.today().isoformat(),
                                **_fingerprints(root)}, indent=2) + "\n", encoding="utf-8")
@@ -448,6 +583,8 @@ if __name__ == "__main__":
         print("\n".join(render()))
     elif cmd == "calibrate":
         print(calibrate(agent_id=args[0] if args else "A3"))
+    elif cmd == "leak":
+        print(leak(name=args[0] if args else "leaktest"))
     elif cmd == "propose":
         force = "--force" in args
         wanted = [a for a in args if a != "--force"] or [
@@ -466,5 +603,5 @@ if __name__ == "__main__":
         print("\n".join(problems) if problems else "intact")
         sys.exit(1 if problems else 0)
     else:
-        sys.exit("usage: python -m s2slab.bargein render | calibrate [A3] | propose [ids] [--force] "
-                 "| check | freeze | verify")
+        sys.exit("usage: python -m s2slab.bargein render | calibrate [A3] | leak [take] | "
+                 "propose [ids] [--force] | check | freeze | verify")
