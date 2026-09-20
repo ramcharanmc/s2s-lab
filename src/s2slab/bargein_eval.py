@@ -1,9 +1,10 @@
 """
 Scoring barge-in policies on a probe set: wrong decisions and stop latency, together.
 
-    python -m s2slab.bargein_eval                         B0 at four thresholds, frozen set
-    python -m s2slab.bargein_eval B1_words --confirm PR-003   anything else needs a registration
-
+    python -m s2slab.bargein_eval                                     B0 at four thresholds, frozen set
+    python -m s2slab.bargein_eval B1_words --root probes/bargein_dev  develop on the synthetic set, freely
+    python -m s2slab.bargein_eval B1_words --asr-latency-ms 70        ...charging a T4's recognizer time
+    python -m s2slab.bargein_eval B1_words --confirm PR-003           the frozen set needs a registration
 ONE ITEM, ONE WINDOW. A policy is asked about an item from WINDOW_BEFORE_S before
 its labelled onset to WINDOW_AFTER_S after its labelled end. A stray noise eight
 seconds later is not the item; what happens inside the window is.
@@ -20,6 +21,12 @@ so it may be run freely; any other policy needs --confirm with its registration
 
 NO MEDIAN FROM TEN NUMBERS. timing.py wants 20 samples for a p50, and a set
 with 10 stop items cannot give one. The latencies of the hits are listed.
+
+A POLICY THAT READS WORDS PAYS FOR THEM. For such a policy the recognizer is run
+over each item first (bargein_asr.py), and every transcript carries the time it
+was DELIVERED. By default that is what each call really took on this machine;
+--asr-latency-ms charges a stated figure instead. The transcripts are cached
+under results/bargein/, so a changed rule is re-scored without the recognizer.
 """
 
 from __future__ import annotations
@@ -28,6 +35,7 @@ import pathlib
 from dataclasses import dataclass
 
 from .bargein import BARGEIN_ROOT, CELLS, BargeIn, load_set, read_lag_s
+from .bargein_asr import cache_path, partials_for, whisper
 from .bargein_policies import POLICIES, BargeInContext, BargeInPolicy, get
 from .probes import TARGET_SR
 
@@ -35,17 +43,19 @@ WINDOW_BEFORE_S = 1.0
 WINDOW_AFTER_S = 2.0
 
 
-def context_for(item: BargeIn, lag_s: float) -> BargeInContext:
+def context_for(item: BargeIn, lag_s: float, partials=()) -> BargeInContext:
     """The caller's channel moved onto the agent's clock, and the item's window.
 
-    Takes:   a loaded item, and the overdub lag its recording carries.
+    Takes:   a loaded item, the overdub lag its recording carries, and the
+             recognizer's partials for it, if the policy reads words.
     Returns: a context whose time zero is the moment the agent started: the
              first lag_s of the recording are dropped, so a sound the label
              puts at onset_s really is at onset_s in ctx.audio.
     """
     audio = item.audio[int(round(lag_s * TARGET_SR)):]
     end_s = min(len(audio) / TARGET_SR, item.onset_s + item.duration_s + WINDOW_AFTER_S)
-    return BargeInContext(audio, TARGET_SR, max(0.0, item.onset_s - WINDOW_BEFORE_S), end_s)
+    return BargeInContext(audio, TARGET_SR, max(0.0, item.onset_s - WINDOW_BEFORE_S), end_s,
+                          partials=list(partials))
 
 
 
@@ -72,11 +82,12 @@ class Outcome:
         return "missed interruption" if self.should_stop else "false barge-in"
 
 
-def score(policy: BargeInPolicy, items, lag_s: float) -> list[Outcome]:
-    """Run one policy over every item. Takes loaded items; returns one Outcome each."""
+def score(policy: BargeInPolicy, items, lag_s: float, partials: dict | None = None) -> list[Outcome]:
+    """Run one policy over every item. Takes loaded items and, for a policy that
+    reads words, {item id: [Partial, ...]}; returns one Outcome each."""
     out = []
     for item in items:
-        decision = policy.decide(context_for(item, lag_s))
+        decision = policy.decide(context_for(item, lag_s, (partials or {}).get(item.id, ())))
         latency = (decision.stop_s - item.onset_s) * 1000 if decision.fired else None
         out.append(Outcome(item.id, item.cell, item.kind, item.should_stop,
                            decision.stop_s, decision.reason, latency))
@@ -123,9 +134,11 @@ def format_report(results: dict[str, list[Outcome]]) -> str:
     return "\n".join(lines)
 
 
-def score_set(names: list[str], root: pathlib.Path = BARGEIN_ROOT, confirm: str = "") -> str:
+def score_set(names: list[str], root: pathlib.Path = BARGEIN_ROOT, confirm: str = "",
+              asr_latency_ms: float | None = None, refresh: bool = False, recognizer=whisper) -> str:
     """Score named policies on a probe set. The frozen set is locked to baselines
-    unless `confirm` names the registration this run belongs to."""
+    unless `confirm` names the registration this run belongs to. If any policy
+    reads words, the recognizer runs first (or its cache is read)."""
     root = pathlib.Path(root)
     policies = [get(n) for n in names]
     locked = [p.name for p in policies if not p.baseline]
@@ -134,8 +147,16 @@ def score_set(names: list[str], root: pathlib.Path = BARGEIN_ROOT, confirm: str 
                               "policy on it is a registered confirmation run "
                               "(docs/preregistration.md); pass --confirm PR-003.")
     items = list(load_set(root).values())
+    lag_s = read_lag_s(root)
     head = f"{len(items)} items from {root}" + (f" · confirms {confirm}" if confirm else "")
-    return head + "\n\n" + format_report({p.name: score(p, items, read_lag_s(root)) for p in policies})
+    partials = None
+    if any(p.needs_partials for p in policies):
+        contexts = {item.id: context_for(item, lag_s) for item in items}
+        partials = partials_for(contexts, recognizer, asr_latency_ms,
+                                cache_path(root.resolve().name, asr_latency_ms), refresh)
+        head += (" · recognizer time: " + ("as measured on this machine" if asr_latency_ms is None
+                                           else f"charged at {asr_latency_ms:.0f} ms a call"))
+    return head + "\n\n" + format_report({p.name: score(p, items, lag_s, partials) for p in policies})
 
 
 if __name__ == "__main__":
@@ -145,6 +166,9 @@ if __name__ == "__main__":
     ap.add_argument("policies", nargs="*", help="policy names; default: every B0 baseline")
     ap.add_argument("--root", default=str(BARGEIN_ROOT))
     ap.add_argument("--confirm", default="", help="the registration this run confirms, e.g. PR-003")
+    ap.add_argument("--asr-latency-ms", type=float, default=None,
+                    help="charge every recognizer call this much instead of what it took here")
+    ap.add_argument("--refresh", action="store_true", help="run the recognizer again, ignoring the cache")
     a = ap.parse_args()
     names = a.policies or [n for n, p in POLICIES.items() if p.baseline]
-    print(score_set(names, pathlib.Path(a.root), a.confirm))
+    print(score_set(names, pathlib.Path(a.root), a.confirm, a.asr_latency_ms, a.refresh))

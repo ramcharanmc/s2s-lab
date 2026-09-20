@@ -78,6 +78,10 @@ def test_the_context_answers_by_time():
     assert c.partial_at(2.5) == "" and c.partial_at(2.6) == "no" and c.partial_at(5.0) == "no wait"
     assert c.f0_before(2.1, ms=200) == [0.0] * 10 + [180.0] * 10
     assert c.f0_before(0.05) == [0.0] * 5                # never reaches before zero or past t
+    assert c.latest_partial(2.5) is None and c.latest_partial(3.5).text == "no wait"
+    assert c.event_start_at(1.9) is None and c.event_start_at(2.5) == pytest.approx(2.0, abs=0.04)
+    assert c.event_start_at(3.2) == pytest.approx(2.0, abs=0.04)          # 200 ms after the sound: still the event
+    assert c.event_start_at(3.6) is None                                  # HANG_MS of quiet: over
 
 
 # --------------------------------------------------------------------------- #
@@ -111,10 +115,12 @@ def test_a_policy_only_decides_inside_its_window():
     assert not DurationThreshold(400).decide(ctx(audio, start_s=3.0, end_s=4.5)).fired
 
 
-def test_the_registry_holds_the_four_baselines():
-    assert sorted(POLICIES) == ["B0_duration_1500ms", "B0_duration_200ms",
-                                "B0_duration_400ms", "B0_duration_800ms"]
-    assert get("B0_duration_400ms").baseline
+def test_the_registry_holds_four_baselines_and_the_word_readers():
+    assert sorted(n for n, p in POLICIES.items() if p.baseline) == [
+        "B0_duration_1500ms", "B0_duration_200ms", "B0_duration_400ms", "B0_duration_800ms"]
+    assert get("B0_duration_400ms").baseline and not get("B0_duration_400ms").needs_partials
+    assert get("B1_words").needs_partials and not get("B1_words").baseline
+    assert "B1_words_min1" in POLICIES
     with pytest.raises(KeyError, match="B0_duration_200ms"):
         get("B9")
 
