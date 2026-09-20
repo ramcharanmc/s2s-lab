@@ -139,9 +139,9 @@ probes/
 
 ### Recording notes
 
-- Microphone: *(fill in)*
-- Room: *(fill in)*
-- Date recorded: *(fill in)*
+- Microphone: Earbuds
+- Room: My Personal Bedroom
+- Date recorded: 09/20/2026
 
 ---
 

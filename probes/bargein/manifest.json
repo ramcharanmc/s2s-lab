@@ -1,0 +1,100 @@
+{
+  "set": "bargein",
+  "version": 1,
+  "frozen": "2026-09-20",
+  "files": {
+    "agent.tsv": "1473a2c22b1f199da7a4c1082f0f6454ed583aec282442c89cf353c9f3b32444",
+    "script.tsv": "76a6358dc2e17571294786f7f1cc64747654b891fdb8298bdad6dd0fe97a4c6e",
+    "agent_words.tsv": "dc476049709fdee3f1972cb1ea687f6ce56ffe83c8b6d9f66e0f7a674974d10f",
+    "calibration.json": "137e1c4d24cdf94a6c7c541f4ca43374b5532370e3657d5cfa987b73b6101028"
+  },
+  "agent": {
+    "A1": "412c5fe16e5aa6dfda024e06646d6f44682581d872d8b8ac016464e385ebada8",
+    "A2": "0f0aad83f6b45cd8686f89e01e09ca35f0ba2abd0d130d263bf5ea2bb44d3764",
+    "A3": "5d7a693b0eab87a05a7a33a512424e5f2f3ba0c65093d1826aedb049955f2e51",
+    "A4": "c5c70bea41a163c55b45fc92058b7325b5d3c810b797ee7fe8dbe82801f8be95",
+    "A5": "69bc619c502134fc3fb34305751e0601eaff9011bce1c71e3a79167bbdf7c728"
+  },
+  "items": {
+    "sl01": {
+      "wav": "b71b4e3d917f97e4e8635f34abad3c7d9006fc3f758634c2e1d3d3910ec010b9",
+      "labels": "fd285c589c49746fad34a1eaee42c54c49aeeb405fa5c556105a5d514842a7b6"
+    },
+    "sl02": {
+      "wav": "9b37acfbe54f637c288e2375cbfa6bbe143ca0211331bbb31fb7e06cad2c3933",
+      "labels": "af2ba43d00b7547308cc851b4fa15d4a158320b8984bead85a46cf5d1ac3801c"
+    },
+    "sl03": {
+      "wav": "38082ff1ceb9a51878abf1fdcff93711893635ad656ed54205e53998e8b1dd07",
+      "labels": "df301636b84bbad7f6970691857c3d537d3a6752bfe4d00c9c9ee27d9dc06531"
+    },
+    "sl04": {
+      "wav": "5005d61d87fd76a7fc1c11ca4e0108da84646866efd9ad30f3126470f6df8671",
+      "labels": "83b3d31421163fac04e4ae764693cd7a0bc7e6a41fce31d7f65fe3e41a231ea6"
+    },
+    "sl05": {
+      "wav": "c0af2933d95d0680f8cf403457b03f754bafc6eb12d9e3c0b9cd056f7f5276f9",
+      "labels": "3e3fc6f29edc9d99b7358e9fe6011ad7e9196dbcb025c51dee6acf5480c4fed6"
+    },
+    "ss01": {
+      "wav": "fa1f2a0952f7eaea0ee2022e5c6daaf0549e7df6002300c3cf89df73f4f3c186",
+      "labels": "f6c32453caf6be3140408977f25fc0c8a932423357b5dc86f37e884afca74337"
+    },
+    "ss02": {
+      "wav": "45b420422399de36b7574a57ca8547f434d2ca41670612d45674ef2a6c9433b8",
+      "labels": "e9ce50e300de6be2526f978f23e5ef54c90e4d1a5dea078c3e98e1c918b7c49a"
+    },
+    "ss03": {
+      "wav": "f7fe6218cba75dbce38fe5c49f4e1814077688b07738141e1128ec38cb6c7de6",
+      "labels": "6cd4188feaddac6ed8ff266c1297ce6371fce5a36f0bccdf2f62651963d61680"
+    },
+    "ss04": {
+      "wav": "012a53b5940912bcdc77513d25b14ee733ac3e05a2b1fd68893d73b5f2587b2d",
+      "labels": "c7563e888db188f1f1aca55be81dae7ac11fae36dd2edd2c5dee71e2a6db2a27"
+    },
+    "ss05": {
+      "wav": "afaf7c491ab4711b3629ea78a1fa24079e3e0f1a5a0c1054d5bf403613a3b529",
+      "labels": "85c8b17c17dead55f6e11a24e3255f41d4e580d3a070888514632c82beca391f"
+    },
+    "cs01": {
+      "wav": "40880085b9d44e16aff78f5eb5825e606f3c8df536336356526b68d6119aa15f",
+      "labels": "2ff3361ed28bf0069029c045e3cf8079a673156e2ca57e50f52ca720a3918568"
+    },
+    "cs02": {
+      "wav": "93a1381a427090c3faacaa2f5eb33af2efaaf4da77efca957573f6fd3321e8d9",
+      "labels": "ce826158d8f69b7925d9c115a75e066ebf9005af5a081ddf84920d0684c8e04a"
+    },
+    "cs03": {
+      "wav": "279756be77b4a6b4edb5e64df6719279e50f571c0c93717008095622381526d8",
+      "labels": "1cb556d6f1426b83d405eeb21df851a6299e590c173b59209e7c3c42717ea419"
+    },
+    "cs04": {
+      "wav": "fde2a9a34833d62a5dc2298e346d9d67b5b538226c020402b61b425c078d5b83",
+      "labels": "7ee5550f2ca91bef3f7d369f1368176346cfdf37237d8a9449b3d4dd00972e1c"
+    },
+    "cs05": {
+      "wav": "3decfb263a8e2f2c2a956a0d66abdf072c11aaa7cf766784e2295a122de592c7",
+      "labels": "00ce2c93c12ddcd9fa5315e5461bd72b1f95860cb432cdfabe125b9ad56657bd"
+    },
+    "cl01": {
+      "wav": "f4c64d2377c0eb30f2862db09a98f69dbbe68ba2bee8c11c66063584189ee9f7",
+      "labels": "04efae7d630aaa9c939931fa9eed7f402caa81078a78619328c32789b2b0d205"
+    },
+    "cl02": {
+      "wav": "acafa893243a3242e066351feaa8d4f6972e8b5e648fa0684ba648463139f881",
+      "labels": "c340870bda818049836c0e221f6f8efc8b4f3c36a856755b598af91e1e25e799"
+    },
+    "cl03": {
+      "wav": "8a529313172ff2298b5e35430900c8b8146a2f56885d0b12bb4f9824f8aa8f32",
+      "labels": "66abf00359683a61dba94c2eb02d422a2b8227b39ad89afdff92a19f81849657"
+    },
+    "cl04": {
+      "wav": "7870d16d4485b1c5e36fefa2b4d5512ba3c9bcb3f9308ac0ff11335beb3e0ae7",
+      "labels": "25cceab3773ceeebdf1abb1812f97db1cfda4e3711247b73b7b9b2cd5bc1ab05"
+    },
+    "cl05": {
+      "wav": "6a77b169f730dabb824a85c8e703939de22d8f91aaacf8f4903ae38f4598da7f",
+      "labels": "5e9e2841a2c815fccdb5ec26ae4928ecdc3249bb829a0ed8b9ff94c6fb638d86"
+    }
+  }
+}
