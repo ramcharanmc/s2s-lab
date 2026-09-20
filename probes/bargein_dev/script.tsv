@@ -1,0 +1,41 @@
+id	cell	kind	agent	after	text
+sl01	stop-long	speech	D01	three nights from Friday	no that's not right, I ordered the blue one, not the red one
+sl02	stop-long	speech	D02	tray on the side	hold on, I think you have the wrong account, my name is spelled differently
+sl03	stop-long	speech	D03	monthly fee of twelve pounds	sorry to cut in, but I already tried that and it did not work
+sl04	stop-long	speech	D04	between two and four	actually can we go back, I did not catch the reference number
+sl05	stop-long	speech	D05	Friday afternoon	wait, before you go on, how much is this going to cost me
+sl06	stop-long	speech	D06	first of next month	excuse me, that is not what I asked for, I wanted the morning slot
+sl07	stop-long	speech	D07	end of the month	I do not need all that, just tell me when it arrives
+sl08	stop-long	speech	D08	recorded for training purposes	could you repeat the last part, the line broke up for a moment
+sl09	stop-long	speech	D09	three to five working days	that date is no good for me, do you have anything the week after
+sl10	stop-long	speech	D10	half past seven on Saturday	hang on a minute, someone is at the door, can you hold
+ss01	stop-short	speech	D01	in front of me now	no
+ss02	stop-short	speech	D02	screen lights up	stop
+ss03	stop-short	speech	D03	late payment charge	wait
+ss04	stop-short	speech	D04	eleven stops before yours	hold on
+ss05	stop-short	speech	D05	over eighteen	excuse me
+ss06	stop-short	speech	D06	your premium stays the same	what?
+ss07	stop-short	speech	D07	available today	pardon?
+ss08	stop-short	speech	D08	kept securely	not that one
+ss09	stop-short	speech	D09	sent to your bank	say again?
+ss10	stop-short	speech	D10	hold the reservation	just a moment
+cs01	continue-short	speech	D01	breakfast is included	uh-huh
+cs02	continue-short	noise	D02	choose your language	[cough]
+cs03	continue-short	speech	D03	from last week	yeah
+cs04	continue-short	noise	D04	out for delivery	[short laugh]
+cs05	continue-short	speech	D05	about an hour	yes
+cs06	continue-short	speech	D06	on your policy	sure
+cs07	continue-short	noise	D07	in that style	[cough]
+cs08	continue-short	speech	D08	a short statement	I see
+cs09	continue-short	noise	D09	has been approved	[short laugh]
+cs10	continue-short	speech	D10	for six people	got it
+cl01	continue-long	speech	D01	free of charge	yeah, okay, that makes sense to me
+cl02	continue-long	speech	D02	inserting the card	right, right, I understand, carry on
+cl03	continue-long	speech	D03	two charges on the statement	okay, sure, that sounds good, thanks
+cl04	continue-long	speech	D04	left the depot this morning	okay, yes, I am writing that down now
+cl05	continue-long	speech	D05	Wednesday morning	yep, that is fine by me, go on
+cl06	continue-long	speech	D06	confirmation letter	sure, no worries, take your time
+cl07	continue-long	speech	D07	three sizes available	alright, great, I will do that then
+cl08	continue-long	speech	D08	Before we continue	yes, yes, I follow you so far
+cl09	continue-long	speech	D09	to appear	okay, perfect, that is what I expected
+cl10	continue-long	speech	D10	a card number	uh-huh, yeah, I can see it on the screen

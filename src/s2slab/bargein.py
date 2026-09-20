@@ -49,7 +49,6 @@ MANIFEST = "manifest.json"
 CALIBRATION = "calibration.json"
 AGENT_WORDS = "agent_words.tsv"
 CELLS = ("stop-long", "stop-short", "continue-short", "continue-long")
-PER_CELL = 5
 SHORT_MAX_S, LONG_MIN_S = 0.8, 1.2     # what "short" and "long" mean when checking a recording
 EARLY_S = 0.5                          # a sound this long before the phrase ends is not the item's
 MAX_LAG_S = 1.0                        # calibrate looks for the lag within +/- this
@@ -95,10 +94,11 @@ def read_script(root: pathlib.Path = BARGEIN_ROOT) -> dict[str, dict]:
     Returns: {"ss03": {"cell": "stop-short", "kind": "speech", "agent": "A3",
                        "after": "the fourteenth", "text": "no, wait",
                        "should_stop": True}, ...}
-    Raises:  ValueError if a cell does not have PER_CELL items, an agent line is
-             used twice in a cell, or an `after` phrase is not in its agent
-             line exactly once -- each would quietly unbalance the set.
-    """
+    Raises:  ValueError if a cell does not use every agent line exactly once
+             (5 lines give 5 items per cell; the dev set's 10 give 10), or an
+             `after` phrase is not in its agent line exactly once -- each would
+             quietly unbalance the set.
+     """
     agent = read_agent(root)
     items = {}
     for row in _tsv(pathlib.Path(root) / "script.tsv"):
@@ -110,10 +110,9 @@ def read_script(root: pathlib.Path = BARGEIN_ROOT) -> dict[str, dict]:
                             "should_stop": row["cell"].startswith("stop")}
     for cell in CELLS:
         used = sorted(it["agent"] for it in items.values() if it["cell"] == cell)
-        if len(used) != PER_CELL or len(set(used)) != len(used):
-            raise ValueError(f"{cell}: needs {PER_CELL} items, each on a different agent line; has {used}")
+        if used != sorted(agent):
+            raise ValueError(f"{cell}: must use every agent line exactly once; uses {used}")
     return items
-
 
 
 # --------------------------------------------------------------------------- #
