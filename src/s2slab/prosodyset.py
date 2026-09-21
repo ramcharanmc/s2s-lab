@@ -32,9 +32,12 @@ SELECTED BY RULE, FROM THE RATINGS ALONE -- nobody listens first.
      MIN_RATERS raters
   3. actors are split into dev and test BEFORE any pair is drawn, so no voice
      is on both sides; the test pairs are locked like the other test sets
-  4. the threshold is the HIGHEST of THRESHOLDS at which every emotion fills
-     both sides -- decided by counting, reported, never by ear
-  5. a seeded draw: one pair per actor per emotion, no neutral clip twice, at
+  4. each emotion's threshold is the HIGHEST of THRESHOLDS at which it fills
+     both sides -- decided by counting, reported, never by ear. One threshold
+     for all three was the first rule (f56c55d); sadness is so rarely heard
+     from the voice alone that it dragged fear and anger down to 60% when the
+     raters agree on them at 80 and 90%. Changed after seeing the counts and
+     nothing else: no clip had been fetched, no system run.  5. a seeded draw: one pair per actor per emotion, no neutral clip twice, at
      most PER_SENTENCE pairs of one sentence per emotion and side
 
 Only the chosen clips are fetched (about 50 KB each); the full corpus is 7.5 GB.
@@ -72,7 +75,7 @@ DEV_ACTORS = 30                       # of 91
 PER_EMOTION = {"dev": 7, "test": 13}  # x 3 emotions = 21 dev pairs + 39 test pairs
 PER_SENTENCE = {"dev": 2, "test": 3}
 PAIR_COLUMNS = ("id", "split", "emotion", "actor", "sentence", "neutral", "loaded",
-                "agree_neutral", "agree_loaded", "raters_neutral", "raters_loaded", "intensity")
+                "agree_neutral", "agree_loaded", "raters_neutral", "raters_loaded", "intensity", "threshold")
 
 
 class Rating(NamedTuple):
@@ -104,6 +107,7 @@ class Pair(NamedTuple):
     raters_neutral: int
     raters_loaded: int
     intensity: float
+    threshold: float      # the agreement both clips had to reach: the emotion's own
 
 
 # --------------------------------------------------------------------------- #
@@ -177,72 +181,85 @@ def split_actors(actors, seed: int = SEED) -> dict[str, str]:
     return {a: ("dev" if k < DEV_ACTORS else "test") for k, a in enumerate(order)}
 
 
-def draw(cands: list[tuple[Rating, Rating]], sides: dict[str, str], seed: int = SEED) -> list[Pair]:
-    """A seeded draw from the candidates, as many as the rule allows up to PER_EMOTION.
+def draw(cands: list[tuple[Rating, Rating]], sides: dict[str, str], emotion: str, threshold: float,
+         used_neutral: frozenset = frozenset(), seed: int = SEED) -> list[Pair]:
+    """A seeded draw of ONE emotion's pairs, dev then test, as many as the rule
+    allows up to PER_EMOTION.
 
-    One pair per actor per emotion; no neutral clip in two pairs; at most
-    PER_SENTENCE pairs of one sentence per emotion and side. Emotions are
-    drawn in EMOTIONS order from one shuffled list, so the result depends only
-    on the candidates and the seed.
+    Takes:   the candidates at `threshold`; {actor: side}; the emotion; the
+             neutral clips earlier emotions already took.
+    One pair per actor; no neutral clip in two pairs; at most PER_SENTENCE
+    pairs of one sentence per side. The result depends only on the candidates,
+    the clips already taken, and the seed.
     """
-    order = list(cands)
+    order = [c for c in cands if c[1].emotion == emotion]
     random.Random(seed).shuffle(order)
-    used_neutral: set[str] = set()
+    taken = set(used_neutral)
     pairs = []
-    for emotion in EMOTIONS:
-        for split in ("dev", "test"):
-            actors, per_sentence, n = set(), {}, 0
-            for neutral, loaded in order:
-                if n == PER_EMOTION[split]:
-                    break
-                if (loaded.emotion != emotion or sides[loaded.actor] != split or loaded.actor in actors
-                        or neutral.clip in used_neutral
-                        or per_sentence.get(loaded.sentence, 0) >= PER_SENTENCE[split]):
-                    continue
-                n += 1
-                actors.add(loaded.actor)
-                used_neutral.add(neutral.clip)
-                per_sentence[loaded.sentence] = per_sentence.get(loaded.sentence, 0) + 1
-                pairs.append(Pair(f"{emotion.lower()}-{split[0]}{n:02d}", split, emotion, loaded.actor,
-                                  loaded.sentence, neutral.clip, loaded.clip, round(neutral.agreement, 3),
-                                  round(loaded.agreement, 3), neutral.raters, loaded.raters,
-                                  round(loaded.intensity, 1)))
+    for split in ("dev", "test"):
+        actors, per_sentence, n = set(), {}, 0
+        for neutral, loaded in order:
+            if n == PER_EMOTION[split]:
+                break
+            if (sides[loaded.actor] != split or loaded.actor in actors or neutral.clip in taken
+                    or per_sentence.get(loaded.sentence, 0) >= PER_SENTENCE[split]):
+                continue
+            n += 1
+            actors.add(loaded.actor)
+            taken.add(neutral.clip)
+            per_sentence[loaded.sentence] = per_sentence.get(loaded.sentence, 0) + 1
+            pairs.append(Pair(f"{emotion.lower()}-{split[0]}{n:02d}", split, emotion, loaded.actor,
+                              loaded.sentence, neutral.clip, loaded.clip, round(neutral.agreement, 3),
+                              round(loaded.agreement, 3), neutral.raters, loaded.raters,
+                              round(loaded.intensity, 1), threshold))
     return pairs
 
 
-def filled(pairs: list[Pair]) -> dict[tuple[str, str], int]:
-    """{(emotion, split): pairs drawn}."""
-    out = {(e, s): 0 for e in EMOTIONS for s in ("dev", "test")}
-    for p in pairs:
-        out[(p.emotion, p.split)] += 1
-    return out
+def filled(pairs: list[Pair]) -> dict[str, int]:
+    """{"dev": pairs drawn, "test": pairs drawn}."""
+    return {s: sum(1 for p in pairs if p.split == s) for s in ("dev", "test")}
 
 
-def select(ratings: dict[str, Rating], seed: int = SEED) -> tuple[float, list[Pair], dict[float, dict]]:
-    """Apply the rule. Returns the threshold used, the pairs, and for every
-    threshold tried {(emotion, split): pairs the draw could fill} -- the
-    counting that chose the threshold, kept so it can be reported.
+def select(ratings: dict[str, Rating], seed: int = SEED) -> tuple[dict[str, float], list[Pair], dict]:
+    """Apply the rule, one emotion after another in EMOTIONS order.
 
-    Raises: ValueError, with the counts, if no threshold fills every cell.
+    Returns: {emotion: the threshold it was drawn at}; the pairs; and the
+             counting that chose each threshold, {emotion: {threshold tried:
+             {"dev": n, "test": n}}}, kept so it can be reported.
+    Raises:  ValueError, with the counts, if an emotion fills at no threshold.
     """
     sides = split_actors({r.actor for r in ratings.values()}, seed)
-    counts = {}
+    chosen, pairs, counts = {}, [], {}
+    for emotion in EMOTIONS:
+        counts[emotion] = {}
+        for threshold in THRESHOLDS:
+            mine = draw(candidates(ratings, threshold), sides, emotion, threshold,
+                        frozenset(p.neutral for p in pairs), seed)
+            counts[emotion][threshold] = filled(mine)
+            if counts[emotion][threshold] == PER_EMOTION:
+                chosen[emotion] = threshold
+                pairs += mine
+                break
+        else:
+            raise ValueError(f"{emotion} fills both sides at no threshold:\n" + format_counts(counts, chosen))
+    return chosen, pairs, counts
+
+
+def format_counts(counts: dict, chosen: dict[str, float]) -> str:
+    """The counting behind each emotion's threshold, as a table. A dot: not
+    tried, because the emotion had already filled at a higher threshold."""
+    cells = [(e, s) for e in counts for s in ("dev", "test")]
+    lines = ["| raters agreeing | " + " | ".join(f"{e} {s} (of {PER_EMOTION[s]})" for e, s in cells) + " |",
+             "|---|" + "---:|" * len(cells)]
     for threshold in THRESHOLDS:
-        pairs = draw(candidates(ratings, threshold), sides, seed)
-        counts[threshold] = filled(pairs)
-        if all(counts[threshold][(e, s)] == PER_EMOTION[s] for e in EMOTIONS for s in ("dev", "test")):
-            return threshold, pairs, counts
-    raise ValueError("no threshold fills every emotion on both sides:\n" + format_counts(counts))
-
-
-def format_counts(counts: dict[float, dict], chosen: float | None = None) -> str:
-    """The counting behind the threshold, as a table."""
-    cells = [(e, s) for e in EMOTIONS for s in ("dev", "test")]
-    lines = ["| raters agreeing | " + " | ".join(f"{e} {s} (of {PER_EMOTION[s]})" for e, s in cells) + " | |",
-             "|---|" + "---:|" * len(cells) + "---|"]
-    for threshold, got in counts.items():
-        lines.append(f"| at least {threshold:.0%} | " + " | ".join(str(got[c]) for c in cells)
-                     + (" | **chosen** |" if threshold == chosen else " | |"))
+        if not any(threshold in counts[e] for e in counts):
+            break
+        row = []
+        for e, s in cells:
+            n = counts[e].get(threshold, {}).get(s)
+            row.append("\u00b7" if n is None else f"**{n}**" if chosen.get(e) == threshold else str(n))
+        lines.append(f"| at least {threshold:.0%} | " + " | ".join(row) + " |")
+    lines.append("chosen (bold): " + ", ".join(f"{e} at least {t:.0%}" for e, t in chosen.items()))
     return "\n".join(lines)
 
 
@@ -275,7 +292,7 @@ def read_pairs(path: pathlib.Path) -> list[Pair]:
     with open(path, newline="", encoding="utf-8") as f:
         return [Pair(r["id"], r["split"], r["emotion"], r["actor"], r["sentence"], r["neutral"], r["loaded"],
                      float(r["agree_neutral"]), float(r["agree_loaded"]), int(r["raters_neutral"]),
-                     int(r["raters_loaded"]), float(r["intensity"]))
+                     int(r["raters_loaded"]), float(r["intensity"]), float(r["threshold"]))
                 for r in csv.DictReader(f, delimiter="\t")]
 
 
@@ -315,11 +332,11 @@ if __name__ == "__main__":
             print(f"{path}  {path.stat().st_size / 1e6:.1f} MB")
     elif cmd == "select":
         ratings = read_ratings(source / pathlib.Path(RATINGS).name)
-        threshold, pairs, counts = select(ratings)
+        chosen, pairs, counts = select(ratings)
         cross_check(pairs, read_summary(source / pathlib.Path(SUMMARY).name))
         print(f"{len(ratings)} voice-only ratings of neutral, sad, fearful and angry clips; "
               f"{len({r.actor for r in ratings.values()})} actors; seed {SEED}\n")
-        print(format_counts(counts, threshold))
+        print(format_counts(counts, chosen))
         write_pairs(pairs, PROSODY_ROOT / "pairs.tsv")
         print(f"\n{len(pairs)} pairs -> {PROSODY_ROOT / 'pairs.tsv'}; every chosen clip agrees with summaryTable.csv")
         for emotion in EMOTIONS:

@@ -127,9 +127,9 @@ def test_no_actor_is_on_both_sides_and_none_twice_in_one_emotion():
 
 
 def test_the_draw_fills_every_cell_and_spreads_over_sentences():
-    threshold, pairs, counts = select(fake_ratings())
-    assert threshold == 0.9 and len(pairs) == 3 * (PER_EMOTION["dev"] + PER_EMOTION["test"]) == 60
-    assert filled(pairs) == {(e, s): PER_EMOTION[s] for e in EMOTIONS for s in ("dev", "test")}
+    chosen, pairs, counts = select(fake_ratings())
+    assert chosen == {e: 0.9 for e in EMOTIONS} and len(pairs) == 3 * (PER_EMOTION["dev"] + PER_EMOTION["test"]) == 60
+    assert all(filled([p for p in pairs if p.emotion == e]) == PER_EMOTION for e in EMOTIONS)
     for emotion in EMOTIONS:
         for split in ("dev", "test"):
             sentences = [p.sentence for p in pairs if (p.emotion, p.split) == (emotion, split)]
@@ -145,28 +145,42 @@ def test_the_same_seed_gives_the_same_set_and_another_seed_another():
     assert select(ratings)[1] != select(ratings, seed=7)[1]
 
 
-def test_the_threshold_is_the_highest_that_fills_every_cell_and_the_counting_is_kept():
-    """Fear is heard less reliably: 0.75 agreement. Everything else 0.95."""
-    threshold, pairs, counts = select(fake_ratings(lambda a, s, e: 0.75 if e == "FEA" else 0.95))
-    assert threshold == 0.7 and list(counts) == [0.9, 0.8, 0.7]
-    assert counts[0.9][("FEA", "test")] == 0 and counts[0.9][("SAD", "test")] == PER_EMOTION["test"]
+def test_each_emotion_gets_the_highest_threshold_that_fills_it_and_the_counting_is_kept():
+    """Fear is heard less reliably: 0.75 agreement. Everything else 0.95. A scarce
+    emotion must not drag the others down with it."""
+    chosen, pairs, counts = select(fake_ratings(lambda a, s, e: 0.75 if e == "FEA" else 0.95))
+    assert chosen == {"SAD": 0.9, "FEA": 0.7, "ANG": 0.9}
+    assert list(counts["FEA"]) == [0.9, 0.8, 0.7] and list(counts["SAD"]) == [0.9]
+    assert counts["FEA"][0.9] == {"dev": 0, "test": 0} and counts["FEA"][0.7] == PER_EMOTION
+    assert all(p.threshold == chosen[p.emotion] for p in pairs)
     assert all(p.agree_loaded == 0.75 for p in pairs if p.emotion == "FEA")
-    text = format_counts(counts, threshold)
-    assert "| at least 70% | 7 | 13 | 7 | 13 | 7 | 13 | **chosen** |" in text
-    assert "| at least 90% | 7 | 13 | 0 | 0 | 7 | 13 | |" in text
+    text = format_counts(counts, chosen)
+    assert "| at least 90% | **7** | **13** | 0 | 0 | **7** | **13** |" in text
+    assert "| at least 70% | \u00b7 | \u00b7 | **7** | **13** | \u00b7 | \u00b7 |" in text
+    assert "chosen (bold): SAD at least 90%, FEA at least 70%, ANG at least 90%" in text
+    assert "at least 60%" not in text                                     # never tried: nothing needed it
 
 
-def test_a_corpus_that_cannot_fill_the_set_is_an_error_with_the_counts():
-    with pytest.raises(ValueError, match="at least 50%"):
+def test_the_neutral_clips_must_clear_the_same_threshold_as_the_loaded_ones():
+    """Neutral clips at 0.85: no pair qualifies at 0.9, whatever the loaded clips reach."""
+    chosen, pairs, _ = select(fake_ratings(lambda a, s, e: 0.85 if e == "NEU" else 0.95))
+    assert chosen == {e: 0.8 for e in EMOTIONS} and all(p.agree_neutral == 0.85 for p in pairs)
+
+
+def test_a_corpus_that_cannot_fill_an_emotion_is_an_error_with_the_counts():
+    with pytest.raises(ValueError, match="(?s)ANG fills both sides at no threshold.*at least 50%"):
         select(fake_ratings(lambda a, s, e: 0.4 if e == "ANG" else 0.95))
 
 
 def test_the_draw_takes_what_the_rule_allows_and_no_more():
-    """Two actors only: one pair per actor per emotion, whatever PER_EMOTION asks for."""
+    """Two actors only: one pair per actor, whatever PER_EMOTION asks for; and a
+    neutral clip another emotion took is not taken again."""
     ratings = {c: r for c, r in fake_ratings().items() if r.actor in ("1001", "1002")}
-    pairs = draw(candidates(ratings, 0.9), {"1001": "test", "1002": "test"})
-    assert filled(pairs) == {(e, "dev"): 0 for e in EMOTIONS} | {(e, "test"): 2 for e in EMOTIONS}
-
+    sides = {"1001": "test", "1002": "test"}
+    sad = draw(candidates(ratings, 0.9), sides, "SAD", 0.9)
+    assert filled(sad) == {"dev": 0, "test": 2} and {p.emotion for p in sad} == {"SAD"}
+    ang = draw(candidates(ratings, 0.9), sides, "ANG", 0.9, frozenset(p.neutral for p in sad))
+    assert filled(ang) == {"dev": 0, "test": 2} and not {p.neutral for p in ang} & {p.neutral for p in sad}
 
 # --------------------------------------------------------------------------- #
 # Cross-check, files, downloads
