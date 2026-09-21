@@ -1,0 +1,3274 @@
+{
+ "run": "20 items from probes/bargein \u00b7 confirms PR-003 \u00b7 recognizer time: charged at 70 ms a call",
+ "outcomes": {
+  "B0_duration_200ms": [
+   {
+    "item": "sl01",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 9.4,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 202.4000000000008,
+    "overrun_words": 0,
+    "correct": true
+   },
+   {
+    "item": "sl02",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 5.08,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 162.39999999999986,
+    "overrun_words": 0,
+    "correct": true
+   },
+   {
+    "item": "sl03",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 4.14,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 275.04999999999933,
+    "overrun_words": 0,
+    "correct": true
+   },
+   {
+    "item": "sl04",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 6.22,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 202.39999999999992,
+    "overrun_words": 0,
+    "correct": true
+   },
+   {
+    "item": "sl05",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 7.62,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 202.39999999999992,
+    "overrun_words": 0,
+    "correct": true
+   },
+   {
+    "item": "ss01",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 6.4,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 162.39999999999986,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "ss02",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 6.88,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 182.39999999999947,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "ss03",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 3.18,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 202.39999999999992,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "ss04",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 9.34,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 62.40000000000023,
+    "overrun_words": 0,
+    "correct": true
+   },
+   {
+    "item": "ss05",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 9.92,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 182.40000000000123,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "cs01",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 4.28,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 214.50600000000009,
+    "overrun_words": 1,
+    "correct": false
+   },
+   {
+    "item": "cs02",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": 8.82,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 339.7420000000011,
+    "overrun_words": 1,
+    "correct": false
+   },
+   {
+    "item": "cs03",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 4.26,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 272.56499999999926,
+    "overrun_words": 1,
+    "correct": false
+   },
+   {
+    "item": "cs04",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": 4.64,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 239.88999999999993,
+    "overrun_words": 2,
+    "correct": false
+   },
+   {
+    "item": "cs05",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 4.86,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 182.40000000000035,
+    "overrun_words": 1,
+    "correct": false
+   },
+   {
+    "item": "cl01",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 10.64,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 202.4000000000008,
+    "overrun_words": 2,
+    "correct": false
+   },
+   {
+    "item": "cl02",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 3.84,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 202.39999999999992,
+    "overrun_words": 0,
+    "correct": false
+   },
+   {
+    "item": "cl03",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 6.56,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 254.35899999999913,
+    "overrun_words": 2,
+    "correct": false
+   },
+   {
+    "item": "cl04",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 2.58,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 182.3999999999999,
+    "overrun_words": 1,
+    "correct": false
+   },
+   {
+    "item": "cl05",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 2.68,
+    "reason": "200 ms of caller sound",
+    "latency_ms": 182.3999999999999,
+    "overrun_words": 1,
+    "correct": false
+   }
+  ],
+  "B0_duration_400ms": [
+   {
+    "item": "sl01",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 9.6,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 402.4000000000001,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "sl02",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 5.28,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 362.40000000000003,
+    "overrun_words": 0,
+    "correct": true
+   },
+   {
+    "item": "sl03",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 4.34,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 475.0499999999995,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "sl04",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 6.42,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 402.4000000000001,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "sl05",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 7.82,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 402.4000000000001,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "ss01",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 6.6,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 362.3999999999992,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "ss02",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 7.08,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 382.39999999999964,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "ss03",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 3.38,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 402.39999999999964,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "ss04",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 9.54,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 262.3999999999995,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "ss05",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.12,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 382.40000000000055,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "cs01",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 4.48,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 414.50600000000026,
+    "overrun_words": 3,
+    "correct": false
+   },
+   {
+    "item": "cs02",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": 9.02,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 539.7420000000004,
+    "overrun_words": 2,
+    "correct": false
+   },
+   {
+    "item": "cs03",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 4.5,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 512.5649999999995,
+    "overrun_words": 1,
+    "correct": false
+   },
+   {
+    "item": "cs04",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": 4.84,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 439.8900000000001,
+    "overrun_words": 2,
+    "correct": false
+   },
+   {
+    "item": "cs05",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 5.06,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 382.39999999999964,
+    "overrun_words": 1,
+    "correct": false
+   },
+   {
+    "item": "cl01",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 10.84,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 402.4000000000001,
+    "overrun_words": 4,
+    "correct": false
+   },
+   {
+    "item": "cl02",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 4.04,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 402.4000000000001,
+    "overrun_words": 1,
+    "correct": false
+   },
+   {
+    "item": "cl03",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 6.76,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 454.3589999999993,
+    "overrun_words": 2,
+    "correct": false
+   },
+   {
+    "item": "cl04",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 2.78,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 382.39999999999964,
+    "overrun_words": 2,
+    "correct": false
+   },
+   {
+    "item": "cl05",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 2.88,
+    "reason": "400 ms of caller sound",
+    "latency_ms": 382.39999999999964,
+    "overrun_words": 2,
+    "correct": false
+   }
+  ],
+  "B0_duration_800ms": [
+   {
+    "item": "sl01",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.0,
+    "reason": "800 ms of caller sound",
+    "latency_ms": 802.4000000000004,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "sl02",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 5.68,
+    "reason": "800 ms of caller sound",
+    "latency_ms": 762.3999999999995,
+    "overrun_words": 3,
+    "correct": true
+   },
+   {
+    "item": "sl03",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 4.74,
+    "reason": "800 ms of caller sound",
+    "latency_ms": 875.0499999999998,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "sl04",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 6.86,
+    "reason": "800 ms of caller sound",
+    "latency_ms": 842.4000000000004,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "sl05",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 8.26,
+    "reason": "800 ms of caller sound",
+    "latency_ms": 842.3999999999996,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "ss01",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": false
+   },
+   {
+    "item": "ss02",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 7.54,
+    "reason": "800 ms of caller sound",
+    "latency_ms": 842.3999999999996,
+    "overrun_words": 5,
+    "correct": true
+   },
+   {
+    "item": "ss03",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": false
+   },
+   {
+    "item": "ss04",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": false
+   },
+   {
+    "item": "ss05",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": false
+   },
+   {
+    "item": "cs01",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs02",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": 9.42,
+    "reason": "800 ms of caller sound",
+    "latency_ms": 939.7420000000008,
+    "overrun_words": 3,
+    "correct": false
+   },
+   {
+    "item": "cs03",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs04",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": 5.24,
+    "reason": "800 ms of caller sound",
+    "latency_ms": 839.8900000000004,
+    "overrun_words": 4,
+    "correct": false
+   },
+   {
+    "item": "cs05",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl01",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 11.24,
+    "reason": "800 ms of caller sound",
+    "latency_ms": 802.4000000000004,
+    "overrun_words": 5,
+    "correct": false
+   },
+   {
+    "item": "cl02",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 5.44,
+    "reason": "800 ms of caller sound",
+    "latency_ms": 1802.4000000000005,
+    "overrun_words": 3,
+    "correct": false
+   },
+   {
+    "item": "cl03",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 7.18,
+    "reason": "800 ms of caller sound",
+    "latency_ms": 874.3589999999992,
+    "overrun_words": 5,
+    "correct": false
+   },
+   {
+    "item": "cl04",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 3.18,
+    "reason": "800 ms of caller sound",
+    "latency_ms": 782.4,
+    "overrun_words": 3,
+    "correct": false
+   },
+   {
+    "item": "cl05",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 3.32,
+    "reason": "800 ms of caller sound",
+    "latency_ms": 822.3999999999995,
+    "overrun_words": 3,
+    "correct": false
+   }
+  ],
+  "B0_duration_1500ms": [
+   {
+    "item": "sl01",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 14.16,
+    "reason": "1500 ms of caller sound",
+    "latency_ms": 4962.400000000001,
+    "overrun_words": 15,
+    "correct": true
+   },
+   {
+    "item": "sl02",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 6.38,
+    "reason": "1500 ms of caller sound",
+    "latency_ms": 1462.3999999999996,
+    "overrun_words": 4,
+    "correct": true
+   },
+   {
+    "item": "sl03",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 5.44,
+    "reason": "1500 ms of caller sound",
+    "latency_ms": 1575.05,
+    "overrun_words": 4,
+    "correct": true
+   },
+   {
+    "item": "sl04",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 7.56,
+    "reason": "1500 ms of caller sound",
+    "latency_ms": 1542.3999999999999,
+    "overrun_words": 4,
+    "correct": true
+   },
+   {
+    "item": "sl05",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 9.06,
+    "reason": "1500 ms of caller sound",
+    "latency_ms": 1642.4000000000003,
+    "overrun_words": 6,
+    "correct": true
+   },
+   {
+    "item": "ss01",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": false
+   },
+   {
+    "item": "ss02",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": false
+   },
+   {
+    "item": "ss03",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": false
+   },
+   {
+    "item": "ss04",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": false
+   },
+   {
+    "item": "ss05",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": false
+   },
+   {
+    "item": "cs01",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs02",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs03",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs04",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs05",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl01",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 11.98,
+    "reason": "1500 ms of caller sound",
+    "latency_ms": 1542.4000000000005,
+    "overrun_words": 9,
+    "correct": false
+   },
+   {
+    "item": "cl02",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl03",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 8.02,
+    "reason": "1500 ms of caller sound",
+    "latency_ms": 1714.358999999999,
+    "overrun_words": 6,
+    "correct": false
+   },
+   {
+    "item": "cl04",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl05",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 4.2,
+    "reason": "1500 ms of caller sound",
+    "latency_ms": 1702.3999999999999,
+    "overrun_words": 6,
+    "correct": false
+   }
+  ],
+  "B1_words": [
+   {
+    "item": "sl01",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.32,
+    "reason": "heard 'no' after an acknowledgement",
+    "latency_ms": 1122.4000000000008,
+    "overrun_words": 3,
+    "correct": true
+   },
+   {
+    "item": "sl02",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 5.56,
+    "reason": "heard 'sorry', not an acknowledgement",
+    "latency_ms": 642.3999999999994,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "sl03",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 4.82,
+    "reason": "heard 'no', not an acknowledgement",
+    "latency_ms": 955.05,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "sl04",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 7.12,
+    "reason": "heard 'actually', not an acknowledgement",
+    "latency_ms": 1102.4000000000003,
+    "overrun_words": 4,
+    "correct": true
+   },
+   {
+    "item": "sl05",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.08,
+    "reason": "heard 'lets', not an acknowledgement",
+    "latency_ms": 2662.4,
+    "overrun_words": 10,
+    "correct": true
+   },
+   {
+    "item": "ss01",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 7.12,
+    "reason": "heard 'hand', not an acknowledgement",
+    "latency_ms": 882.3999999999996,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "ss02",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 8.18,
+    "reason": "heard 'wait', not an acknowledgement",
+    "latency_ms": 1482.3999999999992,
+    "overrun_words": 6,
+    "correct": true
+   },
+   {
+    "item": "ss03",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 4.12,
+    "reason": "heard 'no', not an acknowledgement",
+    "latency_ms": 1142.3999999999999,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "ss04",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.06,
+    "reason": "heard 'sorry', not an acknowledgement",
+    "latency_ms": 782.4000000000009,
+    "overrun_words": 4,
+    "correct": true
+   },
+   {
+    "item": "ss05",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.86,
+    "reason": "heard '1', not an acknowledgement",
+    "latency_ms": 1122.4000000000008,
+    "overrun_words": 4,
+    "correct": true
+   },
+   {
+    "item": "cs01",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs02",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": 9.12,
+    "reason": "heard 'sorry' after an acknowledgement",
+    "latency_ms": 639.7420000000001,
+    "overrun_words": 3,
+    "correct": false
+   },
+   {
+    "item": "cs03",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs04",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": 4.72,
+    "reason": "heard 'im', not an acknowledgement",
+    "latency_ms": 319.89,
+    "overrun_words": 2,
+    "correct": false
+   },
+   {
+    "item": "cs05",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl01",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl02",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 5.52,
+    "reason": "heard 'doing', not an acknowledgement",
+    "latency_ms": 1882.3999999999996,
+    "overrun_words": 3,
+    "correct": false
+   },
+   {
+    "item": "cl03",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl04",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl05",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   }
+  ],
+  "B1_words_min1": [
+   {
+    "item": "sl01",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.32,
+    "reason": "heard 'no' after an acknowledgement",
+    "latency_ms": 1122.4000000000008,
+    "overrun_words": 3,
+    "correct": true
+   },
+   {
+    "item": "sl02",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 5.56,
+    "reason": "heard 'sorry', not an acknowledgement",
+    "latency_ms": 642.3999999999994,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "sl03",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 4.82,
+    "reason": "heard 'no', not an acknowledgement",
+    "latency_ms": 955.05,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "sl04",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 6.3,
+    "reason": "heard 'thats', not an acknowledgement",
+    "latency_ms": 282.4,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "sl05",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.08,
+    "reason": "heard 'lets', not an acknowledgement",
+    "latency_ms": 2662.4,
+    "overrun_words": 10,
+    "correct": true
+   },
+   {
+    "item": "ss01",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 6.9,
+    "reason": "heard 'hand', not an acknowledgement",
+    "latency_ms": 662.3999999999999,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "ss02",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 7.36,
+    "reason": "heard 'wait', not an acknowledgement",
+    "latency_ms": 662.3999999999999,
+    "overrun_words": 3,
+    "correct": true
+   },
+   {
+    "item": "ss03",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 4.12,
+    "reason": "heard 'no', not an acknowledgement",
+    "latency_ms": 1142.3999999999999,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "ss04",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.06,
+    "reason": "heard 'sorry', not an acknowledgement",
+    "latency_ms": 782.4000000000009,
+    "overrun_words": 4,
+    "correct": true
+   },
+   {
+    "item": "ss05",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.22,
+    "reason": "heard 'one', not an acknowledgement",
+    "latency_ms": 482.4000000000019,
+    "overrun_words": 3,
+    "correct": true
+   },
+   {
+    "item": "cs01",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs02",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": 9.12,
+    "reason": "heard 'sorry' after an acknowledgement",
+    "latency_ms": 639.7420000000001,
+    "overrun_words": 3,
+    "correct": false
+   },
+   {
+    "item": "cs03",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs04",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": 4.72,
+    "reason": "heard 'im', not an acknowledgement",
+    "latency_ms": 319.89,
+    "overrun_words": 2,
+    "correct": false
+   },
+   {
+    "item": "cs05",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl01",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl02",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 5.32,
+    "reason": "heard 'doing', not an acknowledgement",
+    "latency_ms": 1682.4000000000003,
+    "overrun_words": 2,
+    "correct": false
+   },
+   {
+    "item": "cl03",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl04",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl05",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   }
+  ],
+  "B2_speechlike": [
+   {
+    "item": "sl01",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.32,
+    "reason": "heard 'no' after an acknowledgement",
+    "latency_ms": 1122.4000000000008,
+    "overrun_words": 3,
+    "correct": true
+   },
+   {
+    "item": "sl02",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 5.56,
+    "reason": "heard 'sorry', not an acknowledgement",
+    "latency_ms": 642.3999999999994,
+    "overrun_words": 1,
+    "correct": true
+   },
+   {
+    "item": "sl03",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 4.82,
+    "reason": "heard 'no', not an acknowledgement",
+    "latency_ms": 955.05,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "sl04",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 7.12,
+    "reason": "heard 'actually', not an acknowledgement",
+    "latency_ms": 1102.4000000000003,
+    "overrun_words": 4,
+    "correct": true
+   },
+   {
+    "item": "sl05",
+    "cell": "stop-long",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.52,
+    "reason": "heard 'let', not an acknowledgement",
+    "latency_ms": 3102.399999999999,
+    "overrun_words": 11,
+    "correct": true
+   },
+   {
+    "item": "ss01",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 7.12,
+    "reason": "heard 'hand', not an acknowledgement",
+    "latency_ms": 882.3999999999996,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "ss02",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 8.18,
+    "reason": "heard 'wait', not an acknowledgement",
+    "latency_ms": 1482.3999999999992,
+    "overrun_words": 6,
+    "correct": true
+   },
+   {
+    "item": "ss03",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 4.12,
+    "reason": "heard 'no', not an acknowledgement",
+    "latency_ms": 1142.3999999999999,
+    "overrun_words": 2,
+    "correct": true
+   },
+   {
+    "item": "ss04",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.06,
+    "reason": "heard 'sorry', not an acknowledgement",
+    "latency_ms": 782.4000000000009,
+    "overrun_words": 4,
+    "correct": true
+   },
+   {
+    "item": "ss05",
+    "cell": "stop-short",
+    "kind": "speech",
+    "should_stop": true,
+    "stop_s": 10.86,
+    "reason": "heard '1', not an acknowledgement",
+    "latency_ms": 1122.4000000000008,
+    "overrun_words": 4,
+    "correct": true
+   },
+   {
+    "item": "cs01",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs02",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs03",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs04",
+    "cell": "continue-short",
+    "kind": "noise",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cs05",
+    "cell": "continue-short",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl01",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl02",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": 5.74,
+    "reason": "heard 'doing', not an acknowledgement",
+    "latency_ms": 2102.4,
+    "overrun_words": 5,
+    "correct": false
+   },
+   {
+    "item": "cl03",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl04",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   },
+   {
+    "item": "cl05",
+    "cell": "continue-long",
+    "kind": "speech",
+    "should_stop": false,
+    "stop_s": null,
+    "reason": "no rule fired",
+    "latency_ms": null,
+    "overrun_words": null,
+    "correct": true
+   }
+  ]
+ },
+ "partials": {
+  "sl01": [
+   [
+    9.47,
+    "Oh.",
+    false,
+    9.2,
+    0.271
+   ],
+   [
+    9.69,
+    "Oh no!",
+    false,
+    9.2,
+    0.251
+   ],
+   [
+    9.89,
+    "Oh no!",
+    false,
+    9.2,
+    0.163
+   ],
+   [
+    10.11,
+    "Oh no!",
+    false,
+    9.2,
+    0.098
+   ],
+   [
+    10.31,
+    "Oh no!",
+    true,
+    9.2,
+    0.09
+   ],
+   [
+    10.91,
+    "Good.",
+    false,
+    10.64,
+    0.254
+   ],
+   [
+    11.13,
+    "Cause",
+    false,
+    10.64,
+    0.236
+   ],
+   [
+    11.35,
+    "Doesn't it?",
+    false,
+    10.64,
+    0.277
+   ],
+   [
+    11.55,
+    "because it does not",
+    false,
+    10.64,
+    0.252
+   ],
+   [
+    11.77,
+    "The first day does not work.",
+    false,
+    10.64,
+    0.121
+   ],
+   [
+    11.97,
+    "Personally, it does not work.",
+    false,
+    10.64,
+    0.108
+   ],
+   [
+    12.19,
+    "Doesn't it does not work?",
+    false,
+    10.64,
+    0.028
+   ],
+   [
+    12.39,
+    "Doesn't it does not work?",
+    false,
+    10.64,
+    0.021
+   ],
+   [
+    12.55,
+    "Doesn't it does not work?",
+    true,
+    10.64,
+    0.013
+   ],
+   [
+    12.91,
+    "No.",
+    false,
+    12.64,
+    0.279
+   ],
+   [
+    13.13,
+    "Nobody?",
+    false,
+    12.64,
+    0.095
+   ],
+   [
+    13.35,
+    "Nobody will...",
+    false,
+    12.64,
+    0.2
+   ],
+   [
+    13.55,
+    "Nobody will be...",
+    false,
+    12.64,
+    0.234
+   ],
+   [
+    13.77,
+    "Nobody will be home.",
+    false,
+    12.64,
+    0.121
+   ],
+   [
+    13.97,
+    "Nobody will be home.",
+    false,
+    12.64,
+    0.12
+   ],
+   [
+    14.19,
+    "Nobody will be home and can't.",
+    false,
+    12.64,
+    0.162
+   ],
+   [
+    14.39,
+    "Nobody will be home until the...",
+    false,
+    12.64,
+    0.121
+   ],
+   [
+    14.61,
+    "Nobody will be home until the week.",
+    false,
+    12.64,
+    0.119
+   ],
+   [
+    14.81,
+    "Nobody will be home until the weekend.",
+    false,
+    12.64,
+    0.143
+   ],
+   [
+    15.030000000000001,
+    "Nobody will be home until the weekend.",
+    false,
+    12.64,
+    0.062
+   ],
+   [
+    15.25,
+    "Nobody will be home until the weekend.",
+    true,
+    12.64,
+    0.058
+   ],
+   [
+    16.35,
+    "",
+    true,
+    15.96,
+    1.0
+   ]
+  ],
+  "sl02": [
+   [
+    4.15,
+    "",
+    true,
+    3.76,
+    1.0
+   ],
+   [
+    4.83,
+    "",
+    true,
+    4.42,
+    1.0
+   ],
+   [
+    5.15,
+    "Sorry.",
+    false,
+    4.88,
+    0.414
+   ],
+   [
+    5.3500000000000005,
+    "Sorry.",
+    false,
+    4.88,
+    0.168
+   ],
+   [
+    5.550000000000001,
+    "Sorry you can.",
+    false,
+    4.88,
+    0.13
+   ],
+   [
+    5.7700000000000005,
+    "Sorry, can you?",
+    false,
+    4.88,
+    0.168
+   ],
+   [
+    5.970000000000001,
+    "Sorry, can you slow?",
+    false,
+    4.88,
+    0.301
+   ],
+   [
+    6.19,
+    "Sorry, can you slow down?",
+    false,
+    4.88,
+    0.456
+   ],
+   [
+    6.390000000000001,
+    "Sorry, can you slow down?",
+    false,
+    4.88,
+    0.144
+   ],
+   [
+    6.61,
+    "Sorry, can you slow down?",
+    false,
+    4.88,
+    0.141
+   ],
+   [
+    6.8100000000000005,
+    "Sorry, can you slow down?",
+    false,
+    4.88,
+    0.205
+   ],
+   [
+    7.010000000000001,
+    "Sorry, can you slow down?",
+    false,
+    4.88,
+    0.141
+   ],
+   [
+    7.23,
+    "Sorry, can you slow down? I need to f***.",
+    false,
+    4.88,
+    0.198
+   ],
+   [
+    7.430000000000001,
+    "Sorry, can you slow down? I need to find",
+    false,
+    4.88,
+    0.137
+   ],
+   [
+    7.65,
+    "Sorry, can you slow down? I need to find the...",
+    false,
+    4.88,
+    0.126
+   ],
+   [
+    7.8500000000000005,
+    "Sorry, can you slow down? I need to find the case.",
+    false,
+    4.88,
+    0.103
+   ],
+   [
+    8.05,
+    "Sorry, can you slow down? I need to find the cable.",
+    false,
+    4.88,
+    0.09
+   ],
+   [
+    8.27,
+    "Sorry, can you slow down? I need to find the cable.",
+    false,
+    4.88,
+    0.078
+   ],
+   [
+    8.47,
+    "Sorry, can you slow down? I need to find the cable first.",
+    false,
+    4.88,
+    0.072
+   ],
+   [
+    8.69,
+    "Sorry, can you slow down? I need to find the cable first.",
+    false,
+    4.88,
+    0.046
+   ],
+   [
+    8.89,
+    "Sorry, can you slow down? I need to find the cable first.",
+    true,
+    4.88,
+    0.04
+   ]
+  ],
+  "sl03": [
+   [
+    3.3299999999999996,
+    "",
+    true,
+    2.82,
+    1.0
+   ],
+   [
+    4.21,
+    "No.",
+    false,
+    3.86,
+    0.18
+   ],
+   [
+    4.41,
+    "No",
+    false,
+    3.86,
+    0.054
+   ],
+   [
+    4.61,
+    "No, sorry.",
+    false,
+    3.86,
+    0.163
+   ],
+   [
+    4.8100000000000005,
+    "No, I'm sorry",
+    false,
+    3.86,
+    0.078
+   ],
+   [
+    5.010000000000001,
+    "No, I'm sorry",
+    false,
+    3.86,
+    0.05
+   ],
+   [
+    5.23,
+    "No, sorry",
+    false,
+    3.86,
+    0.114
+   ],
+   [
+    5.430000000000001,
+    "No, sorry that is",
+    false,
+    3.86,
+    0.098
+   ],
+   [
+    5.65,
+    "No, sorry, that is the",
+    false,
+    3.86,
+    0.148
+   ],
+   [
+    5.8500000000000005,
+    "No, sorry, that is the wrong",
+    false,
+    3.86,
+    0.128
+   ],
+   [
+    6.050000000000001,
+    "No, sorry, that is the wrong",
+    false,
+    3.86,
+    0.066
+   ],
+   [
+    6.2700000000000005,
+    "No, sorry. That is the wrong day.",
+    false,
+    3.86,
+    0.093
+   ],
+   [
+    6.470000000000001,
+    "No, sorry. That is the wrong day.",
+    false,
+    3.86,
+    0.048
+   ],
+   [
+    6.69,
+    "No, sorry. That is the wrong day.",
+    false,
+    3.86,
+    0.097
+   ],
+   [
+    6.890000000000001,
+    "No, sorry. That is the wrong day. I asked",
+    false,
+    3.86,
+    0.071
+   ],
+   [
+    7.11,
+    "No, sorry. That is the wrong day. I asked for",
+    false,
+    3.86,
+    0.106
+   ],
+   [
+    7.3100000000000005,
+    "No, sorry. That is the wrong day. I asked for",
+    false,
+    3.86,
+    0.1
+   ],
+   [
+    7.510000000000001,
+    "No, sorry. That is the wrong day. I asked for Thursday.",
+    false,
+    3.86,
+    0.069
+   ],
+   [
+    7.73,
+    "No, sorry. That is the wrong day. I asked for Thursday",
+    false,
+    3.86,
+    0.044
+   ],
+   [
+    7.930000000000001,
+    "No, sorry. That is the wrong day. I asked for Thursday",
+    false,
+    3.86,
+    0.034
+   ],
+   [
+    8.13,
+    "No, sorry. That is the wrong day. I asked for Thursday",
+    true,
+    3.86,
+    0.03
+   ],
+   [
+    9.290000000000001,
+    "",
+    true,
+    8.5,
+    1.0
+   ]
+  ],
+  "sl04": [
+   [
+    6.29,
+    "That's it.",
+    false,
+    6.02,
+    0.258
+   ],
+   [
+    6.49,
+    "Actually...",
+    false,
+    6.02,
+    0.084
+   ],
+   [
+    6.69,
+    "Actually that's...",
+    false,
+    6.02,
+    0.194
+   ],
+   [
+    6.890000000000001,
+    "Actually that...",
+    false,
+    6.02,
+    0.158
+   ],
+   [
+    7.11,
+    "Actually that first",
+    false,
+    6.02,
+    0.088
+   ],
+   [
+    7.3100000000000005,
+    "Actually, that first...",
+    false,
+    6.02,
+    0.114
+   ],
+   [
+    7.510000000000001,
+    "Actually that first one",
+    false,
+    6.02,
+    0.041
+   ],
+   [
+    7.73,
+    "Actually, that first one...",
+    false,
+    6.02,
+    0.058
+   ],
+   [
+    7.930000000000001,
+    "Actually that first one sounds",
+    false,
+    6.02,
+    0.048
+   ],
+   [
+    8.13,
+    "Actually, that first one sounds",
+    false,
+    6.02,
+    0.031
+   ],
+   [
+    8.35,
+    "Actually that first one sounds good.",
+    false,
+    6.02,
+    0.014
+   ],
+   [
+    8.55,
+    "Actually that first one sounds good.",
+    false,
+    6.02,
+    0.012
+   ],
+   [
+    8.77,
+    "Actually, that first one sounds good.",
+    true,
+    6.02,
+    0.005
+   ],
+   [
+    9.17,
+    "again",
+    false,
+    8.9,
+    0.291
+   ],
+   [
+    9.370000000000001,
+    "Can you?",
+    false,
+    8.9,
+    0.082
+   ],
+   [
+    9.59,
+    "Can you book?",
+    false,
+    8.9,
+    0.129
+   ],
+   [
+    9.790000000000001,
+    "Can you book that?",
+    false,
+    8.9,
+    0.154
+   ],
+   [
+    10.01,
+    "Can you book that one?",
+    false,
+    8.9,
+    0.148
+   ],
+   [
+    10.21,
+    "Can you book that one?",
+    false,
+    8.9,
+    0.04
+   ],
+   [
+    10.43,
+    "Can you book that one?",
+    false,
+    8.9,
+    0.032
+   ],
+   [
+    10.61,
+    "Can you book that one?",
+    true,
+    8.9,
+    0.022
+   ]
+  ],
+  "sl05": [
+   [
+    7.69,
+    "Yeah.",
+    false,
+    7.42,
+    0.179
+   ],
+   [
+    7.890000000000001,
+    "Yes.",
+    false,
+    7.42,
+    0.042
+   ],
+   [
+    8.11,
+    "Yes. It's a",
+    false,
+    7.42,
+    0.06
+   ],
+   [
+    8.31,
+    "Yes, it is.",
+    false,
+    7.42,
+    0.116
+   ],
+   [
+    8.530000000000001,
+    "Yes, it is.",
+    false,
+    7.42,
+    0.024
+   ],
+   [
+    8.75,
+    "Yes, it is.",
+    false,
+    7.42,
+    0.035
+   ],
+   [
+    8.950000000000001,
+    "Yes, it is",
+    false,
+    7.42,
+    0.033
+   ],
+   [
+    9.17,
+    "Yes, it is",
+    false,
+    7.42,
+    0.023
+   ],
+   [
+    9.370000000000001,
+    "Yes, it is.",
+    false,
+    7.42,
+    0.023
+   ],
+   [
+    9.59,
+    "Yes, it is.",
+    false,
+    7.42,
+    0.038
+   ],
+   [
+    9.790000000000001,
+    "Yes, it is.",
+    true,
+    7.42,
+    0.025
+   ],
+   [
+    10.07,
+    "Let's do this.",
+    false,
+    9.8,
+    0.338
+   ],
+   [
+    10.290000000000001,
+    "Let me...",
+    false,
+    9.8,
+    0.17
+   ],
+   [
+    10.51,
+    "Let me think.",
+    false,
+    9.8,
+    0.111
+   ],
+   [
+    10.71,
+    "Let me think.",
+    false,
+    9.8,
+    0.066
+   ],
+   [
+    10.93,
+    "Let me think. I . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+    false,
+    9.8,
+    0.113
+   ],
+   [
+    11.13,
+    "Let me think, I...",
+    false,
+    9.8,
+    0.117
+   ],
+   [
+    11.35,
+    "Let me think, I'm...",
+    false,
+    9.8,
+    0.07
+   ],
+   [
+    11.55,
+    "Let me think, I move...",
+    false,
+    9.8,
+    0.045
+   ],
+   [
+    11.77,
+    "Let me think, I mood re-",
+    false,
+    9.8,
+    0.047
+   ],
+   [
+    11.97,
+    "Let me think, I removed this.",
+    false,
+    9.8,
+    0.065
+   ],
+   [
+    12.19,
+    "Let me think, I removed recent...",
+    false,
+    9.8,
+    0.043
+   ],
+   [
+    12.39,
+    "Let me think, I removed recently.",
+    false,
+    9.8,
+    0.025
+   ],
+   [
+    12.61,
+    "Let me think, I removed recently.",
+    false,
+    9.8,
+    0.041
+   ],
+   [
+    12.81,
+    "Let me think, I moved recently so it's",
+    false,
+    9.8,
+    0.038
+   ],
+   [
+    13.030000000000001,
+    "Let me think, I moved recently so it might be.",
+    false,
+    9.8,
+    0.061
+   ],
+   [
+    13.25,
+    "Let me think, I moved recently so it might be",
+    false,
+    9.8,
+    0.045
+   ],
+   [
+    13.450000000000001,
+    "Let me think, I moved recently so it might be the...",
+    false,
+    9.8,
+    0.026
+   ],
+   [
+    13.67,
+    "Let me think, I removed recently so it might be the old.",
+    false,
+    9.8,
+    0.02
+   ],
+   [
+    13.870000000000001,
+    "Let me think, I moved recently so it might be the old.",
+    false,
+    9.8,
+    0.021
+   ],
+   [
+    14.09,
+    "Let me think, I removed recently so it might be the old one.",
+    false,
+    9.8,
+    0.019
+   ],
+   [
+    14.290000000000001,
+    "Let me think, I removed recently so it might be the old one.",
+    false,
+    9.8,
+    0.015
+   ],
+   [
+    14.51,
+    "Let me think, I removed recently so it might be the old one.",
+    true,
+    9.8,
+    0.006
+   ]
+  ],
+  "ss01": [
+   [
+    6.470000000000001,
+    "Hi.",
+    false,
+    6.2,
+    0.192
+   ],
+   [
+    6.69,
+    "Handball.",
+    false,
+    6.2,
+    0.089
+   ],
+   [
+    6.890000000000001,
+    "Hand-bond.",
+    false,
+    6.2,
+    0.017
+   ],
+   [
+    7.11,
+    "Hand-bond.",
+    true,
+    6.2,
+    0.02
+   ]
+  ],
+  "ss02": [
+   [
+    6.95,
+    "May.",
+    false,
+    6.68,
+    0.591
+   ],
+   [
+    7.15,
+    "May.",
+    false,
+    6.68,
+    0.12
+   ],
+   [
+    7.3500000000000005,
+    "Wait, wait...",
+    false,
+    6.68,
+    0.267
+   ],
+   [
+    7.550000000000001,
+    "Wait, wait.",
+    false,
+    6.68,
+    0.263
+   ],
+   [
+    7.7700000000000005,
+    "Wait, wait.",
+    false,
+    6.68,
+    0.103
+   ],
+   [
+    7.970000000000001,
+    "Wait, wait.",
+    false,
+    6.68,
+    0.105
+   ],
+   [
+    8.17,
+    "Wait, wait.",
+    true,
+    6.68,
+    0.077
+   ],
+   [
+    8.83,
+    "",
+    true,
+    8.24,
+    1.0
+   ]
+  ],
+  "ss03": [
+   [
+    3.25,
+    "No.",
+    false,
+    2.98,
+    0.09
+   ],
+   [
+    3.4699999999999998,
+    "No, wait.",
+    false,
+    2.98,
+    0.129
+   ],
+   [
+    3.67,
+    "No way!",
+    false,
+    2.98,
+    0.06
+   ],
+   [
+    3.8899999999999997,
+    "No, wait.",
+    false,
+    2.98,
+    0.044
+   ],
+   [
+    4.11,
+    "No, wait.",
+    true,
+    2.98,
+    0.034
+   ]
+  ],
+  "ss04": [
+   [
+    9.41,
+    "",
+    false,
+    8.68,
+    1.0
+   ],
+   [
+    9.63,
+    "Sorry.",
+    false,
+    8.68,
+    0.312
+   ],
+   [
+    9.85,
+    "Sorry.",
+    false,
+    8.68,
+    0.14
+   ],
+   [
+    10.05,
+    "Sorry?",
+    true,
+    8.68,
+    0.141
+   ],
+   [
+    11.83,
+    "",
+    true,
+    11.44,
+    1.0
+   ]
+  ],
+  "ss05": [
+   [
+    9.99,
+    "One.",
+    false,
+    9.72,
+    0.455
+   ],
+   [
+    10.21,
+    "One second.",
+    false,
+    9.72,
+    0.443
+   ],
+   [
+    10.43,
+    "One second.",
+    false,
+    9.72,
+    0.16
+   ],
+   [
+    10.63,
+    "1 second",
+    false,
+    9.72,
+    0.169
+   ],
+   [
+    10.85,
+    "1 second.",
+    true,
+    9.72,
+    0.217
+   ]
+  ],
+  "cs01": [
+   [
+    4.3500000000000005,
+    "Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay.",
+    false,
+    3.9,
+    0.672
+   ],
+   [
+    4.550000000000001,
+    "Mm-hmm",
+    false,
+    3.9,
+    0.408
+   ],
+   [
+    4.7700000000000005,
+    "Mm-hmm",
+    true,
+    3.9,
+    0.302
+   ]
+  ],
+  "cs02": [
+   [
+    8.07,
+    "",
+    true,
+    7.56,
+    1.0
+   ],
+   [
+    8.57,
+    "",
+    true,
+    8.18,
+    1.0
+   ],
+   [
+    8.89,
+    "Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay.",
+    false,
+    8.52,
+    0.694
+   ],
+   [
+    9.11,
+    "I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry.",
+    false,
+    8.52,
+    0.323
+   ],
+   [
+    9.31,
+    "I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry.",
+    false,
+    8.52,
+    0.35
+   ],
+   [
+    9.530000000000001,
+    "I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry. I'm sorry.",
+    false,
+    8.52,
+    0.369
+   ],
+   [
+    9.75,
+    "I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure.",
+    false,
+    8.52,
+    0.506
+   ],
+   [
+    9.950000000000001,
+    "I'm not going to do that.",
+    false,
+    8.52,
+    0.429
+   ],
+   [
+    10.17,
+    "I'm not going to do that.",
+    false,
+    8.52,
+    0.517
+   ],
+   [
+    10.370000000000001,
+    "I'm not going to do that.",
+    true,
+    8.52,
+    0.488
+   ],
+   [
+    10.81,
+    "Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay.",
+    false,
+    10.52,
+    0.55
+   ],
+   [
+    11.030000000000001,
+    "Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay. Okay.",
+    true,
+    10.52,
+    0.623
+   ]
+  ],
+  "cs03": [
+   [
+    4.33,
+    "Right.",
+    false,
+    4.06,
+    0.181
+   ],
+   [
+    4.53,
+    "Right.",
+    false,
+    4.06,
+    0.054
+   ],
+   [
+    4.73,
+    "Right.",
+    false,
+    4.06,
+    0.14
+   ],
+   [
+    4.890000000000001,
+    "Right.",
+    true,
+    4.06,
+    0.108
+   ]
+  ],
+  "cs04": [
+   [
+    4.71,
+    "I'm going to go ahead and get",
+    false,
+    4.44,
+    0.519
+   ],
+   [
+    4.91,
+    "I'm going to go back to the next one.",
+    false,
+    4.44,
+    0.359
+   ],
+   [
+    5.11,
+    "I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure. I'm not sure.",
+    false,
+    4.44,
+    0.272
+   ],
+   [
+    5.3100000000000005,
+    "Hahaha.",
+    false,
+    4.44,
+    0.237
+   ],
+   [
+    5.510000000000001,
+    "Hahaha!",
+    false,
+    4.44,
+    0.184
+   ],
+   [
+    5.73,
+    "Hahaha! Haha.",
+    false,
+    4.44,
+    0.436
+   ],
+   [
+    5.930000000000001,
+    "Hahaha. Haha.",
+    true,
+    4.44,
+    0.464
+   ],
+   [
+    6.71,
+    "",
+    true,
+    6.28,
+    1.0
+   ]
+  ],
+  "cs05": [
+   [
+    4.930000000000001,
+    "Okay.",
+    false,
+    4.66,
+    0.31
+   ],
+   [
+    5.15,
+    "Okay",
+    false,
+    4.66,
+    0.105
+   ],
+   [
+    5.3500000000000005,
+    "Okay",
+    false,
+    4.66,
+    0.049
+   ],
+   [
+    5.550000000000001,
+    "Okay",
+    true,
+    4.66,
+    0.042
+   ]
+  ],
+  "cl01": [
+   [
+    10.71,
+    "Okay.",
+    false,
+    10.44,
+    0.234
+   ],
+   [
+    10.93,
+    "Okay",
+    false,
+    10.44,
+    0.123
+   ],
+   [
+    11.13,
+    "Okay, yeah",
+    false,
+    10.44,
+    0.053
+   ],
+   [
+    11.35,
+    "Okay, yeah",
+    false,
+    10.44,
+    0.02
+   ],
+   [
+    11.55,
+    "Okay, yeah",
+    false,
+    10.44,
+    0.087
+   ],
+   [
+    11.77,
+    "Okay, yeah",
+    false,
+    10.44,
+    0.086
+   ],
+   [
+    11.97,
+    "Okay, yeah, that works",
+    false,
+    10.44,
+    0.048
+   ],
+   [
+    12.19,
+    "Okay, yeah, that works",
+    false,
+    10.44,
+    0.047
+   ],
+   [
+    12.39,
+    "Okay, yeah, that works for me",
+    false,
+    10.44,
+    0.02
+   ],
+   [
+    12.61,
+    "Okay, yeah, that works for me",
+    false,
+    10.44,
+    0.011
+   ],
+   [
+    12.81,
+    "Okay, yeah, that works for me",
+    true,
+    10.44,
+    0.007
+   ]
+  ],
+  "cl02": [
+   [
+    3.9099999999999997,
+    "Okay.",
+    false,
+    3.64,
+    0.247
+   ],
+   [
+    4.11,
+    "Okay",
+    false,
+    3.64,
+    0.172
+   ],
+   [
+    4.3100000000000005,
+    "Okay, yep.",
+    false,
+    3.64,
+    0.063
+   ],
+   [
+    4.510000000000001,
+    "Okay, yep.",
+    true,
+    3.64,
+    0.04
+   ],
+   [
+    4.890000000000001,
+    "Don't...",
+    false,
+    4.62,
+    0.769
+   ],
+   [
+    5.11,
+    "",
+    false,
+    4.62,
+    1.0
+   ],
+   [
+    5.3100000000000005,
+    "doing that.",
+    false,
+    4.62,
+    0.487
+   ],
+   [
+    5.510000000000001,
+    "Doing that now.",
+    false,
+    4.62,
+    0.301
+   ],
+   [
+    5.73,
+    "Doing that now.",
+    false,
+    4.62,
+    0.06
+   ],
+   [
+    5.930000000000001,
+    "Doing that now",
+    true,
+    4.62,
+    0.065
+   ]
+  ],
+  "cl03": [
+   [
+    6.63,
+    "Okay.",
+    false,
+    6.36,
+    0.29
+   ],
+   [
+    6.83,
+    "Okay.",
+    false,
+    6.36,
+    0.124
+   ],
+   [
+    7.03,
+    "Okay, yeah",
+    false,
+    6.36,
+    0.042
+   ],
+   [
+    7.23,
+    "Okay, uh",
+    false,
+    6.36,
+    0.082
+   ],
+   [
+    7.430000000000001,
+    "Okay, uh, that is",
+    false,
+    6.36,
+    0.052
+   ],
+   [
+    7.65,
+    "Okay, that is...",
+    false,
+    6.36,
+    0.075
+   ],
+   [
+    7.8500000000000005,
+    "Okay, yeah, that is fine.",
+    false,
+    6.36,
+    0.027
+   ],
+   [
+    8.05,
+    "Okay, yeah, that is fine",
+    false,
+    6.36,
+    0.022
+   ],
+   [
+    8.27,
+    "Okay, yeah, that is fine. God",
+    false,
+    6.36,
+    0.046
+   ],
+   [
+    8.47,
+    "Okay, yeah, that is fine. Got it.",
+    false,
+    6.36,
+    0.017
+   ],
+   [
+    8.69,
+    "Okay, yeah, that is fine. Got it.",
+    true,
+    6.36,
+    0.01
+   ]
+  ],
+  "cl04": [
+   [
+    2.01,
+    "",
+    true,
+    1.62,
+    1.0
+   ],
+   [
+    2.65,
+    "Oh.",
+    false,
+    2.36,
+    0.113
+   ],
+   [
+    2.8699999999999997,
+    "Oh, good.",
+    false,
+    2.36,
+    0.051
+   ],
+   [
+    3.07,
+    "Oh great.",
+    false,
+    2.36,
+    0.036
+   ],
+   [
+    3.27,
+    "Oh great!",
+    false,
+    2.36,
+    0.024
+   ],
+   [
+    3.4899999999999998,
+    "Oh, great.",
+    true,
+    2.36,
+    0.018
+   ],
+   [
+    3.8899999999999997,
+    "Whoops.",
+    false,
+    3.62,
+    0.127
+   ],
+   [
+    4.11,
+    "Okay",
+    false,
+    3.62,
+    0.061
+   ],
+   [
+    4.3100000000000005,
+    "Okay",
+    true,
+    3.62,
+    0.087
+   ],
+   [
+    4.510000000000001,
+    "Okay",
+    false,
+    3.62,
+    0.243
+   ],
+   [
+    4.73,
+    "Okay, go ahead.",
+    false,
+    3.62,
+    0.051
+   ],
+   [
+    4.930000000000001,
+    "Okay, go ahead.",
+    false,
+    3.62,
+    0.039
+   ],
+   [
+    5.15,
+    "Okay, go ahead",
+    true,
+    3.62,
+    0.026
+   ]
+  ],
+  "cl05": [
+   [
+    2.75,
+    "Sure.",
+    false,
+    2.48,
+    0.287
+   ],
+   [
+    2.9699999999999998,
+    "Sean",
+    false,
+    2.48,
+    0.027
+   ],
+   [
+    3.17,
+    "Sure. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah. Yeah.",
+    false,
+    2.48,
+    0.077
+   ],
+   [
+    3.3899999999999997,
+    "Sure, yeah.",
+    false,
+    2.48,
+    0.019
+   ],
+   [
+    3.59,
+    "Sure, yeah.",
+    false,
+    2.48,
+    0.017
+   ],
+   [
+    3.79,
+    "Sure, yeah. No.",
+    false,
+    2.48,
+    0.07
+   ],
+   [
+    4.01,
+    "Sure, yeah, no pr-",
+    false,
+    2.48,
+    0.096
+   ],
+   [
+    4.23,
+    "Sure, yeah, no problem.",
+    false,
+    2.48,
+    0.02
+   ],
+   [
+    4.430000000000001,
+    "Sure, yeah, no problem.",
+    false,
+    2.48,
+    0.032
+   ],
+   [
+    4.65,
+    "Sure, yeah, no problem at all.",
+    false,
+    2.48,
+    0.038
+   ],
+   [
+    4.8500000000000005,
+    "Sure, yeah, no problem at all.",
+    false,
+    2.48,
+    0.01
+   ],
+   [
+    5.050000000000001,
+    "Sure, yeah, no problem at all.",
+    true,
+    2.48,
+    0.008
+   ]
+  ]
+ }
+}

@@ -17,7 +17,7 @@ Rules, from the v1 Research plan (§8):
 | PR-000 | T0 vs T1, T1 vs T2, T0 700 vs T2 on the seed-1000 confirmation run | **Not verifiably** — see entry | Reported, Notion page 18 §6 |
 | PR-001 | Does a phrase-level completeness check reduce disfluent interruptions beyond T1? | The commit that adds this entry | Open |
 | PR-002 | Does streaming the reply (R1) cut the wait for first audio against R0, without changing the words, slowing the turn or stalling playback? | `194e2bb` | **Reported: not supported** (S1, S2, S3 failed; S4, S5 and validity held) |
-| PR-003 | On the author's real voice, does a barge-in policy that reads the caller's words (B2) make fewer wrong stop / keep-going decisions than the best duration threshold, and stop within 1.5 s? | The commit that adds this entry | Open |
+| PR-003 | On the author's real voice, does a barge-in policy that reads the caller's words (B2) make fewer wrong stop / keep-going decisions than the best duration threshold, and stop within 1.5 s? | `e707190` | **Reported: supported** (S1: wrong on 1 of 20 against 8, p = 0.039; S2: 9 of 10 within 1.5 s; any second error would have failed S1) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -497,8 +497,128 @@ criterion.
 
 ### Deviations
 
-*(none yet)*
+- **2026-09-20, the run's commit.** The registered run was made from a working
+  tree that had not been committed: `e707190` plus the reporting changes that
+  were committed afterwards, unchanged, as `19d3ad7`. `git diff e707190 19d3ad7`
+  touches only `bargein_eval.py` and its tests; `context_for` and `score` are
+  unchanged, and the three other frozen files have zero changed lines. V1 is
+  met in substance, but "the run's commit" did not exist when the run was made.
+  The repeat run was made at `19d3ad7` and gave a byte-identical result file.
+- **2026-09-20, verbatim output.** Step 4 of the analysis plan says the output
+  is recorded below verbatim. The per-item table is eleven columns wide, so it
+  is kept verbatim in the committed `runs/bargein/pr003-70ms-report.md`
+  instead; everything else the run printed is below.
+- **2026-09-20, registry row.** Its "Registered" cell was changed from "The
+  commit that adds this entry" to that commit's hash, `e707190`, and its status
+  updated, as for PR-002.
 
 ### Results
 
-*(to be appended)*
+**Run:** 2026-09-20, laptop CPU (WSL), recognizer time charged at 70 ms a call,
+all 20 items, seven policies, first and only registered run. `bargein verify`:
+intact. No transcript cache of the set existed beforehand. Code: `19d3ad7` (see
+Deviations). Evidence: `runs/bargein/pr003-70ms.json` (every outcome, every
+partial) and `runs/bargein/pr003-70ms-report.md` (the run's complete output). A
+repeat at `19d3ad7` with `--refresh` gave a byte-identical result file (`cmp`).
+
+**Verdict: supported.** Both criteria hold, S1 with nothing to spare.
+
+| | Criterion | Result | |
+|---|---|---|---|
+| **S1** | B2 wrong on fewer items than B0 at 1500 ms, exact two-sided sign test p < 0.05 | B2 wrong on **1** of 20, B0 on 8; fixed 8, broken 1; **p = 0.039** | holds |
+| **S2** | at least 8 of 10 interruptions stopped within 1500 ms | **9 of 10**; the tenth, `sl05`, at +3102 ms | holds |
+
+V2, V3 and V4 held; V1 held in substance, with the deviation recorded above.
+Given the one broken item, **any second error would have failed S1** (8 fixed
+and 2 broken: p = 0.11; 7 and 1: p = 0.07).
+
+The run's output, verbatim, without the per-item table (which is in the report file):
+
+```text
+20 items from probes/bargein · confirms PR-003 · recognizer time: charged at 70 ms a call
+
+| policy | stop-long | stop-short | continue-short | continue-long | wrong | missed | false barge-in | of which noise | stop latency of the hits, ms | agent words said over the caller |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---|---|
+| B0_duration_200ms | 0 | 0 | 5 | 5 | **10 of 20** | 0 | 10 | 2 of 2 | 62 / 202 / 275  (fastest / middle / slowest of 10 hits) | 0 / 0 / 1 |
+| B0_duration_400ms | 0 | 0 | 5 | 5 | **10 of 20** | 0 | 10 | 2 of 2 | 262 / 402 / 475  (fastest / middle / slowest of 10 hits) | 0 / 1 / 2 |
+| B0_duration_800ms | 0 | 4 | 2 | 5 | **11 of 20** | 4 | 7 | 2 of 2 | 762 / 842 / 875  (fastest / middle / slowest of 6 hits) | 2 / 2 / 5 |
+| B0_duration_1500ms | 0 | 5 | 0 | 3 | **8 of 20** | 5 | 3 | 0 of 2 | 1462 / 1575 / 4962  (fastest / middle / slowest of 5 hits) | 4 / 4 / 15 |
+| B1_words | 0 | 0 | 2 | 1 | **3 of 20** | 0 | 3 | 2 of 2 | 642 / 1122 / 2662  (fastest / middle / slowest of 10 hits) | 1 / 4 / 10 |
+| B1_words_min1 | 0 | 0 | 2 | 1 | **3 of 20** | 0 | 3 | 2 of 2 | 282 / 782 / 2662  (fastest / middle / slowest of 10 hits) | 1 / 3 / 10 |
+| B2_speechlike | 0 | 0 | 0 | 1 | **1 of 20** | 0 | 1 | 0 of 2 | 642 / 1122 / 3102  (fastest / middle / slowest of 10 hits) | 1 / 4 / 11 |
+
+B1_words: cs02 (false barge-in at +640 ms), cs04 (false barge-in at +320 ms), cl02 (false barge-in at +1882 ms)
+
+B1_words_min1: cs02 (false barge-in at +640 ms), cs04 (false barge-in at +320 ms), cl02 (false barge-in at +1682 ms)
+
+B2_speechlike: cl02 (false barge-in at +2102 ms)
+
+B0_duration_200ms: 10 of 10 interruptions stopped within 1500 ms
+B0_duration_400ms: 10 of 10 interruptions stopped within 1500 ms
+B0_duration_800ms: 6 of 10 interruptions stopped within 1500 ms
+B0_duration_1500ms: 1 of 10 interruptions stopped within 1500 ms
+B1_words: 9 of 10 interruptions stopped within 1500 ms
+B1_words_min1: 9 of 10 interruptions stopped within 1500 ms
+B2_speechlike: 9 of 10 interruptions stopped within 1500 ms
+
+B2_speechlike against B0_duration_1500ms: wrong on 1 against 8 of 20
+  fixed 8: cl01, cl03, cl05, ss01, ss02, ss03, ss04, ss05
+  broken 1: cl02
+  exact two-sided sign test on the 9 items that differ: p = 0.039
+```
+
+**Predictions, scored**
+
+| Prediction | Outcome |
+|---|---|
+| B2 wrong on 1 to 3 of 20 | 1. Right. |
+| S1 is the criterion most likely to fail | It held, at p = 0.039, and was the close one: any second error would have failed it. |
+| Likeliest errors: the laugh `cs04` and "mm-hm" `cs01` | **Wrong.** Both were held. The one error, `cl02`, was not foreseen. |
+| The cough `cs02` will be held | Right. The recognizer wrote "I'm sorry. I'm sorry. I'm sorry…" for it; B1 stopped, B2 did not. |
+| `sl05` counted right, stopped at about +3000 ms by the cap | Right number, **wrong reason**: +3102 ms, but the 3 s cap never fired. See below. |
+| S2: 8 or 9 of 10; middle stop latency 800 to 1200 ms | 9 of 10; 1122 ms. Right. |
+| B1 wrong on 1 or 2 more items than B2, the cough among them | 2 more: the cough and the laugh. Right. |
+
+**What the registration got wrong**
+
+- *"B0 at 1500 ms meets S2 on 0 of 10 by construction."* It meets it on 1:
+  `sl02` at +1462 ms. The causal VAD hears the caller about 40 ms before the
+  hand-labelled onset, so a latency counted from the label can fall under the
+  threshold. S2 is unaffected.
+- The error that happened was not among those imagined. `cl02` is "okay, yep,
+  doing that now", said with a pause after "yep" long enough for the VAD to
+  hear two sounds. B2 judges each sound by its opening, and the second opens
+  with "doing": not an acknowledgement, so it stopped.
+- `ss01`, "hang on", was transcribed "Hand-bond." and stopped correctly only
+  because anything that is not an acknowledgement stops the agent. Right
+  decision, no credit to the recognizer.
+
+**Reported alongside, descriptively**
+
+- B2's ten stops, ms after the labelled onset: 642, 782, 882, 955, 1102, 1122,
+  1122, 1142, 1482, 3102. Agent words said over the caller: 1 to 11, middle 4.
+- The two noise items: B0 at 200 to 800 ms and B1 stop for both; B2 for
+  neither. For the laugh the recognizer first wrote "I'm going to go ahead and
+  get" (no-speech 0.52). B2's speech check changed exactly these two decisions
+  and no other.
+- **Recognizer time as measured on the laptop** (`runs/bargein/pr003-measured.json`;
+  Whisper base.en int8 takes about half a second a call on this CPU): the same
+  decisions item for item -- B2 wrong on 1, B1 on 3, the same items, p = 0.039
+  -- but B2's stops come at 1102 / 1662 / 3402 ms and only **4 of 10 within
+  1500 ms**. S1 does not depend on the recognizer's speed; **S2 does**, and
+  holds only at a GPU's. Not deterministic, not a criterion.
+- The per-item table's last column shows each item's *last* transcript. For
+  five items that is an empty transcript of a breath after the caller had
+  finished. A fault of the listing; the JSON holds every partial.
+
+**Exploratory, after the result**
+
+`sl05` ("yes it is, um, let me think…") was rescued by the mechanism that broke
+`cl02`. "Yes, it is." was held as an acknowledgement; after the "um", "Let me
+think" arrived as a new sound, was judged by its own opening, and stopped the
+agent. Treating a new sound as a new opening fixed one item and broke one. A
+rule that let a sound shortly after an acknowledgement inherit it would fix
+`cl02` and lose `sl05` to the 3 s cap. That is untested, and these 20
+recordings cannot test it: B2's errors on them are now known, so they are
+spent as a test set for any policy of this family. A successor needs new
+recordings and its own registration.
