@@ -9,14 +9,17 @@ what CREMA-D's raters said. fake_ratings() invents a corpus of the same shape:
 from __future__ import annotations
 
 import csv
+import json
 
+import numpy as np
 import pytest
+import soundfile as sf
 
 from s2slab import prosodyset as ps
 from s2slab.prosodyset import (DEV_ACTORS, EMOTIONS, PER_EMOTION, PER_SENTENCE, Rating, candidates,
-                               cross_check, draw, fetch, fetch_audio, filled, format_counts, read_pairs,
-                               read_ratings, read_summary, select, split_actors, write_pairs)
-
+                               cross_check, draw, fetch, fetch_audio, filled, format_counts, freeze, load,
+                               read_pairs, read_ratings, read_summary, select, split_actors, verify,
+                               write_pairs)
 ACTORS = [str(1001 + k) for k in range(91)]
 SENTENCES = ["IEO", "TIE", "IOM", "IWW", "TAI", "MTI", "IWL", "ITH", "DFA", "ITS", "TSI", "WSI"]
 
@@ -230,3 +233,76 @@ def test_only_the_chosen_clips_are_fetched_from_the_pinned_revision_and_never_tw
                for u in asked)
     assert fetch_audio(pairs[:2], tmp_path) == 0 and len(asked) == 4      # already there: nothing asked again
     assert not fetch("https://example.invalid/x", tmp_path / "audio" / f"{pairs[0].neutral}.wav")
+
+
+# --------------------------------------------------------------------------- #
+# Freezing, verifying, loading
+# --------------------------------------------------------------------------- #
+
+
+def tiny_set(root, n_pairs=4):
+    """pairs.tsv for the first dev and test pairs of a made-up selection, and half
+    a second of quiet noise for each of their clips."""
+    _, pairs, _ = select(fake_ratings())
+    pairs = [p for p in pairs if p.id in ("sad-d01", "sad-d02", "sad-t01", "sad-t02")][:n_pairs]
+    write_pairs(pairs, root / "pairs.tsv")
+    rng = np.random.default_rng(0)
+    for p in pairs:
+        for k, clip in enumerate((p.neutral, p.loaded)):
+            (root / "audio").mkdir(exist_ok=True)
+            sf.write(str(root / "audio" / f"{clip}.wav"),
+                     (0.01 * rng.standard_normal(8000 + 1600 * k)).astype(np.float32), 16_000, subtype="PCM_16")
+    return pairs
+
+
+def test_a_frozen_set_verifies_until_a_single_clip_or_the_selection_changes(tmp_path):
+    pairs = tiny_set(tmp_path)
+    manifest = json.loads(freeze(tmp_path).read_text(encoding="utf-8"))
+    assert manifest["source"]["revision"] == ps.REVISION and manifest["pairs"] == 4 and len(manifest["clips"]) == 8
+    assert verify(tmp_path) == []
+    clip = tmp_path / "audio" / f"{pairs[0].loaded}.wav"
+    data = bytearray(clip.read_bytes())
+    data[-1] ^= 1
+    clip.write_bytes(bytes(data))
+    assert verify(tmp_path) == [f"audio/{pairs[0].loaded}.wav: changed"]
+    with pytest.raises(FileExistsError, match="never re-frozen"):
+        freeze(tmp_path)
+
+
+def test_a_set_with_a_missing_clip_or_a_file_that_is_not_audio_cannot_be_frozen(tmp_path):
+    pairs = tiny_set(tmp_path)
+    clip = tmp_path / "audio" / f"{pairs[1].neutral}.wav"
+    original = clip.read_bytes()
+    clip.write_text("version https://git-lfs.github.com/spec/v1\noid sha256:abc\nsize 51296\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="git-lfs pointer"):
+        freeze(tmp_path)
+    clip.unlink()
+    with pytest.raises(FileNotFoundError, match=pairs[1].neutral):
+        freeze(tmp_path)
+    clip.write_bytes(original)
+    assert freeze(tmp_path).exists()
+    assert verify(tmp_path / "nowhere") == ["no manifest.json: the set is not frozen yet"]
+
+
+def test_the_test_pairs_load_only_for_a_registered_run(tmp_path):
+    tiny_set(tmp_path)
+    dev = load("dev", tmp_path)
+    assert [lp.pair.id for lp in dev] == ["sad-d01", "sad-d02"]
+    assert dev[0].neutral.dtype == np.float32 and (len(dev[0].neutral), len(dev[0].loaded)) == (8000, 9600)
+    with pytest.raises(PermissionError, match="preregistration"):
+        load("test", tmp_path)
+    assert [lp.pair.id for lp in load("test", tmp_path, confirm="PR-005")] == ["sad-t01", "sad-t02"]
+    with pytest.raises(ValueError, match="'dev' or 'test'"):
+        load("all", tmp_path)
+
+
+@pytest.mark.skipif(not (ps.PROSODY_ROOT / ps.MANIFEST).exists()
+                    or not any((ps.PROSODY_ROOT / "audio").glob("*.wav")),
+                    reason="the prosody set is not frozen, or its clips are not on this machine")
+def test_the_frozen_prosody_set_is_intact():
+    """A clone has pairs.tsv and the manifest but no audio: fetch it with `prosodyset audio`."""
+    assert verify() == []
+    dev = load("dev")
+    assert len(dev) == 3 * PER_EMOTION["dev"]
+    assert not {lp.pair.actor for lp in dev} & {p.actor for p in read_pairs(ps.PROSODY_ROOT / ps.PAIRS)
+                                                if p.split == "test"}    

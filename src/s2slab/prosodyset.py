@@ -37,8 +37,8 @@ SELECTED BY RULE, FROM THE RATINGS ALONE -- nobody listens first.
      for all three was the first rule (f56c55d); sadness is so rarely heard
      from the voice alone that it dragged fear and anger down to 60% when the
      raters agree on them at 80 and 90%. Changed after seeing the counts and
-     nothing else: no clip had been fetched, no system run.  5. a seeded draw: one pair per actor per emotion, no neutral clip twice, at
-     most PER_SENTENCE pairs of one sentence per emotion and side
+     nothing else: no clip had been fetched, no system run.
+  5. a seeded draw: one pair per actor per emotion, no neutral clip twice, at     most PER_SENTENCE pairs of one sentence per emotion and side
 
 Only the chosen clips are fetched (about 50 KB each); the full corpus is 7.5 GB.
 Audio and the ratings file stay out of git; pairs.tsv, the rule's output, is committed.
@@ -46,15 +46,23 @@ Audio and the ratings file stay out of git; pairs.tsv, the rule's output, is com
     python -m s2slab.prosodyset ratings      fetch the two ratings files (4.5 MB), once
     python -m s2slab.prosodyset select       count, choose, write probes/prosody/pairs.tsv
     python -m s2slab.prosodyset audio        fetch the chosen clips
+    python -m s2slab.prosodyset freeze       write manifest.json: every clip's SHA-256, once
+    python -m s2slab.prosodyset verify       has anything changed since?    
 """
 
 from __future__ import annotations
 
 import csv
+import datetime
+import json
 import pathlib
 import random
 import urllib.request
 from typing import NamedTuple
+
+import numpy as np
+
+from .probes import load_wav, sha256_file
 
 PROSODY_ROOT = pathlib.Path("probes/prosody")
 REPO = "CheyneyComputerScience/CREMA-D"
@@ -62,7 +70,8 @@ REVISION = "1658cd342dff90010aa843eaeebd53610a08b1dc"      # master on 2026-09-2
 RAW = f"https://raw.githubusercontent.com/{REPO}/{REVISION}/"
 MEDIA = f"https://media.githubusercontent.com/media/{REPO}/{REVISION}/"    # the WAVs are git-lfs objects
 RATINGS, SUMMARY = "processedResults/tabulatedVotes.csv", "processedResults/summaryTable.csv"
-
+PAIRS, MANIFEST = "pairs.tsv", "manifest.json"
+CLIP_SR = 16_000                      # CREMA-D's AudioWAV: 16 kHz mono, as the rungs expect
 SEED = 20260921                       # fixed before any rating was read
 NEUTRAL = "NEU"
 EMOTIONS = ("SAD", "FEA", "ANG")      # the three proxies, always reported separately
@@ -321,6 +330,94 @@ def fetch_audio(pairs: list[Pair], root: pathlib.Path = PROSODY_ROOT) -> int:
     clips = sorted({c for p in pairs for c in (p.neutral, p.loaded)})
     return sum(fetch(f"{MEDIA}AudioWAV/{clip}.wav", root / "audio" / f"{clip}.wav") for clip in clips)
 
+# --------------------------------------------------------------------------- #
+# Freezing, verifying, loading
+# --------------------------------------------------------------------------- #
+
+
+def _fingerprints(root: pathlib.Path) -> dict:
+    """SHA-256 of pairs.tsv (line endings normalized) and of every chosen clip."""
+    root = pathlib.Path(root)
+    clips = sorted({c for p in read_pairs(root / PAIRS) for c in (p.neutral, p.loaded)})
+    return {"files": {PAIRS: sha256_file(root / PAIRS, text=True)},
+            "clips": {c: sha256_file(root / "audio" / f"{c}.wav") for c in clips}}
+
+
+def freeze(root: pathlib.Path = PROSODY_ROOT) -> pathlib.Path:
+    """Write manifest.json: where the clips came from, and the SHA-256 of each.
+
+    Refuses if a manifest exists, if a chosen clip is missing, or if a file is
+    not audio at 16 kHz mono -- a git-lfs pointer saved as .wav is a few lines
+    of text, and would otherwise be frozen as if it were a recording.
+    """
+    import soundfile as sf
+    root = pathlib.Path(root)
+    out = root / MANIFEST
+    if out.exists():
+        raise FileExistsError(f"{out} exists: a frozen set is never re-frozen; make a new version")
+    pairs = read_pairs(root / PAIRS)
+    clips = sorted({c for p in pairs for c in (p.neutral, p.loaded)})
+    missing = [c for c in clips if not (root / "audio" / f"{c}.wav").exists()]
+    if missing:
+        raise FileNotFoundError(f"not fetched yet: {', '.join(missing[:5])}"
+                                + (f" and {len(missing) - 5} more" if len(missing) > 5 else ""))
+    for clip in clips:
+        try:
+            info = sf.info(str(root / "audio" / f"{clip}.wav"))
+        except Exception as e:                                     # noqa: BLE001 -- whatever soundfile raises
+            raise ValueError(f"{clip}.wav is not audio ({e}): a git-lfs pointer?") from None
+        if (info.samplerate, info.channels) != (CLIP_SR, 1) or info.duration < 0.5:
+            raise ValueError(f"{clip}.wav: {info.samplerate} Hz, {info.channels} channel(s), "
+                             f"{info.duration:.2f} s -- expected {CLIP_SR} Hz mono, at least 0.5 s")
+    ratings = {name: sha256_file(root / "source" / name) for name in (pathlib.Path(RATINGS).name,
+               pathlib.Path(SUMMARY).name) if (root / "source" / name).exists()}
+    out.write_text(json.dumps({"set": "prosody", "version": 1, "frozen": datetime.date.today().isoformat(),
+                               "source": {"repo": REPO, "revision": REVISION, "ratings_sha256": ratings},
+                               "seed": SEED, "pairs": len(pairs), **_fingerprints(root)}, indent=2) + "\n",
+                   encoding="utf-8")
+    return out
+
+
+def verify(root: pathlib.Path = PROSODY_ROOT) -> list[str]:
+    """One line per file that is missing or changed; empty means intact."""
+    root = pathlib.Path(root)
+    if not (root / MANIFEST).exists():
+        return [f"no {MANIFEST}: the set is not frozen yet"]
+    frozen = json.loads((root / MANIFEST).read_text(encoding="utf-8"))
+    try:
+        now = _fingerprints(root)
+    except FileNotFoundError as e:
+        return [f"missing: {e.filename}"]
+    problems = [f"{name}: changed" for name, h in frozen["files"].items() if now["files"].get(name) != h]
+    problems += [f"audio/{clip}.wav: {'missing from pairs.tsv' if clip not in now['clips'] else 'changed'}"
+                 for clip, h in frozen["clips"].items() if now["clips"].get(clip) != h]
+    return problems
+
+
+class LoadedPair(NamedTuple):
+    pair: Pair
+    neutral: np.ndarray       # mono float32 at 16 kHz
+    loaded: np.ndarray
+
+
+def load(split: str = "dev", root: pathlib.Path = PROSODY_ROOT, confirm: str = "") -> list[LoadedPair]:
+    """The pairs of one side, with their audio.
+
+    Takes:  "dev" or "test". THE TEST PAIRS ARE A TEST SET: they load only for
+            a run that names its registration (docs/preregistration.md), like
+            the simulator's EVAL sentences and the frozen barge-in recordings.
+    Raises: PermissionError for "test" without `confirm`.
+    """
+    if split not in ("dev", "test"):
+        raise ValueError(f"split is 'dev' or 'test', not {split!r}")
+    if split == "test" and not confirm:
+        raise PermissionError("the prosody test pairs are a test set: loading them is a registered "
+                              "confirmation run (docs/preregistration.md); pass confirm='PR-...'. "
+                              "Develop on split='dev'.")
+    root = pathlib.Path(root)
+    return [LoadedPair(p, load_wav(root / "audio" / f"{p.neutral}.wav"), load_wav(root / "audio" / f"{p.loaded}.wav"))
+            for p in read_pairs(root / PAIRS) if p.split == split]
+
 
 if __name__ == "__main__":
     import sys
@@ -337,7 +434,7 @@ if __name__ == "__main__":
         print(f"{len(ratings)} voice-only ratings of neutral, sad, fearful and angry clips; "
               f"{len({r.actor for r in ratings.values()})} actors; seed {SEED}\n")
         print(format_counts(counts, chosen))
-        write_pairs(pairs, PROSODY_ROOT / "pairs.tsv")
+        write_pairs(pairs, PROSODY_ROOT / PAIRS)
         print(f"\n{len(pairs)} pairs -> {PROSODY_ROOT / 'pairs.tsv'}; every chosen clip agrees with summaryTable.csv")
         for emotion in EMOTIONS:
             mine = [p for p in pairs if p.emotion == emotion]
@@ -348,5 +445,11 @@ if __name__ == "__main__":
     elif cmd == "audio":
         pairs = read_pairs(PROSODY_ROOT / "pairs.tsv")
         print(f"downloaded {fetch_audio(pairs)} clips; {2 * len(pairs)} are in {PROSODY_ROOT / 'audio'}")
+    elif cmd == "freeze":
+        print(f"frozen -> {freeze()}")
+    elif cmd == "verify":
+        problems = verify()
+        print("\n".join(problems) if problems else "intact")
+        sys.exit(1 if problems else 0)
     else:
-        sys.exit("usage: python -m s2slab.prosodyset ratings | select | audio")
+        sys.exit("usage: python -m s2slab.prosodyset ratings | select | audio | freeze | verify")

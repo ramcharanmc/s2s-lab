@@ -304,3 +304,109 @@ probes/bargein/
 - Room: personal bedroom, door closed · measured room level −59 to −70 dB re full scale
 - Date recorded: pilot and the other 16 takes 2026-09-19; `cs01` restored from a same-day copy on 2026-09-20
 - Overdub lag from `calibrate`: **202.4 ms** (sharpness 78), 2026-09-19
+
+## Prosody probe set
+
+`probes/prosody/` · 60 pairs · built by `src/s2slab/prosodyset.py` · frozen 2026-09-21
+
+The v2 plan, §6.3: *"Neutral words, loaded delivery … R1 cannot distinguish the
+pairs by construction — this is the input bottleneck, demonstrated rather than
+argued."* One item is a **pair**: the same actor saying the same sentence, once
+neutrally and once with feeling. A cascade hands its LLM a transcript, and both
+clips of a pair have the same transcript.
+
+**Nothing here was recorded for this project.** A label that is a perception
+needs listeners, and one untrained speaker has none. The clips come from
+**CREMA-D**, where 2,443 raters said what they heard:
+
+> Cao H, Cooper DG, Keutmann MK, Gur RC, Nenkova A, Verma R. *CREMA-D:
+> Crowd-sourced Emotional Multimodal Actors Dataset.* IEEE Transactions on
+> Affective Computing 5(4):377–390, 2014. github.com/CheyneyComputerScience/CREMA-D,
+> pinned at commit `1658cd342dff90010aa843eaeebd53610a08b1dc`.
+
+91 actors (48 male, 43 female, aged 20 to 74) speak 12 sentences whose words
+carry no emotion ("It's eleven o'clock", "I think I have a doctor's
+appointment", "Don't forget a jacket"…), each in six acted emotions.
+
+**Licence.** CREMA-D's database is under the Open Database License (ODbL 1.0),
+its contents under the Database Contents License (DbCL 1.0). `pairs.tsv` and
+`manifest.json` contain information from CREMA-D, which is made available under
+the ODbL, and are offered under the same licence. The audio and the ratings
+files are not redistributed here: the builder fetches them from the source.
+
+### "Distress" is a proxy, three times over
+
+CREMA-D has no such category. **Sad, fearful and angry** delivery are three
+separate stand-ins, reported one by one and never pooled. This is acted emotion
+by consenting actors; nothing here claims clinical validity or diagnoses anyone
+(v1 plan, ethics boundary). Each pair keeps the raters' mean intensity for the
+loaded clip — a number beside the label.
+
+### Selected by rule, from the ratings alone
+
+Nobody listened first. The rule was committed (`f56c55d`) before any rating was
+read:
+
+1. **Voice-only ratings** — the raters who heard the clip and saw no face.
+2. A pair qualifies if the neutral clip was heard as neutral and the loaded clip
+   as its intended emotion, each by at least the threshold, of at least 8 raters.
+   A tie is not a majority.
+3. **Actors are split into dev (30) and test (61) before any pair is drawn**, by
+   the seed alone (20260921). No voice is on both sides.
+4. Each emotion's threshold is the highest of 90 / 80 / 70 / 60 / 50% that fills
+   both sides (7 dev + 13 test pairs).
+5. A seeded draw: one pair per actor per emotion, no neutral clip in two pairs,
+   at most 2 (dev) or 3 (test) pairs of one sentence per emotion.
+6. Every chosen clip is cross-checked against CREMA-D's own `summaryTable.csv`.
+
+The counting that chose the thresholds (dev + test pairs the draw could fill):
+
+| raters agreeing | SAD | FEA | ANG |
+|---|---|---|---|
+| at least 90% | 1 + 2 | 7 + 6 | **7 + 13** |
+| at least 80% | 1 + 4 | **7 + 13** | · |
+| at least 70% | 6 + 12 | · | · |
+| at least 60% | **7 + 13** | · | · |
+
+**Sadness is rarely heard from the voice alone**: of 91 actors, three sad pairs
+reach 90% agreement. The sad pairs are the weakest proxy, and say so: loaded
+clips heard as sad by 60 to 100% of raters (median 67%), against 80 to 100% for
+fear (median 90%) and 90 to 100% for anger (median 100%).
+
+**One change to the rule, recorded.** The first rule used one threshold for all
+three emotions and landed at 60%, because sadness needs it; 8 of the 20 anger
+pairs then sat under 70% although anger fills at 90%. Rule 4 was changed to one
+threshold per emotion (`e2d1436`) after seeing the counting table and nothing
+else: no clip had been fetched, no system run.
+
+### Dev and test
+
+21 dev pairs (14 actors) for developing anything that reads prosody; **39 test
+pairs (29 actors) are a test set**: `prosodyset.load("test")` refuses without
+`confirm` naming a registration in `docs/preregistration.md`, like the
+simulator's EVAL sentences and the frozen barge-in recordings.
+
+### Layout, and rebuilding it
+probes/prosody/
+├── pairs.tsv the rule's output: 60 pairs, agreement, raters, intensity (committed)
+├── manifest.json source revision, seed, SHA-256 of pairs.tsv and of all 120 clips (committed)
+├── audio/ 120 clips, 16 kHz mono, 1.5 to 4.1 s, 9.8 MB (NOT committed)
+└── source/ CREMA-D's two ratings files, 4.5 MB (NOT committed)
+
+A clone has the first two. `python -m s2slab.prosodyset audio` fetches the 120
+clips from the pinned revision (the full corpus is 7.5 GB; only these are
+fetched), and `python -m s2slab.prosodyset verify` proves they are the frozen
+ones.
+
+### What it is not
+
+- **Acted, not felt**, by North American actors reading fixed sentences. It
+  tests whether a system can use delivery at all, not how callers sound.
+- **Possibly seen before.** CREMA-D is a standard emotion-recognition benchmark;
+  a speech-LLM may have trained on it. A good score here can be memory. A small
+  set in the author's own voice, which no model has seen, is parked until a rung
+  that could use it exists.
+- **Three emotions as stand-ins for one idea**, and one of the three weakly
+  validated. Results are per emotion.
+- **60 pairs.** Enough for a large effect per emotion (13 test pairs each), not
+  for a subtle one.
