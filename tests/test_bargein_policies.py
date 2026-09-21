@@ -11,11 +11,10 @@ import numpy as np
 import pytest
 
 from s2slab.bargein import BARGEIN_ROOT, CELLS, BargeIn
-from s2slab.bargein_eval import (WINDOW_AFTER_S, WINDOW_BEFORE_S, Outcome, context_for,
-                                 format_report, score, score_set, summarize)
-from s2slab.bargein_policies import (HANG_MS, POLICIES, BargeInContext, BargeInPolicy,
+from s2slab.bargein_eval import (WINDOW_AFTER_S, WINDOW_BEFORE_S, Outcome, compare, context_for,
+                                 format_report, per_item, save, score, score_set, sign_test, summarize)
+from s2slab.bargein_policies import (HANG_MS, POLICIES, BargeInContext, BargeInPolicy, Partial,
                                      DurationThreshold, causal_speech_prob, get, sound_run_ms)
-
 SR = 16_000
 
 
@@ -215,6 +214,74 @@ def test_a_policy_that_is_always_right_says_so():
                 Outcome("cs01", "continue-short", "speech", False, None, "no rule fired", None)]
     assert "oracle: every decision right" in format_report({"oracle": outcomes})
 
+# --------------------------------------------------------------------------- #
+# Every item listed, two policies compared, the run kept
+# --------------------------------------------------------------------------- #
+
+
+def did(item_id: str, should_stop: bool, latency_ms: float | None) -> Outcome:
+    """An outcome by hand: the caller comes in at 5.0 s."""
+    cell = {"s": "stop", "c": "continue"}[item_id[0]] + {"s": "-short", "l": "-long"}[item_id[1]]
+    stop_s = None if latency_ms is None else 5.0 + latency_ms / 1000
+    return Outcome(item_id, cell, "speech", should_stop, stop_s, "", latency_ms, None if stop_s is None else 1)
+
+
+def two_policies() -> dict[str, list[Outcome]]:
+    ids = [("ss01", True), ("ss02", True), ("sl01", True), ("cs01", False), ("cl01", False)]
+    slow = dict(ss01=None, ss02=None, sl01=1500.0, cs01=None, cl01=1500.0)       # wrong: ss01 ss02 cl01
+    words = dict(ss01=700.0, ss02=1501.0, sl01=3000.0, cs01=480.0, cl01=None)    # wrong: cs01
+    return {"slow": [did(i, s, slow[i]) for i, s in ids], "words": [did(i, s, words[i]) for i, s in ids]}
+
+
+def test_every_item_is_listed_with_what_each_policy_did():
+    partials = {"cs01": [Partial(5.3, "Mm", False, 5.0, 0.4), Partial(5.6, "Bye.", True, 5.0, 0.12)]}
+    text = per_item(two_policies(), partials)
+    assert "| item | cell | should | slow | words | the recognizer finally wrote |" in text
+    assert "| ss01 | stop-short | stop | **held, wrong** | +700 ms | - |" in text
+    assert "| cs01 | continue-short | keep going | held | **+480 ms, wrong** | 'Bye.' (no-speech 0.12) |" in text
+    assert "| cl01 | continue-long | keep going | **+1500 ms, wrong** | held | - |" in text
+
+
+def test_stopped_soon_is_counted_per_policy_and_the_bound_is_inclusive():
+    text = per_item(two_policies())
+    assert "slow: 1 of 3 interruptions stopped within 1500 ms" in text       # sl01 at exactly +1500
+    assert "words: 1 of 3 interruptions stopped within 1500 ms" in text      # +700; not +1501, not +3000
+    assert "words: 2 of 3 interruptions stopped within 2000 ms" in per_item(two_policies(), within_ms=2000)
+
+
+def test_the_sign_test_is_exact():
+    assert sign_test(6, 0) == pytest.approx(0.03125) and sign_test(5, 0) == pytest.approx(0.0625)
+    assert sign_test(8, 1) == pytest.approx(0.0390625) and sign_test(7, 1) == pytest.approx(0.0703125)
+    assert sign_test(1, 8) == sign_test(8, 1)                                 # two-sided
+    assert sign_test(0, 0) == 1.0 and sign_test(3, 3) == 1.0
+
+
+def test_two_policies_are_compared_item_by_item():
+    text = compare(two_policies(), "words", "slow")
+    assert "words against slow: wrong on 1 against 3 of 5" in text
+    assert "fixed 3: cl01, ss01, ss02" in text and "broken 1: cs01" in text
+    assert "on the 4 items that differ: p = 0.625" in text
+    with pytest.raises(KeyError, match="B9"):
+        compare(two_policies(), "B9", "slow")
+
+
+def test_a_saved_run_can_be_recounted_and_is_never_overwritten(tmp_path):
+    import json
+    path = tmp_path / "bargein" / "run.json"
+    save(path, "5 items", two_policies(), {"cs01": [Partial(5.6, "Bye.", True, 5.0, 0.12)]})
+    kept = json.loads(path.read_text(encoding="utf-8"))
+    assert kept["run"] == "5 items" and kept["partials"]["cs01"] == [[5.6, "Bye.", True, 5.0, 0.12]]
+    assert [o["item"] for o in kept["outcomes"]["words"] if not o["correct"]] == ["cs01"]
+    assert kept["outcomes"]["words"][0]["latency_ms"] == 700.0
+    with pytest.raises(FileExistsError, match="never overwritten"):
+        save(path, "again", two_policies(), None)
+
+
+def test_a_run_that_cannot_be_saved_is_refused_before_anything_is_scored(tmp_path):
+    (tmp_path / "run.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(FileExistsError):
+        score_set(["B0_duration_400ms"], tmp_path / "no-such-set", save_to=tmp_path / "run.json")
+
 
 # --------------------------------------------------------------------------- #
 # The frozen set is a test set
@@ -234,5 +301,8 @@ def test_only_baselines_may_be_scored_on_the_frozen_set_without_a_registration(m
 @pytest.mark.skipif(not (BARGEIN_ROOT / "audio" / "sl03.wav").exists(),
                     reason="the barge-in recordings are not on this machine")
 def test_the_baselines_run_on_the_real_recordings():
-    text = score_set(["B0_duration_400ms"])
+    text = score_set(["B0_duration_400ms", "B0_duration_1500ms"],
+                     versus=("B0_duration_1500ms", "B0_duration_400ms"))
     assert "20 items" in text and "of 20**" in text
+    assert "| sl03 | stop-long | stop |" in text and "interruptions stopped within 1500 ms" in text
+    assert "B0_duration_1500ms against B0_duration_400ms: wrong on 8 against 10 of 20" in text

@@ -7,6 +7,8 @@ Scoring barge-in policies on a probe set: wrong decisions and stop latency, toge
     python -m s2slab.bargein_eval B1_words B2_speechlike --noise-dir probes/bargein_dev/noise
                                                                       real coughs and laughs: all "keep going"    
     python -m s2slab.bargein_eval B1_words --confirm PR-003           the frozen set needs a registration
+    ... --compare B2_speechlike B0_duration_1500ms                    items fixed and broken, exact sign test
+    ... --save runs/bargein/pr003.json                                every outcome and every transcript, kept
 ONE ITEM, ONE WINDOW. A policy is asked about an item from WINDOW_BEFORE_S before
 its labelled onset to WINDOW_AFTER_S after its labelled end. A stray noise eight
 seconds later is not the item; what happens inside the window is.
@@ -29,12 +31,19 @@ over each item first (bargein_asr.py), and every transcript carries the time it
 was DELIVERED. By default that is what each call really took on this machine;
 --asr-latency-ms charges a stated figure instead. The transcripts are cached
 under results/bargein/, so a changed rule is re-scored without the recognizer.
+
+EVERY ITEM IS LISTED. Under the table: one row per item with what each policy
+did and what the recognizer finally wrote, and per policy how many interruptions
+were stopped within WITHIN_MS. Twenty items are few enough to read, and a count
+of errors does not say which.
 """
 
 from __future__ import annotations
 
+import json
 import pathlib
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
+from math import comb
 
 from .bargein import BARGEIN_ROOT, CELLS, BargeIn, load_set, read_lag_s
 from .bargein_asr import cache_path, partials_for, whisper
@@ -43,6 +52,7 @@ from .probes import TARGET_SR
 
 WINDOW_BEFORE_S = 1.0
 WINDOW_AFTER_S = 2.0
+WITHIN_MS = 1500.0       # PR-003, S2: an interruption counts as stopped soon if stopped within this of its onset
 
 
 def context_for(item: BargeIn, lag_s: float, partials=()) -> BargeInContext:
@@ -142,14 +152,100 @@ def format_report(results: dict[str, list[Outcome]]) -> str:
             for o in errors) or "every decision right")]
     return "\n".join(lines)
 
+def per_item(results: dict[str, list[Outcome]], partials: dict | None = None,
+             within_ms: float = WITHIN_MS) -> str:
+    """Every item, and what every policy did with it.
+
+    Takes:   {policy name: outcomes}, all over the same items in the same order;
+             the recognizer's partials, if any policy read words.
+    Returns: a table -- one row per item, one column per policy: "+714 ms" for a
+             stop (stop minus labelled onset), "held" for none, bold and marked
+             "wrong" where that was the wrong thing to do; then the recognizer's
+             last transcript and its no-speech score. Below it, per policy, how
+             many interruptions were stopped within within_ms.
+    """
+    names = list(results)
+    lines = ["| item | cell | should | " + " | ".join(names) + " | the recognizer finally wrote |",
+             "|---|---|---|" + "---:|" * len(names) + "---|"]
+    for k, first in enumerate(results[names[0]]):
+        cells = []
+        for name in names:
+            o = results[name][k]
+            did = f"{o.latency_ms:+.0f} ms" if o.stop_s is not None else "held"
+            cells.append(did if o.correct else f"**{did}, wrong**")
+        last = (partials or {}).get(first.item) or []
+        wrote = f"{last[-1].text[:60]!r} (no-speech {last[-1].no_speech:.2f})" if last else "-"
+        lines.append(f"| {first.item} | {first.cell} | {'stop' if first.should_stop else 'keep going'} | "
+                     + " | ".join(cells) + f" | {wrote} |")
+    lines.append("")
+    for name in names:
+        stops = [o for o in results[name] if o.should_stop]
+        soon = sum(1 for o in stops if o.correct and o.latency_ms <= within_ms)
+        lines.append(f"{name}: {soon} of {len(stops)} interruptions stopped within {within_ms:.0f} ms")
+    return "\n".join(lines)
+
+
+def sign_test(fixed: int, broken: int) -> float:
+    """Exact two-sided sign test on the items where two policies disagree.
+
+    If the two were equally good, each disagreement would be a coin flip. Returns
+    the chance of a split at least this lopsided: 6 fixed and 0 broken -> 0.031,
+    5 and 0 -> 0.063, 8 and 1 -> 0.039. No disagreements -> 1.0.
+    """
+    n, k = fixed + broken, min(fixed, broken)
+    return min(1.0, 2 * sum(comb(n, i) for i in range(k + 1)) / 2 ** n) if n else 1.0
+
+
+def compare(results: dict[str, list[Outcome]], a: str, b: str) -> str:
+    """Policy a against policy b on the same items: which items a fixed (b wrong,
+    a right), which it broke (b right, a wrong), and the sign test on those."""
+    for name in (a, b):
+        if name not in results:
+            raise KeyError(f"--compare {name}: not among the policies scored ({', '.join(results)})")
+    wrong_a, wrong_b = ({o.item for o in results[n] if not o.correct} for n in (a, b))
+    fixed, broken = sorted(wrong_b - wrong_a), sorted(wrong_a - wrong_b)
+    p = sign_test(len(fixed), len(broken))
+    return (f"{a} against {b}: wrong on {len(wrong_a)} against {len(wrong_b)} of {len(results[a])}\n"
+            f"  fixed {len(fixed)}: {', '.join(fixed) or '-'}\n"
+            f"  broken {len(broken)}: {', '.join(broken) or '-'}\n"
+            f"  exact two-sided sign test on the {len(fixed) + len(broken)} items that differ: "
+            + (f"p = {p:.3f}" if p >= 0.001 else "p < 0.001"))
+
+
+def refuse_to_overwrite(path: pathlib.Path) -> None:
+    if pathlib.Path(path).exists():
+        raise FileExistsError(f"{path} exists. A saved run is evidence and is never overwritten: "
+                              "choose another name.")
+
+
+def save(path: pathlib.Path, run: str, results: dict[str, list[Outcome]], partials: dict | None) -> None:
+    """Everything a reader needs to re-count the result without the recordings:
+    the run's heading, every outcome of every policy, and every partial the
+    policies were shown -- [delivered at, text, final, event start, no-speech]."""
+    path = pathlib.Path(path)
+    refuse_to_overwrite(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({
+        "run": run,
+        "outcomes": {name: [{**asdict(o), "correct": o.correct} for o in outcomes]
+                     for name, outcomes in results.items()},
+        "partials": {i: [list(p) for p in ps] for i, ps in (partials or {}).items()},
+    }, indent=1) + "\n", encoding="utf-8")
+
 
 def score_set(names: list[str], root: pathlib.Path = BARGEIN_ROOT, confirm: str = "",
-              asr_latency_ms: float | None = None, refresh: bool = False, recognizer=whisper) -> str:
+              asr_latency_ms: float | None = None, refresh: bool = False, recognizer=whisper,
+              versus: tuple[str, str] | None = None, save_to: pathlib.Path | None = None) -> str:
     """Score named policies on a probe set. The frozen set is locked to baselines
     unless `confirm` names the registration this run belongs to. If any policy
-    reads words, the recognizer runs first (or its cache is read)."""
+    reads words, the recognizer runs first (or its cache is read).
+
+    versus=(a, b) adds compare(a, b); save_to keeps the run as JSON, and is
+    checked BEFORE the recognizer runs, so a run is never made and then lost."""
     root = pathlib.Path(root)
     policies = [get(n) for n in names]
+    if save_to is not None:
+        refuse_to_overwrite(save_to)
     locked = [p.name for p in policies if not p.baseline]
     if locked and root.resolve() == BARGEIN_ROOT.resolve() and not confirm:
         raise PermissionError(f"{', '.join(locked)}: the frozen barge-in set is a test set. Scoring a "
@@ -165,7 +261,15 @@ def score_set(names: list[str], root: pathlib.Path = BARGEIN_ROOT, confirm: str 
                                 cache_path(root.resolve().name, asr_latency_ms), refresh)
         head += (" · recognizer time: " + ("as measured on this machine" if asr_latency_ms is None
                                            else f"charged at {asr_latency_ms:.0f} ms a call"))
-    return head + "\n\n" + format_report({p.name: score(p, items, lag_s, partials) for p in policies})
+    results = {p.name: score(p, items, lag_s, partials) for p in policies}
+    text = [head, format_report(results), per_item(results, partials)]
+    if versus:
+        text.append(compare(results, *versus))
+    if save_to is not None:
+        save(save_to, head, results, partials)
+        text.append(f"saved to {save_to}")
+    return "\n\n".join(text)
+
 
 
 def score_noise(names: list[str], noise_dir: pathlib.Path, asr_latency_ms: float | None = None,
@@ -205,9 +309,14 @@ if __name__ == "__main__":
                     help="charge every recognizer call this much instead of what it took here")
     ap.add_argument("--refresh", action="store_true", help="run the recognizer again, ignoring the cache")
     ap.add_argument("--noise-dir", default="", help="score on a folder of real non-speech clips instead of a set")
+    ap.add_argument("--compare", nargs=2, metavar=("POLICY", "AGAINST"),
+                    help="items fixed and broken by POLICY relative to AGAINST, with an exact sign test")
+    ap.add_argument("--save", default="", help="keep every outcome and every transcript as JSON; never overwrites")    
     a = ap.parse_args()
     names = a.policies or [n for n, p in POLICIES.items() if p.baseline]
     if a.noise_dir:
         print(score_noise(names, pathlib.Path(a.noise_dir), a.asr_latency_ms, a.refresh))
     else:
-        print(score_set(names, pathlib.Path(a.root), a.confirm, a.asr_latency_ms, a.refresh))
+        print(score_set(names, pathlib.Path(a.root), a.confirm, a.asr_latency_ms, a.refresh,
+                        versus=tuple(a.compare) if a.compare else None,
+                        save_to=pathlib.Path(a.save) if a.save else None))
