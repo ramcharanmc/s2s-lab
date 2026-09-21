@@ -16,6 +16,9 @@ Smoke tests, `--limit` runs and reply WAVs go to `results/`, which is ignored.
 | `bargein/pr003-70ms.json` | PR-003, the registered run: seven barge-in policies on the frozen 20, recognizer time charged at 70 ms a call | `19d3ad7` | laptop CPU (WSL) | page 20 §11, page 18 |
 | `bargein/pr003-70ms-report.md` | the same run's complete printed output, with the per-item table | `19d3ad7` | laptop CPU (WSL) | page 20 §11 |
 | `bargein/pr003-measured.json` | PR-003, descriptive: the same set with recognizer time as measured on the laptop; not deterministic | `19d3ad7` | laptop CPU (WSL) | page 20 §11 |
+| `r1-gpu/evalset-modal-t4-pr004.json` | R1 re-run for PR-004, same container as the two rows below; 17% slower than its PR-002 run, same words | `91048b3` | Modal Tesla T4 | page 20 §12 |
+| `r2-gpu/evalset-modal-t4-pr004.json` | R2 with small.en as the slow tier, over the 200-clip eval set; described, not tested | `91048b3` | Modal Tesla T4 | page 20 §12 |
+| `r2-gpu-turbo/evalset-modal-t4-pr004.json` | R2 with large-v3-turbo as the slow tier, the PR-004 run | `91048b3` | Modal Tesla T4 | page 20 §12 |
 
 ## What an eval-set run holds
 

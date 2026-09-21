@@ -18,7 +18,7 @@ Rules, from the v1 Research plan (§8):
 | PR-001 | Does a phrase-level completeness check reduce disfluent interruptions beyond T1? | The commit that adds this entry | Open |
 | PR-002 | Does streaming the reply (R1) cut the wait for first audio against R0, without changing the words, slowing the turn or stalling playback? | `194e2bb` | **Reported: not supported** (S1, S2, S3 failed; S4, S5 and validity held) |
 | PR-003 | On the author's real voice, does a barge-in policy that reads the caller's words (B2) make fewer wrong stop / keep-going decisions than the best duration threshold, and stop within 1.5 s? | `e707190` | **Reported: supported** (S1: wrong on 1 of 20 against 8, p = 0.039; S2: 9 of 10 within 1.5 s; any second error would have failed S1) |
-| PR-004 | Does a slow-tier recognizer (R2, large-v3-turbo) cut R1's word error rate by at least 3 points overall and 5 on accented speech, while the reply still starts within a second? | The commit that adds this entry | Open |
+| PR-004 | Does a slow-tier recognizer (R2, large-v3-turbo) cut R1's word error rate by at least 3 points overall and 5 on accented speech, while the reply still starts within a second? | `415ddc7` | **Reported: not supported** (S2 failed: accented −4.3 points, needed −5; S1 −3.4 points and S3 889 ms held) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -770,8 +770,130 @@ to a pass: it is a different operating point, described, not tested.
 
 ### Deviations
 
-*(none yet)*
+- **2026-09-21, registry row.** Its "Registered" cell was changed from "The
+  commit that adds this entry" to that commit's hash, `415ddc7`, and its status
+  updated, as for PR-002 and PR-003.
+- **2026-09-21, who ran the analysis.** Step 4's command was first run by the
+  assistant, read-only, on the three saved result files; the author then ran
+  the same command. It is deterministic (seed 0), and the two outputs are
+  identical.
 
 ### Results
 
-*(to be appended)*
+**Run:** 2026-09-21, commit `91048b3`, clean tree, Modal T4 (driver 580.95.05), one
+container call: `r1-gpu`, then `r2-gpu`, then `r2-gpu-turbo`, all 200 clips each,
+first and only run. 666 s inside the function, about \$0.119. Files:
+`runs/r1-gpu/`, `runs/r2-gpu/` and `runs/r2-gpu-turbo/evalset-modal-t4-pr004.json`.
+V1 to V4 held; zero changed lines in the seven frozen files since `415ddc7`.
+
+**Verdict: not supported.** S1 and S3 hold; **S2 fails**: on accented speech the
+slow tier cuts the error rate by 4.3 points, not the 5 registered, with an
+interval from −7.4 to −1.5.
+
+Output of `python -m s2slab.tiers`, verbatim:
+
+```text
+PR-004: r2-gpu-turbo against r1-gpu
+  r1-gpu: commit 91048b3 · Modal Tesla T4, 580.95.05, one container: r1-gpu then r2-gpu then r2-gpu-turbo · run 2026-09-21
+  r2-gpu-turbo: commit 91048b3 · Modal Tesla T4, 580.95.05, one container: r1-gpu then r2-gpu then r2-gpu-turbo · run 2026-09-21
+  paired bootstrap: 10000 resamples of 200 clips, seed 0
+
+V1 same run          PASS  Modal Tesla T4, 580.95.05, one container: r1-gpu then r2-gpu then r2-gpu-turbo
+V3 clean tree        PASS  commit 91048b3
+S1 hears more        PASS  normalized WER, slow minus fast: -3.389 [95% CI -4.487, -2.345] points; needs <= -3.0 and upper end < 0
+S2 accented          FAIL  accented cohort (50 clips): -4.348 [95% CI -7.379, -1.537] points; needs <= -5.0 and upper end < 0
+S3 within a second   PASS  first-audio p50 888.950 [95% CI 870.950, 910.200] ms; needs upper end <= 1000
+
+NOT SUPPORTED: failed S2 accented
+
+Descriptive, not criteria:
+  ms, p50 / p90            r2-gpu-turbo           r1-gpu
+  first audio               889 /  1191      574 /   864
+  total                    1160 /  1814      806 /  1357
+  first sound p50                  1204              893
+  asr p50                           393               81
+  WER normalized                   8.6%            11.9%
+  turns that stalled                  0                0
+  the added wait, per turn, at the median:
+    first audio +310 ms = recognizer +310 ms + everything after it -2 ms
+    everything after it: -1 ms on the 66 turns whose reply kept its words, -6 ms on the 134 whose reply changed
+  clips with any error: both tiers 100, only r1-gpu 28, only r2-gpu-turbo 5, neither 67
+    error overlap 75% (both / either); the plan's rule: above about 70%, fusing the tiers will not pay
+  the tiers agree word for word (normalized) on 97 of 200 clips
+  the reply's words changed on 134 of 200 turns: 134 of the 154 whose transcript differed, 0 of the 46 whose transcript was identical
+
+Described only, not tested: r2-gpu against r1-gpu
+  r1-gpu: commit 91048b3 · Modal Tesla T4, 580.95.05, one container: r1-gpu then r2-gpu then r2-gpu-turbo · run 2026-09-21
+  r2-gpu: commit 91048b3 · Modal Tesla T4, 580.95.05, one container: r1-gpu then r2-gpu then r2-gpu-turbo · run 2026-09-21
+  paired bootstrap: 10000 resamples of 200 clips, seed 0
+
+S1 hears more              normalized WER, slow minus fast: -2.296 [95% CI -3.348, -1.294] points; needs <= -3.0 and upper end < 0
+S2 accented                accented cohort (50 clips): -2.676 [95% CI -5.653, -0.109] points; needs <= -5.0 and upper end < 0
+S3 within a second         first-audio p50 670.600 [95% CI 645.000, 713.500] ms; needs upper end <= 1000
+
+Descriptive, not criteria:
+  ms, p50 / p90                  r2-gpu           r1-gpu
+  first audio               671 /   969      574 /   864
+  total                     898 /  1509      806 /  1357
+  first sound p50                   988              893
+  asr p50                           167               81
+  WER normalized                   9.6%            11.9%
+  turns that stalled                  0                0
+  the added wait, per turn, at the median:
+    first audio +92 ms = recognizer +84 ms + everything after it +3 ms
+    everything after it: +2 ms on the 87 turns whose reply kept its words, +14 ms on the 113 whose reply changed
+  clips with any error: both tiers 112, only r1-gpu 16, only r2-gpu 8, neither 64
+    error overlap 82% (both / either); the plan's rule: above about 70%, fusing the tiers will not pay
+  the tiers agree word for word (normalized) on 104 of 200 clips
+  the reply's words changed on 113 of 200 turns: 113 of the 128 whose transcript differed, 0 of the 72 whose transcript was identical
+
+WER normalized (raw), by cohort:
+  r1-gpu: clean 5.6% (6.3%), accented 26.5% (29.0%), disfluent 9.7% (12.1%), slow 5.6% (6.1%), all 11.9% (13.5%)
+  r2-gpu-turbo: clean 2.4% (3.4%), accented 22.2% (25.5%), disfluent 7.4% (9.7%), slow 1.8% (2.5%), all 8.6% (10.4%)
+  r2-gpu: clean 3.3% (3.5%), accented 23.9% (27.0%), disfluent 7.6% (9.9%), slow 3.5% (3.7%), all 9.6% (11.1%)
+
+r1-gpu now (commit 91048b3) against its earlier run (commit b107927), 200 clips:
+  identical transcripts 200, identical replies 200; first-audio p50 574 vs 491 ms, median per-turn difference +94 ms
+```
+
+**Predictions, scored**
+
+| Prediction | Outcome |
+|---|---|
+| Turbo's overall WER about 7.5% (−4 to −5 points) | **Wrong.** 8.6%, −3.4 points. |
+| Accented about 17% (−8 to −10 points); both WER criteria hold | **Wrong, and the reason PR-004 failed.** 22.2%, −4.3 points; S2 failed. |
+| First-audio p50 860 to 920 ms | Right: 889 ms. |
+| S3 is the criterion most at risk | **Wrong.** S3 held with 90 ms to spare; S2 failed. |
+| small.en: −1 to −2 points overall for about +90 ms | −2.3 points (a little better than predicted) for +92 ms. |
+| The tiers agree exactly on 35 to 45% of clips | 48.5% (97 of 200): a little more than predicted. |
+| R1's re-run reproduces its PR-002 run: WER 11.9%, first audio within 20 ms | WER and all 200 transcripts and replies identical; **timing wrong: +94 ms.** |
+| No playback stalls | Right: 0 of 600 turns. |
+
+**What the registration got wrong**
+
+1. **It borrowed its optimism from public benchmarks.** Larger Whisper models
+   roughly halve the error rate on read speech, and they did here (clean 5.6%
+   to 2.4%, slow 5.6% to 1.8%). The accented cohort is spontaneous
+   conversation, and there the bigger model cut errors by a sixth. −5 points
+   was set from the wrong expectation, not from anything measured.
+2. **It treated a Modal T4 as one machine.** The same R1, saying the same
+   words, was 17% slower than three days earlier (asr 81 against 68 ms, llm
+   432 against 374, tts 300 against 231). The image had been rebuilt and the
+   host was another one. The paired comparison inside one container is
+   unaffected; S3's absolute bar was met on a slow day. Numbers from
+   different runs are not comparable to within 20 ms, or to within 80.
+
+**Exploratory, after the registered analysis — not evidence for or against PR-004**
+
+- On the 50 accented clips turbo makes fewer errors on 21, the same number on
+  21 and more on 8. Its 199 remaining errors are spread out: the worst five
+  clips hold 49 of them. No handful of clips explains the cohort.
+- The smoke test suggested first audio rose by more than the recognizer's own
+  time. Turn by turn it does not: +310 ms of recognizer, −2 ms of everything
+  else. Medians of 30 clips do not add.
+- The reply changed on 134 of 200 turns, though the tiers' words differ on
+  only 103: a 0.5B LLM answers differently when only punctuation or casing
+  changes. Whether the new replies are better was not measured.
+- Starting the LLM on the fast tier's transcript and keeping the reply when
+  the slow tier agrees would save the 310 ms on at most the 46 turns whose raw
+  transcripts are identical, under a quarter. Not worth building as it stands.
