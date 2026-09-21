@@ -18,6 +18,7 @@ Rules, from the v1 Research plan (§8):
 | PR-001 | Does a phrase-level completeness check reduce disfluent interruptions beyond T1? | The commit that adds this entry | Open |
 | PR-002 | Does streaming the reply (R1) cut the wait for first audio against R0, without changing the words, slowing the turn or stalling playback? | `194e2bb` | **Reported: not supported** (S1, S2, S3 failed; S4, S5 and validity held) |
 | PR-003 | On the author's real voice, does a barge-in policy that reads the caller's words (B2) make fewer wrong stop / keep-going decisions than the best duration threshold, and stop within 1.5 s? | `e707190` | **Reported: supported** (S1: wrong on 1 of 20 against 8, p = 0.039; S2: 9 of 10 within 1.5 s; any second error would have failed S1) |
+| PR-004 | Does a slow-tier recognizer (R2, large-v3-turbo) cut R1's word error rate by at least 3 points overall and 5 on accented speech, while the reply still starts within a second? | The commit that adds this entry | Open |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -622,3 +623,155 @@ rule that let a sound shortly after an acknowledgement inherit it would fix
 recordings cannot test it: B2's errors on them are now known, so they are
 spent as a test set for any policy of this family. A successor needs new
 recordings and its own registration.
+
+---
+
+## PR-004 — Does a slow-tier recognizer hear enough more to be worth the wait?
+
+**Registered:** 2026-09-21, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+R1 on the frozen 200-clip eval set, Modal T4 (PR-002 run, `b107927`): first
+audio p50 491 ms; normalized WER 11.9% overall -- clean 5.6%, **accented 26.5%**,
+disfluent 9.7%, slow 5.6%. A misheard word becomes the answer: on probe clip
+f02 R1 hears "half pass too" and replies "half time".
+
+R2 (`4920228`, `a84a3e3`) is the v2 plan's two-tier cascade. The fast tier,
+Whisper base.en, serves barge-in and was tested in PR-003. The slow tier, a
+larger Whisper, transcribes the finished turn, and its words drive the reply.
+Inside `respond()` R2 is R1 with the slow tier's recognizer: the LLM, prompt,
+chunker and voice are R1's own, and a test holds that nothing but the
+recognizer's size differs. Two slow tiers are built: small.en (`r2-gpu`) and
+large-v3-turbo (`r2-gpu-turbo`). Nothing in either is tuned.
+
+Development data, **the 30 probe clips only, one speaker**:
+
+- Modal T4, one container, `4920228-dirty` (dirty only by the edits committed
+  as `a84a3e3`): asr p50 65 / 123 / 376 ms for base.en / small.en / turbo;
+  first audio 512 / 605 / 900 ms; no playback stalls. First audio rose by more
+  than the recognizer's own time (+93 against +58 ms; +388 against +312 ms).
+- Laptop CPU: turbo needs 6.9 s a turn; the slow tier is a GPU design.
+- One clip, f02: small.en hears "half pass 2"; turbo hears "half past two" and
+  the reply is "2:30 PM", right for the first time in this project.
+
+What was already known about the eval set: all of R1's and R0's results on it,
+turn by turn. **Neither slow tier has been run on any eval-set clip.** That a
+larger Whisper makes fewer errors in general is not in doubt; what is
+registered is how many fewer on this set, whether they come where R1 fails,
+and what the caller waits for them.
+
+### Question
+
+On the same clips, LLM, voice and GPU, does replacing R1's recognizer with
+large-v3-turbo cut the word error rate substantially -- overall and on
+accented speech -- while the reply still starts within a second?
+
+### Validity requirements
+
+| | Requirement |
+|---|---|
+| **V1 · Same run** | `r1-gpu`, `r2-gpu` and `r2-gpu-turbo`, in that order, over all 200 clips inside **one Modal container call**, same T4, same image: `modal run modal_app/r0_bench.py --rung r1-gpu,r2-gpu,r2-gpu-turbo --evalset --tag pr004`. R1 is re-run; its saved PR-002 run is not the comparator. |
+| **V2 · Frozen code** | `r2.py`, `r1.py`, `r0.py`, `rungs.py`, `chunking.py`, `wer.py` and `evalrun.py` are unchanged between this commit and the run. `modal_app/`, the analysis script and tests may change. |
+| **V3 · Clean tree** | The run is made from a committed, clean working tree: the commit stamped into the result files must not end in `-dirty`. A dirty run is not the registered run; it is reported, and the run is repeated once from a clean tree. |
+| **V4 · Whole set, one run** | All 200 clips per rung, the first complete run. No clip is dropped and no run is repeated to improve a number; a crashed run is reported as such and repeated once, in full. The container verifies the eval set against its manifest before any model loads. |
+
+### Primary outcomes
+
+- **Normalized WER**, as `wer.score` computes it at this commit (Whisper's
+  English normalizer, corpus-level: total errors over total reference words),
+  overall and for the accented cohort. The statistic is the difference
+  `r2-gpu-turbo` minus `r1-gpu`, in percentage points.
+- **`first_audio_ms`** of `r2-gpu-turbo`: from the rung receiving the finished
+  turn to its first piece of reply audio existing; p50 over the 200 clips.
+
+### Success criterion — all three must hold
+
+| | Criterion |
+|---|---|
+| **S1 · Hears more** | Overall normalized WER difference is **−3.0 points or lower**, and the upper end of its 95% interval is below 0. |
+| **S2 · Hears more where R1 fails** | Accented-cohort normalized WER difference is **−5.0 points or lower**, and the upper end of its 95% interval is below 0. |
+| **S3 · Still starts within a second** | The upper end of the 95% interval of `r2-gpu-turbo`'s first-audio p50 is **at or below 1000 ms**. |
+
+**Confidence.** A paired bootstrap resamples clip ids with replacement (10,000
+resamples, seed 0, percentile interval; `compare.resamples`): all 200 for S1
+and S3, the 50 accented clips for S2. On each resample the corpus WER of both
+rungs is recomputed from the same clips, and their difference taken; for S3
+the p50 is recomputed.
+
+**No multiplicity correction:** success needs all three at once.
+
+**Why −3 and −5 points.** The slow tier adds about a third of a second before
+the caller hears anything. A quarter off the overall error rate is the least
+that would justify that, and accent is where R1 fails worst, so a gain that
+missed the accented cohort would not be the gain the tier exists for.
+
+**Why 1000 ms.** First sound follows first audio by Kokoro's 320 ms of leading
+silence. Past one second to first audio, the caller waits over 1.3 s to hear a
+word, and a faster recognizer would have been the better trade.
+
+**If any of S1–S3 fails,** PR-004 is reported as *not supported*, naming the
+criterion. `r2-gpu` (small.en) is reported beside it and is **not** promoted
+to a pass: it is a different operating point, described, not tested.
+
+### Predictions, recorded but not criteria
+
+- Turbo's overall WER about 7.5% (−4 to −5 points). Accented about 17% (−8 to
+  −10 points), with a wide interval from 50 clips. Both criteria hold.
+- Turbo's first-audio p50 860 to 920 ms. **S3 is the criterion most at risk:**
+  the eval set's replies open differently from the probe clips', which is what
+  sank PR-002's thresholds.
+- small.en: −1 to −2 points overall for about +90 ms.
+- The two tiers' transcripts agree exactly (normalized) on 35 to 45% of clips
+  for base.en against turbo: too few for "start the LLM on the fast tier's
+  words" to pay.
+- R1's re-run reproduces its PR-002 run: WER 11.9%, first audio within 20 ms.
+- No playback stalls.
+
+### Reported alongside, descriptively
+
+- `r2-gpu` (small.en): the same three statistics, against `r1-gpu`.
+- Per-cohort WER, raw and normalized, for all three rungs; first-audio p90;
+  first sound; total; stalls; R1's re-run against its PR-002 run.
+- **Where the added wait comes from, turn by turn:** the change in first audio
+  minus the change in asr time, at the median, split by whether the reply's
+  words changed.
+- **Pairwise error overlap** (the plan's diagnostic before fusion): a clip is
+  wrong for a tier if its normalized transcript differs from the normalized
+  reference; overlap is clips wrong for both over clips wrong for either.
+  Above about 70%, fusion will not pay.
+- **Agreement:** the share of clips whose normalized transcripts are identical
+  between tiers. **Reply change:** the share of clips whose reply words differ
+  from R1's, split by whether the raw transcript differed.
+- The run's cost.
+
+### Analysis plan
+
+1. Commit this entry. Code under V2 is frozen from here.
+2. Add the analysis script; test it on fake runs only.
+3. Run once on Modal from a clean tree (V1, V3, V4). Save the three JSONs to `runs/`.
+4. Run the analysis script; record its output below, verbatim.
+5. Only after step 4: any further look at the transcripts or replies, labelled exploratory.
+
+### What this cannot show
+
+- **Not that the reply is better.** WER scores what was heard. Nothing here
+  scores what was said; "reply change" counts differences, not improvements.
+- **Not accent alone.** The accented cohort is spontaneous conversation and
+  the clean cohort is read audiobooks; a gain there mixes accent with style.
+- **Not a two-tier system running live.** The fast tier is not inside
+  `respond()`; its job was tested separately (PR-003). No speculation, no
+  fusion, no partials reaching a UI.
+- **Order and one run.** R1 runs first, turbo last, in one container; drift
+  between them would land in S3. Run-to-run spread on Modal has been measured
+  once (10 ms at the median).
+- **One GPU type, one LLM, 200 clips.** Fifty accented clips give a wide interval.
+
+### Deviations
+
+*(none yet)*
+
+### Results
+
+*(to be appended)*
