@@ -17,6 +17,7 @@ Rules, from the v1 Research plan (§8):
 | PR-000 | T0 vs T1, T1 vs T2, T0 700 vs T2 on the seed-1000 confirmation run | **Not verifiably** — see entry | Reported, Notion page 18 §6 |
 | PR-001 | Does a phrase-level completeness check reduce disfluent interruptions beyond T1? | The commit that adds this entry | Open |
 | PR-002 | Does streaming the reply (R1) cut the wait for first audio against R0, without changing the words, slowing the turn or stalling playback? | `194e2bb` | **Reported: not supported** (S1, S2, S3 failed; S4, S5 and validity held) |
+| PR-003 | On the author's real voice, does a barge-in policy that reads the caller's words (B2) make fewer wrong stop / keep-going decisions than the best duration threshold, and stop within 1.5 s? | The commit that adds this entry | Open |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -346,3 +347,158 @@ S3 would likely have failed even with fewer one-piece replies. One-piece share
 by cohort: clean 52%, accented 30%, disfluent 50%, slow 58%. R0's re-run
 reproduces `0af142a`: p50 660 vs 655 ms, median per-turn difference 10 ms, 200
 of 200 replies and transcripts identical.
+
+---
+
+## PR-003 — Can a barge-in policy that reads the caller's words beat a duration threshold on a real voice?
+
+**Registered:** 2026-09-20, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+The barge-in probe set (`probes/bargein/`, frozen at `e860999`): 20 recordings
+of the author speaking over five synthesized agent lines, in a 2 × 2 design --
+the agent should stop or keep going, and the caller's sound is short or long --
+five per cell. Two of the "keep going" items are a real cough and a real laugh.
+
+B0, a duration threshold, on these 20 (`6dbfb0c`; it reads no words, so it was
+never locked): **10, 10, 11 and 8 wrong of 20** at 200, 400, 800 and 1500 ms.
+The 8 comes with stops 1.5 to 5 s after the caller began. By design no duration
+separates "hang on" (0.5 s) from "okay, yeah, that works for me" (2 s).
+
+B1 (`3f64d14`) streams Whisper base.en partials every 200 ms, charges the
+recognizer's compute time to the decision, and lets the caller's opening
+decide: an acknowledgement holds the floor, anything else stops the agent. B2
+(`7d11d75`) is B1, but ignores a transcript unless the sound behind it is
+speech: the recognizer's own no-speech score under 0.25, at most 10 words per
+second of sound, at least 25% of it voiced. The recognizer decodes greedily, so
+a run repeats exactly (`97b3974`).
+
+Development data, none of it the author's voice:
+
+- `probes/bargein_dev`: 40 synthetic items, four Kokoro voices, labels exact by
+  construction. B0 19 to 22 wrong of 40; B1 2 wrong; **B2 0 wrong**. B2's stops
+  come 479 / 714 / 1100 ms after onset (fastest / middle / slowest of 20), with
+  0 / 3 / 6 agent words said over the caller. Recognizer time charged at 70 ms.
+- Ten real coughs and laughs from ESC-50 (CC BY-NC, not committed), all "keep
+  going": B0 9 wrong, B1 9 wrong, **B2 2 wrong**, both long voiced laughs.
+- Every threshold and word list was set on these two sets.
+
+What was already known about the test set, and by whom:
+
+- The author wrote the script and recorded it. The word lists in
+  `bargein_policies.py` were written by an assistant **that had read the
+  script**. All 18 spoken items open with a word those lists cover. They were
+  drawn from general conversational usage, not copied from the script, but
+  they cannot be called blind to it.
+- Durations, entry times and loudness of all 20 takes were examined while
+  labelling. B0's errors on them are known, item by item.
+- **No policy that reads words has been run on the 20 recordings.** The scorer
+  refuses without `--confirm PR-003`, and no transcript of them exists.
+- One item is known to be hard: `sl05` is an interruption that opens with
+  "yes". Nothing was tuned for it.
+
+### Question
+
+On the author's real voice, recorded over a talking agent, does B2 make fewer
+wrong stop / keep-going decisions than the best duration threshold, and stop
+soon enough to be of use?
+
+### Validity requirements
+
+| | Requirement |
+|---|---|
+| **V1 · Frozen code** | `bargein_policies.py`, `bargein_asr.py`, `bargein.py`, and `context_for` and `score` in `bargein_eval.py`, are unchanged between this commit and the run. Reporting code and tests may change. The run's commit is recorded below. |
+| **V2 · Frozen set** | `python -m s2slab.bargein verify` passes on the day of the run: every recording and label matches its SHA-256 in the manifest. |
+| **V3 · One run, whole set** | All 20 items, the first complete run, with `--asr-latency-ms 70` and no transcript cache beforehand. The recognizer is deterministic, so a repeat must give the same table; a repeat that differs is reported as a finding. A crashed run is reported and repeated once, in full. |
+| **V4 · Evidence** | The transcripts the policies saw (every partial, with its delivery time and no-speech score) and the per-item outcomes are saved to `runs/bargein/` in the commit that reports the result. |
+
+### Primary outcome
+
+Wrong decisions of 20, as `bargein_eval.score` decides them at this commit: a
+missed interruption, or a stop on an item where the agent should keep going.
+The policy under test is **`B2_speechlike`**. The comparator is
+**`B0_duration_1500ms`**, the best of the four B0 thresholds on this set.
+
+### Success criterion — both must hold
+
+| | Criterion |
+|---|---|
+| **S1 · Fewer wrong decisions** | B2 is wrong on fewer items than B0 at 1500 ms, and an exact two-sided sign test on the items where the two disagree gives **p < 0.05**. |
+| **S2 · Soon enough** | At least **8 of the 10** interruptions are stopped within **1500 ms** of the labelled onset. |
+
+**What S1 demands.** B0 at 1500 ms is wrong on 8. With f items fixed and b
+broken, p = 2 · P(X ≤ min(f, b)) for X ~ Binomial(f + b, ½): 5 fixed and none
+broken gives 0.063, 6 and 0 gives 0.031, 8 and 1 gives 0.039, 7 and 1 gives
+0.070. **S1 can hold only if B2 is wrong on at most 2 of 20.** That is what 20
+paired items can show; a smaller improvement would be real and undetectable.
+
+**Why 1500 ms B0.** It is the hardest comparator, chosen after its result was
+seen, which favours B0. It is no usable system -- it cannot stop in under
+1.5 s -- and S2 is what holds B2 to a usable speed. B0 at 1500 ms meets S2 on
+0 of 10 by construction.
+
+**Why 8 of 10 within 1500 ms.** On the dev set every stop came within 1100 ms.
+A real voice is slower to recognize than a synthetic one, and `sl05` is
+expected to wait for the 3 s cap, so two misses are allowed.
+
+**No multiplicity correction:** success needs both criteria at once.
+
+**If either fails,** PR-003 is reported as *not supported*, naming the
+criterion, every wrong item, and what the recognizer wrote for it.
+
+### Predictions, recorded but not criteria
+
+- B2 wrong on **1 to 3** of 20. **S1 is the criterion most likely to fail:** a
+  third error fails it.
+- The likeliest errors: the real laugh `cs04`, if the recognizer writes words
+  for it as it did for two ESC-50 laughs; and `cs01` "mm-hm", a quiet sound
+  Whisper is known to turn into a stray word.
+- The real cough `cs02` will be held correctly.
+- `sl05` will be counted right but stopped at about +3000 ms, by the cap: the
+  slowest hit, and one of S2's two allowed misses.
+- S2: 8 or 9 of 10. Middle stop latency 800 to 1200 ms, slower than the dev
+  set's 714 ms.
+- B1 will be wrong on 1 or 2 more items than B2, the cough among them.
+
+### Reported alongside, descriptively
+
+All four B0 thresholds, `B1_words` and `B1_words_min1` from the same run and
+the same transcripts; errors by cell and on the two noise items; every hit's
+stop latency and the agent words said over the caller; what the recognizer
+wrote for every item; one further run with the recognizer's time as measured
+on the laptop instead of charged, which is not deterministic and is not a
+criterion.
+
+### Analysis plan
+
+1. Commit this entry. Code under V1 is frozen from here.
+2. Add a per-item listing to the scorer's output and a way to save outcomes; test on the dev set only.
+3. `bargein verify`, then the one run (V2, V3). Save the evidence (V4).
+4. Count S1's fixed and broken items from the per-item listing; record the output below, verbatim.
+5. Only after step 4: any further look at the transcripts, labelled exploratory.
+
+### What this cannot show
+
+- **Not that the word lists generalize.** They were written with knowledge of
+  the script, and every spoken opening is on them. This run tests the rest of
+  the chain on a real voice: the causal VAD, streamed recognition of short
+  real utterances, the timing, the speech check on a real cough and laugh. A
+  blind test needs a script written by someone else.
+- **One speaker, one microphone, one room, read from a script.** Acted
+  interruptions are cleaner than real ones.
+- **Two noise items.** B2's speech check is tested on one cough and one laugh.
+- **Latency is modelled.** 70 ms per recognizer call is R0's measured ASR time
+  on a T4, charged; no GPU runs here, and no audio device or network is in the
+  loop. The labelled onset carries a hand-labelling error of tens of ms.
+- **Nothing about the agent stopping well.** State truncation (`68b0255`) is
+  built and unit-tested; no criterion here scores it.
+
+### Deviations
+
+*(none yet)*
+
+### Results
+
+*(to be appended)*
