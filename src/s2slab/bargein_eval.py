@@ -8,7 +8,7 @@ Scoring barge-in policies on a probe set: wrong decisions and stop latency, toge
                                                                       real coughs and laughs: all "keep going"    
     python -m s2slab.bargein_eval B1_words --confirm PR-003           the frozen set needs a registration
     ... --compare B2_speechlike B0_duration_1500ms                    items fixed and broken, exact sign test
-    ... --save runs/bargein/pr003.json                                every outcome and every transcript, kept
+    ... --save runs/bargein/pr003-70ms.json                           every outcome and every transcript, kept                            every outcome and every transcript, kept
 ONE ITEM, ONE WINDOW. A policy is asked about an item from WINDOW_BEFORE_S before
 its labelled onset to WINDOW_AFTER_S after its labelled end. A stray noise eight
 seconds later is not the item; what happens inside the window is.

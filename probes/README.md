@@ -300,7 +300,7 @@ probes/bargein/
 
 ### Recording notes
 
-- Microphone: *(fill in)* · Playback: **earbuds at system volume 1** (see Pilot result)
-- Room: *(fill in)* · measured room level −59 to −70 dB re full scale
-- Date recorded: pilot 2026-09-19; the rest *(fill in)*
+- Microphone: earbuds' built-in microphone · Playback: **earbuds at system volume 1** (see Pilot result)
+- Room: personal bedroom, door closed · measured room level −59 to −70 dB re full scale
+- Date recorded: pilot and the other 16 takes 2026-09-19; `cs01` restored from a same-day copy on 2026-09-20
 - Overdub lag from `calibrate`: **202.4 ms** (sharpness 78), 2026-09-19
