@@ -1,0 +1,3 @@
+# The affect tagger's feature extractor (python -m s2slab.affect, M15).
+# Only extraction needs it: a saved tagger tags with numpy alone.
+opensmile==2.5.1
