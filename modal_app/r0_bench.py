@@ -12,6 +12,8 @@ together with what it cost.
     modal run modal_app/r0_bench.py --rung r0-gpu,r1-gpu        # two rungs, ONE container: probe clips
     modal run modal_app/r0_bench.py --rung r0-gpu,r1-gpu --evalset --tag pr002
                                                                 # the PR-002 run: same container, same GPU
+    modal run modal_app/r0_bench.py --rung r1-gpu,r2-gpu,r2-gpu-turbo
+                                                                # R2's slow tier beside R1: probe clips                                                                
     
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
@@ -52,10 +54,20 @@ T4_DOLLARS_PER_HOUR = 0.59     # Modal's T4 rate, checked 2026-08-19 (v2 §5)
 MODELS = {
     "Systran/faster-whisper-base.en": None,
     "Systran/faster-whisper-small.en": None,
+    "mobiuslabsgmbh/faster-whisper-large-v3-turbo": None,       # R2's larger slow tier, 1.6 GB
     "Qwen/Qwen2.5-0.5B-Instruct": None,
     "Qwen/Qwen2.5-1.5B-Instruct": None,
     "hexgrad/Kokoro-82M": ["config.json", "kokoro-v1_0.pth", "voices/af_heart.pt"],
 }
+
+# faster-whisper resolves a model name to a Hugging Face repo. Most are
+# Systran's conversions; the turbo model was converted by someone else.
+WHISPER_REPOS = {"large-v3-turbo": "mobiuslabsgmbh/faster-whisper-large-v3-turbo"}
+
+
+def whisper_repo(model_name: str) -> str:
+    """The repo faster-whisper will look for, offline, when a rung asks for model_name."""
+    return WHISPER_REPOS.get(model_name, f"Systran/faster-whisper-{model_name}")
 
 
 def download_weights() -> None:

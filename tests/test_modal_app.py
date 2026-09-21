@@ -26,15 +26,27 @@ def r0_bench():
     return module
 
 
-@pytest.mark.parametrize("rung_id", ["r0-gpu", "r0-gpu-bigger", "r1-gpu"])
+GPU_RUNGS = ["r0-gpu", "r0-gpu-bigger", "r1-gpu", "r2-gpu", "r2-gpu-turbo"]
+
+
+@pytest.mark.parametrize("rung_id", GPU_RUNGS)
 def test_the_image_holds_every_model_the_gpu_rungs_load(r0_bench, rung_id):
     """The container runs with HF_HUB_OFFLINE=1, so a model missing from MODELS
     fails at load instead of downloading on the GPU's meter. This catches it
     here, for free, whenever a rung changes its models."""
     rung = get(rung_id)
-    assert f"Systran/faster-whisper-{rung.asr.model_name}" in r0_bench.MODELS
+    assert r0_bench.whisper_repo(rung.asr.model_name) in r0_bench.MODELS
     assert rung.llm.model_name in r0_bench.MODELS
     assert f"voices/{rung.tts.voice}.pt" in r0_bench.MODELS["hexgrad/Kokoro-82M"]
+
+def test_the_image_looks_for_each_recognizer_where_faster_whisper_will(r0_bench):
+    """whisper_repo() is our copy of faster-whisper's own table. If the two
+    disagree, the image holds a model the container will not find."""
+    utils = pytest.importorskip("faster_whisper.utils")
+    for rung_id in GPU_RUNGS:
+        name = get(rung_id).asr.model_name
+        assert r0_bench.whisper_repo(name) == utils._MODELS[name], name
+
 
 def test_a_full_eval_run_is_saved_as_evidence_and_a_smoke_test_is_not(r0_bench):
     """The full run lands in runs/, which is committed; a --limit run lands in
