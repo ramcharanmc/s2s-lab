@@ -15,7 +15,7 @@ import numpy as np
 import pytest
 
 from s2slab.bargein_asr import LEAD_S, cache_path, partials_for, stream_partials
-from s2slab.bargein_policies import BargeInContext, Partial, WordsSoFar, words_of
+from s2slab.bargein_policies import BargeInContext, Partial, SpeechLike, WordsSoFar, words_of
 
 SR = 16_000
 WORD_S = 0.3
@@ -127,9 +127,18 @@ def test_partials_are_cached_and_the_recognizer_is_not_loaded_twice(tmp_path):
     assert isinstance(again["ss01"][0], Partial) and json.loads(cache.read_text())["ss01"]
     partials_for(contexts, factory, 70, cache, refresh=True)
     assert len(loads) == 2
-    assert cache_path("bargein_dev", None).name == "partials-bargein_dev-measured.json"
-    assert cache_path("bargein", 70).name == "partials-bargein-70ms.json"
+    assert cache_path("bargein_dev", None).name == "partials-v2-bargein_dev-measured.json"
+    assert cache_path("bargein", 70).name == "partials-v2-bargein-70ms.json"
 
+
+def test_a_recognizer_that_scores_itself_has_its_doubt_carried_along():
+    class Doubtful(FakeRecognizer):
+        def transcribe_scored(self, audio):
+            return self.transcribe(audio), 0.6
+
+    c = ctx(room(8.0, (2.0, 0.9)))
+    assert all(p.no_speech == 0.6 for p in stream_partials(c, Doubtful("you"), latency_ms=70))
+    assert all(p.no_speech == 0.0 for p in stream_partials(c, FakeRecognizer("you"), latency_ms=70))
 
 # --------------------------------------------------------------------------- #
 # B1: reading the words
@@ -209,6 +218,54 @@ def test_a_caller_still_talking_after_the_floor_time_has_taken_the_floor():
     d = WordsSoFar().decide(ctx(audio, [Partial(2.7, "Yes it is, um-", False, 2.0)]))
     assert d.fired and d.stop_s == pytest.approx(5.0, abs=0.06) and "still talking" in d.reason
     assert not WordsSoFar(floor_time_s=9.0).decide(ctx(audio, [Partial(2.7, "Yes it is, um-", False, 2.0)])).fired
+# --------------------------------------------------------------------------- #
+# B2: is it speech at all?
+# --------------------------------------------------------------------------- #
+
+
+def cough_room(total_s: float, start: float, lasts: float) -> np.ndarray:
+    """A burst of noise: loud, and without pitch."""
+    rng = np.random.default_rng(3)
+    x = 1e-4 * rng.standard_normal(int(total_s * SR)).astype(np.float32)
+    n, a = int(lasts * SR), int(start * SR)
+    x[a:a + n] += (0.1 * rng.standard_normal(n)).astype(np.float32)
+    return x
+
+
+def test_voicing_is_measured_on_the_stretch_alone():
+    c = ctx(room(8.0, (2.0, 1.0)))
+    voiced_s, sound_s = c.voicing(2.0, 3.0)
+    assert sound_s == pytest.approx(1.0, abs=0.06) and voiced_s / sound_s > 0.8       # a 200 Hz tone has pitch
+    voiced_s, sound_s = ctx(cough_room(8.0, 2.0, 1.0)).voicing(2.0, 3.0)
+    assert sound_s > 0.8 and voiced_s / sound_s < 0.1                                  # noise has none
+    assert c.voicing(5.0, 6.0) == (0.0, 0.0)                                           # nothing there
+
+
+def test_b1_stops_for_an_invented_word_and_b2_does_not():
+    """A cough the recognizer turns into "You". No pitch in it: B2 ignores the transcript."""
+    audio, invented = cough_room(8.0, 2.0, 0.6), [Partial(3.0, "You", True, 2.0)]
+    assert WordsSoFar().decide(ctx(audio, invented)).fired
+    assert not SpeechLike().decide(ctx(audio, invented)).fired
+
+
+def test_b2_ignores_a_transcript_the_recognizer_itself_doubts():
+    audio = room(8.0, (2.0, 0.6))                                 # voiced, plausible rate: only the score says no
+    assert SpeechLike().decide(ctx(audio, [Partial(3.0, "You", True, 2.0, 0.10)])).fired
+    assert not SpeechLike().decide(ctx(audio, [Partial(3.0, "You", True, 2.0, 0.51)])).fired
+
+
+def test_b2_ignores_forty_words_from_one_second_of_sound():
+    audio = room(8.0, (2.0, 1.0))
+    paragraph = "I've had the video. I know. I'm excited to see you. " * 4
+    assert WordsSoFar().decide(ctx(audio, [Partial(3.3, paragraph, True, 2.0)])).fired
+    assert not SpeechLike().decide(ctx(audio, [Partial(3.3, paragraph, True, 2.0)])).fired
+
+
+def test_b2_still_stops_for_real_words_and_still_holds_for_acknowledgements():
+    audio = room(8.0, (2.0, 1.0))
+    assert SpeechLike().decide(ctx(audio, [Partial(3.2, "No, wait.", True, 2.0, 0.03)])).fired
+    assert not SpeechLike().decide(ctx(audio, [Partial(3.2, "Okay, yes.", True, 2.0, 0.03)])).fired
+
 
 
 def test_no_words_means_keep_going():

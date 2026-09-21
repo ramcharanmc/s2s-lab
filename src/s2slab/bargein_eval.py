@@ -4,6 +4,8 @@ Scoring barge-in policies on a probe set: wrong decisions and stop latency, toge
     python -m s2slab.bargein_eval                                     B0 at four thresholds, frozen set
     python -m s2slab.bargein_eval B1_words --root probes/bargein_dev  develop on the synthetic set, freely
     python -m s2slab.bargein_eval B1_words --asr-latency-ms 70        ...charging a T4's recognizer time
+    python -m s2slab.bargein_eval B1_words B2_speechlike --noise-dir probes/bargein_dev/noise
+                                                                      real coughs and laughs: all "keep going"    
     python -m s2slab.bargein_eval B1_words --confirm PR-003           the frozen set needs a registration
 ONE ITEM, ONE WINDOW. A policy is asked about an item from WINDOW_BEFORE_S before
 its labelled onset to WINDOW_AFTER_S after its labelled end. A stray noise eight
@@ -70,6 +72,7 @@ class Outcome:
     stop_s: float | None
     reason: str
     latency_ms: float | None       # stop time minus labelled onset; None if it did not stop
+    overrun_words: int | None = None   # agent words finished between the caller's onset and the stop    
 
     @property
     def correct(self) -> bool:
@@ -89,8 +92,10 @@ def score(policy: BargeInPolicy, items, lag_s: float, partials: dict | None = No
     for item in items:
         decision = policy.decide(context_for(item, lag_s, (partials or {}).get(item.id, ())))
         latency = (decision.stop_s - item.onset_s) * 1000 if decision.fired else None
+        overrun = (item.words_finished_by(decision.stop_s) - item.words_finished_by(item.onset_s)
+                   if decision.fired else None)
         out.append(Outcome(item.id, item.cell, item.kind, item.should_stop,
-                           decision.stop_s, decision.reason, latency))
+                           decision.stop_s, decision.reason, latency, overrun))    
     return out
 
 
@@ -106,6 +111,7 @@ def summarize(outcomes: list[Outcome]) -> dict:
         "wrong_noise": sum(1 for o in outcomes if o.kind == "noise" and not o.correct),
         "n_noise": sum(1 for o in outcomes if o.kind == "noise"),
         "hit_latencies_ms": sorted(o.latency_ms for o in outcomes if o.should_stop and o.correct),
+        "hit_overrun_words": sorted(o.overrun_words for o in outcomes if o.should_stop and o.correct),
     }
 
 
@@ -117,18 +123,21 @@ def format_report(results: dict[str, list[Outcome]]) -> str:
     (fastest, middle, slowest) and how many there were -- never a bare median.
     """
     lines = ["| policy | " + " | ".join(CELLS) + " | wrong | missed | false barge-in | of which noise | "
-             "stop latency of the hits, ms |", "|---|" + "---:|" * (len(CELLS) + 4) + "---|"]
+             "stop latency of the hits, ms | agent words said over the caller |",
+             "|---|" + "---:|" * (len(CELLS) + 4) + "---|---|"]
     for name, outcomes in results.items():
         s = summarize(outcomes)
         lat = s["hit_latencies_ms"]
         latency = (f"{lat[0]:.0f} / {lat[len(lat) // 2]:.0f} / {lat[-1]:.0f}  (fastest / middle / slowest of "
                    f"{len(lat)} hits)") if lat else "no hits"
+        over = s["hit_overrun_words"]
+        overrun = f"{over[0]} / {over[len(over) // 2]} / {over[-1]}" if over else "-"
         lines.append(f"| {name} | " + " | ".join(str(s["wrong"][c]) for c in CELLS)
                      + f" | **{s['wrong_total']} of {s['n']}** | {s['missed']} | {s['false_bargein']} | "
-                       f"{s['wrong_noise']} of {s['n_noise']} | {latency} |")
-    for name, outcomes in results.items():
-        errors = [o for o in outcomes if not o.correct]
-        lines += ["", f"{name}: " + (", ".join(
+                       f"{s['wrong_noise']} of {s['n_noise']} | {latency} | {overrun} |")    
+        for name, outcomes in results.items():
+            errors = [o for o in outcomes if not o.correct]
+            lines += ["", f"{name}: " + (", ".join(
             f"{o.item} ({o.error}" + (f" at {o.latency_ms:+.0f} ms" if o.latency_ms is not None else "") + ")"
             for o in errors) or "every decision right")]
     return "\n".join(lines)
@@ -159,6 +168,32 @@ def score_set(names: list[str], root: pathlib.Path = BARGEIN_ROOT, confirm: str 
     return head + "\n\n" + format_report({p.name: score(p, items, lag_s, partials) for p in policies})
 
 
+def score_noise(names: list[str], noise_dir: pathlib.Path, asr_latency_ms: float | None = None,
+                refresh: bool = False, recognizer=whisper) -> str:
+    """Score policies on a folder of real non-speech clips: every one is "keep going".
+
+    Returns the usual table, then one line per clip: what the recognizer wrote
+    for the whole sound and how sure it was that there was no speech -- which is
+    what a policy that reads words is up against.
+    """
+    from .bargein_dev import noise_items
+    noise_dir = pathlib.Path(noise_dir)
+    items = noise_items(noise_dir)
+    policies = [get(n) for n in names]
+    partials = None
+    if any(p.needs_partials for p in policies):
+        contexts = {item.id: context_for(item, 0.0) for item in items}
+        partials = partials_for(contexts, recognizer, asr_latency_ms,
+                                cache_path(f"noise-{noise_dir.resolve().parent.name}", asr_latency_ms), refresh)
+    head = f"{len(items)} real noise clips from {noise_dir}: the right answer is always to keep going"
+    lines = [head, "", format_report({p.name: score(p, items, 0.0, partials) for p in policies}), ""]
+    for item in items:
+        last = (partials or {}).get(item.id) or []
+        heard = f"{last[-1].text[:70]!r} (no-speech {last[-1].no_speech:.2f})" if last else "nothing transcribed"
+        lines.append(f"{item.id}: lasts {item.duration_s:.2f} s, recognizer wrote {heard}")
+    return "\n".join(lines)
+
+
 if __name__ == "__main__":
     import argparse
 
@@ -169,6 +204,10 @@ if __name__ == "__main__":
     ap.add_argument("--asr-latency-ms", type=float, default=None,
                     help="charge every recognizer call this much instead of what it took here")
     ap.add_argument("--refresh", action="store_true", help="run the recognizer again, ignoring the cache")
+    ap.add_argument("--noise-dir", default="", help="score on a folder of real non-speech clips instead of a set")
     a = ap.parse_args()
     names = a.policies or [n for n, p in POLICIES.items() if p.baseline]
-    print(score_set(names, pathlib.Path(a.root), a.confirm, a.asr_latency_ms, a.refresh))
+    if a.noise_dir:
+        print(score_noise(names, pathlib.Path(a.noise_dir), a.asr_latency_ms, a.refresh))
+    else:
+        print(score_set(names, pathlib.Path(a.root), a.confirm, a.asr_latency_ms, a.refresh))

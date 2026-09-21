@@ -16,7 +16,8 @@ import pytest
 import soundfile as sf
 
 from s2slab.bargein import CELLS, Word, load_set, phrase_span_s, read_agent, read_agent_words, read_script
-from s2slab.bargein_dev import DEV_ROOT, ENTRY_S, LAUGH_TEXT, VOICES, build, cough, place
+from s2slab.bargein_dev import (DEV_ROOT, ENTRY_S, LAUGH_TEXT, NOISE_AT_S, VOICES, build, cough,
+                                noise_items, place)
 from s2slab.bargein_eval import score, summarize
 from s2slab.bargein_policies import DurationThreshold
 from s2slab.probes import read_labels
@@ -148,6 +149,26 @@ def test_a_cough_has_two_bursts_and_no_pitch():
     assert 0.3 <= len(c) / SR <= 0.7
     assert _voiced_s(_pitch_track(x), 0.0, len(x) / SR) < 0.05
     assert len(loud_spans(x)) >= 1
+# --------------------------------------------------------------------------- #
+# Real noise clips
+# --------------------------------------------------------------------------- #
+
+
+def test_a_noise_clip_becomes_a_keep_going_item_in_a_real_room(tmp_path):
+    """Like an ESC-50 clip: 44.1 kHz, the sound in the middle, DIGITAL silence around it."""
+    rng = np.random.default_rng(2)
+    clip = np.zeros(5 * 44_100, np.float32)
+    clip[44_100: 2 * 44_100] = 0.3 * rng.standard_normal(44_100) * np.hanning(44_100)
+    sf.write(str(tmp_path / "cough-a.wav"), clip, 44_100, subtype="PCM_16")
+    sf.write(str(tmp_path / "cough-b.wav"), np.concatenate([clip, clip]), 44_100, subtype="PCM_16")
+    short, long_ = noise_items(tmp_path)
+    assert (short.id, short.kind, short.should_stop, short.cell) == ("cough-a", "noise", False, "continue-short")
+    assert long_.cell == "continue-long"                                     # two coughs four seconds apart
+    assert short.onset_s == NOISE_AT_S and 0.4 < short.duration_s < 1.1
+    assert (short.audio == 0).mean() < 0.01                                  # a room, not digital silence
+    outcome, = score(DurationThreshold(200), [short], 0.0)
+    assert outcome.error == "false barge-in" and outcome.overrun_words == 0  # no agent line: nothing overrun
+
 
 
 # --------------------------------------------------------------------------- #

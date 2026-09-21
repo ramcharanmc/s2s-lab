@@ -120,7 +120,7 @@ def test_the_registry_holds_four_baselines_and_the_word_readers():
         "B0_duration_1500ms", "B0_duration_200ms", "B0_duration_400ms", "B0_duration_800ms"]
     assert get("B0_duration_400ms").baseline and not get("B0_duration_400ms").needs_partials
     assert get("B1_words").needs_partials and not get("B1_words").baseline
-    assert "B1_words_min1" in POLICIES
+    assert "B1_words_min1" in POLICIES and get("B2_speechlike").needs_partials
     with pytest.raises(KeyError, match="B0_duration_200ms"):
         get("B9")
 
@@ -186,6 +186,20 @@ def test_the_report_lists_latencies_and_never_a_bare_median():
     assert "fastest / middle / slowest of 10 hits" in text and "p50" not in text
     assert "B0_duration_800ms: ss01 (missed interruption)" in text
     assert "cl01 (false barge-in at +" in text
+
+def test_a_hit_counts_the_agent_words_said_over_the_caller():
+    """The caller comes in at 5.0 s; B0 stops at 5.4 s. The agent finishes a word
+    every 0.3 s -- at 5.1 s and at 5.4 s in between: two words said over the caller."""
+    from s2slab.bargein import Word
+    stop = item("sl01", "stop-long", 5.0, 3.0)
+    stop.agent_words = [Word(f"w{k}", k * 0.3, (k + 1) * 0.3) for k in range(30)]
+    (o,) = score(DurationThreshold(400), [stop], 0.0)
+    assert o.overrun_words == 2
+    text = format_report({"B0_duration_400ms": [o]})
+    assert "agent words said over the caller" in text and "| 2 / 2 / 2 |" in text
+    (miss,) = score(DurationThreshold(1500), [item("ss01", "stop-short", 5.0, 0.6)], 0.0)
+    assert miss.overrun_words is None
+
 
 
 def test_a_policy_that_is_always_right_says_so():

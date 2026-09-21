@@ -27,6 +27,16 @@ frozen set, under a registration.
 
 Kokoro is not bit-identical between runs, so a second build is a different
 set: build() refuses to overwrite, and only the two TSVs are committed.
+
+REAL NOISES. A synthetic cough is a burst of noise; a real one has a voice in
+it, and a recognizer invents words for it. probes/bargein_dev/noise/ holds ten
+clips from ESC-50 (K. J. Piczak, "ESC: Dataset for Environmental Sound
+Classification", ACM Multimedia 2015; github.com/karolpiczak/ESC-50): six
+coughs (class 24) and four laughs (class 26), under CC BY-NC -- development
+only, never committed (*.wav is ignored), never redistributed. A policy only
+hears the caller's channel, so such a clip needs no agent line and no overdub:
+noise_items() puts each into a quiet room, and the right answer is always
+"keep going".
 """
 
 from __future__ import annotations
@@ -36,10 +46,9 @@ import pathlib
 
 import numpy as np
 
-from .bargein import (CALIBRATION, loud_spans, phrase_span_s, read_agent_words, read_script,
+from .bargein import (CALIBRATION, BargeIn, loud_spans, phrase_span_s, read_agent_words, read_script,
                       render)
-from .probes import TARGET_SR, Chunk, write_labels
-
+from .probes import TARGET_SR, Chunk, load_wav, write_labels
 DEV_ROOT = pathlib.Path("probes/bargein_dev")
 SEED = 20260920
 VOICES = ("am_adam", "am_michael", "af_bella", "af_sarah")     # any American voice but the agent's
@@ -48,6 +57,7 @@ ROOM_DB = -65.0              # the room's noise, re full scale
 CALLER_PEAK = 0.2
 TAIL_S = 3.0                 # silence kept after the agent and the caller have both finished
 LAUGH_TEXT = "ha ha ha"
+NOISE_AT_S = 2.0             # where a real noise clip is placed in its room
 
 
 
@@ -139,6 +149,30 @@ def build(root: pathlib.Path = DEV_ROOT, seed: int = SEED, agent_synth=None, cal
         lines.append(f"{item_id} {item['cell']:15} {voice:11} onset {start:5.2f} s "
                      f"({(start - after_end) * 1000:+4.0f} ms), lasts {end - start:4.2f} s  {item['text']}")
     return lines
+
+def noise_items(noise_dir: pathlib.Path = DEV_ROOT / "noise", seed: int = SEED) -> list[BargeIn]:
+    """Every WAV in a folder as a "keep going" item.
+
+    Takes:   a folder of non-speech clips, any sample rate; a seed for the room.
+    Calls:   probes.load_wav() (to 16 kHz mono), loud_spans() to find the sound
+             inside the clip's padding, place() to put it in a quiet room --
+             ESC-50 pads with digital silence, which no real room produces and
+             which would wreck the VAD's noise floor.
+    Returns: BargeIn items the scorer takes like any other: kind "noise",
+             should_stop False, onset NOISE_AT_S, no agent line, lag zero.
+    """
+    rng = np.random.default_rng(seed)
+    items = []
+    for path in sorted(pathlib.Path(noise_dir).glob("*.wav")):
+        clip = load_wav(path)
+        spans = loud_spans(clip)
+        a, b = max(0.0, spans[0][0] - 0.1), spans[-1][1] + 0.1
+        sound = clip[int(a * TARGET_SR): int(b * TARGET_SR)]
+        take, start, end = place(sound, NOISE_AT_S, NOISE_AT_S + len(sound) / TARGET_SR + TAIL_S, rng)
+        cell = "continue-short" if end - start <= 1.2 else "continue-long"
+        items.append(BargeIn(path.stem, cell, "noise", False, "none", take, start, end - start,
+                             0.0, 0.0, [], 0.0, 0.0, float(np.abs(take).max())))
+    return items
 
 
 if __name__ == "__main__":

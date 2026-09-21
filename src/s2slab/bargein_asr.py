@@ -21,6 +21,10 @@ THREE THINGS THIS KEEPS HONEST.
 latency_ms=None charges each call what it really took on this machine;
 a number charges that instead, to ask "what would this policy do on a GPU?"
 without one. Either way the transcripts themselves come from the real model.
+
+A recognizer may also say how sure it is that there was speech at all: if it
+has transcribe_scored(audio) -> (text, no_speech), that probability travels
+with the partial. Whisper computes it anyway; B2 is the policy that reads it.
 """
 
 from __future__ import annotations
@@ -59,11 +63,13 @@ def stream_partials(ctx: BargeInContext, recognizer, latency_ms: float | None = 
         nonlocal free_at, last_call_s, heard_until, heard_final
         audio = ctx.audio[max(0, int((start_s - LEAD_S) * ctx.sr)): int(t_s * ctx.sr)]
         t0 = time.perf_counter()
-        text = recognizer.transcribe(audio)
+        if hasattr(recognizer, "transcribe_scored"):
+            text, no_speech = recognizer.transcribe_scored(audio)
+        else:
+            text, no_speech = recognizer.transcribe(audio), 0.0
         took_s = (time.perf_counter() - t0) if latency_ms is None else latency_ms / 1000
         free_at, last_call_s, heard_until, heard_final = t_s + took_s, t_s, t_s, final
-        out.append(Partial(t_s + took_s, text, final, start_s))
-
+        out.append(Partial(t_s + took_s, text, final, start_s, round(float(no_speech), 3)))
     for k in range(first, last + 1):
         t_s = k * ctx.frame_ms / 1000
         sounding = ctx.speech_prob[k - 1] >= SOUND_PROB
@@ -119,17 +125,42 @@ def partials_for(contexts: dict[str, BargeInContext], recognizer_factory, latenc
     return {i: cached[i] for i in contexts}
 
 
-def whisper() -> object:
-    """R0's recognizer, loaded and warmed up: the first call pays one-time costs."""
-    import numpy as np
+class ScoredWhisper:
+    """R0's recognizer, also reporting Whisper's own no-speech probability.
 
-    from .r0 import WhisperASR
-    asr = WhisperASR()
-    asr.load()
-    asr.transcribe(np.zeros(16_000, dtype=np.float32))
-    return asr
+    Whisper scores every 30 s window for "there is no speech here" before it
+    decodes; faster-whisper reports it per segment. The highest one is kept: a
+    transcript is only as credible as its least credible part.
+    """
+
+    def __init__(self):
+        from .r0 import WhisperASR
+        self.asr = WhisperASR()
+
+    def load(self) -> "ScoredWhisper":
+        import numpy as np
+        self.asr.load()
+        self.transcribe_scored(np.zeros(16_000, dtype=np.float32))     # the first call pays one-time costs
+        return self
+
+    def transcribe_scored(self, audio) -> tuple[str, float]:
+        segments, _info = self.asr.model.transcribe(audio, language="en", beam_size=self.asr.beam_size,
+                                                    condition_on_previous_text=False)
+        segments = list(segments)                                       # lazy: the work happens here
+        text = " ".join(s.text.strip() for s in segments).strip()
+        return text, max((s.no_speech_prob for s in segments), default=1.0)
+
+    def transcribe(self, audio) -> str:
+        return self.transcribe_scored(audio)[0]
+
+
+def whisper() -> ScoredWhisper:
+    """The recognizer the scorer uses unless it is handed another."""
+    return ScoredWhisper().load()
 
 
 def cache_path(set_name: str, latency_ms: float | None) -> pathlib.Path:
+    """v2: partials carry the recognizer's no-speech score. A cache written
+    before that would read as "certainly speech", so it gets a new name."""
     mode = "measured" if latency_ms is None else f"{latency_ms:.0f}ms"
-    return CACHE_ROOT / f"partials-{set_name}-{mode}.json"
+    return CACHE_ROOT / f"partials-v2-{set_name}-{mode}.json"

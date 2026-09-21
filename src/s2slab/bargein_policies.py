@@ -7,8 +7,7 @@ each rung adding exactly one signal, as in policies.py:
 
     B0  duration             stop after N ms of caller sound -- the default
     B1  + the words so far   hold while every word is an acknowledgement   (next commit)
-    B2  + voicing            a sound with no pitch is not speech           (next commit)
-
+    B2  + is it speech?      a cough is not a word, whatever the recognizer writes
 Every policy implements the same call:
 
         decide(ctx: BargeInContext) -> BargeInDecision
@@ -42,6 +41,9 @@ HANG_MS = 300.0         # this much quiet ends a sound: "wait, wait" is one soun
 NOISE_PERCENTILE = 10.0
 SNR_DB_FULL = 20.0      # as vad.frame_speech_prob: probability 1.0 this far above the floor
 FLOOR_TIME_S = 3.0      # B1: a caller still talking after this has taken the floor, whatever the opening
+NO_SPEECH_MAX = 0.25    # B2: the recognizer's own "this is not speech" score; dev speech never exceeds 0.20
+WORDS_PER_S_MAX = 10.0  # B2: dev speech peaks under 9 words per second of sound; invented text runs at 14-39
+VOICED_MIN = 0.25       # B2: at least this share of the sound must have pitch; dev speech never goes under 0.30
 
 # How an acknowledgement OPENS. General English, written before any scoring and
 # tuned on the synthetic dev set only. "uh-huh" is split at its hyphen, so
@@ -123,7 +125,7 @@ class Partial(NamedTuple):
     text: str
     final: bool = False     # True if the audio ended in quiet, so its last word is a whole word
     event_s: float = -1.0   # when the sound event it transcribes began: partials of one event share it
-
+    no_speech: float = 0.0  # the recognizer's own probability that the audio held no speech    
 
 def words_of(text: str) -> list[str]:
     """ "Uh-huh, yeah -- I'm right" -> [uh, huh, yeah, im, right]: lower case, hyphens
@@ -169,6 +171,8 @@ class BargeInContext:
     speech_prob: list[float] = field(init=False)
     sound_ms: list[float] = field(init=False)
     event_start: list[float | None] = field(init=False)
+    _voicing: dict = field(init=False, default_factory=dict)
+    
 
     def __post_init__(self):
         self.partials = [Partial(*p) for p in self.partials]
@@ -203,6 +207,22 @@ class BargeInContext:
         end = int(t_s / self.f0_hop_s)
         return list(self.f0_track[max(0, end - int(ms / 1000 / self.f0_hop_s)): end])
 
+    def voicing(self, from_s: float, to_s: float) -> tuple[float, float]:
+        """(seconds with pitch, seconds of caller sound) between from_s and to_s.
+
+        The pitch tracker is run on that stretch ALONE, so nothing after to_s
+        can influence it -- a whole-take pitch track is smoothed across time and
+        would let the future in. Costs a few ms; kept, since the scan asks again.
+        """
+        key = (round(from_s, 3), round(to_s, 3))
+        if key not in self._voicing:
+            from .probes import _pitch_track
+            a, b = max(0, int(from_s * self.sr)), int(to_s * self.sr)
+            voiced_s = sum(1 for f in _pitch_track(self.audio[a:b]) if f > 0) * 0.010 if b - a > 1600 else 0.0
+            k0, k1 = max(0, int(from_s * 1000 / self.frame_ms)), int(to_s * 1000 / self.frame_ms)
+            sound_s = sum(1 for p in self.speech_prob[k0:k1] if p >= SOUND_PROB) * self.frame_ms / 1000
+            self._voicing[key] = (voiced_s, sound_s)
+        return self._voicing[key]
 
 
 class BargeInPolicy:
@@ -306,14 +326,17 @@ class WordsSoFar(BargeInPolicy):
                 k += 1
         return "hold", f"acknowledging: {' '.join(words[:3])!r}"
 
+    def trusts(self, ctx: BargeInContext, partial: Partial) -> bool:
+        """B1 believes every transcript. B2 does not."""
+        return True
+
     def _stop_reason(self, ctx, t_s):
         latest = ctx.latest_partial(t_s)
         if latest is None:
             return None
         holding = False
         for partial in ctx.partials:                    # this event's partials, as they were delivered
-            if partial.at_s > t_s or partial.event_s != latest.event_s:
-                continue
+            if partial.at_s > t_s or partial.event_s != latest.event_s or not self.trusts(ctx, partial):                continue
             words = self.settled(words_of(partial.text), partial.final)
             verdict, why = self.reading(words, holding)
             if verdict == "stop" and not holding and not partial.final and len(words) < self.min_unsettled_words:
@@ -327,9 +350,36 @@ class WordsSoFar(BargeInPolicy):
         return None
 
 
+class SpeechLike(WordsSoFar):
+    """B2: B1, but a transcript only counts if the sound it came from is speech.
+
+    A recognizer asked to transcribe a cough does not return nothing. It returns
+    "You", or "Poop.", or forty fluent words about a video, and B1 stops the
+    agent for them: 6 of 10 real coughs and laughs. Three independent signs that
+    a transcript was invented, each set with margin on the dev data:
+
+      the recognizer itself doubts it     no_speech at or above NO_SPEECH_MAX
+      nobody talks that fast              more than WORDS_PER_S_MAX words per second of sound
+      there is hardly any voice in it     less than VOICED_MIN of the sound has pitch
+
+    Any one of them, and the transcript is ignored -- as if it had never been
+    delivered. Everything else is B1's: the opening, the stop cues, the floor time.
+    """
+
+    name = "B2_speechlike"
+
+    def trusts(self, ctx, partial):
+        if partial.no_speech >= NO_SPEECH_MAX:
+            return False
+        voiced_s, sound_s = ctx.voicing(partial.event_s, partial.at_s)
+        if sound_s <= 0:
+            return False
+        return len(words_of(partial.text)) / sound_s <= WORDS_PER_S_MAX and voiced_s / sound_s >= VOICED_MIN
+
+
 POLICIES: dict[str, BargeInPolicy] = {p.name: p for p in (
     DurationThreshold(200), DurationThreshold(400), DurationThreshold(800), DurationThreshold(1500),
-    WordsSoFar(), WordsSoFar(min_unsettled_words=1))}
+    WordsSoFar(), WordsSoFar(min_unsettled_words=1), SpeechLike())}
 
 def get(name: str) -> BargeInPolicy:
     if name not in POLICIES:
