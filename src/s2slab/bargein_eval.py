@@ -134,10 +134,10 @@ def format_report(results: dict[str, list[Outcome]]) -> str:
         overrun = f"{over[0]} / {over[len(over) // 2]} / {over[-1]}" if over else "-"
         lines.append(f"| {name} | " + " | ".join(str(s["wrong"][c]) for c in CELLS)
                      + f" | **{s['wrong_total']} of {s['n']}** | {s['missed']} | {s['false_bargein']} | "
-                       f"{s['wrong_noise']} of {s['n_noise']} | {latency} | {overrun} |")    
-        for name, outcomes in results.items():
-            errors = [o for o in outcomes if not o.correct]
-            lines += ["", f"{name}: " + (", ".join(
+                       f"{s['wrong_noise']} of {s['n_noise']} | {latency} | {overrun} |")
+    for name, outcomes in results.items():
+        errors = [o for o in outcomes if not o.correct]
+        lines += ["", f"{name}: " + (", ".join(
             f"{o.item} ({o.error}" + (f" at {o.latency_ms:+.0f} ms" if o.latency_ms is not None else "") + ")"
             for o in errors) or "every decision right")]
     return "\n".join(lines)

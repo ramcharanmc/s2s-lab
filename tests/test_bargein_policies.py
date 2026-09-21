@@ -186,6 +186,8 @@ def test_the_report_lists_latencies_and_never_a_bare_median():
     assert "fastest / middle / slowest of 10 hits" in text and "p50" not in text
     assert "B0_duration_800ms: ss01 (missed interruption)" in text
     assert "cl01 (false barge-in at +" in text
+    assert text.count("B0_duration_800ms: ") == 1                      # each policy's errors are listed once
+
 
 def test_a_hit_counts_the_agent_words_said_over_the_caller():
     """The caller comes in at 5.0 s; B0 stops at 5.4 s. The agent finishes a word

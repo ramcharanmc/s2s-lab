@@ -127,8 +127,8 @@ def test_partials_are_cached_and_the_recognizer_is_not_loaded_twice(tmp_path):
     assert isinstance(again["ss01"][0], Partial) and json.loads(cache.read_text())["ss01"]
     partials_for(contexts, factory, 70, cache, refresh=True)
     assert len(loads) == 2
-    assert cache_path("bargein_dev", None).name == "partials-v2-bargein_dev-measured.json"
-    assert cache_path("bargein", 70).name == "partials-v2-bargein-70ms.json"
+    assert cache_path("bargein_dev", None).name == "partials-v3-bargein_dev-measured.json"
+    assert cache_path("bargein", 70).name == "partials-v3-bargein-70ms.json"
 
 
 def test_a_recognizer_that_scores_itself_has_its_doubt_carried_along():

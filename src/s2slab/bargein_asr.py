@@ -131,6 +131,13 @@ class ScoredWhisper:
     Whisper scores every 30 s window for "there is no speech here" before it
     decodes; faster-whisper reports it per segment. The highest one is kept: a
     transcript is only as credible as its least credible part.
+    
+    GREEDY ONLY (temperature 0). Left alone, faster-whisper re-decodes with
+    random sampling whenever its first answer looks wrong to it -- which is
+    exactly when the sound was a cough. The same clip then reads "You" on one
+    run and a paragraph on the next, and a policy's score moves with it (B1 on
+    ten real noises: 7 wrong, then 8). A registered result has to be the same
+    twice, so the recognizer here never samples.
     """
 
     def __init__(self):
@@ -145,7 +152,7 @@ class ScoredWhisper:
 
     def transcribe_scored(self, audio) -> tuple[str, float]:
         segments, _info = self.asr.model.transcribe(audio, language="en", beam_size=self.asr.beam_size,
-                                                    condition_on_previous_text=False)
+                                                    condition_on_previous_text=False, temperature=0.0)        
         segments = list(segments)                                       # lazy: the work happens here
         text = " ".join(s.text.strip() for s in segments).strip()
         return text, max((s.no_speech_prob for s in segments), default=1.0)
@@ -160,7 +167,8 @@ def whisper() -> ScoredWhisper:
 
 
 def cache_path(set_name: str, latency_ms: float | None) -> pathlib.Path:
-    """v2: partials carry the recognizer's no-speech score. A cache written
-    before that would read as "certainly speech", so it gets a new name."""
+    """v3: greedy decoding only; v2 caches were sampled. v2: partials carry the
+    recognizer's no-speech score; a cache written before that would read as
+    "certainly speech". Every change to what is cached gets a new name."""
     mode = "measured" if latency_ms is None else f"{latency_ms:.0f}ms"
-    return CACHE_ROOT / f"partials-v2-{set_name}-{mode}.json"
+    return CACHE_ROOT / f"partials-v3-{set_name}-{mode}.json"
