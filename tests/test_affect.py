@@ -146,6 +146,85 @@ def test_a_label_with_no_clip_is_refused():
     with pytest.raises(ValueError, match="SAD"):
         fit(X[[k for k, v in enumerate(y) if v != "SAD"]], [v for v in y if v != "SAD"], ["a", "b", "c", "const"])
 
+# --------------------------------------------------------------------------- #
+# Training it, and the first look
+# --------------------------------------------------------------------------- #
+
+
+def test_features_are_extracted_once_and_then_read_from_the_cache(tmp_path):
+    import soundfile as sf
+    calls = []
+
+    def fake_extract(audio):
+        calls.append(len(audio))
+        return np.full(4, float(len(audio)))
+
+    for name, n in (("a", 1600), ("b", 3200)):
+        sf.write(str(tmp_path / f"{name}.wav"), np.zeros(n, np.float32), 16_000, subtype="PCM_16")
+    X = affect.features_for(["a", "b"], tmp_path, tmp_path / "cache" / "f.npz", extract=fake_extract)
+    assert X.shape == (2, 4) and list(X[:, 0]) == [1600.0, 3200.0] and calls == [1600, 3200]
+    again = affect.features_for(["b", "a"], tmp_path, tmp_path / "cache" / "f.npz", extract=fake_extract)
+    assert list(again[:, 0]) == [3200.0, 1600.0] and calls == [1600, 3200]          # nothing extracted twice
+
+
+def test_training_refuses_clips_that_are_not_the_ones_in_the_manifest(tmp_path, monkeypatch):
+    ratings = fake_ratings()
+    clips = training_clips(ratings, select(ratings)[1])[:2]
+    write_training_clips(clips, tmp_path / "train.tsv")
+    monkeypatch.setattr(ps.urllib.request, "urlopen", lambda url, timeout: _Bytes(url.encode()))
+    fetch_training(tmp_path)
+    assert affect.verify_training(tmp_path) == []
+    (tmp_path / "audio" / f"{clips[0].clip}.wav").write_bytes(b"something else")
+    (tmp_path / "audio" / f"{clips[1].clip}.wav").unlink()
+    assert affect.verify_training(tmp_path) == [f"audio/{clips[0].clip}.wav: changed",
+                                                f"audio/{clips[1].clip}.wav: missing"]
+
+
+class _Bytes:
+    def __init__(self, data):
+        self.data = data
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *a):
+        return False
+
+    def read(self):
+        return self.data
+
+
+def test_leaving_an_actor_out_tests_the_recipe_on_a_voice_it_has_not_heard():
+    """Every actor has their own offset -- a voice. The classes still separate, so
+    held-out accuracy is high; and every clip is tagged exactly once."""
+    rng = np.random.default_rng(5)
+    X, y, actors = [], [], []
+    for a in range(6):
+        voice = rng.standard_normal(3) * 0.3
+        for k, label in enumerate(LABELS):
+            centre = np.zeros(3) if k == 0 else 3.0 * np.eye(3)[k - 1]
+            for _ in range(5):
+                X.append(centre + voice + 0.3 * rng.standard_normal(3))
+                y.append(label)
+                actors.append(f"10{a:02d}")
+    got = affect.leave_one_actor_out(np.array(X), y, actors, ["a", "b", "c"])
+    assert {label: n for label, (_, n) in got.items()} == {label: 30 for label in LABELS}
+    assert all(right >= 28 for right, _ in got.values())
+
+
+def test_pairs_are_scored_both_right_and_told_apart():
+    X, y = blobs()
+    model = fit(X, y, ["a", "b", "c", "const"])
+    centre = {label: X[[k for k, v in enumerate(y) if v == label]].mean(axis=0) for label in LABELS}
+    pairs = select(fake_ratings())[1]
+    ang = [p for p in pairs if p.emotion == "ANG"][:3]
+    Xn = np.vstack([centre["NEU"], centre["NEU"], centre["FEA"]])          # the third neutral clip sounds fearful
+    Xl = np.vstack([centre["ANG"], centre["SAD"], centre["ANG"]])          # the second angry clip sounds sad
+    text = affect.tag_pairs(model, ang, Xn, Xl)
+    assert "| ANG | 3 | 1 | 2 | 2 | 2 |" in text
+    assert f"  {ang[2].id}: neutral clip tagged fearful" in text and ang[0].id not in text.split("not told apart:")[1]
+    assert ang[1].id not in text.split("not told apart:")[1]                # tagged sad, not angry -- but told apart
+
 
 # --------------------------------------------------------------------------- #
 # Real eGeMAPS features: skipped where openSMILE is not installed

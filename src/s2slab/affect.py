@@ -36,8 +36,10 @@ The model is saved as JSON -- feature names, means, scales, weights -- so it can
 be read, diffed and committed, and tagging needs numpy alone.
 
     python -m s2slab.affect clips      which training clips: count them, write train.tsv
-    python -m s2slab.affect fetch      fetch them (about 20 MB), write their manifest
-"""
+    python -m s2slab.affect fetch      fetch them (about 30 MB), write their manifest
+    python -m s2slab.affect train      extract, check on held-out training actors, fit, save tagger.json
+    python -m s2slab.affect dev        the saved tagger on the 21 DEV pairs (the test pairs stay locked)
+    """
 
 from __future__ import annotations
 
@@ -48,8 +50,7 @@ import pathlib
 from typing import NamedTuple
 
 import numpy as np
-
-from .probes import TARGET_SR, sha256_file
+from .probes import TARGET_SR, load_wav, sha256_file
 from .prosodyset import (MEDIA, PAIRS, PROSODY_ROOT, RATINGS, REPO, REVISION, SEED, VOTE, Rating, fetch,
                          read_pairs, read_ratings, split_actors)
 
@@ -57,6 +58,8 @@ TRAIN_ROOT = PROSODY_ROOT / "train"
 TRAIN_CLIPS, TRAIN_MANIFEST = "train.tsv", "manifest.json"
 LABELS = ("NEU", "SAD", "FEA", "ANG")
 WORDS = {"NEU": "neutral", "SAD": "sad", "FEA": "fearful", "ANG": "angry"}
+TAGGER = PROSODY_ROOT / "tagger.json"         # the fitted model: committed
+CACHE = pathlib.Path("results/affect")        # extracted features: ignored by git
 N_FEATURES = 88
 L2 = 1.0                  # on standardized features; fixed, not tuned
 
@@ -227,6 +230,88 @@ def fit(X: np.ndarray, y: list[str], features, labels=LABELS, l2: float = L2) ->
                     method="L-BFGS-B", options={"maxiter": 2000})
     return Tagger(labels, tuple(features), mean, scale, best.x[: k * d].reshape(k, d), best.x[k * d:])
 
+# --------------------------------------------------------------------------- #
+# Training it, and a first look at what it learned
+# --------------------------------------------------------------------------- #
+
+
+def features_for(clips: list[str], audio_dir: pathlib.Path, cache: pathlib.Path | None = None,
+                 extract=None) -> np.ndarray:
+    """eGeMAPS for many clips, (n clips, 88), kept in an .npz cache by clip name.
+
+    Takes:  clip names (no .wav); the folder they are in; where the cache lives
+            (results/ is ignored by git); the extractor (default: egemaps()).
+    A clip is extracted once: about 0.1 s each, so 398 take under a minute.
+    """
+    extract = extract or egemaps
+    known: dict[str, np.ndarray] = {}
+    if cache is not None and pathlib.Path(cache).exists():
+        with np.load(cache) as z:
+            known = {name: z[name] for name in z.files}
+    missing = [c for c in clips if c not in known]
+    for clip in missing:
+        known[clip] = extract(load_wav(pathlib.Path(audio_dir) / f"{clip}.wav"))
+    if missing and cache is not None:
+        pathlib.Path(cache).parent.mkdir(parents=True, exist_ok=True)
+        np.savez(cache, **known)
+    return np.vstack([known[c] for c in clips])
+
+
+def verify_training(root: pathlib.Path = TRAIN_ROOT) -> list[str]:
+    """One line per training clip that is missing or differs from the manifest."""
+    root = pathlib.Path(root)
+    frozen = json.loads((root / TRAIN_MANIFEST).read_text(encoding="utf-8"))
+    problems = [] if sha256_file(root / TRAIN_CLIPS, text=True) == frozen["files"][TRAIN_CLIPS] else [f"{TRAIN_CLIPS}: changed"]
+    for clip, h in frozen["clips"].items():
+        path = root / "audio" / f"{clip}.wav"
+        if not path.exists():
+            problems.append(f"audio/{clip}.wav: missing")
+        elif sha256_file(path) != h:
+            problems.append(f"audio/{clip}.wav: changed")
+    return problems
+
+
+def leave_one_actor_out(X: np.ndarray, y: list[str], actors: list[str], names) -> dict[str, tuple[int, int]]:
+    """How well the recipe does on a voice it has never heard, from the training
+    clips alone: fit on all actors but one, tag that one's clips, for every actor.
+    Returns {label: (clips tagged right, clips)}. The tagger that is SAVED is
+    fitted on all of them; this only says what to expect of it."""
+    right = {label: [0, 0] for label in LABELS}
+    actors_arr, y_arr = np.array(actors), np.array(y)
+    for actor in sorted(set(actors)):
+        held = actors_arr == actor
+        model = fit(X[~held], list(y_arr[~held]), names)
+        for truth, p in zip(y_arr[held], model.proba(X[held])):
+            right[truth][0] += int(model.labels[int(np.argmax(p))] == truth)
+            right[truth][1] += 1
+    return {label: (a, b) for label, (a, b) in right.items()}
+
+
+def tag_pairs(tagger: Tagger, pairs, X_neutral: np.ndarray, X_loaded: np.ndarray) -> str:
+    """The tagger on pairs, one row per emotion.
+
+        both right   the neutral clip tagged neutral AND the loaded clip tagged its own emotion
+        told apart   the neutral clip tagged neutral AND the loaded clip tagged ANYTHING else --
+                     all a yes/no "does the caller sound upset?" needs
+    then every pair that was not told apart, with the two tags and their probabilities.
+    """
+    lines = ["| emotion | pairs | both right | told apart | neutral clip tagged neutral | loaded clip tagged its emotion |",
+             "|---|---:|---:|---:|---:|---:|"]
+    missed = []
+    for emotion in [e for e in LABELS if e != "NEU"]:
+        rows = [(p, tagger.tag(xn), tagger.tag(xl)) for p, xn, xl in zip(pairs, X_neutral, X_loaded)
+                if p.emotion == emotion]
+        if not rows:
+            continue
+        n_ok = sum(tn.label == "NEU" for _, tn, _ in rows)
+        l_ok = sum(tl.label == emotion for _, _, tl in rows)
+        both = sum(tn.label == "NEU" and tl.label == emotion for _, tn, tl in rows)
+        apart = sum(tn.label == "NEU" and tl.label != "NEU" for _, tn, tl in rows)
+        lines.append(f"| {emotion} | {len(rows)} | {both} | {apart} | {n_ok} | {l_ok} |")
+        missed += [f"  {p.id}: neutral clip tagged {tn.word} ({tn.p:.2f}), loaded clip tagged {tl.word} ({tl.p:.2f})"
+                   for p, tn, tl in rows if not (tn.label == "NEU" and tl.label != "NEU")]
+    return "\n".join(lines + ["", "pairs not told apart:"] + (missed or ["  none"]))
+
 
 if __name__ == "__main__":
     import sys
@@ -244,5 +329,28 @@ if __name__ == "__main__":
         n = fetch_training()
         total = len(read_training_clips(TRAIN_ROOT / TRAIN_CLIPS))
         print(f"downloaded {n} clips; {total} are in {TRAIN_ROOT / 'audio'}; manifest -> {TRAIN_ROOT / TRAIN_MANIFEST}")
+    elif cmd == "train":
+        import time
+        problems = verify_training()
+        if problems:
+            sys.exit("the training clips are not the ones in the manifest:\n  " + "\n  ".join(problems[:10]))
+        listed = read_training_clips(TRAIN_ROOT / TRAIN_CLIPS)
+        clips, y = [c for c, _ in listed], [e for _, e in listed]
+        t0 = time.perf_counter()
+        X = features_for(clips, TRAIN_ROOT / "audio", CACHE / "train.npz")
+        print(f"{len(clips)} clips, {X.shape[1]} features each ({time.perf_counter() - t0:.0f} s; cached in {CACHE})\n")
+        held_out = leave_one_actor_out(X, y, [c.split("_")[0] for c in clips], feature_names())
+        print("leave one training actor out -- clips tagged right, on a voice the model had not heard:")
+        for label, (a, b) in held_out.items():
+            print(f"  {label}: {a} of {b} ({100 * a / b:.0f}%)")
+        fit(X, y, feature_names()).save(TAGGER)
+        print(f"\nfitted on all {len(clips)} clips -> {TAGGER}")
+    elif cmd == "dev":
+        from .prosodyset import load
+        tagger, pairs = Tagger.load(TAGGER), [lp.pair for lp in load("dev")]
+        Xn = features_for([p.neutral for p in pairs], PROSODY_ROOT / "audio", CACHE / "dev.npz")
+        Xl = features_for([p.loaded for p in pairs], PROSODY_ROOT / "audio", CACHE / "dev.npz")
+        print(f"the tagger on the {len(pairs)} dev pairs, one clip at a time\n")
+        print(tag_pairs(tagger, pairs, Xn, Xl))
     else:
-        sys.exit("usage: python -m s2slab.affect clips | fetch")
+        sys.exit("usage: python -m s2slab.affect clips | fetch | train | dev")
