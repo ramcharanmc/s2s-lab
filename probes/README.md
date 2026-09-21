@@ -410,3 +410,42 @@ ones.
   validated. Results are per emotion.
 - **60 pairs.** Enough for a large effect per emotion (13 test pairs each), not
   for a subtle one.
+
+### First look — the 21 dev pairs only (2026-09-21)
+
+`python -m s2slab.prosodycheck acoustics` and `… blind`. Descriptive; no claim
+is tested, and the 39 test pairs are not loaded.
+
+**The difference is in the sound.** Loaded minus neutral inside each pair: the
+median change, and how many of the 7 pairs moved that way. Pitch is tracked
+from 75 to 600 Hz — the 60 to 400 Hz that serves endpointing clips fearful and
+angry speech.
+
+| | median pitch | pitch range | level |
+|---|---|---|---|
+| SAD | +0.4 st (4 of 7) | +2.0 st (6 of 7) | −2.0 dB (6 of 7) |
+| FEA | **+9.3 st** (6 of 7) | −1.6 st (5 of 7) | **+10.3 dB** (6 of 7) |
+| ANG | **+7.7 st** (7 of 7) | +0.5 st (4 of 7) | **+14.7 dB** (7 of 7) |
+
+Anger and fear raise the voice by more than half an octave and 10 to 15 dB.
+Sadness barely shows in these numbers, as it barely showed to the raters. A
+level difference of this size would not survive a telephone's gain control;
+the pitch difference would. **Speaking rate is not reported:** two ways of
+timing the spoken part both turned the level difference into a length
+difference (one made anger 35% faster, the other 42% slower). Rate needs word
+times from a recognizer.
+
+**The difference is not in the words.** Both clips of each pair through R1's
+recognizer (Whisper base.en):
+
+| | pairs | same transcript for both clips | WER, neutral | WER, loaded |
+|---|---:|---:|---:|---:|
+| SAD | 7 | 5 | 2.3% | 2.3% |
+| FEA | 7 | 6 | 7.0% | 0.0% |
+| ANG | 7 | 7 | 0.0% | 0.0% |
+
+In 18 of 21 pairs R1's LLM is given the same words for both clips, so it gives
+the same reply: the delivery is gone before it sees anything. The three that
+differ are recognition errors — two of them on the *neutral* clip ("…a doctor's
+appointment to rate it") — and loaded speech is no harder to recognize than
+neutral.
