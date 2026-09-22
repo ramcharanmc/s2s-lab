@@ -48,6 +48,10 @@ image = (
     .pip_install("transformers==5.17.0", "accelerate==1.15.0", "soundfile==0.14.0", "numpy==2.2.6",
                  "huggingface_hub==1.31.0")
     .run_function(download_weights)
+    # torch 2.14 runs small GPU ops through Triton kernels that compile a C helper
+    # on first use; the CUDA runtime image has no compiler (r0_bench hit the same).
+    # After the weights, so the 16 GB layer stays cached.
+    .apt_install("gcc")
     .env({"HF_HUB_OFFLINE": "1"})
 )
 

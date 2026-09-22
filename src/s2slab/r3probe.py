@@ -27,8 +27,20 @@ THE WORDING IS CHOSEN ON THE DEV PAIRS, and only there. There is no oracle for
 R3, so the choice is by the dev score directly; WORDINGS holds every one tried,
 and the registration (PR-006) fixes one before the test pairs are sent anywhere.
 
+THE DEV RUN (2026-09-22, A10, $0.04): R3 ranked all 21 pairs right under every
+wording -- the loaded clip's p(Yes) was about 1.00 every time -- and transcribed
+every clip correctly. It leans Yes, so with the 0.5 threshold PR-005 uses:
+
+    tone       4 · 4 · 4 of 7 answered right (SAD · FEA · ANG)
+    upset      6 · 5 · 5                    <- registered
+    not_words  0 · 0 · 0   Yes to all 42 clips
+    emotion    0 · 0 · 0   mass 0.00: it wants to name the emotion, not say Yes or No
+
+Its limit is calibration, not hearing. The metric stays the one PR-005 used,
+so the two are compared on the same scale.
+
     modal run modal_app/r3_probe.py --split dev                          the 21 dev pairs, every wording
-    modal run modal_app/r3_probe.py --split test --confirm PR-006 --wording tone --save runs/prosody/pr006.json
+    modal run modal_app/r3_probe.py --split test --confirm PR-006 --wording upset --save runs/prosody/pr006.json
 """
 
 from __future__ import annotations
@@ -49,6 +61,7 @@ WORDINGS = {
     "emotion": "Does the speaker sound sad, fearful or angry, rather than calm?",
 }
 TRANSCRIBE = "Transcribe the speech in this clip, word for word."
+REGISTERED_WORDING = "upset"    # chosen on the dev pairs, 2026-09-22 (see the docstring); PR-006 asks this one
 
 
 def clips_for(split: str, confirm: str = "", root: pathlib.Path = PROSODY_ROOT):

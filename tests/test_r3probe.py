@@ -126,9 +126,11 @@ def test_a_saved_run_holds_the_answers_and_scores_and_is_never_overwritten(tmp_p
         save(path, "again", PAIRS, answers, {"loud": "Is it loud?"})
 
 
-def test_the_wordings_are_four_and_the_first_is_the_side_channels_question():
+def test_the_wordings_are_four_the_first_is_the_side_channels_question_and_one_is_registered():
     from s2slab.sidechannel import QUESTION
+    from s2slab.r3probe import REGISTERED_WORDING
     assert len(WORDINGS) == 4 and WORDINGS["tone"] == QUESTION
+    assert REGISTERED_WORDING in WORDINGS and WORDINGS[REGISTERED_WORDING] == "Is the person speaking upset?"
 
 
 # --------------------------------------------------------------------------- #
