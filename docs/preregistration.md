@@ -19,7 +19,7 @@ Rules, from the v1 Research plan (§8):
 | PR-002 | Does streaming the reply (R1) cut the wait for first audio against R0, without changing the words, slowing the turn or stalling playback? | `194e2bb` | **Reported: not supported** (S1, S2, S3 failed; S4, S5 and validity held) |
 | PR-003 | On the author's real voice, does a barge-in policy that reads the caller's words (B2) make fewer wrong stop / keep-going decisions than the best duration threshold, and stop within 1.5 s? | `e707190` | **Reported: supported** (S1: wrong on 1 of 20 against 8, p = 0.039; S2: 9 of 10 within 1.5 s; any second error would have failed S1) |
 | PR-004 | Does a slow-tier recognizer (R2, large-v3-turbo) cut R1's word error rate by at least 3 points overall and 5 on accented speech, while the reply still starts within a second? | `415ddc7` | **Reported: not supported** (S2 failed: accented −4.3 points, needed −5; S1 −3.4 points and S3 889 ms held) |
-| PR-005 | Does telling R1's LLM one word about the caller's tone (a $0 eGeMAPS tagger) let it tell an upset caller from the same words said calmly, for fear and for anger, better than shuffled tags do? | The commit that adds this entry | Open |
+| PR-005 | Does telling R1's LLM one word about the caller's tone (a $0 eGeMAPS tagger) let it tell an upset caller from the same words said calmly, for fear and for anger, better than shuffled tags do? | `44a9a5f` | **Reported: not supported** (fear 7 of 13, one under the bar, p = 0.015; anger 11 of 13, p < 0.001, held; sadness 7 of 13, p = 0.025, held though expected to fail) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -1062,8 +1062,99 @@ between the two clips of a pair.
 
 ### Deviations
 
-*(none yet)*
+- **2026-09-21, registry row.** Its "Registered" cell was changed from "The
+  commit that adds this entry" to that commit's hash, `44a9a5f`, and its status
+  updated, as for the earlier entries.
+- **2026-09-21, verbatim output.** The per-pair table (39 rows, 8 columns) is
+  kept verbatim in the committed `runs/prosody/pr005-report.md` rather than
+  below; everything else the run printed is below.
 
 ### Results
 
-*(to be appended)*
+**Run:** 2026-09-21, commit `4b50017`, clean tree, laptop CPU; `prosodyset
+verify` intact; no cache of the test pairs existed beforehand (V2); the 39
+test pairs, first and only run: `python -m s2slab.sidechannel test --confirm
+PR-005 --save runs/prosody/pr005.json`. $0. Evidence: `runs/prosody/pr005.json`
+(every transcript, tag, p(Yes) under every word, outcome, and the 1000 deal
+counts) and `runs/prosody/pr005-report.md` (the complete output). V1 held:
+zero changed lines in `affect.py` and `tagger.json` since `44a9a5f`, and the
+frozen functions of `sidechannel.py` unchanged (the reporting commit
+`4b50017` added below them only).
+
+**Verdict: not supported.** S2 holds; **S1 fails by count**: fear was
+answered right on 7 of 13 pairs, one under the registered 8, although it beat
+the shuffled control (p = 0.015). S3, expected to fail, held.
+
+Output of the run, verbatim, without the per-pair table (which is in the
+report file):
+
+```text
+39 test pairs · confirms PR-005 · "Judging by their tone of voice, is the caller upset?" · shuffled = mean of 1000 deals, seed 20260921
+
+| condition | SAD: answered right · ranked right (of 13) | FEA: answered right · ranked right (of 13) | ANG: answered right · ranked right (of 13) |
+|---|---|---|---|
+| none | 0 · 3 | 0 · 5 | 1 · 8 |
+| tagger | 7 · 10 | 7 · 8 | 11 · 13 |
+| oracle | 13 · 13 | 13 · 13 | 13 · 13 |
+| shuffled | 3.2 · 6.1 | 3.1 · 5.6 | 3.1 · 6.8 |
+
+with no tag the LLM says Yes to 73 of 78 clips (median p_yes 0.78); it puts a median 1.00 of its probability on Yes or No
+median p_yes by the word shown: neutral 0.10, sad 0.91, fearful 0.79, angry 0.82
+
+| criterion | pairs answered right | shuffled deals at or above it | permutation p | registered bar | |
+|---|---:|---:|---:|---|---|
+| S1 fear | 7 of 13 | 15 of 1000 | p = 0.015 | at least 8 and p < 0.05 | FAIL |
+| S2 anger | 11 of 13 | 0 of 1000 | p < 0.001 | at least 7 and p < 0.05 | PASS |
+| S3 sadness | 7 of 13 | 25 of 1000 | p = 0.025 | at least 7 and p < 0.05 | PASS (reported, not deciding) |
+
+PR-005: NOT SUPPORTED: failed fearful
+
+the tagger alone told apart (neutral clip tagged neutral, loaded clip tagged anything else): SAD 7 of 13, FEA 7 of 13, ANG 11 of 13
+```
+
+**Predictions, scored**
+
+| Prediction | Outcome |
+|---|---|
+| Fear 10 to 11 of 13, p < 0.01; holds | **Wrong.** 7 of 13, p = 0.015; failed by count. |
+| Anger 7 to 9 of 13; S2 the criterion most at risk | **Wrong in the other direction.** 11 of 13, p < 0.001; the safest of the three. |
+| Sadness 2 to 3 of 13, no better than shuffled; S3 fails | **Wrong.** 7 of 13, p = 0.025; S3 held. |
+| *None* answers 0 pairs right and says Yes to most clips | Right: 1 of 39 pairs; Yes to 73 of 78 clips. |
+| *Oracle* 12 to 13 of 13 per emotion: the LLM layer loses nothing | Right: 13 of 13 for all three. The side-channel equals the tagger's told-apart count exactly. |
+| Ranked right at most 2 above answered right | Right for anger (13 against 11) and fear (8 against 7); sadness 10 against 7. |
+| Most anger misses are neutral clips tagged sad or fearful | Right, and it holds for every emotion: 12 of the tagger's 15 misses are neutral clips tagged emotional. |
+
+**What the registration got wrong**
+
+1. **It read the 21 dev pairs as if they were the population.** Sadness at 1 of
+   7 and anger at 4 of 7 on dev were seven voices each. On the thirteen test
+   voices the tagger heard sadness 10 times out of 13 and anger 13 of 13; its
+   failures were not the emotions but particular *neutral* voices it takes for
+   upset ones. The predictions should have been made per voice, with the
+   uncertainty that seven voices carry; they were made per emotion, with none.
+2. **The fear bar was set from the dev score, not from the mechanism.** With
+   the tagger's misses being neutral clips, an emotion's count is set by how
+   many of its 13 *neutral* twins the tagger mishears -- a property of the
+   actors drawn, not of the emotion. A bar of 8 of 13 sat on the wrong side of
+   that lottery for fear and the right side for the other two.
+
+**Reported alongside, descriptively**
+
+- *None* ranked right on 3 / 5 / 8 pairs: with no tag, p(Yes) differs between
+  the clips of a pair only when the transcripts differ, and the recognizer
+  heard the same words in **22 of 39** pairs (18 of 21 on dev). It answered 1
+  pair right.
+- The tagger's misses on the 39 pairs: **12 neutral clips tagged emotional**
+  (sad 5, angry 5, fearful 2), **3 loaded clips tagged neutral** (two fearful,
+  one sad).
+- p(Yes) by the word shown, medians: neutral 0.10, sad 0.91, fearful 0.79,
+  angry 0.82: the LLM answers the tag it is given.
+
+**Exploratory, after the registered analysis**
+
+The tagger's remaining problem is speaker independence: it has no idea how a
+given person sounds when calm, so five of the 39 calm clips read as sad and
+five as angry. Every one of those twelve pairs would be answered right if the
+tag were computed *relative to the caller's own earlier speech* -- the
+per-caller baseline parked in M15's design. That is the next experiment for
+this side-channel, on a fresh set of pairs: these 39 are now spent.

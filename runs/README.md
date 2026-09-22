@@ -19,6 +19,8 @@ Smoke tests, `--limit` runs and reply WAVs go to `results/`, which is ignored.
 | `r1-gpu/evalset-modal-t4-pr004.json` | R1 re-run for PR-004, same container as the two rows below; 17% slower than its PR-002 run, same words | `91048b3` | Modal Tesla T4 | page 20 §12 |
 | `r2-gpu/evalset-modal-t4-pr004.json` | R2 with small.en as the slow tier, over the 200-clip eval set; described, not tested | `91048b3` | Modal Tesla T4 | page 20 §12 |
 | `r2-gpu-turbo/evalset-modal-t4-pr004.json` | R2 with large-v3-turbo as the slow tier, the PR-004 run | `91048b3` | Modal Tesla T4 | page 20 §12 |
+| `prosody/pr005.json` | PR-005, the registered run: the affect side-channel on the 39 locked prosody pairs, four conditions | `4b50017` | laptop CPU (WSL) | page 20 §14 |
+| `prosody/pr005-report.md` | the same run's complete printed output, with the per-pair table | `4b50017` | laptop CPU (WSL) | page 20 §14 |
 
 ## What an eval-set run holds
 
@@ -26,6 +28,19 @@ Provenance first: `rung`, `description`, `commit`, `machine`, `ran`, `load_ms`,
 and `evalset` (build date, seed, turn count). Then `turns`, one entry per clip:
 `cohort`, `transcript`, `reply_text`, `stages_ms`, `untimed_ms`, `total_ms`,
 `reply_s`, `leading_silence_ms`.
+
+## What a prosody run holds
+
+`run` (the heading the side-channel printed), `question` and `system` (the
+exact prompt), `seed`, `n_shuffles`; `pairs` (the 39 pairs as in
+`probes/prosody/pairs.tsv`); `transcripts` (R1's recognizer, per clip); `tags`
+(the tagger's word, per clip); `p_yes` (per clip, the LLM's p(Yes) under no
+tag and under each of the four words, plus the no-tag prompt's probability
+mass on Yes-or-No); `result` (per condition and emotion: pairs answered right,
+ranked right, pairs); and `shuffled_deal_counts` (per emotion, the 1000 deals'
+counts, from which the permutation p is the share at or above the tagger's
+count). No audio and no reference text from CREMA-D is stored; the transcripts
+are a model's output.
 
 Re-score without a GPU or any model (needs the eval set's manifest, not its audio):
 

@@ -449,3 +449,26 @@ the same reply: the delivery is gone before it sees anything. The three that
 differ are recognition errors — two of them on the *neutral* clip ("…a doctor's
 appointment to rate it") — and loaded speech is no harder to recognize than
 neutral.
+
+### The affect side-channel on the test pairs — PR-005 (2026-09-21)
+
+`src/s2slab/affect.py` (the tagger: 88 eGeMAPS numbers into a class-balanced
+softmax regression, fitted on 398 clips from the 16 dev actors who have no
+pair) and `src/s2slab/sidechannel.py` (R1's LLM asked *"Judging by their tone
+of voice, is the caller upset?"* with the tagger's word in the prompt). Full
+registration and results: `docs/preregistration.md`, PR-005. Evidence:
+`runs/prosody/`.
+
+**Registered before the run, not supported.** Pairs answered right of 13 —
+loaded clip Yes and its neutral twin No — against shuffled tags:
+
+| | none (R1 as it is) | tagger | shuffled (mean of 1000 deals) | oracle | bar | |
+|---|---:|---:|---:|---:|---|---|
+| fear | 0 | 7 (p = 0.015) | 3.1 | 13 | ≥ 8, p < 0.05 | **fail** |
+| anger | 1 | 11 (p < 0.001) | 3.1 | 13 | ≥ 7, p < 0.05 | pass |
+| sadness | 0 | 7 (p = 0.025) | 3.2 | 13 | ≥ 7, p < 0.05 | pass (reported, not deciding) |
+
+The LLM layer loses nothing (oracle 13 of 13); every miss is the tagger's, and
+12 of its 15 misses are **neutral clips tagged emotional** — a
+speaker-independent tagger does not know how this caller sounds when calm.
+The 39 test pairs are now spent for this family of taggers.
