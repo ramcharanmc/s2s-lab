@@ -23,6 +23,8 @@ Smoke tests, `--limit` runs and reply WAVs go to `results/`, which is ignored.
 | `prosody/pr005-report.md` | the same run's complete printed output, with the per-pair table | `4b50017` | laptop CPU (WSL) | page 20 §14 |
 | `prosody/pr006.json` | PR-006, the registered run: R3 (Qwen2-Audio) hears the 39 locked prosody pairs, `upset` wording | `5c1f3aa` | Modal NVIDIA A10 | page 20 §15 |
 | `prosody/pr006-report.md` | the same run's complete printed output, with both per-pair tables | `5c1f3aa` | Modal NVIDIA A10 | page 20 §15 |
+| `prosody/ownvoice-r3.json` | the own-voice mini set (dev-only, not registered): R3 on the author's five pairs, every take windowed and as recorded, every wording | `4c5905d-dirty` | Modal NVIDIA A10 | page 20 §16 |
+| `prosody/ownvoice-r3-report.md` | the same run's complete printed output, both per-pair tables | `4c5905d-dirty` | Modal NVIDIA A10 | page 20 §16 |
 
 ## What an eval-set run holds
 

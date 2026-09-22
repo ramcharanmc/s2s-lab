@@ -1,0 +1,459 @@
+{
+ "run": "5 own-voice pairs, each take windowed and as recorded \u00b7 Qwen/Qwen2-Audio-7B-Instruct on NVIDIA A10, 580.95.05 \u00b7 commit 4c5905d-dirty \u00b7 load 17 s",
+ "system": "Answer with one word: Yes or No.",
+ "wordings": {
+  "upset": "Is the person speaking upset?",
+  "tone": "Judging by their tone of voice, is the caller upset?",
+  "not_words": "Listen to how this was said, not to what was said. Does the speaker sound upset?",
+  "emotion": "Does the speaker sound sad, fearful or angry, rather than calm?"
+ },
+ "pairs": [
+  {
+   "id": "sad-o01",
+   "split": "dev",
+   "emotion": "SAD",
+   "actor": "own",
+   "sentence": "p1",
+   "neutral": "own_p1_CAL",
+   "loaded": "own_p1_SAD",
+   "agree_neutral": 0.0,
+   "agree_loaded": 0.0,
+   "raters_neutral": 0,
+   "raters_loaded": 0,
+   "intensity": -1.0,
+   "threshold": 0.0
+  },
+  {
+   "id": "ang-o02",
+   "split": "dev",
+   "emotion": "ANG",
+   "actor": "own",
+   "sentence": "p2",
+   "neutral": "own_p2_CAL",
+   "loaded": "own_p2_ANG",
+   "agree_neutral": 0.0,
+   "agree_loaded": 0.0,
+   "raters_neutral": 0,
+   "raters_loaded": 0,
+   "intensity": -1.0,
+   "threshold": 0.0
+  },
+  {
+   "id": "ang-o03",
+   "split": "dev",
+   "emotion": "ANG",
+   "actor": "own",
+   "sentence": "p3",
+   "neutral": "own_p3_CAL",
+   "loaded": "own_p3_ANG",
+   "agree_neutral": 0.0,
+   "agree_loaded": 0.0,
+   "raters_neutral": 0,
+   "raters_loaded": 0,
+   "intensity": -1.0,
+   "threshold": 0.0
+  },
+  {
+   "id": "fea-o04",
+   "split": "dev",
+   "emotion": "FEA",
+   "actor": "own",
+   "sentence": "p4",
+   "neutral": "own_p4_CAL",
+   "loaded": "own_p4_FEA",
+   "agree_neutral": 0.0,
+   "agree_loaded": 0.0,
+   "raters_neutral": 0,
+   "raters_loaded": 0,
+   "intensity": -1.0,
+   "threshold": 0.0
+  },
+  {
+   "id": "sad-o05",
+   "split": "dev",
+   "emotion": "SAD",
+   "actor": "own",
+   "sentence": "p5",
+   "neutral": "own_p5_CAL",
+   "loaded": "own_p5_SAD",
+   "agree_neutral": 0.0,
+   "agree_loaded": 0.0,
+   "raters_neutral": 0,
+   "raters_loaded": 0,
+   "intensity": -1.0,
+   "threshold": 0.0
+  }
+ ],
+ "answers": {
+  "own_p1_CAL": {
+   "p_yes": {
+    "upset": 0.007121428330354685,
+    "tone": 0.07585817693836795,
+    "not_words": 0.46879062211288464,
+    "emotion": 0.9777138163087529
+   },
+   "mass": {
+    "upset": 0.9952356521971524,
+    "tone": 0.9804216548800468,
+    "not_words": 0.9805431663990021,
+    "emotion": 6.803816506817384e-05
+   },
+   "transcript": "The transcription of the speech is: 'I'm fine.'"
+  },
+  "own_p1_CAL.raw": {
+   "p_yes": {
+    "upset": 0.005220125780044548,
+    "tone": 0.07585817875880588,
+    "not_words": 0.5312093887023346,
+    "emotion": 0.9688561705075434
+   },
+   "mass": {
+    "upset": 0.9955377206206322,
+    "tone": 0.9889375567436218,
+    "not_words": 0.9773414731025696,
+    "emotion": 6.213260621734662e-05
+   },
+   "transcript": "The transcription of the speech is 'I'm fine.'"
+  },
+  "own_p1_SAD": {
+   "p_yes": {
+    "upset": 0.006692850581083025,
+    "tone": 0.17328820695544003,
+    "not_words": 0.8670357507429796,
+    "emotion": 0.973240714077488
+   },
+   "mass": {
+    "upset": 0.9939596140757203,
+    "tone": 0.9801764339208603,
+    "not_words": 0.9906436204910278,
+    "emotion": 6.878342162508488e-05
+   },
+   "transcript": "The transcription of the speech is: 'I'm fine.'"
+  },
+  "own_p1_SAD.raw": {
+   "p_yes": {
+    "upset": 0.0038244836535890536,
+    "tone": 0.09009299534251068,
+    "not_words": 0.679178683862534,
+    "emotion": 0.9658995757829403
+   },
+   "mass": {
+    "upset": 0.9977959853131324,
+    "tone": 0.9913606122136116,
+    "not_words": 0.9664558470249176,
+    "emotion": 3.170079025949235e-05
+   },
+   "transcript": "The transcription of the speech is: 'I'm fine.'"
+  },
+  "own_p2_CAL": {
+   "p_yes": {
+    "upset": 0.014063626729411232,
+    "tone": 0.03308597885737377,
+    "not_words": 0.8354835405474077,
+    "emotion": 0.9362850066011065
+   },
+   "mass": {
+    "upset": 0.9934461191296577,
+    "tone": 0.9915177337825298,
+    "not_words": 0.9914196282625198,
+    "emotion": 4.355714963821811e-05
+   },
+   "transcript": "The transcription of the speech is: 'that's great.'"
+  },
+  "own_p2_CAL.raw": {
+   "p_yes": {
+    "upset": 0.050330635144409226,
+    "tone": 0.0715912011852727,
+    "not_words": 0.9706877693955197,
+    "emotion": 0.9481545303999376
+   },
+   "mass": {
+    "upset": 0.9857691712677479,
+    "tone": 0.9885004088282585,
+    "not_words": 0.9918888658285141,
+    "emotion": 4.325779968894494e-05
+   },
+   "transcript": "The transcription of the speech is 'that's great.'"
+  },
+  "own_p2_ANG": {
+   "p_yes": {
+    "upset": 0.021615331498176533,
+    "tone": 0.03963884322196102,
+    "not_words": 0.835483549985333,
+    "emotion": 0.9343951674021724
+   },
+   "mass": {
+    "upset": 0.9918588846921921,
+    "tone": 0.9900242239236832,
+    "not_words": 0.990769624710083,
+    "emotion": 4.447601600077178e-05
+   },
+   "transcript": "The transcription of the speech is: 'that's great.'"
+  },
+  "own_p2_ANG.raw": {
+   "p_yes": {
+    "upset": 0.017986210741993497,
+    "tone": 0.03308597836989005,
+    "not_words": 0.8670357518341444,
+    "emotion": 0.9553191281838861
+   },
+   "mass": {
+    "upset": 0.9906152859330177,
+    "tone": 0.9901809170842171,
+    "not_words": 0.9884443879127502,
+    "emotion": 2.561970427450433e-05
+   },
+   "transcript": "The transcription of the speech is 'that's great.'"
+  },
+  "own_p3_CAL": {
+   "p_yes": {
+    "upset": 0.36296919640100994,
+    "tone": 0.8354835559468837,
+    "not_words": 0.9964063972752362,
+    "emotion": 0.9854964202004108
+   },
+   "mass": {
+    "upset": 0.9065561890602112,
+    "tone": 0.9429910778999329,
+    "not_words": 0.982092140475288,
+    "emotion": 9.957971565199841e-05
+   },
+   "transcript": "The transcription of the speech is: 'Sure, whatever you say.'"
+  },
+  "own_p3_CAL.raw": {
+   "p_yes": {
+    "upset": 0.5621765029128827,
+    "tone": 0.718594395298923,
+    "not_words": 0.9973683260877031,
+    "emotion": 0.9908743616976398
+   },
+   "mass": {
+    "upset": 0.8831378221511841,
+    "tone": 0.9550077319145203,
+    "not_words": 0.9853083188645542,
+    "emotion": 8.043180446293263e-05
+   },
+   "transcript": "The transcription of the speech is: 'Sure, whatever you say.'"
+  },
+  "own_p3_ANG": {
+   "p_yes": {
+    "upset": 0.5,
+    "tone": 0.8872046024870262,
+    "not_words": 0.9971990729710201,
+    "emotion": 0.99426975407669
+   },
+   "mass": {
+    "upset": 0.906440258026123,
+    "tone": 0.9346578568220139,
+    "not_words": 0.9868149261455983,
+    "emotion": 7.46009730789865e-05
+   },
+   "transcript": "The transcription of the speech is: 'Sure, whatever you say.'"
+  },
+  "own_p3_ANG.raw": {
+   "p_yes": {
+    "upset": 0.4073334094355245,
+    "tone": 0.6370308121683484,
+    "not_words": 0.997199072943096,
+    "emotion": 0.9945307251804831
+   },
+   "mass": {
+    "upset": 0.9074891805648804,
+    "tone": 0.9596523642539978,
+    "not_words": 0.9879691246896982,
+    "emotion": 6.116124043842319e-05
+   },
+   "transcript": "The transcription of the speech is: 'Sure, whatever you say.'"
+  },
+  "own_p4_CAL": {
+   "p_yes": {
+    "upset": 0.39233683534913727,
+    "tone": 0.8438951073781998,
+    "not_words": 0.995668497876255,
+    "emotion": 0.8840392854783488
+   },
+   "mass": {
+    "upset": 0.8372837603092194,
+    "tone": 0.9682662934064865,
+    "not_words": 0.9919812572188675,
+    "emotion": 2.28191606765904e-05
+   },
+   "transcript": "The transcription of the speech is: 'I'll be there at six.'"
+  },
+  "own_p4_CAL.raw": {
+   "p_yes": {
+    "upset": 0.3923368383378441,
+    "tone": 0.515619915801664,
+    "not_words": 0.9944450752944972,
+    "emotion": 0.9465966668907276
+   },
+   "mass": {
+    "upset": 0.840682327747345,
+    "tone": 0.947222888469696,
+    "not_words": 0.9927733945660293,
+    "emotion": 2.7257123747403966e-05
+   },
+   "transcript": "The transcription of the speech is: 'I'll be there at six.'"
+  },
+  "own_p4_FEA": {
+   "p_yes": {
+    "upset": 0.7662936644287095,
+    "tone": 0.9496693701726888,
+    "not_words": 0.9984988177669551,
+    "emotion": 0.8991213801945703
+   },
+   "mass": {
+    "upset": 0.8471718728542328,
+    "tone": 0.9769227653741837,
+    "not_words": 0.9945158682530746,
+    "emotion": 2.022361218223523e-05
+   },
+   "transcript": "The transcription of the speech is: 'I'll be there at six.'"
+  },
+  "own_p4_FEA.raw": {
+   "p_yes": {
+    "upset": 0.4843800870258978,
+    "tone": 0.5774953774739535,
+    "not_words": 0.9959298621563495,
+    "emotion": 0.957912267614771
+   },
+   "mass": {
+    "upset": 0.8663251399993896,
+    "tone": 0.957617849111557,
+    "not_words": 0.9923482583835721,
+    "emotion": 2.460970756601455e-05
+   },
+   "transcript": "The transcription of the speech is: 'I'll be there at six.'"
+  },
+  "own_p5_CAL": {
+   "p_yes": {
+    "upset": 0.9046505346458897,
+    "tone": 0.975576908290801,
+    "not_words": 0.9984021544338495,
+    "emotion": 0.9850429134380414
+   },
+   "mass": {
+    "upset": 0.9210947751998901,
+    "tone": 0.9808414727449417,
+    "not_words": 0.9947406298015267,
+    "emotion": 9.3159230573292e-05
+   },
+   "transcript": "The transcription of the speech is: 'Okay, I'll do that.'"
+  },
+  "own_p5_CAL.raw": {
+   "p_yes": {
+    "upset": 0.8080672065309924,
+    "tone": 0.8670357545922917,
+    "not_words": 0.998402154381839,
+    "emotion": 0.988312741320238
+   },
+   "mass": {
+    "upset": 0.9446950256824493,
+    "tone": 0.9796007126569748,
+    "not_words": 0.9962392798624933,
+    "emotion": 4.5611634163833514e-05
+   },
+   "transcript": "The transcription of the speech is 'Okay, I'll do that.'"
+  },
+  "own_p5_SAD": {
+   "p_yes": {
+    "upset": 0.8519528182158663,
+    "tone": 0.9648551532451993,
+    "not_words": 0.9990302480401124,
+    "emotion": 0.9873750493080483
+   },
+   "mass": {
+    "upset": 0.8959472328424454,
+    "tone": 0.9703339710831642,
+    "not_words": 0.9957070286618546,
+    "emotion": 0.00010915469363226293
+   },
+   "transcript": "The transcription of the speech is: 'Okay, I'll do that.'"
+  },
+  "own_p5_SAD.raw": {
+   "p_yes": {
+    "upset": 0.8354835423452399,
+    "tone": 0.826711790971145,
+    "not_words": 0.9990302480496017,
+    "emotion": 0.9777138139017434
+   },
+   "mass": {
+    "upset": 0.9368719905614853,
+    "tone": 0.9732471257448196,
+    "not_words": 0.9961422069463879,
+    "emotion": 3.941805414342525e-05
+   },
+   "transcript": "The transcription of the speech is: 'Okay, I'll do that.'"
+  }
+ },
+ "scores": {
+  "upset": {
+   "SAD": [
+    0,
+    0,
+    2
+   ],
+   "FEA": [
+    1,
+    1,
+    1
+   ],
+   "ANG": [
+    0,
+    2,
+    2
+   ]
+  },
+  "tone": {
+   "SAD": [
+    0,
+    1,
+    2
+   ],
+   "FEA": [
+    0,
+    1,
+    1
+   ],
+   "ANG": [
+    0,
+    2,
+    2
+   ]
+  },
+  "not_words": {
+   "SAD": [
+    1,
+    2,
+    2
+   ],
+   "FEA": [
+    0,
+    1,
+    1
+   ],
+   "ANG": [
+    0,
+    2,
+    2
+   ]
+  },
+  "emotion": {
+   "SAD": [
+    0,
+    1,
+    2
+   ],
+   "FEA": [
+    0,
+    1,
+    1
+   ],
+   "ANG": [
+    0,
+    1,
+    2
+   ]
+  }
+ }
+}

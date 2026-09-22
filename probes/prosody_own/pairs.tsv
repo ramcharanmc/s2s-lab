@@ -1,0 +1,6 @@
+id	split	emotion	actor	sentence	neutral	loaded	agree_neutral	agree_loaded	raters_neutral	raters_loaded	intensity	threshold
+sad-o01	dev	SAD	own	p1	own_p1_CAL	own_p1_SAD	0	0	0	0	-1	0
+ang-o02	dev	ANG	own	p2	own_p2_CAL	own_p2_ANG	0	0	0	0	-1	0
+ang-o03	dev	ANG	own	p3	own_p3_CAL	own_p3_ANG	0	0	0	0	-1	0
+fea-o04	dev	FEA	own	p4	own_p4_CAL	own_p4_FEA	0	0	0	0	-1	0
+sad-o05	dev	SAD	own	p5	own_p5_CAL	own_p5_SAD	0	0	0	0	-1	0

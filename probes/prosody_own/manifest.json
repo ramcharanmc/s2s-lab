@@ -1,0 +1,27 @@
+{
+  "set": "prosody-own",
+  "version": 1,
+  "recorded": "2026-09-22",
+  "frozen": "2026-09-22",
+  "pairs": 5,
+  "window": {
+    "floor_db": -30.0,
+    "gap_s": 0.5,
+    "pad_s": 0.3
+  },
+  "files": {
+    "pairs.tsv": "0022dce49fc95ef4961d99cb2ed00629a49d0b705488822fc6c8a663ff02d8f4"
+  },
+  "clips": {
+    "own_p1_CAL": "5018b8e9e1623255f14d85db65bc0a596d87f4cc9210a502b84b184821dcf320",
+    "own_p1_SAD": "2c747e8d1c0550a455a1d781eab653864a03a673f21fbb27bdd96c40d1db1154",
+    "own_p2_ANG": "a73dd7a4dd306a9140cbb59a06057959190259132dddf0df044541fdaf80a2e4",
+    "own_p2_CAL": "03e342ff6986b63f764f251c8f830e97603c9612251afdaf10f1abd31b58a54c",
+    "own_p3_ANG": "ba286b8a6741f5467bbbed7f57b90dda3fe928f2772d2c19b3b6cd8f27f70820",
+    "own_p3_CAL": "05979041b71f424243c0532f6c59b4fb010d7a28810c567c218f1f291f4c3621",
+    "own_p4_CAL": "baed870490353f1ed3e595949c3cac4f44e88e970b4c67c2af278dc9dc7ef841",
+    "own_p4_FEA": "0e596e21a2e79b8ae8575401eda7e3d7ba57dadd9462dd277ba5be7f0e784962",
+    "own_p5_CAL": "f0f8dde432c560210ad51cd0e627f3dab5bb3ec99034e2f6cb4a9eaa394898f6",
+    "own_p5_SAD": "4747eeae12f9c03e4e1689b47e7d1b1600e890ea4164a3978a934289eea931c5"
+  }
+}

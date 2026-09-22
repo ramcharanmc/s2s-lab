@@ -2,7 +2,8 @@
 R3's probe on Modal: Qwen2-Audio-7B-Instruct hears the prosody pairs and is asked whether the caller is upset.
 
     modal run modal_app/r3_probe.py --split dev                          21 dev pairs, every wording in WORDINGS
-    modal run modal_app/r3_probe.py --split test --confirm PR-006 --wording tone --save runs/prosody/pr006.json
+    modal run modal_app/r3_probe.py --split test --confirm PR-006 --wording upset --save runs/prosody/pr006.json
+    modal run modal_app/r3_probe.py::own --save runs/prosody/ownvoice-r3.json     the own-voice mini set, dev-only
 
 What happens where:
   laptop   verifies the frozen set, loads one side of it (the test side only
@@ -181,6 +182,37 @@ def main(split: str = "dev", confirm: str = "", wording: str = "", save: str = "
         side = sidechannel_outcomes(json.loads((REPO / "runs" / "prosody" / "pr005.json").read_text(encoding="utf-8")))
         print("\n" + format_criteria(compare(pairs, p_yes, side), confirm))
         print("\n" + per_pair(pairs, p_yes, side, transcripts))
+    if save:
+        save_run(pathlib.Path(save), head, pairs, out["answers"], wordings)
+        print(f"\nsaved to {save}")
+    print(f"\n{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * A10_DOLLARS_PER_HOUR:.3f} at the A10 rate. Modal's dashboard has the exact bill.")
+
+
+@app.local_entrypoint()
+def own(save: str = ""):
+    """The own-voice mini set (s2slab.ownvoice, dev-only): every take windowed
+    and as recorded, every wording; the registered wording's per-pair table first."""
+    from s2slab.ownvoice import clips, split_answers
+    from s2slab.r3probe import REGISTERED_WORDING, SYSTEM, TRANSCRIBE, WORDINGS, format_report
+    from s2slab.r3probe import save as save_run
+    from s2slab.sidechannel import refuse_to_overwrite
+
+    if save:
+        refuse_to_overwrite(pathlib.Path(save))
+    wordings = {REGISTERED_WORDING: WORDINGS[REGISTERED_WORDING],
+                **{k: v for k, v in WORDINGS.items() if k != REGISTERED_WORDING}}
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    pairs, data = clips()
+    t0 = time.time()
+    out = probe.remote(data, SYSTEM, wordings, TRANSCRIBE)
+    wall = time.time() - t0
+    head = (f"{len(pairs)} own-voice pairs, each take windowed and as recorded · {out['model']} on {out['gpu']}"
+            f" · commit {commit} · load {out['load_s']:.0f} s")
+    print(head)
+    for label, answers in zip(("windowed", "as recorded"), split_answers(out["answers"])):
+        print(f"\n{label}:\n" + format_report(pairs, answers, wordings))
     if save:
         save_run(pathlib.Path(save), head, pairs, out["answers"], wordings)
         print(f"\nsaved to {save}")

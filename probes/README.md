@@ -496,3 +496,145 @@ supported: anger 9 against the tag's 11, sign test p = 0.21). It also
 transcribed all 39 neutral clips word for word. The 39 pairs are now spent for
 R3 as well; whether a perfect ranking is hearing or memory of CREMA-D is what
 the own-voice mini set is for.
+
+## Own-voice mini set (2026-09-22)
+
+Ten takes by the author: the plan's lexically neutral phrases, each once calm
+and once upset. It exists for one reason. R3 ranked the upset clip above its
+calm twin on 39 of 39 CREMA-D pairs (PR-006), and CREMA-D is a standard emotion
+benchmark whose presence in Qwen2-Audio's training data cannot be ruled out, so
+a perfect ranking is consistent with hearing and with familiarity. These takes
+are audio no model has seen -- a fresh voice, a fresh microphone, fresh
+sentences. Five pairs cannot prove the CREMA-D result is clean; they can show
+whether the ranking survives on them. They also give the tagger, fitted on 16
+CREMA-D actors and one microphone, its first genuinely new speaker.
+
+**Dev-only.** Nothing is registered, the audio is never committed (`*.wav` is
+ignored), and whatever comes out is reported as descriptive. Code:
+`src/s2slab/ownvoice.py`; R3 side: `modal run modal_app/r3_probe.py::own`.
+
+### The takes
+
+| take | phrase | delivery |
+|---|---|---|
+| `own_p1_CAL` / `own_p1_SAD` | I'm fine. | calm / sad |
+| `own_p2_CAL` / `own_p2_ANG` | That's great. | calm / angry (bitter) |
+| `own_p3_CAL` / `own_p3_ANG` | Sure, whatever you say. | calm / angry |
+| `own_p4_CAL` / `own_p4_FEA` | I'll be there at six. | calm / fearful |
+| `own_p5_CAL` / `own_p5_SAD` | Okay, I'll do that. | calm / sad |
+
+Recorded in one session in Audacity at 16 kHz mono, one file per take,
+exported as 16-bit PCM WAV. The gain was set on the loudest delivery first
+(angry, p3, peaks near -6 dBFS) and not touched again, nor the microphone or
+the distance to it, so a level difference between two takes is the voice's,
+not the knob's. The five calm takes were recorded first, back to back, then
+the five upset ones; one take each; no trimming, normalizing, noise reduction
+or fades. The delivery cues came from the CREMA-D dev medians in "First look"
+above: sad softer and slower with more pitch movement, fearful much higher and
+louder, angry louder and clipped. Microphone and room: (fill in).
+
+As recorded: 5.8-7.8 s per file with 0.8-2.3 s of speech inside, peaks -18.2
+to -0.1 dBFS, no clipped samples, and the click of the record button at the
+start of several. CREMA-D's clips are 1.5-4.1 s with little silence, and the
+eGeMAPS functionals are taken over the whole clip, so every take is
+**windowed in code** -- the longest run of 20 ms frames within 30 dB of the
+take's loudest, runs closer than 0.5 s merged, 0.3 s of room tone kept on
+each side -- identically for all ten, with the files on disk untouched. Both
+the windowed and the as-recorded audio go to R3 and to the tagger; the
+windowed one is primary. (`ownvoice look` prints the windows; p3's angry take
+keeps a breath before the words and so starts at 0.00 s. The rule was not
+adjusted for it.)
+
+### The reading, fixed before any run
+
+Chance ranking of 5 pairs is 1 in 32. R3 ranks 4 or 5 of 5 right -> "hearing
+generalizes to a fresh voice"; 3 or fewer -> "the CREMA-D ranking may lean on
+familiarity; this set cannot say which". Predictions, to be scored: R3 ranks 5
+of 5 and answers 3 of 5 strictly right (its Yes-lean catches a calm take or
+two); the tagger tags 3-4 of the 5 upset takes non-neutral and 2-3 of the 5
+calm takes neutral.
+
+### What the takes measure as (`ownvoice look`, windowed)
+
+| pair | phrase | upset | pitch (st) | pitch range (st) | level (dB) |
+|---|---|---|---:|---:|---:|
+| sad-o01 | I'm fine | SAD | +1.4 | -4.5 | -0.8 |
+| ang-o02 | That's great | ANG | +0.5 | -3.8 | +0.9 |
+| ang-o03 | Sure, whatever you say | ANG | +1.6 | +3.7 | +9.7 |
+| fea-o04 | I'll be there at six | FEA | +8.5 | -4.8 | +15.5 |
+| sad-o05 | Okay, I'll do that | SAD | +0.5 | +0.4 | +6.6 |
+
+Calm takes sit at 97-114 Hz and -21 to -31 dB. Fear moved as CREMA-D's actors
+did (+8.5 st, +15.5 dB against their +9.3 st, +10.3 dB); one angry take did
+(+9.7 dB) and the other, the bitter "That's great", barely moved at all; the
+two sad takes did not get softer (-0.8 and +6.6 dB against CREMA-D's -2.0).
+One untrained speaker, one attempt each -- the set is what it is.
+
+### The tagger on the five pairs (2026-09-22)
+
+Windowed: told apart SAD 0 of 2, FEA 1 of 1, ANG 1 of 2; both right only
+ang-o03. Every upset take was tagged **angry** -- the sad ones too -- and so
+were three of the five calm takes (p1 at 0.99, p2 at 1.00, p5 at 0.59); only
+p3 and p4 calm were tagged neutral. As recorded, all ten takes are tagged angry.
+
+Scored against the predictions: "3-4 of 5 upset takes non-neutral" -> 5 of 5,
+over; "2-3 of 5 calm takes neutral" -> 2 of 5, at the bottom of the range.
+The reading is the one PR-005 already gave, only louder: a speaker-independent
+tagger does not know what this voice sounds like when nothing is wrong, and on
+a new voice through a new microphone its baseline is off before the first
+word -- here, towards angry. The per-caller baseline (parked) is the fix; the
+window matters too (with the room tone in, nothing at all is told apart).
+
+### R3 on the five pairs (2026-09-22)
+
+`modal run modal_app/r3_probe.py::own --save runs/prosody/ownvoice-r3.json`,
+Modal A10, 42 s in the function, about \$0.014; stamp `4c5905d-dirty` because
+this section's files were in the tree uncommitted when the call was made
+(dev-only, nothing registered; the run file is committed with them). Evidence:
+`runs/prosody/ownvoice-r3.json` (every p(Yes) under every wording, windowed and
+as recorded, and every transcript) and `runs/prosody/ownvoice-r3-report.md`.
+
+Windowed, the registered wording *"Is the person speaking upset?"*:
+
+| pair | p(Yes) calm | p(Yes) upset | ranked | answered |
+|---|---:|---:|---|---|
+| sad-o01 | 0.01 | 0.01 | wrong | wrong |
+| ang-o02 | 0.01 | 0.02 | right | wrong |
+| ang-o03 | 0.36 | 0.50 | right | wrong |
+| fea-o04 | 0.39 | 0.77 | right | right |
+| sad-o05 | 0.90 | 0.85 | wrong | wrong |
+
+**Ranked right 3 of 5, answered right 1 of 5.** By the reading fixed above:
+*the CREMA-D ranking may lean on familiarity; this set cannot say which.*
+Predictions scored: "ranks 5 of 5" -> 3 of 5, wrong; "answers 3 of 5" -> 1,
+wrong. (The tagger's two predictions were scored in the section above: one
+over, one at the bottom of its range.)
+
+What the run shows besides, descriptively:
+
+- **The Yes-lean is gone.** On CREMA-D the upset clips got p(Yes) 0.94 to
+  1.00 and 47 of 78 clips got Yes; here the five upset takes got 0.01, 0.02,
+  0.50, 0.77 and 0.85, and 3 of 10 clips got Yes. Whatever made the model say
+  Yes to nearly every acted clip, it does not do it to this voice.
+- **The ranking follows the acoustics.** The pairs ranked right are the ones
+  whose upset take moved in the `look` table (fear +8.5 st and +15.5 dB;
+  ang-o03 +9.7 dB; ang-o02 barely, and ranked right by 0.01). The two sad
+  pairs, which never got softer or slower, are the two ranked wrong -- and the
+  tagger failed on exactly those two. That is what hearing the delivery would
+  look like, and it is also what five pairs from one untrained speaker look
+  like; the set cannot separate them.
+- **Wording matters on a fresh voice as it did not on CREMA-D.** Ranked
+  right, windowed: `not_words` 5 of 5, `tone` 4, `upset` 3, `emotion` 3. On
+  the 21 dev pairs every wording ranked 21 of 21. Reported, not read: picking
+  `not_words` now would be picking after seeing.
+- **The window mattered for R3 too:** as recorded, `upset` ranks 2 of 5.
+- The calm "Okay, I'll do that" is heard as upset by both systems (R3 0.90,
+  the tagger angry at 0.59). One take, one listener; it may be the take.
+- R3 transcribed all ten takes word for word.
+
+**Where this leaves it.** M16's Claim A (13 · 13 · 13 on CREMA-D) stands as
+registered; what this set adds is that the same model, same question, ranks a
+fresh voice at 3 of 5 with no Yes-lean, so the CREMA-D figure should not be
+read as "R3 hears upset in anyone". Settling familiarity against hearing needs
+more speakers, or acted pairs from a corpus published after the model -- both
+parked.
