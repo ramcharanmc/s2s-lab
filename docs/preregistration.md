@@ -19,6 +19,7 @@ Rules, from the v1 Research plan (§8):
 | PR-002 | Does streaming the reply (R1) cut the wait for first audio against R0, without changing the words, slowing the turn or stalling playback? | `194e2bb` | **Reported: not supported** (S1, S2, S3 failed; S4, S5 and validity held) |
 | PR-003 | On the author's real voice, does a barge-in policy that reads the caller's words (B2) make fewer wrong stop / keep-going decisions than the best duration threshold, and stop within 1.5 s? | `e707190` | **Reported: supported** (S1: wrong on 1 of 20 against 8, p = 0.039; S2: 9 of 10 within 1.5 s; any second error would have failed S1) |
 | PR-004 | Does a slow-tier recognizer (R2, large-v3-turbo) cut R1's word error rate by at least 3 points overall and 5 on accented speech, while the reply still starts within a second? | `415ddc7` | **Reported: not supported** (S2 failed: accented −4.3 points, needed −5; S1 −3.4 points and S3 889 ms held) |
+| PR-005 | Does telling R1's LLM one word about the caller's tone (a $0 eGeMAPS tagger) let it tell an upset caller from the same words said calmly, for fear and for anger, better than shuffled tags do? | The commit that adds this entry | Open |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -897,3 +898,172 @@ r1-gpu now (commit 91048b3) against its earlier run (commit b107927), 200 clips:
 - Starting the LLM on the fast tier's transcript and keeping the reply when
   the slow tier agrees would save the 310 ms on at most the 46 turns whose raw
   transcripts are identical, under a quarter. Not worth building as it stands.
+  
+---
+
+## PR-005 — Does a $0 affect side-channel let a blind cascade hear that the caller is upset?
+
+**Registered:** 2026-09-21, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+The v2 plan (R3, week 3): routing eGeMAPS tags around the text bottleneck is
+"a poor man's R3", and the question is "how much of R3's benefit does a $0
+side-channel recover?", tested with a shuffled-tag control.
+
+The prosody probe set (`ac8b114`): 60 same-actor, same-sentence pairs from
+CREMA-D, one clip neutral and one loaded (sad, fearful or angry), chosen by
+what 2,443 raters heard. 21 dev pairs from 14 actors; **39 test pairs from 29
+other actors, locked** behind this registration. On the dev pairs R1's
+recognizer gives the same transcript for both clips of 18 of 21 pairs: the
+words do not carry the difference.
+
+The side-channel (`8548b87` → `ffbc32d`):
+
+- **The tagger** (`affect.py`, `probes/prosody/tagger.json`): 88 eGeMAPS
+  functionals (openSMILE) into a class-balanced softmax regression, fitted on
+  398 clips from the **16 dev-side actors who have no pair in the set** — no
+  training voice is a dev-pair or test-pair voice. One clip in, one word out:
+  neutral, sad, fearful or angry. It never sees a clip's twin. On a held-out
+  training voice: neutral 69%, sad 53%, fearful 45%, angry 76% tagged right.
+- **The probe** (`sidechannel.py`): R1's own Qwen2.5-0.5B, unchanged, is shown
+  the transcript and, in one sentence, the tagger's word, and asked *"Judging
+  by their tone of voice, is the caller upset?"*. The answer is the next-token
+  probability of "Yes" against "No", read off directly: deterministic, and it
+  cannot fail to parse.
+- **Four conditions**, same clips and LLM: *none* (R1 as it is), *tagger* (the
+  side-channel), *oracle* (the acted emotion as the word: what a perfect tagger
+  would buy), *shuffled* (the tagger's words dealt to the wrong clips, 1000
+  seeded deals: the control).
+- **A pair is answered right** when the loaded clip gets p(Yes) > 0.5 and its
+  neutral twin gets p(Yes) ≤ 0.5. "Ranked right" (the loaded clip merely
+  higher) is reported beside it.
+
+Development data, **the 21 dev pairs only** — answered right · ranked right, of 7:
+
+| | SAD | FEA | ANG |
+|---|---|---|---|
+| none | 0 · 2 | 0 · 2 | 0 · 2 |
+| tagger | 1 · 2 | 6 · 6 | 4 · 5 |
+| oracle | 7 · 7 | 7 · 7 | 7 · 7 |
+| shuffled (mean of 1000 deals) | 1.7 · 3.1 | 1.8 · 3.1 | 1.7 · 3.0 |
+
+What was tuned, and on what:
+
+- **The prompt wording was chosen on the dev pairs with the oracle tag.** Four
+  wordings were tried; three left the 0.5B model answering "No" to nearly
+  everything (3 to 5 of 21 answered right, though all ranked 21 of 21). The
+  wording that states the tone in a sentence answered 21 of 21. It is fixed in
+  the code. The test pairs had no part in it.
+- The tagger's regularization (L2 = 1.0) was fixed before any data was seen; a
+  sweep on the training actors afterwards found it made no difference (60.7 to
+  62.8% held-out mean recall across 1 to 1000) and it was left as it was.
+- **No test pair has been tagged, transcribed or scored**: `prosodyset.load`
+  refuses the test split without `confirm`, and no cache for it exists.
+- Known in advance: sadness is nearly inaudible to every tool so far — to
+  CREMA-D's own raters (60% agreement at best for these pairs), to pitch and
+  level, and to the tagger (1 of 7 on dev). **The sadness criterion below is
+  expected to fail**, and is registered so that the failure is on record.
+
+### Question
+
+On 39 pairs of voices the tagger and the author have never heard, does telling
+R1's LLM one word about the caller's tone let it tell an upset caller from the
+same caller saying the same words calmly — for fear and for anger — better
+than the same words dealt at random would?
+
+### Validity requirements
+
+| | Requirement |
+|---|---|
+| **V1 · Frozen** | `probes/prosody/tagger.json`, `src/s2slab/affect.py`, and in `src/s2slab/sidechannel.py` the constants `PROBE_SYSTEM`, `QUESTION`, `N_SHUFFLES`, and the functions `user_text`, `YesNoScorer`, `score_all`, `_pair_right` and `evaluate`, are unchanged between this commit and the run. Reporting code (`format_report`, `run`'s output, any per-pair listing or saving added for step 2) and tests may change. |
+| **V2 · Untouched test pairs** | No `results/affect/pyes-test.json` or `results/affect/test.npz` exists before the run, and `prosodyset verify` passes on the day of the run. |
+| **V3 · One run, whole set** | All 39 test pairs, the first complete run, `python -m s2slab.sidechannel test --confirm PR-005`, from a clean tree. The LLM's answers are one forward pass each and the deals are seeded, so a repeat must reproduce the table exactly; a repeat that differs is reported as a finding. |
+| **V4 · Evidence** | Every clip's transcript, tag and p(Yes) under every word, and the per-pair outcomes, are saved to `runs/prosody/` in the commit that reports the result. |
+
+### Primary outcome
+
+Per emotion, over its 13 test pairs: the number of pairs **answered right**
+under the *tagger* condition, as `sidechannel.evaluate` counts it at this
+commit; and the same count under each of the 1000 shuffled deals.
+
+### Success criterion
+
+For each emotion, the permutation p-value is the share of the 1000 seeded
+shuffled deals whose answered-right count is **at least** the tagger's (a
+one-sided exact test against the control; a p of 0.000 is reported as
+< 0.001).
+
+| | Criterion |
+|---|---|
+| **S1 · Fear** | tagger answered-right count ≥ 8 of 13, and p < 0.05 |
+| **S2 · Anger** | tagger answered-right count ≥ 7 of 13, and p < 0.05 |
+| **S3 · Sadness** | tagger answered-right count ≥ 7 of 13, and p < 0.05 — **registered, reported, and expected to fail; it does not decide the verdict** |
+
+**PR-005 is supported if S1 and S2 both hold**, and *not supported* otherwise,
+naming the criterion. S3 is reported in the same table whatever it says.
+
+**Why a count as well as a p.** With 13 pairs a lucky control can score 4 or 5;
+a p under 0.05 against it could be reached with 6 right. The counts are the
+least that would matter: over half the pairs for anger, more than half for
+fear, where the tagger is stronger.
+
+**Why the control is the comparator and not "none".** *None* answers no pair
+right by construction — both clips get the same words — so beating it says
+nothing. Beating the shuffled control says the *voice* carried the answer, not
+the prompt's wording or the LLM's lean.
+
+**No multiplicity correction** across S1 and S2: success needs both.
+
+### Predictions, recorded but not criteria
+
+- Fear: 10 to 11 of 13 answered right; shuffled about 3.3; p < 0.01. Holds.
+- Anger: 7 to 9 of 13; shuffled about 3.3; **S2 is the criterion most at
+  risk** — at 7 of 13 the p may land near 0.05.
+- Sadness: 2 to 3 of 13, no better than shuffled. **S3 fails.**
+- *None* answers 0 pairs right and says Yes to most clips (dev: 38 of 42).
+  *Oracle* answers 12 to 13 of 13 for every emotion: the LLM layer loses
+  nothing, and every miss under *tagger* is the tagger's.
+- Ranked right runs a little above answered right, by at most 2 pairs per emotion.
+- Most tagger misses on anger are neutral clips tagged sad or fearful (as on
+  dev), not angry clips tagged neutral.
+
+### Reported alongside, descriptively
+
+Ranked-right counts; the *none* and *oracle* rows; p(Yes) medians by the word
+shown; the tagger's own told-apart counts on the test pairs; every pair the
+side-channel got wrong, with both tags and both p(Yes); transcripts that differ
+between the two clips of a pair.
+
+### Analysis plan
+
+1. Commit this entry. The frozen code is frozen from here.
+2. Add the permutation p-value, a per-pair listing and a `--save` to the
+   reporting; test them on made-up scores only.
+3. `prosodyset verify`, confirm no test cache exists, then the one run (V2, V3). Save the evidence (V4).
+4. Record the output below, verbatim.
+5. Only after step 4: any further look at the test pairs, labelled exploratory.
+
+### What this cannot show
+
+- **Not what R3 buys.** This is one point on the plan's axis (R1 blind → R1 +
+  tags → R3). The comparison with R3 needs R3.
+- **Not that the reply gets better.** The probe is an explicit yes/no
+  question; nothing scores a spoken reply's tone.
+- **Not a live system.** The tag is computed from the whole finished clip; no
+  streaming, no per-caller baseline, no latency measured.
+- **Acted emotion, one corpus, 13 pairs per emotion.** Large effects only.
+  Sadness is a proxy the tools cannot hear, and the negative result there says
+  so about the tools, not about sadness.
+- **The wording was chosen for this LLM.** A larger LLM might answer the
+  bracketed tag that this one ignored; the finding that "a 0.5B model needs
+  the tone stated as a sentence" is a finding about Qwen2.5-0.5B.
+
+### Deviations
+
+*(none yet)*
+
+### Results
+
+*(to be appended)*
