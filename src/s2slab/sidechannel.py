@@ -42,8 +42,8 @@ Every (clip, word) the LLM could be shown is scored once and cached, so the
 shuffled control is an average over N_SHUFFLES seeded deals at no further cost.
 
     python -m s2slab.sidechannel dev                        the 21 dev pairs
-    python -m s2slab.sidechannel test --confirm PR-005      the 39 locked pairs: a registered run
-"""
+    python -m s2slab.sidechannel test --confirm PR-005 --save runs/prosody/pr005.json
+                                                            the 39 locked pairs: a registered run, kept"""
 
 from __future__ import annotations
 
@@ -187,13 +187,110 @@ def format_report(result: dict, p: dict[str, dict[str, float]]) -> str:
     return "\n".join(lines)
 
 
-def run(split: str, confirm: str = "", recognizer=None, scorer=None) -> str:
+# --------------------------------------------------------------------------- #
+# PR-005's criteria, the per-pair listing, and the evidence file.
+# Reporting only: nothing above this line changes after the registration.
+# --------------------------------------------------------------------------- #
+
+THRESHOLDS = {"FEA": 8, "ANG": 7, "SAD": 7}   # PR-005 S1, S2, S3: pairs answered right, of 13
+P_MAX = 0.05
+DECIDING = ("FEA", "ANG")                     # S3 (sadness) is reported, expected to fail, and does not decide
+
+
+def deal_counts(pairs, p: dict[str, dict[str, float]], tags: dict[str, str],
+                n_shuffles: int = N_SHUFFLES, seed: int = SEED) -> dict[str, list[int]]:
+    """{emotion: pairs answered right under each shuffled deal} -- the SAME deals
+    evaluate() averages (same seed, same draw order), kept one by one so a
+    permutation p can be read off them. A test holds that their mean equals
+    evaluate()'s shuffled mean exactly."""
+    clips = [c for pr in pairs for c in (pr.neutral, pr.loaded)]
+    rng = random.Random(seed)
+    counts = {e: [] for e in EMOTIONS}
+    for _ in range(n_shuffles):
+        words = [tags[c] for c in clips]
+        rng.shuffle(words)
+        deal = dict(zip(clips, words))
+        for emotion in EMOTIONS:
+            counts[emotion].append(sum(_pair_right(p[pr.neutral][deal[pr.neutral]], p[pr.loaded][deal[pr.loaded]])[0]
+                                       for pr in pairs if pr.emotion == emotion))
+    return counts
+
+
+def permutation_p(count: float, null: list[int]) -> float:
+    """The share of shuffled deals that answered at least `count` pairs right."""
+    return sum(c >= count for c in null) / len(null)
+
+
+def format_criteria(result: dict, null: dict[str, list[int]], confirm: str = "") -> str:
+    """PR-005's table: per emotion, the tagger's count, the deals that matched or
+    beat it, the p, and PASS / FAIL against the registered bar. The verdict line
+    is printed only for a registered run."""
+    fmt_p = lambda v: f"p = {v:.3f}" if v >= 0.001 else "p < 0.001"           # noqa: E731
+    lines = ["| criterion | pairs answered right | shuffled deals at or above it | permutation p | registered bar | |",
+             "|---|---:|---:|---:|---|---|"]
+    verdicts = {}
+    for name, emotion in (("S1 fear", "FEA"), ("S2 anger", "ANG"), ("S3 sadness", "SAD")):
+        got, _, n = result["tagger"][emotion]
+        pv = permutation_p(got, null[emotion])
+        ok = got >= THRESHOLDS[emotion] and pv < P_MAX
+        verdicts[emotion] = ok
+        lines.append(f"| {name} | {got:.0f} of {n} | {sum(c >= got for c in null[emotion])} of {len(null[emotion])} | "
+                     f"{fmt_p(pv)} | at least {THRESHOLDS[emotion]} and p < {P_MAX} | "
+                     f"{'PASS' if ok else 'FAIL'}{'' if emotion in DECIDING else ' (reported, not deciding)'} |")
+    if confirm:
+        failed = [e for e in DECIDING if not verdicts[e]]
+        lines += ["", f"{confirm}: " + ("SUPPORTED: fear and anger both hold" if not failed
+                                        else "NOT SUPPORTED: failed " + ", ".join(WORDS[e] for e in failed))]
+    return "\n".join(lines)
+
+
+def per_pair(pairs, p: dict[str, dict[str, float]], tags: dict[str, str], transcripts: dict[str, str]) -> str:
+    """Every pair: the two tags, the two p(Yes) under those tags, the outcome, and
+    whether the recognizer heard the same words in both clips."""
+    lines = ["| pair | neutral clip tagged | p(Yes) | loaded clip tagged | p(Yes) | answered | ranked | same transcript |",
+             "|---|---|---:|---|---:|---|---|---|"]
+    apart = {e: 0 for e in EMOTIONS}
+    for pr in pairs:
+        tn, tl = tags[pr.neutral], tags[pr.loaded]
+        pn, pl = p[pr.neutral][tn], p[pr.loaded][tl]
+        answered, ranked = _pair_right(pn, pl)
+        apart[pr.emotion] += tn == "neutral" != tl
+        lines.append(f"| {pr.id} | {tn} | {pn:.2f} | {tl} | {pl:.2f} | {'right' if answered else '**wrong**'} | "
+                     f"{'right' if ranked else 'wrong'} | {'yes' if transcripts[pr.neutral] == transcripts[pr.loaded] else 'no'} |")
+    lines += ["", "the tagger alone told apart (neutral clip tagged neutral, loaded clip tagged anything else): "
+              + ", ".join(f"{e} {apart[e]} of {sum(pr.emotion == e for pr in pairs)}" for e in EMOTIONS)]
+    return "\n".join(lines)
+
+
+def refuse_to_overwrite(path: pathlib.Path) -> None:
+    if pathlib.Path(path).exists():
+        raise FileExistsError(f"{path} exists. A saved run is evidence and is never overwritten: choose another name.")
+
+
+def save(path: pathlib.Path, head: str, pairs, p: dict, tags: dict, transcripts: dict, result: dict,
+         null: dict[str, list[int]]) -> None:
+    """Everything a reader needs to re-count PR-005 without the clips or the models."""
+    path = pathlib.Path(path)
+    refuse_to_overwrite(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({
+        "run": head, "question": QUESTION, "system": PROBE_SYSTEM, "seed": SEED, "n_shuffles": N_SHUFFLES,
+        "pairs": [pr._asdict() for pr in pairs], "transcripts": transcripts, "tags": tags, "p_yes": p,
+        "result": {c: {e: list(v) for e, v in r.items()} for c, r in result.items()},
+        "shuffled_deal_counts": null,
+    }, indent=1) + "\n", encoding="utf-8")
+
+
+def run(split: str, confirm: str = "", recognizer=None, scorer=None, save_to: pathlib.Path | None = None) -> str:
     """Tag, transcribe and probe one side of the set; returns the report.
 
     Takes:   "dev", or "test" with the registration it confirms (prosodyset.load
              enforces the lock); a loaded recognizer and a scorer function, for
-             tests -- by default R1's own Whisper base.en and Qwen2.5-0.5B.
+             tests -- by default R1's own Whisper base.en and Qwen2.5-0.5B; and
+             where to keep the run, checked BEFORE any model runs.
     """
+    if save_to is not None:
+        refuse_to_overwrite(save_to)
     loaded: list[LoadedPair] = load(split, confirm=confirm)
     pairs = [lp.pair for lp in loaded]
     audio = {c: a for lp in loaded for c, a in ((lp.pair.neutral, lp.neutral), (lp.pair.loaded, lp.loaded))}
@@ -210,7 +307,15 @@ def run(split: str, confirm: str = "", recognizer=None, scorer=None) -> str:
     p = score_all(transcripts, scorer, CACHE / f"pyes-{split}.json")
     head = f"{len(pairs)} {split} pairs" + (f" · confirms {confirm}" if confirm else "") + \
            f' · "{QUESTION}" · shuffled = mean of {N_SHUFFLES} deals, seed {SEED}'
-    return head + "\n\n" + format_report(evaluate(pairs, p, tags), p)
+    result, null = evaluate(pairs, p, tags), deal_counts(pairs, p, tags)
+    criteria = format_criteria(result, null, confirm)
+    if split == "dev":
+        criteria += "\n(the registered bars are for 13 test pairs per emotion; on the dev pairs only the p means anything)"
+    text = [head, format_report(result, p), criteria, per_pair(pairs, p, tags, transcripts)]
+    if save_to is not None:
+        save(save_to, head, pairs, p, tags, transcripts, result, null)
+        text.append(f"saved to {save_to}")
+    return "\n\n".join(text)
 
 
 if __name__ == "__main__":
@@ -219,5 +324,6 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="The affect side-channel on the prosody probe set.")
     ap.add_argument("split", choices=("dev", "test"))
     ap.add_argument("--confirm", default="", help="the registration a test run confirms, e.g. PR-005")
+    ap.add_argument("--save", default="", help="keep every transcript, tag, p(Yes) and outcome as JSON; never overwrites")
     a = ap.parse_args()
-    print(run(a.split, a.confirm))
+    print(run(a.split, a.confirm, save_to=pathlib.Path(a.save) if a.save else None))

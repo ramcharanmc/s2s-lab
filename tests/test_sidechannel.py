@@ -17,8 +17,9 @@ import json
 import pytest
 
 from s2slab.prosodyset import Pair
-from s2slab.sidechannel import (QUESTION, YesNoScorer, evaluate, format_report, run, score_all, user_text)
-
+from s2slab.affect import WORDS
+from s2slab.sidechannel import (QUESTION, YesNoScorer, deal_counts, evaluate, format_criteria, format_report,
+                                per_pair, permutation_p, run, save, score_all, user_text)
 
 def pair(emotion: str, k: int) -> Pair:
     actor = f"10{k:02d}"
@@ -102,6 +103,79 @@ def test_the_report_has_a_row_per_condition_and_says_how_the_llm_leans():
 def test_the_test_pairs_are_refused_without_a_registration():
     with pytest.raises(PermissionError, match="preregistration"):
         run("test")
+# --------------------------------------------------------------------------- #
+# PR-005's criteria, the listing, the evidence file
+# --------------------------------------------------------------------------- #
+
+
+def test_the_deals_counted_one_by_one_are_the_deals_evaluate_averages():
+    p = score_all(CLIPS, fake_scorer)
+    null = deal_counts(PAIRS, p, TAGS, n_shuffles=300)
+    result = evaluate(PAIRS, p, TAGS, n_shuffles=300)
+    for e in ("SAD", "FEA", "ANG"):
+        assert len(null[e]) == 300 and sum(null[e]) / 300 == pytest.approx(result["shuffled"][e][0])
+
+
+def test_the_permutation_p_is_the_share_of_deals_at_or_above_the_count():
+    assert permutation_p(3, [0, 1, 2, 3, 4, 5, 3, 3, 1, 0]) == 0.5
+    assert permutation_p(6, [0, 1, 2, 3, 4, 5, 3, 3, 1, 0]) == 0.0
+    assert permutation_p(0, [0, 1]) == 1.0
+
+
+def test_criteria_need_both_the_count_and_the_p_and_sadness_does_not_decide():
+    thirteen = {e: [pair(e, 10 * k + j) for j in range(13)] for k, e in enumerate(("SAD", "FEA", "ANG"), 1)}
+    prs = thirteen["SAD"] + thirteen["FEA"] + thirteen["ANG"]
+    clips = {c: "x" for pr in prs for c in (pr.neutral, pr.loaded)}
+    p = score_all(clips, fake_scorer)
+    # a tagger that tells fear apart 10 of 13, anger 7 of 13, sadness 2 of 13
+    right = {"FEA": 10, "ANG": 7, "SAD": 2}
+    tags = {}
+    for e, mine in thirteen.items():
+        for j, pr in enumerate(mine):
+            tags[pr.neutral] = "neutral"
+            tags[pr.loaded] = WORDS[e] if j < right[e] else "neutral"
+    result, null = evaluate(prs, p, tags, n_shuffles=400), deal_counts(prs, p, tags, n_shuffles=400)
+    text = format_criteria(result, null, "PR-005")
+    assert "| S1 fear | 10 of 13 |" in text and "| PASS |" in text.split("S1 fear")[1].split("\n")[0]
+    assert "| S2 anger | 7 of 13 |" in text
+    assert "| S3 sadness | 2 of 13 |" in text and "FAIL (reported, not deciding)" in text
+    assert text.endswith("PR-005: SUPPORTED: fear and anger both hold") or "NOT SUPPORTED: failed angry" in text
+    assert "sad" not in text.split("PR-005:")[1]                          # sadness never decides
+    # without a registration there is no verdict line
+    assert "PR-005:" not in format_criteria(result, null)
+
+
+def test_a_count_over_the_bar_with_a_lucky_control_still_fails():
+    null = {"FEA": [8] * 100, "ANG": [0] * 100, "SAD": [0] * 100}         # every deal matches fear's 8
+    result = {"tagger": {"FEA": (8.0, 8.0, 13), "ANG": (7.0, 7.0, 13), "SAD": (7.0, 7.0, 13)}}
+    text = format_criteria(result, null, "PR-005")
+    assert "| S1 fear | 8 of 13 | 100 of 100 | p = 1.000 |" in text and "NOT SUPPORTED: failed fearful" in text
+
+
+def test_the_per_pair_listing_shows_both_tags_and_who_was_wrong():
+    p = score_all(CLIPS, fake_scorer)
+    transcripts = {**CLIPS, "1002_DFA_FEA_XX": "Don't forget the jacket."}
+    text = per_pair(PAIRS, p, TAGS, transcripts)
+    assert "| sad-d01 | neutral | 0.10 | neutral | 0.10 | **wrong** | wrong | yes |" in text
+    assert "| fea-d02 | neutral | 0.10 | fearful | 0.90 | right | right | no |" in text
+    assert "| ang-d04 | sad | 0.90 | angry | 0.90 | **wrong** | wrong | yes |" in text
+    assert text.endswith("SAD 0 of 1, FEA 1 of 1, ANG 1 of 2")
+
+
+def test_a_saved_run_holds_everything_and_is_never_overwritten(tmp_path):
+    p = score_all(CLIPS, fake_scorer)
+    result, null = evaluate(PAIRS, p, TAGS, n_shuffles=20), deal_counts(PAIRS, p, TAGS, n_shuffles=20)
+    path = tmp_path / "prosody" / "run.json"
+    save(path, "4 dev pairs", PAIRS, p, TAGS, CLIPS, result, null)
+    kept = json.loads(path.read_text(encoding="utf-8"))
+    assert kept["run"] == "4 dev pairs" and kept["question"] == QUESTION and len(kept["pairs"]) == 4
+    assert kept["tags"] == TAGS and kept["shuffled_deal_counts"]["ANG"] == null["ANG"]
+    assert kept["result"]["tagger"]["FEA"] == [1.0, 1.0, 1]
+    with pytest.raises(FileExistsError, match="never overwritten"):
+        save(path, "again", PAIRS, p, TAGS, CLIPS, result, null)
+    with pytest.raises(FileExistsError):
+        run("dev", save_to=path)                                          # refused before any model loads
+
 
 
 @pytest.mark.slow
