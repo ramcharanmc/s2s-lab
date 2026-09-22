@@ -155,7 +155,10 @@ def probe(clips: dict[str, bytes], system: str, questions: dict[str, str], trans
 
 @app.local_entrypoint()
 def main(split: str = "dev", confirm: str = "", wording: str = "", save: str = ""):
-    from s2slab.r3probe import SYSTEM, TRANSCRIBE, WORDINGS, clips_for, format_report
+    import json
+
+    from s2slab.r3probe import (REGISTERED_WORDING, SYSTEM, TRANSCRIBE, WORDINGS, clips_for, compare,
+                                format_criteria, format_report, per_pair, sidechannel_outcomes)
     from s2slab.r3probe import save as save_run
     from s2slab.sidechannel import refuse_to_overwrite
 
@@ -172,6 +175,12 @@ def main(split: str = "dev", confirm: str = "", wording: str = "", save: str = "
             + f" · {out['model']} on {out['gpu']} · commit {commit} · load {out['load_s']:.0f} s")
     print(head, "\n")
     print(format_report(pairs, out["answers"], wordings))
+    if split == "test" and REGISTERED_WORDING in wordings:
+        p_yes = {c: a["p_yes"][REGISTERED_WORDING] for c, a in out["answers"].items()}
+        transcripts = {c: a["transcript"] for c, a in out["answers"].items()}
+        side = sidechannel_outcomes(json.loads((REPO / "runs" / "prosody" / "pr005.json").read_text(encoding="utf-8")))
+        print("\n" + format_criteria(compare(pairs, p_yes, side), confirm))
+        print("\n" + per_pair(pairs, p_yes, side, transcripts))
     if save:
         save_run(pathlib.Path(save), head, pairs, out["answers"], wordings)
         print(f"\nsaved to {save}")

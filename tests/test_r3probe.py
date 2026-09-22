@@ -151,3 +151,92 @@ def test_the_dev_clips_are_sent_as_the_frozen_wav_bytes():
     assert len(pairs) == 21 and len(clips) == 42
     data = clips[pairs[0].neutral]
     assert data[:4] == b"RIFF" and data == (r3probe.PROSODY_ROOT / "audio" / f"{pairs[0].neutral}.wav").read_bytes()
+
+
+# --------------------------------------------------------------------------- #
+# PR-006's criteria: R3 against the side-channel
+# --------------------------------------------------------------------------- #
+
+from s2slab.r3probe import compare, format_criteria, per_pair, sidechannel_outcomes  # noqa: E402
+
+
+def thirteen(emotion, k0):
+    return [pair(emotion, k0 + j, "test") for j in range(13)]
+
+
+TEST_PAIRS = thirteen("SAD", 10) + thirteen("FEA", 30) + thirteen("ANG", 50)
+
+
+def fake_sidechannel_run(right_ids):
+    """A PR-005 run file where the tagger answered exactly right_ids right: the
+    loaded clip tagged angry with p(Yes) 0.9, the neutral clip tagged neutral
+    with 0.1 -- or, when wrong, the neutral clip tagged sad with 0.9."""
+    run = {"pairs": [pr._asdict() for pr in TEST_PAIRS], "tags": {}, "p_yes": {}}
+    for pr in TEST_PAIRS:
+        run["tags"][pr.loaded] = "angry"
+        run["p_yes"][pr.loaded] = {"none": 0.5, "neutral": 0.1, "sad": 0.9, "fearful": 0.9, "angry": 0.9}
+        run["tags"][pr.neutral] = "neutral" if pr.id in right_ids else "sad"
+        run["p_yes"][pr.neutral] = {"none": 0.5, "neutral": 0.1, "sad": 0.9, "fearful": 0.9, "angry": 0.9}
+    return run
+
+
+def r3_scores(answered_ids, ranked_ids):
+    """R3's {clip: p(Yes)}: loaded 0.95 everywhere; neutral 0.2 if answered right,
+    0.7 if only ranked right, 0.99 if neither."""
+    p = {}
+    for pr in TEST_PAIRS:
+        p[pr.loaded] = 0.95
+        p[pr.neutral] = 0.2 if pr.id in answered_ids else 0.7 if pr.id in ranked_ids else 0.99
+    return p
+
+
+def test_the_side_channels_outcomes_are_read_from_its_run_file():
+    right = {pr.id for pr in TEST_PAIRS[:7]}
+    out = sidechannel_outcomes(fake_sidechannel_run(right))
+    assert len(out) == 39 and {i for i, ok in out.items() if ok} == right
+
+
+def test_claim_a_needs_twelve_ranked_right_per_emotion_and_claim_b_the_tags_counts_and_a_sign_test():
+    ids = [pr.id for pr in TEST_PAIRS]
+    sad, fea, ang = ids[:13], ids[13:26], ids[26:]
+    side = sidechannel_outcomes(fake_sidechannel_run(set(sad[:7]) | set(fea[:7]) | set(ang[:11])))   # 7 · 7 · 11
+    # R3: ranks everything right except one fear pair; answers 11 · 9 · 9 right
+    p = r3_scores(set(sad[:11]) | set(fea[:9]) | set(ang[:9]), set(ids) - {fea[12]})
+    r = compare(TEST_PAIRS, p, side)
+    assert r["r3"] == {"SAD": (11, 13, 13), "FEA": (9, 12, 13), "ANG": (9, 13, 13)}
+    assert r["tag"] == {"SAD": 7, "FEA": 7, "ANG": 11} and r["A"] == {"SAD": True, "FEA": True, "ANG": True}
+    assert r["B1"] == {"SAD": True, "FEA": True, "ANG": False}
+    assert r["fixed"] == sorted(sad[7:11] + fea[7:9]) and r["broken"] == sorted(ang[9:11])
+    assert r["p"] == pytest.approx(0.289, abs=0.001) and r["B2"] is False        # 6 fixed, 2 broken
+    text = format_criteria(r, "PR-006")
+    assert "| A2 fear | 12 of 13 | at least 12 | PASS |" in text
+    assert "| B1 anger | 9 of 13 | 11 of 13 | at least 11 | FAIL |" in text
+    assert "| B2 overall | 29 of 39 | 25 of 39 | more, and sign test p < 0.05 | FAIL |" in text
+    assert "PR-006 Claim A: SUPPORTED" in text and "PR-006 Claim B: NOT SUPPORTED: failed B1 anger, B2" in text
+    assert "PR-006" not in format_criteria(r)                                  # no verdict without a registration
+
+
+def test_claim_b_can_hold_and_claim_a_can_fail():
+    ids = [pr.id for pr in TEST_PAIRS]
+    side = sidechannel_outcomes(fake_sidechannel_run(set(ids[:7]) | set(ids[13:20]) | set(ids[26:37])))
+    p = r3_scores(set(ids), set(ids))                                          # 13 · 13 · 13 answered right
+    for i in ids[:3]:                                                          # ...but three sad pairs ranked wrong
+        p[TEST_PAIRS[ids.index(i)].neutral] = 0.99
+    r = compare(TEST_PAIRS, p, side)
+    assert r["A"]["SAD"] is False and r["A"]["FEA"] and r["r3"]["SAD"] == (10, 10, 13)
+    assert r["B1"] == {"SAD": True, "FEA": True, "ANG": True} and r["B2"] is True
+    assert r["p"] == pytest.approx(0.0127, abs=0.001)                       # 14 fixed, 3 broken: 2 * P(X <= 3 | n = 17)
+    text = format_criteria(r, "PR-006")
+    assert "Claim A: NOT SUPPORTED: failed sad" in text and "Claim B: SUPPORTED" in text
+
+
+def test_the_per_pair_table_shows_both_systems_and_whether_r3_heard_the_words():
+    ids = [pr.id for pr in TEST_PAIRS]
+    side = sidechannel_outcomes(fake_sidechannel_run(set(ids[:1])))
+    p = r3_scores(set(ids[1:2]), set(ids[:2]))
+    transcripts = {TEST_PAIRS[0].neutral: "The transcription is: 'Don't forget a jacket.'",
+                   TEST_PAIRS[1].neutral: "Don't forget the jacket"}
+    text = per_pair(TEST_PAIRS[:2], p, side, transcripts)
+    assert f"| {ids[0]} | 0.70 | 0.95 | **wrong** | right | right | yes |" in text
+    assert f"| {ids[1]} | 0.20 | 0.95 | right | right | wrong | no |" in text
+    assert text.endswith("word for word after normalizing: 1 of 2")

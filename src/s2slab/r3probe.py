@@ -134,3 +134,95 @@ def save(path: pathlib.Path, head: str, pairs, answers: dict, wordings: dict[str
                                 "scores": {name: {e: list(v) for e, v in
                                                   score_pairs(pairs, {c: a["p_yes"][name] for c, a in answers.items()}).items()}
                                            for name in wordings}}, indent=1) + "\n", encoding="utf-8")
+
+
+# --------------------------------------------------------------------------- #
+# PR-006's criteria: R3 against the side-channel, pair by pair.
+# Reporting only, added after the registration; nothing above changes.
+# --------------------------------------------------------------------------- #
+
+RANKED_MIN = 12               # Claim A: ranked right, of 13, per emotion
+P_MAX = 0.05                  # Claim B2
+
+
+def sidechannel_outcomes(run: dict) -> dict[str, bool]:
+    """{pair id: answered right by the side-channel} from a saved PR-005 run
+    (runs/prosody/pr005.json): the tagger's word for each clip, and the LLM's
+    p(Yes) under that word, scored exactly as evaluate() scored them."""
+    return {pr["id"]: _pair_right(run["p_yes"][pr["neutral"]][run["tags"][pr["neutral"]]],
+                                  run["p_yes"][pr["loaded"]][run["tags"][pr["loaded"]]])[0]
+            for pr in run["pairs"]}
+
+
+def compare(pairs, p_yes: dict[str, float], sidechannel: dict[str, bool]) -> dict:
+    """Everything PR-006 asks, as numbers.
+
+    Takes:   the pairs; R3's {clip: p(Yes)} under the registered wording; the
+             side-channel's answered-right outcome per pair id.
+    Returns: {"r3": score_pairs(...), "tag": {emotion: answered right},
+              "fixed": [ids R3 got right and the tag wrong], "broken": [the reverse],
+              "p": the exact two-sided sign test on fixed and broken,
+              "A": {emotion: bool}, "B1": {emotion: bool}, "B2": bool}
+    """
+    from .bargein_eval import sign_test
+    r3 = score_pairs(pairs, p_yes)
+    right = {pr.id: _pair_right(p_yes[pr.neutral], p_yes[pr.loaded])[0] for pr in pairs}
+    tag = {e: sum(sidechannel[pr.id] for pr in pairs if pr.emotion == e) for e in EMOTIONS}
+    fixed = sorted(pr.id for pr in pairs if right[pr.id] and not sidechannel[pr.id])
+    broken = sorted(pr.id for pr in pairs if sidechannel[pr.id] and not right[pr.id])
+    p = sign_test(len(fixed), len(broken))
+    return {"r3": r3, "tag": tag, "fixed": fixed, "broken": broken, "p": p,
+            "A": {e: r3[e][1] >= RANKED_MIN for e in EMOTIONS},
+            "B1": {e: r3[e][0] >= tag[e] for e in EMOTIONS},
+            "B2": sum(r3[e][0] for e in EMOTIONS) > sum(tag.values()) and p < P_MAX}
+
+
+def format_criteria(result: dict, confirm: str = "") -> str:
+    """The two claims as tables, and their verdicts (only for a registered run)."""
+    r3, tag = result["r3"], result["tag"]
+    name = {"SAD": "sad", "FEA": "fear", "ANG": "anger"}
+    lines = ["Claim A -- the input bottleneck: R3 ranks the upset clip above its calm twin",
+             "| criterion | ranked right | bar | |", "|---|---:|---|---|"]
+    for k, e in enumerate(EMOTIONS, 1):
+        lines.append(f"| A{k} {name[e]} | {r3[e][1]} of {r3[e][2]} | at least {RANKED_MIN} | "
+                     f"{'PASS' if result['A'][e] else 'FAIL'} |")
+    lines += ["", "Claim B -- native beats the proxy: answered right, R3 against the side-channel",
+              "| criterion | R3 | side-channel | bar | |", "|---|---:|---:|---|---|"]
+    for e in EMOTIONS:
+        lines.append(f"| B1 {name[e]} | {r3[e][0]} of {r3[e][2]} | {tag[e]} of {r3[e][2]} | at least {tag[e]} | "
+                     f"{'PASS' if result['B1'][e] else 'FAIL'} |")
+    total_r3, total_tag = sum(r3[e][0] for e in EMOTIONS), sum(tag.values())
+    fmt_p = f"p = {result['p']:.3f}" if result["p"] >= 0.001 else "p < 0.001"
+    lines.append(f"| B2 overall | {total_r3} of 39 | {total_tag} of 39 | more, and sign test p < {P_MAX} | "
+                 f"{'PASS' if result['B2'] else 'FAIL'} |")
+    lines.append(f"  fixed {len(result['fixed'])}: {', '.join(result['fixed']) or '-'}")
+    lines.append(f"  broken {len(result['broken'])}: {', '.join(result['broken']) or '-'}")
+    lines.append(f"  exact two-sided sign test on the {len(result['fixed']) + len(result['broken'])} pairs that differ: {fmt_p}")
+    if confirm:
+        a_ok, b_ok = all(result["A"].values()), all(result["B1"].values()) and result["B2"]
+        lines += ["", f"{confirm} Claim A: " + ("SUPPORTED: R3 ranks at least 12 of 13 right for every emotion" if a_ok
+                                                else "NOT SUPPORTED: failed " + ", ".join(name[e] for e in EMOTIONS if not result["A"][e])),
+                  f"{confirm} Claim B: " + ("SUPPORTED: at least the side-channel's count for every emotion, and more overall" if b_ok
+                                            else "NOT SUPPORTED: failed " + ", ".join(
+                                                [f"B1 {name[e]}" for e in EMOTIONS if not result["B1"][e]] + ([] if result["B2"] else ["B2"])))]
+    return "\n".join(lines)
+
+
+def per_pair(pairs, p_yes: dict[str, float], sidechannel: dict[str, bool], transcripts: dict[str, str]) -> str:
+    """Every pair: R3's two p(Yes), its outcome, the side-channel's outcome, and
+    whether R3's transcript of the neutral clip has the sentence's words."""
+    from .prosodycheck import SENTENCES
+    from .wer import light
+    lines = ["| pair | p(Yes) neutral | p(Yes) loaded | R3 answered | R3 ranked | side-channel | R3 heard the sentence |",
+             "|---|---:|---:|---|---|---|---|"]
+    heard_right = 0
+    for pr in pairs:
+        pn, pl = p_yes[pr.neutral], p_yes[pr.loaded]
+        a, r = _pair_right(pn, pl)
+        heard = light(SENTENCES[pr.sentence]) in light(transcripts.get(pr.neutral, ""))
+        heard_right += heard
+        lines.append(f"| {pr.id} | {pn:.2f} | {pl:.2f} | {'right' if a else '**wrong**'} | {'right' if r else 'wrong'} | "
+                     f"{'right' if sidechannel[pr.id] else 'wrong'} | {'yes' if heard else 'no'} |")
+    lines += ["", f"R3's transcript of the neutral clip contains the sentence, word for word after normalizing: "
+              f"{heard_right} of {len(pairs)}"]
+    return "\n".join(lines)
