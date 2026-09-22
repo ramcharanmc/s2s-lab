@@ -20,6 +20,7 @@ Rules, from the v1 Research plan (§8):
 | PR-003 | On the author's real voice, does a barge-in policy that reads the caller's words (B2) make fewer wrong stop / keep-going decisions than the best duration threshold, and stop within 1.5 s? | `e707190` | **Reported: supported** (S1: wrong on 1 of 20 against 8, p = 0.039; S2: 9 of 10 within 1.5 s; any second error would have failed S1) |
 | PR-004 | Does a slow-tier recognizer (R2, large-v3-turbo) cut R1's word error rate by at least 3 points overall and 5 on accented speech, while the reply still starts within a second? | `415ddc7` | **Reported: not supported** (S2 failed: accented −4.3 points, needed −5; S1 −3.4 points and S3 889 ms held) |
 | PR-005 | Does telling R1's LLM one word about the caller's tone (a $0 eGeMAPS tagger) let it tell an upset caller from the same words said calmly, for fear and for anger, better than shuffled tags do? | `44a9a5f` | **Reported: not supported** (fear 7 of 13, one under the bar, p = 0.015; anger 11 of 13, p < 0.001, held; sadness 7 of 13, p = 0.025, held though expected to fail) |
+| PR-006 | Does a speech-LLM that hears the audio (R3, Qwen2-Audio) rank the upset clip above its calm twin on the 39 locked prosody pairs (Claim A), and answer at least as many pairs right as the $0 side-channel on its own metric (Claim B)? | The commit that adds this entry | Open |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -1158,3 +1159,170 @@ five as angry. Every one of those twelve pairs would be answered right if the
 tag were computed *relative to the caller's own earlier speech* -- the
 per-caller baseline parked in M15's design. That is the next experiment for
 this side-channel, on a fresh set of pairs: these 39 are now spent.
+
+
+---
+
+## PR-006 — Does a speech-LLM that hears the audio answer the question the cascade cannot?
+
+**Registered:** 2026-09-22, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+The v2 plan, R3: "Ask something answerable only from prosody ... R1 physically
+cannot answer -- the information was destroyed at the ASR boundary. R3 can.
+That is the input bottleneck demonstrated in one prompt." And: "how much of
+R3's benefit does a $0 side-channel recover?" -- three points on one axis.
+
+Two of the three are measured, on the same 39 locked prosody pairs and the
+same question, under PR-005 (`d1a1b68`), pairs answered right · ranked right
+of 13 (SAD · FEA · ANG):
+
+    R1 blind        transcript only                    0 · 3    0 · 5    1 · 8
+    R1 + tags       transcript + the tagger's word     7 · 10   7 · 8    11 · 13
+    oracle tag      transcript + the acted emotion     13 · 13  13 · 13  13 · 13
+
+R3 is the third point (`fee8c03` → `7f2fa52`): Qwen2-Audio-7B-Instruct on a
+Modal A10, given the clip and the question and **no transcript and no tag**.
+Its answer is the next-token probability of "Yes" against "No", read off one
+forward pass -- the same read as PR-005's `YesNoScorer`, so the scores sit on
+one scale. A pair is *answered right* when the loaded clip gets p(Yes) > 0.5
+and its neutral twin ≤ 0.5; *ranked right* when the loaded clip's p(Yes) is
+strictly higher (`sidechannel._pair_right`, unchanged).
+
+Development data, **the 21 dev pairs only**, one A10 run, four wordings:
+
+| wording | SAD | FEA | ANG | answered right · ranked right, of 7 |
+|---|---|---|---|---|
+| tone (PR-005's question) | 4 · 7 | 4 · 7 | 4 · 7 | |
+| **upset** — "Is the person speaking upset?" | **6 · 7** | **5 · 7** | **5 · 7** | registered |
+| not_words | 0 · 7 | 0 · 7 | 0 · 7 | Yes to all 42 clips |
+| emotion | 0 · 7 | 0 · 7 | 0 · 7 | mass 0.00: it names the emotion instead |
+
+R3 ranked every dev pair right under every wording (the loaded clip's p(Yes)
+was about 1.00 each time) and transcribed every clip correctly. It leans Yes:
+with the 0.5 threshold, neutral clips often clear it, which is what the
+answered-right column measures. **The wording was chosen on the dev pairs
+by this table**, and only there; the threshold stays at 0.5 because that is
+PR-005's, and moving it for R3 would compare the two on different scales.
+
+What was known, and by whom: the test pairs have never been sent to any GPU
+(`prosodyset.load` refuses the test split without a registration, and there
+is no cache for R3 -- every run is a fresh container). The author has seen
+the side-channel's per-pair outcomes on the test pairs (PR-005), which decide
+nothing here: R3 is not tuned, and its only chosen parameter is the wording,
+chosen on dev.
+
+### Question
+
+On 39 pairs of voices it has never been shown by us, does a model that hears
+the audio (a) tell the upset clip from the calm one, where a transcript-only
+cascade cannot; and (b) do so at least as well as the $0 side-channel, on the
+side-channel's own metric?
+
+### Validity requirements
+
+| | Requirement |
+|---|---|
+| **V1 · Frozen** | `src/s2slab/r3probe.py` (`SYSTEM`, `WORDINGS`, `REGISTERED_WORDING`, `TRANSCRIBE`, `clips_for`, `score_pairs`) and `modal_app/r3_probe.py` (`MODEL`, the image, `SpeechLLM`, `run_probe`, `probe`) are unchanged between this commit and the run. Reporting -- `format_report`, `save`, the local entrypoint's output, and the comparison script added for step 2 -- may change. |
+| **V2 · Untouched test pairs** | `prosodyset verify` passes on the day of the run; the test clips reach a GPU for the first time in the registered run. |
+| **V3 · One run, whole set** | All 39 pairs, the first complete run, `modal run modal_app/r3_probe.py --split test --confirm PR-006 --wording upset --save runs/prosody/pr006.json`, from a clean tree (the stamp must not end in `-dirty`). One forward pass per clip in bf16 on an A10; a repeat is expected to reproduce the table, and a repeat that differs by more than a pair is reported as a finding. A crashed run is reported and repeated once, in full. |
+| **V4 · Evidence** | The run file (every clip's p(Yes), mass and R3's transcript, and the per-emotion scores) and the printed report are saved to `runs/prosody/` in the commit that reports the result. The comparator is `runs/prosody/pr005.json` as committed. |
+
+### Primary outcomes
+
+Per emotion, over its 13 test pairs, under the `upset` wording: pairs
+**ranked right** and pairs **answered right**, as `r3probe.score_pairs` counts
+them at this commit; and, from `runs/prosody/pr005.json`, the side-channel's
+answered-right outcome for each of the same pairs.
+
+### Success criteria — two claims, two verdicts
+
+**Claim A — the input bottleneck.** R3 hears what R1 cannot.
+
+| | Criterion |
+|---|---|
+| **A1 · Sad** | ranked right on at least **12 of 13** pairs |
+| **A2 · Fear** | ranked right on at least **12 of 13** pairs |
+| **A3 · Anger** | ranked right on at least **12 of 13** pairs |
+
+**Claim A is supported if A1, A2 and A3 all hold.** Against a coin flip per
+pair, 12 or more of 13 has p = 0.002, and R1 blind managed 3 · 5 · 8.
+
+**Claim B — native beats the proxy.** On the side-channel's metric, R3 is at
+least as good for every emotion and better overall.
+
+| | Criterion |
+|---|---|
+| **B1 · Per emotion** | answered right at least the side-channel's count: sad ≥ 7, fear ≥ 7, anger ≥ 11 of 13 |
+| **B2 · Overall, paired** | over the 39 pairs, R3 answers right on more pairs than the side-channel did, and an exact two-sided sign test on the pairs where the two disagree gives **p < 0.05** |
+
+**Claim B is supported if B1 holds for all three emotions and B2 holds.**
+
+**Why two verdicts.** A single verdict would be decided by R3's Yes-lean at
+the 0.5 threshold, which is calibration, not hearing. Claim A asks whether
+the information is there; Claim B asks whether this model, asked plainly and
+read at 0.5, beats a $0 tag. Both are worth knowing, and they can come out
+differently.
+
+**Why the tag's counts as the bars.** They are the numbers R3 has to match to
+be worth 16 GB and an A10 where the tag costs nothing; and they are already
+committed, so they cannot move.
+
+**No multiplicity correction** within a claim: each needs all its parts.
+
+### Predictions, recorded but not criteria
+
+- **Claim A holds:** 13 of 13 ranked right for every emotion; the loaded clip's
+  p(Yes) above 0.9 on nearly every pair.
+- **Claim B fails, on anger.** R3 answered right about 11 · 9 · 9 of 13
+  (scaling the dev rate), which beats the tag on sadness and fear but not
+  anger's 11; the sign test over 39 pairs will not reach 0.05 (about 9 pairs
+  fixed against 5 broken).
+- R3's misses under Claim B are neutral clips it calls upset (p(Yes) between
+  0.5 and 0.9), not upset clips it misses -- the mirror of the tagger's
+  failure, which took calm voices for upset ones for a different reason.
+- R3 transcribes at least 35 of 39 neutral clips word for word.
+- No training-data contamination is detectable from this run alone: a clean
+  ranking says the model hears the difference, not that it has never heard
+  these actors. The own-voice mini set, recorded after this run, is the check.
+
+### Reported alongside, descriptively
+
+R3's ranked-right and answered-right counts under the other three wordings
+if they are run (they are not part of the registered run and will not be);
+p(Yes) medians for neutral and loaded clips; the mass on Yes-or-No; R3's
+transcripts and their word error rate against the sentences; the per-pair
+table with the side-channel's outcome beside R3's; the cost.
+
+### Analysis plan
+
+1. Commit this entry. The frozen code is frozen from here.
+2. Add the comparison against `runs/prosody/pr005.json` (per-pair outcomes,
+   B1, B2's sign test) to the reporting; test on made-up runs only.
+3. `prosodyset verify`, a clean tree, then the one run (V2, V3). Save the evidence (V4).
+4. Record the output below, verbatim.
+5. Only after step 4: any further look at the test pairs, labelled
+   exploratory; then the own-voice recordings.
+
+### What this cannot show
+
+- **Not that R3 learned nothing from CREMA-D.** Qwen2-Audio's training data
+  is not documented and CREMA-D is a standard benchmark. Claim A on these
+  actors could be memory. Only audio no model has seen answers that.
+- **Not a calibrated R3.** The 0.5 threshold is PR-005's; a threshold chosen
+  for R3 would likely lift Claim B, and would be tuning.
+- **Not the reply, not latency.** The probe is a yes/no question; nothing here
+  scores a spoken reply, and R3 is not built as a rung. The plan's own warning
+  stands: this model is not streaming-native, so a rung built on it inherits
+  R0's input-side latency.
+- **One model, one wording, acted emotion, 13 pairs per emotion.**
+
+### Deviations
+
+*(none yet)*
+
+### Results
+
+*(to be appended)*
