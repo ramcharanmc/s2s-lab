@@ -20,7 +20,7 @@ Rules, from the v1 Research plan (§8):
 | PR-003 | On the author's real voice, does a barge-in policy that reads the caller's words (B2) make fewer wrong stop / keep-going decisions than the best duration threshold, and stop within 1.5 s? | `e707190` | **Reported: supported** (S1: wrong on 1 of 20 against 8, p = 0.039; S2: 9 of 10 within 1.5 s; any second error would have failed S1) |
 | PR-004 | Does a slow-tier recognizer (R2, large-v3-turbo) cut R1's word error rate by at least 3 points overall and 5 on accented speech, while the reply still starts within a second? | `415ddc7` | **Reported: not supported** (S2 failed: accented −4.3 points, needed −5; S1 −3.4 points and S3 889 ms held) |
 | PR-005 | Does telling R1's LLM one word about the caller's tone (a $0 eGeMAPS tagger) let it tell an upset caller from the same words said calmly, for fear and for anger, better than shuffled tags do? | `44a9a5f` | **Reported: not supported** (fear 7 of 13, one under the bar, p = 0.015; anger 11 of 13, p < 0.001, held; sadness 7 of 13, p = 0.025, held though expected to fail) |
-| PR-006 | Does a speech-LLM that hears the audio (R3, Qwen2-Audio) rank the upset clip above its calm twin on the 39 locked prosody pairs (Claim A), and answer at least as many pairs right as the $0 side-channel on its own metric (Claim B)? | The commit that adds this entry | Open |
+| PR-006 | Does a speech-LLM that hears the audio (R3, Qwen2-Audio) rank the upset clip above its calm twin on the 39 locked prosody pairs (Claim A), and answer at least as many pairs right as the $0 side-channel on its own metric (Claim B)? | `95c3d33` | **Reported: Claim A supported** (13 of 13 for every emotion); **Claim B not supported** (11 · 11 · 9 against 7 · 7 · 11; anger short; sign test p = 0.21) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -1321,8 +1321,106 @@ table with the side-channel's outcome beside R3's; the cost.
 
 ### Deviations
 
-*(none yet)*
+- **2026-09-22, registry row.** Its "Registered" cell was changed to the
+  registering commit's hash, `95c3d33`, and its status updated, as for the
+  earlier entries.
+- **2026-09-22, verbatim output.** The two per-pair tables (39 rows each) are
+  kept verbatim in the committed `runs/prosody/pr006-report.md`; everything
+  else the run printed is below.
 
 ### Results
 
-*(to be appended)*
+**Run:** 2026-09-22, commit `5c1f3aa`, clean tree, Modal NVIDIA A10 (driver
+580.95.05), `prosodyset verify` intact, the test clips' first time on any
+GPU; all 39 pairs, first and only run: `modal run modal_app/r3_probe.py
+--split test --confirm PR-006 --wording upset --save runs/prosody/pr006.json`.
+66 s inside the function, about \$0.061. Evidence: `runs/prosody/pr006.json`
+(every clip's p(Yes), mass and R3's transcript, and the scores) and
+`runs/prosody/pr006-report.md` (the complete output). V1 held: zero changed
+lines in the frozen parts since `95c3d33` (the reporting commit `5c1f3aa`
+added below them only).
+
+**Verdicts: Claim A supported; Claim B not supported.** R3 ranked the upset
+clip above its calm twin on 13 of 13 pairs for every emotion. On the strict
+metric it answered 11 · 11 · 9 right against the side-channel's 7 · 7 · 11:
+anger fell short of the tag's count, and the paired sign test over all 39
+pairs (11 fixed, 5 broken) gave p = 0.210.
+
+Output of the run, verbatim, without the two per-pair tables (which are in
+the report file):
+
+```text
+39 test pairs · confirms PR-006 · Qwen/Qwen2-Audio-7B-Instruct on NVIDIA A10, 580.95.05 · commit 5c1f3aa · load 5 s
+
+| wording | SAD: answered right · ranked right (of 13) | FEA: answered right · ranked right (of 13) | ANG: answered right · ranked right (of 13) |
+|---|---|---|---|
+| upset | 11 · 13 | 11 · 13 | 9 · 13 |
+
+upset: "Is the person speaking upset?" -- Yes to 47 of 78 clips, median p(Yes) 0.96, median mass on Yes-or-No 0.95
+
+Claim A -- the input bottleneck: R3 ranks the upset clip above its calm twin
+| criterion | ranked right | bar | |
+|---|---:|---|---|
+| A1 sad | 13 of 13 | at least 12 | PASS |
+| A2 fear | 13 of 13 | at least 12 | PASS |
+| A3 anger | 13 of 13 | at least 12 | PASS |
+
+Claim B -- native beats the proxy: answered right, R3 against the side-channel
+| criterion | R3 | side-channel | bar | |
+|---|---:|---:|---|---|
+| B1 sad | 11 of 13 | 7 of 13 | at least 7 | PASS |
+| B1 fear | 11 of 13 | 7 of 13 | at least 7 | PASS |
+| B1 anger | 9 of 13 | 11 of 13 | at least 11 | FAIL |
+| B2 overall | 31 of 39 | 25 of 39 | more, and sign test p < 0.05 | FAIL |
+  fixed 11: ang-t02, ang-t04, fea-t06, fea-t07, fea-t08, fea-t10, sad-t02, sad-t04, sad-t06, sad-t07, sad-t10
+  broken 5: ang-t01, ang-t05, ang-t06, ang-t12, sad-t08
+  exact two-sided sign test on the 16 pairs that differ: p = 0.210
+
+PR-006 Claim A: SUPPORTED: R3 ranks at least 12 of 13 right for every emotion
+PR-006 Claim B: NOT SUPPORTED: failed B1 anger, B2
+
+R3's transcript of the neutral clip contains the sentence, word for word after normalizing: 39 of 39
+```
+
+**The three points on the axis**, same 39 pairs, same question, pairs
+answered right · ranked right of 13 (SAD · FEA · ANG):
+
+| | answered right | ranked right |
+|---|---|---|
+| R1 blind (PR-005, none) | 0 · 0 · 1 | 3 · 5 · 8 |
+| R1 + tags (PR-005, tagger) | 7 · 7 · 11 | 10 · 8 · 13 |
+| **R3** (this run) | **11 · 11 · 9** | **13 · 13 · 13** |
+| oracle tag (PR-005) | 13 · 13 · 13 | 13 · 13 · 13 |
+
+**Predictions, scored**
+
+| Prediction | Outcome |
+|---|---|
+| Claim A holds, 13 of 13 everywhere, loaded p(Yes) > 0.9 nearly always | Right: 13 · 13 · 13; the lowest loaded p(Yes) was 0.94. |
+| Claim B fails on anger; about 11 · 9 · 9; sign test short of 0.05, about 9 fixed to 5 broken | Right in every part: 11 · 11 · 9 (fear better than the dev rate), 11 fixed to 5 broken, p = 0.210. |
+| R3's misses are calm clips called upset, never upset clips missed | Right: all 8 misses are neutral clips with p(Yes) 0.53 to 0.98. |
+| R3 transcribes at least 35 of 39 neutral clips word for word | 39 of 39. |
+| Contamination not detectable from this run | Unchanged: a perfect ranking is consistent with hearing and with memory. The own-voice set follows. |
+
+**What the registration got right, for once, and why.** After PR-004 and
+PR-005 the predictions were made from the mechanism (a Yes-lean at 0.5; the
+tag's anger count as a high bar) rather than from a dev score read as the
+population, and the dev-to-test drift was allowed for by predicting ranges.
+
+**Reported alongside, descriptively**
+
+- p(Yes) for the neutral clips: median 0.26, range 0.04 to 0.98; for the
+  loaded clips: median 0.99, range 0.94 to 1.00. Yes to 47 of 78 clips.
+- The 8 misses (neutral clips over 0.5): sad-t08 0.79, sad-t12 0.98,
+  fea-t01 0.75, fea-t05 0.78, ang-t01 0.53, ang-t05 0.71, ang-t06 0.93,
+  ang-t12 0.69. Three of them the side-channel also missed; five it got right.
+- Mass on Yes-or-No: median 0.95. The model answered the question it was asked.
+- Cost: \$0.061; the whole of M16 on GPUs, \$0.12.
+
+**Exploratory, after the registered analysis**
+
+A threshold of 0.6 on the neutral clips would have turned two anger misses
+right and 0.8 four; that is calibration on the test pairs and is reported
+only to size the gap. The right experiment is a threshold set on the dev
+pairs, then a fresh test set -- as for the tagger's per-caller baseline, these
+39 pairs are spent for R3 too.

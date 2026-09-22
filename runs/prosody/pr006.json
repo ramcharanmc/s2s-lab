@@ -1,0 +1,1317 @@
+{
+ "run": "39 test pairs \u00b7 confirms PR-006 \u00b7 Qwen/Qwen2-Audio-7B-Instruct on NVIDIA A10, 580.95.05 \u00b7 commit 5c1f3aa \u00b7 load 5 s",
+ "system": "Answer with one word: Yes or No.",
+ "wordings": {
+  "upset": "Is the person speaking upset?"
+ },
+ "pairs": [
+  {
+   "id": "sad-t01",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1006",
+   "sentence": "TIE",
+   "neutral": "1006_TIE_NEU_XX",
+   "loaded": "1006_TIE_SAD_XX",
+   "agree_neutral": 0.818,
+   "agree_loaded": 0.778,
+   "raters_neutral": 11,
+   "raters_loaded": 9,
+   "intensity": 62.3,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t02",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1083",
+   "sentence": "IOM",
+   "neutral": "1083_IOM_NEU_XX",
+   "loaded": "1083_IOM_SAD_XX",
+   "agree_neutral": 0.778,
+   "agree_loaded": 0.667,
+   "raters_neutral": 9,
+   "raters_loaded": 9,
+   "intensity": 60.7,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t03",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1048",
+   "sentence": "TAI",
+   "neutral": "1048_TAI_NEU_XX",
+   "loaded": "1048_TAI_SAD_XX",
+   "agree_neutral": 0.7,
+   "agree_loaded": 0.636,
+   "raters_neutral": 10,
+   "raters_loaded": 11,
+   "intensity": 43.1,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t04",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1089",
+   "sentence": "MTI",
+   "neutral": "1089_MTI_NEU_XX",
+   "loaded": "1089_MTI_SAD_XX",
+   "agree_neutral": 0.7,
+   "agree_loaded": 0.889,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 59.2,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t05",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1036",
+   "sentence": "MTI",
+   "neutral": "1036_MTI_NEU_XX",
+   "loaded": "1036_MTI_SAD_XX",
+   "agree_neutral": 0.889,
+   "agree_loaded": 0.7,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 72.3,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t06",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1058",
+   "sentence": "IEO",
+   "neutral": "1058_IEO_NEU_XX",
+   "loaded": "1058_IEO_SAD_HI",
+   "agree_neutral": 1.0,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 91.2,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t07",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1003",
+   "sentence": "WSI",
+   "neutral": "1003_WSI_NEU_XX",
+   "loaded": "1003_WSI_SAD_XX",
+   "agree_neutral": 0.6,
+   "agree_loaded": 0.6,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 59.8,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t08",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1025",
+   "sentence": "IEO",
+   "neutral": "1025_IEO_NEU_XX",
+   "loaded": "1025_IEO_SAD_LO",
+   "agree_neutral": 0.778,
+   "agree_loaded": 0.625,
+   "raters_neutral": 9,
+   "raters_loaded": 8,
+   "intensity": 71.8,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t09",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1078",
+   "sentence": "IEO",
+   "neutral": "1078_IEO_NEU_XX",
+   "loaded": "1078_IEO_SAD_HI",
+   "agree_neutral": 0.778,
+   "agree_loaded": 0.7,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 75.0,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t10",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1037",
+   "sentence": "MTI",
+   "neutral": "1037_MTI_NEU_XX",
+   "loaded": "1037_MTI_SAD_XX",
+   "agree_neutral": 0.6,
+   "agree_loaded": 0.7,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 74.1,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t11",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1014",
+   "sentence": "TAI",
+   "neutral": "1014_TAI_NEU_XX",
+   "loaded": "1014_TAI_SAD_XX",
+   "agree_neutral": 0.7,
+   "agree_loaded": 0.667,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 54.7,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t12",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1060",
+   "sentence": "IOM",
+   "neutral": "1060_IOM_NEU_XX",
+   "loaded": "1060_IOM_SAD_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.6,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 57.8,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t13",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1013",
+   "sentence": "ITH",
+   "neutral": "1013_ITH_NEU_XX",
+   "loaded": "1013_ITH_SAD_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.818,
+   "raters_neutral": 11,
+   "raters_loaded": 11,
+   "intensity": 56.6,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-t01",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1009",
+   "sentence": "IEO",
+   "neutral": "1009_IEO_NEU_XX",
+   "loaded": "1009_IEO_FEA_HI",
+   "agree_neutral": 0.875,
+   "agree_loaded": 0.9,
+   "raters_neutral": 8,
+   "raters_loaded": 10,
+   "intensity": 77.1,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t02",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1058",
+   "sentence": "TAI",
+   "neutral": "1058_TAI_NEU_XX",
+   "loaded": "1058_TAI_FEA_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 64.1,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t03",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1036",
+   "sentence": "TSI",
+   "neutral": "1036_TSI_NEU_XX",
+   "loaded": "1036_TSI_FEA_XX",
+   "agree_neutral": 0.889,
+   "agree_loaded": 0.889,
+   "raters_neutral": 9,
+   "raters_loaded": 9,
+   "intensity": 88.6,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t04",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1063",
+   "sentence": "IEO",
+   "neutral": "1063_IEO_NEU_XX",
+   "loaded": "1063_IEO_FEA_HI",
+   "agree_neutral": 0.8,
+   "agree_loaded": 0.818,
+   "raters_neutral": 10,
+   "raters_loaded": 11,
+   "intensity": 61.1,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t05",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1012",
+   "sentence": "IEO",
+   "neutral": "1012_IEO_NEU_XX",
+   "loaded": "1012_IEO_FEA_HI",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.8,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 67.0,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t06",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1010",
+   "sentence": "ITH",
+   "neutral": "1010_ITH_NEU_XX",
+   "loaded": "1010_ITH_FEA_XX",
+   "agree_neutral": 0.8,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 8,
+   "intensity": 61.6,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t07",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1006",
+   "sentence": "IWW",
+   "neutral": "1006_IWW_NEU_XX",
+   "loaded": "1006_IWW_FEA_XX",
+   "agree_neutral": 0.8,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 69.0,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t08",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1043",
+   "sentence": "IWW",
+   "neutral": "1043_IWW_NEU_XX",
+   "loaded": "1043_IWW_FEA_XX",
+   "agree_neutral": 0.889,
+   "agree_loaded": 0.875,
+   "raters_neutral": 9,
+   "raters_loaded": 8,
+   "intensity": 57.7,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t09",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1026",
+   "sentence": "IWL",
+   "neutral": "1026_IWL_NEU_XX",
+   "loaded": "1026_IWL_FEA_XX",
+   "agree_neutral": 0.8,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 8,
+   "intensity": 56.4,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t10",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1059",
+   "sentence": "ITS",
+   "neutral": "1059_ITS_NEU_XX",
+   "loaded": "1059_ITS_FEA_XX",
+   "agree_neutral": 0.875,
+   "agree_loaded": 1.0,
+   "raters_neutral": 8,
+   "raters_loaded": 10,
+   "intensity": 64.7,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t11",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1086",
+   "sentence": "TSI",
+   "neutral": "1086_TSI_NEU_XX",
+   "loaded": "1086_TSI_FEA_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 56.8,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t12",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1037",
+   "sentence": "TSI",
+   "neutral": "1037_TSI_NEU_XX",
+   "loaded": "1037_TSI_FEA_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 73.4,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t13",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1040",
+   "sentence": "ITS",
+   "neutral": "1040_ITS_NEU_XX",
+   "loaded": "1040_ITS_FEA_XX",
+   "agree_neutral": 0.889,
+   "agree_loaded": 0.889,
+   "raters_neutral": 9,
+   "raters_loaded": 9,
+   "intensity": 57.1,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-t01",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1065",
+   "sentence": "TIE",
+   "neutral": "1065_TIE_NEU_XX",
+   "loaded": "1065_TIE_ANG_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 73.2,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t02",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1009",
+   "sentence": "WSI",
+   "neutral": "1009_WSI_NEU_XX",
+   "loaded": "1009_WSI_ANG_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 80.7,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t03",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1006",
+   "sentence": "WSI",
+   "neutral": "1006_WSI_NEU_XX",
+   "loaded": "1006_WSI_ANG_XX",
+   "agree_neutral": 0.909,
+   "agree_loaded": 1.0,
+   "raters_neutral": 11,
+   "raters_loaded": 10,
+   "intensity": 60.4,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t04",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1004",
+   "sentence": "IEO",
+   "neutral": "1004_IEO_NEU_XX",
+   "loaded": "1004_IEO_ANG_HI",
+   "agree_neutral": 0.9,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 85.1,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t05",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1051",
+   "sentence": "IEO",
+   "neutral": "1051_IEO_NEU_XX",
+   "loaded": "1051_IEO_ANG_HI",
+   "agree_neutral": 1.0,
+   "agree_loaded": 1.0,
+   "raters_neutral": 11,
+   "raters_loaded": 10,
+   "intensity": 61.8,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t06",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1074",
+   "sentence": "IEO",
+   "neutral": "1074_IEO_NEU_XX",
+   "loaded": "1074_IEO_ANG_HI",
+   "agree_neutral": 1.0,
+   "agree_loaded": 1.0,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 85.5,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t07",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1013",
+   "sentence": "DFA",
+   "neutral": "1013_DFA_NEU_XX",
+   "loaded": "1013_DFA_ANG_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 81.1,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t08",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1036",
+   "sentence": "DFA",
+   "neutral": "1036_DFA_NEU_XX",
+   "loaded": "1036_DFA_ANG_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 1.0,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 77.7,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t09",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1039",
+   "sentence": "DFA",
+   "neutral": "1039_DFA_NEU_XX",
+   "loaded": "1039_DFA_ANG_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.9,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 61.1,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t10",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1042",
+   "sentence": "ITH",
+   "neutral": "1042_ITH_NEU_XX",
+   "loaded": "1042_ITH_ANG_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 8,
+   "intensity": 69.5,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t11",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1025",
+   "sentence": "IOM",
+   "neutral": "1025_IOM_NEU_XX",
+   "loaded": "1025_IOM_ANG_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 75.3,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t12",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1089",
+   "sentence": "IWL",
+   "neutral": "1089_IWL_NEU_XX",
+   "loaded": "1089_IWL_ANG_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 69.2,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t13",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1008",
+   "sentence": "TSI",
+   "neutral": "1008_TSI_NEU_XX",
+   "loaded": "1008_TSI_ANG_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 83.7,
+   "threshold": 0.9
+  }
+ ],
+ "answers": {
+  "1006_TIE_NEU_XX": {
+   "p_yes": {
+    "upset": 0.21206881050888235
+   },
+   "mass": {
+    "upset": 0.8766183704137802
+   },
+   "transcript": "The exact transcription of the speech is: 'That is exactly what happened.'"
+  },
+  "1006_TIE_SAD_XX": {
+   "p_yes": {
+    "upset": 0.9964063973078175
+   },
+   "mass": {
+    "upset": 0.9908708480652422
+   },
+   "transcript": "The exact transcription of the speech is: 'That is exactly what happened.'"
+  },
+  "1083_IOM_NEU_XX": {
+   "p_yes": {
+    "upset": 0.23370634811198823
+   },
+   "mass": {
+    "upset": 0.8469130247831345
+   },
+   "transcript": "The transcription of the speech is: 'I'm on my way to the meeting.'"
+  },
+  "1083_IOM_SAD_XX": {
+   "p_yes": {
+    "upset": 0.9947798745725639
+   },
+   "mass": {
+    "upset": 0.981080065947026
+   },
+   "transcript": "The transcription of the speech is: 'I'm on my way to the meeting.'"
+  },
+  "1048_TAI_NEU_XX": {
+   "p_yes": {
+    "upset": 0.15610489643145462
+   },
+   "mass": {
+    "upset": 0.9211009442806244
+   },
+   "transcript": "The transcription of the speech is: 'the airplane is almost full.'"
+  },
+  "1048_TAI_SAD_XX": {
+   "p_yes": {
+    "upset": 0.9953904273786092
+   },
+   "mass": {
+    "upset": 0.9869521097280085
+   },
+   "transcript": "The transcription of the speech is: 'the airplane is almost full.'"
+  },
+  "1089_MTI_NEU_XX": {
+   "p_yes": {
+    "upset": 0.06008664898761898
+   },
+   "mass": {
+    "upset": 0.7842608019709587
+   },
+   "transcript": "The transcription of the speech is: 'Maybe tomorrow it will be cold.'"
+  },
+  "1089_MTI_SAD_XX": {
+   "p_yes": {
+    "upset": 0.9968273169203249
+   },
+   "mass": {
+    "upset": 0.9883018201217055
+   },
+   "transcript": "The transcription of the speech is: 'Maybe tomorrow it will be cold.'"
+  },
+  "1036_MTI_NEU_XX": {
+   "p_yes": {
+    "upset": 0.22270015152308573
+   },
+   "mass": {
+    "upset": 0.882132351398468
+   },
+   "transcript": "The transcription of the speech is: 'Maybe tomorrow it will be cold.'"
+  },
+  "1036_MTI_SAD_XX": {
+   "p_yes": {
+    "upset": 0.9783846679250132
+   },
+   "mass": {
+    "upset": 0.9940677154809237
+   },
+   "transcript": "The transcription of the speech is: 'Maybe tomorrow it will be cold.'"
+  },
+  "1058_IEO_NEU_XX": {
+   "p_yes": {
+    "upset": 0.3345894507899894
+   },
+   "mass": {
+    "upset": 0.8543798923492432
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1058_IEO_SAD_HI": {
+   "p_yes": {
+    "upset": 0.9902915226614002
+   },
+   "mass": {
+    "upset": 0.9740768568590283
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1003_WSI_NEU_XX": {
+   "p_yes": {
+    "upset": 0.4225046370646961
+   },
+   "mass": {
+    "upset": 0.8919684290885925
+   },
+   "transcript": "The transcription of the speech is: 'we'll stop in a couple of minutes.'"
+  },
+  "1003_WSI_SAD_XX": {
+   "p_yes": {
+    "upset": 0.9433475768154848
+   },
+   "mass": {
+    "upset": 0.9645654857158661
+   },
+   "transcript": "The transcription of the speech is: 'we'll stop in a couple of minutes.'"
+  },
+  "1025_IEO_NEU_XX": {
+   "p_yes": {
+    "upset": 0.7879311838734577
+   },
+   "mass": {
+    "upset": 0.8946206271648407
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1025_IEO_SAD_LO": {
+   "p_yes": {
+    "upset": 0.9950945942177681
+   },
+   "mass": {
+    "upset": 0.983469043392688
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1078_IEO_NEU_XX": {
+   "p_yes": {
+    "upset": 0.5
+   },
+   "mass": {
+    "upset": 0.8739205002784729
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1078_IEO_SAD_HI": {
+   "p_yes": {
+    "upset": 0.9975273767868216
+   },
+   "mass": {
+    "upset": 0.9921319088898599
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1037_MTI_NEU_XX": {
+   "p_yes": {
+    "upset": 0.09534946195558368
+   },
+   "mass": {
+    "upset": 0.8763499706983566
+   },
+   "transcript": "The transcription of the speech is: 'Maybe tomorrow it will be cold.'"
+  },
+  "1037_MTI_SAD_XX": {
+   "p_yes": {
+    "upset": 0.9919380083859493
+   },
+   "mass": {
+    "upset": 0.9908843524754047
+   },
+   "transcript": "The transcription of the speech is: 'Maybe tomorrow it will be cold.'"
+  },
+  "1014_TAI_NEU_XX": {
+   "p_yes": {
+    "upset": 0.148047187709877
+   },
+   "mass": {
+    "upset": 0.8973226994276047
+   },
+   "transcript": "The transcription of the speech is: 'the airplane is almost full.'"
+  },
+  "1014_TAI_SAD_XX": {
+   "p_yes": {
+    "upset": 0.9755769083352152
+   },
+   "mass": {
+    "upset": 0.9897496942430735
+   },
+   "transcript": "The transcription of the speech is: 'the airplane is almost'."
+  },
+  "1060_IOM_NEU_XX": {
+   "p_yes": {
+    "upset": 0.982013789755615
+   },
+   "mass": {
+    "upset": 0.8812339827418327
+   },
+   "transcript": "The transcription of the speech is: 'I'm on my way to the meeting.'"
+  },
+  "1060_IOM_SAD_XX": {
+   "p_yes": {
+    "upset": 0.9937100978052902
+   },
+   "mass": {
+    "upset": 0.9865620122291148
+   },
+   "transcript": "The transcription of the speech is: 'I don't want my way to the meeting.'"
+  },
+  "1013_ITH_NEU_XX": {
+   "p_yes": {
+    "upset": 0.36296919768755886
+   },
+   "mass": {
+    "upset": 0.7300382256507874
+   },
+   "transcript": "The transcription of the speech is: 'I think I have a doctor's appointment.'"
+  },
+  "1013_ITH_SAD_XX": {
+   "p_yes": {
+    "upset": 0.991422514707595
+   },
+   "mass": {
+    "upset": 0.9813383696600795
+   },
+   "transcript": "The transcription of the speech is: 'I think I have a doctor's appointment.'"
+  },
+  "1009_IEO_NEU_XX": {
+   "p_yes": {
+    "upset": 0.7549149874118616
+   },
+   "mass": {
+    "upset": 0.8685678690671921
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1009_IEO_FEA_HI": {
+   "p_yes": {
+    "upset": 0.9953904274943134
+   },
+   "mass": {
+    "upset": 0.9898902145214379
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1058_TAI_NEU_XX": {
+   "p_yes": {
+    "upset": 0.14804718819858684
+   },
+   "mass": {
+    "upset": 0.8837865889072418
+   },
+   "transcript": "The transcription of the speech is: 'the airplane is almost full.'"
+  },
+  "1058_TAI_FEA_XX": {
+   "p_yes": {
+    "upset": 0.9971990728652285
+   },
+   "mass": {
+    "upset": 0.9918082843068987
+   },
+   "transcript": "The transcription of the speech is: 'The airplane is almost full.'"
+  },
+  "1036_TSI_NEU_XX": {
+   "p_yes": {
+    "upset": 0.1645164502745746
+   },
+   "mass": {
+    "upset": 0.8850757032632828
+   },
+   "transcript": "The speech transcribed from the audio is: 'the surface is slick.'"
+  },
+  "1036_TSI_FEA_XX": {
+   "p_yes": {
+    "upset": 0.9859363736853258
+   },
+   "mass": {
+    "upset": 0.9705172833055258
+   },
+   "transcript": "The speech transcribed from the audio is: 'The surface is slick.'"
+  },
+  "1063_IEO_NEU_XX": {
+   "p_yes": {
+    "upset": 0.20181322474657526
+   },
+   "mass": {
+    "upset": 0.9064963012933731
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1063_IEO_FEA_HI": {
+   "p_yes": {
+    "upset": 0.9928785716548976
+   },
+   "mass": {
+    "upset": 0.9868258070200682
+   },
+   "transcript": "The transcription of the speech is: 'It's eleven o'clock.'"
+  },
+  "1012_IEO_NEU_XX": {
+   "p_yes": {
+    "upset": 0.7772998509557327
+   },
+   "mass": {
+    "upset": 0.920438289642334
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1012_IEO_FEA_HI": {
+   "p_yes": {
+    "upset": 0.9975273768423236
+   },
+   "mass": {
+    "upset": 0.9942208523862064
+   },
+   "transcript": "The transcription of the speech is: 'It's eleven o'clock.'"
+  },
+  "1010_ITH_NEU_XX": {
+   "p_yes": {
+    "upset": 0.3208213158258507
+   },
+   "mass": {
+    "upset": 0.8804916143417358
+   },
+   "transcript": "The transcription of the speech is: 'I think I have a doctor's appointment.'"
+  },
+  "1010_ITH_FEA_XX": {
+   "p_yes": {
+    "upset": 0.992422758839933
+   },
+   "mass": {
+    "upset": 0.9930770355276763
+   },
+   "transcript": "The transcription of the speech is: 'I think I have a doctor's appointment.'"
+  },
+  "1006_IWW_NEU_XX": {
+   "p_yes": {
+    "upset": 0.5
+   },
+   "mass": {
+    "upset": 0.5456645488739014
+   },
+   "transcript": "The transcription of the speech is: 'I wonder what this is about.'"
+  },
+  "1006_IWW_FEA_XX": {
+   "p_yes": {
+    "upset": 0.9985896414950123
+   },
+   "mass": {
+    "upset": 0.9857226646272466
+   },
+   "transcript": "The transcription of the speech is: 'I wonder what this is about.'"
+  },
+  "1043_IWW_NEU_XX": {
+   "p_yes": {
+    "upset": 0.25683198726638984
+   },
+   "mass": {
+    "upset": 0.7800986170768738
+   },
+   "transcript": "The transcription of the speech is: 'I wonder what this is about.'"
+  },
+  "1043_IWW_FEA_XX": {
+   "p_yes": {
+    "upset": 0.9964063974561586
+   },
+   "mass": {
+    "upset": 0.9905818593688309
+   },
+   "transcript": "The transcription of the speech is: 'I wonder what this is about.'"
+  },
+  "1026_IWL_NEU_XX": {
+   "p_yes": {
+    "upset": 0.29421496935563984
+   },
+   "mass": {
+    "upset": 0.8957562148571014
+   },
+   "transcript": "The transcription of the speech is: 'I would like a new alarm clock.'"
+  },
+  "1026_IWL_FEA_XX": {
+   "p_yes": {
+    "upset": 0.9953904274439255
+   },
+   "mass": {
+    "upset": 0.9853767091408372
+   },
+   "transcript": "The transcription of the speech is: 'I would like a new alarm clock.'"
+  },
+  "1059_ITS_NEU_XX": {
+   "p_yes": {
+    "upset": 0.13296424705919285
+   },
+   "mass": {
+    "upset": 0.8430120944976807
+   },
+   "transcript": "The transcription of the speech is: 'I think I've seen this before.'"
+  },
+  "1059_ITS_FEA_XX": {
+   "p_yes": {
+    "upset": 0.9937100982425726
+   },
+   "mass": {
+    "upset": 0.9628263842314482
+   },
+   "transcript": "The transcription of the speech is: 'I think I've seen this before.'"
+  },
+  "1086_TSI_NEU_XX": {
+   "p_yes": {
+    "upset": 0.1329642461910711
+   },
+   "mass": {
+    "upset": 0.9358653575181961
+   },
+   "transcript": "The speech transcribed from the audio is 'the surface is slick.'"
+  },
+  "1086_TSI_FEA_XX": {
+   "p_yes": {
+    "upset": 0.9840936074474471
+   },
+   "mass": {
+    "upset": 0.9865292981266975
+   },
+   "transcript": "The speech transcribed from the audio is: 'the surface is slick.'"
+  },
+  "1037_TSI_NEU_XX": {
+   "p_yes": {
+    "upset": 0.04468087022165478
+   },
+   "mass": {
+    "upset": 0.8824841566383839
+   },
+   "transcript": "The speech transcribed from the audio is: 'the surface is slick.'"
+  },
+  "1037_TSI_FEA_XX": {
+   "p_yes": {
+    "upset": 0.9820137906701794
+   },
+   "mass": {
+    "upset": 0.9296543672680855
+   },
+   "transcript": "The original content of this audio is: 'The surface is slick.'"
+  },
+  "1040_ITS_NEU_XX": {
+   "p_yes": {
+    "upset": 0.09009299919326093
+   },
+   "mass": {
+    "upset": 0.8184990435838699
+   },
+   "transcript": "The transcription of the speech is: 'I think I've seen this before.'"
+  },
+  "1040_ITS_FEA_XX": {
+   "p_yes": {
+    "upset": 0.9740426422434013
+   },
+   "mass": {
+    "upset": 0.9734758213162422
+   },
+   "transcript": "The transcription of the speech is: 'I think I've seen this before.'"
+  },
+  "1065_TIE_NEU_XX": {
+   "p_yes": {
+    "upset": 0.5312093895765447
+   },
+   "mass": {
+    "upset": 0.8057083189487457
+   },
+   "transcript": "The exact words spoken in the audio are: 'That is exactly what happened.'"
+  },
+  "1065_TIE_ANG_XX": {
+   "p_yes": {
+    "upset": 0.9928785717344655
+   },
+   "mass": {
+    "upset": 0.9971907194703817
+   },
+   "transcript": "The exact transcription of the speech is: 'That is exactly what happened.'"
+  },
+  "1009_WSI_NEU_XX": {
+   "p_yes": {
+    "upset": 0.4378234987009987
+   },
+   "mass": {
+    "upset": 0.8259410560131073
+   },
+   "transcript": "The transcription of the speech is: 'we'll stop in a couple of minutes.'"
+  },
+  "1009_WSI_ANG_XX": {
+   "p_yes": {
+    "upset": 0.9971990728057244
+   },
+   "mass": {
+    "upset": 0.9983772339764982
+   },
+   "transcript": "The transcription of the speech is: 'we'll stop in a couple of minutes.'"
+  },
+  "1006_WSI_NEU_XX": {
+   "p_yes": {
+    "upset": 0.1919327903292097
+   },
+   "mass": {
+    "upset": 0.8307283967733383
+   },
+   "transcript": "The transcription of the speech is: 'we'll stop in a couple of minutes.'"
+  },
+  "1006_WSI_ANG_XX": {
+   "p_yes": {
+    "upset": 0.9953904271986685
+   },
+   "mass": {
+    "upset": 0.998500935267657
+   },
+   "transcript": "The transcription of the speech is: 'We'll stop in a couple of minutes.'"
+  },
+  "1004_IEO_NEU_XX": {
+   "p_yes": {
+    "upset": 0.24508500378265088
+   },
+   "mass": {
+    "upset": 0.8241500556468964
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1004_IEO_ANG_HI": {
+   "p_yes": {
+    "upset": 0.997199072868688
+   },
+   "mass": {
+    "upset": 0.9982139964122325
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1051_IEO_NEU_XX": {
+   "p_yes": {
+    "upset": 0.7057850214743548
+   },
+   "mass": {
+    "upset": 0.8766517639160156
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1051_IEO_ANG_HI": {
+   "p_yes": {
+    "upset": 0.9953904277196957
+   },
+   "mass": {
+    "upset": 0.9987066248431802
+   },
+   "transcript": "The transcription of the speech is: 'It's eleven o'clock.'"
+  },
+  "1074_IEO_NEU_XX": {
+   "p_yes": {
+    "upset": 0.9284087945433271
+   },
+   "mass": {
+    "upset": 0.9316872730851173
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1074_IEO_ANG_HI": {
+   "p_yes": {
+    "upset": 0.9964063972197909
+   },
+   "mass": {
+    "upset": 0.9985240497626364
+   },
+   "transcript": "The transcription of the speech is: 'it's eleven o'clock.'"
+  },
+  "1013_DFA_NEU_XX": {
+   "p_yes": {
+    "upset": 0.20181322045378336
+   },
+   "mass": {
+    "upset": 0.6699036806821823
+   },
+   "transcript": "The transcription of the speech is: 'Don't forget a jacket.'"
+  },
+  "1013_DFA_ANG_XX": {
+   "p_yes": {
+    "upset": 0.9944450747641063
+   },
+   "mass": {
+    "upset": 0.9971836032345891
+   },
+   "transcript": "The transcription of the speech is: 'Don't forget a jacket.'"
+  },
+  "1036_DFA_NEU_XX": {
+   "p_yes": {
+    "upset": 0.4532618395159135
+   },
+   "mass": {
+    "upset": 0.9157232344150543
+   },
+   "transcript": "The transcription of the speech is: 'Don't forget a jacket.'"
+  },
+  "1036_DFA_ANG_XX": {
+   "p_yes": {
+    "upset": 0.991938008033419
+   },
+   "mass": {
+    "upset": 0.9978485573083162
+   },
+   "transcript": "The transcription of the speech is: 'Don't forget a jacket.'"
+  },
+  "1039_DFA_NEU_XX": {
+   "p_yes": {
+    "upset": 0.15610490799170917
+   },
+   "mass": {
+    "upset": 0.9204233288764954
+   },
+   "transcript": "The transcription of the speech is: 'Don't forget a jacket.'"
+  },
+  "1039_DFA_ANG_XX": {
+   "p_yes": {
+    "upset": 0.9914225141509363
+   },
+   "mass": {
+    "upset": 0.9977120207622647
+   },
+   "transcript": "The transcription of the speech is: 'Don't forget a jacket.'"
+  },
+  "1042_ITH_NEU_XX": {
+   "p_yes": {
+    "upset": 0.392336843532844
+   },
+   "mass": {
+    "upset": 0.8508659601211548
+   },
+   "transcript": "The transcription of the speech is: 'I think I have a doctor's appointment.'"
+  },
+  "1042_ITH_ANG_XX": {
+   "p_yes": {
+    "upset": 0.9840936084703471
+   },
+   "mass": {
+    "upset": 0.99833601154387
+   },
+   "transcript": "The transcription of the speech is: 'I think I have a doctor's appointment.'"
+  },
+  "1025_IOM_NEU_XX": {
+   "p_yes": {
+    "upset": 0.2568319990186149
+   },
+   "mass": {
+    "upset": 0.7113309800624847
+   },
+   "transcript": "The transcription of the speech is: 'I'm on my way to the meeting.'"
+  },
+  "1025_IOM_ANG_XX": {
+   "p_yes": {
+    "upset": 0.9964063974736488
+   },
+   "mass": {
+    "upset": 0.9979399708099663
+   },
+   "transcript": "The transcription of the speech is: 'I'm on my way to the meeting.'"
+  },
+  "1089_IWL_NEU_XX": {
+   "p_yes": {
+    "upset": 0.6926419708828507
+   },
+   "mass": {
+    "upset": 0.9570286571979523
+   },
+   "transcript": "The transcription of the speech is: 'I would like a new alarm clock.'"
+  },
+  "1089_IWL_ANG_XX": {
+   "p_yes": {
+    "upset": 0.9961755160099937
+   },
+   "mass": {
+    "upset": 0.9966756636276841
+   },
+   "transcript": "The transcription of the speech is: 'I would like a new alarm clock.'"
+  },
+  "1008_TSI_NEU_XX": {
+   "p_yes": {
+    "upset": 0.04208772926970226
+   },
+   "mass": {
+    "upset": 0.9126083478331566
+   },
+   "transcript": "The speech transcribed from the audio is 'The surface is slick.'"
+  },
+  "1008_TSI_ANG_XX": {
+   "p_yes": {
+    "upset": 0.9933071493679637
+   },
+   "mass": {
+    "upset": 0.9952165652066469
+   },
+   "transcript": "The speech transcribed from the audio is: 'The surface is slick.'"
+  }
+ },
+ "scores": {
+  "upset": {
+   "SAD": [
+    11,
+    13,
+    13
+   ],
+   "FEA": [
+    11,
+    13,
+    13
+   ],
+   "ANG": [
+    9,
+    13,
+    13
+   ]
+  }
+ }
+}

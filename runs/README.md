@@ -21,6 +21,8 @@ Smoke tests, `--limit` runs and reply WAVs go to `results/`, which is ignored.
 | `r2-gpu-turbo/evalset-modal-t4-pr004.json` | R2 with large-v3-turbo as the slow tier, the PR-004 run | `91048b3` | Modal Tesla T4 | page 20 §12 |
 | `prosody/pr005.json` | PR-005, the registered run: the affect side-channel on the 39 locked prosody pairs, four conditions | `4b50017` | laptop CPU (WSL) | page 20 §14 |
 | `prosody/pr005-report.md` | the same run's complete printed output, with the per-pair table | `4b50017` | laptop CPU (WSL) | page 20 §14 |
+| `prosody/pr006.json` | PR-006, the registered run: R3 (Qwen2-Audio) hears the 39 locked prosody pairs, `upset` wording | `5c1f3aa` | Modal NVIDIA A10 | page 20 §15 |
+| `prosody/pr006-report.md` | the same run's complete printed output, with both per-pair tables | `5c1f3aa` | Modal NVIDIA A10 | page 20 §15 |
 
 ## What an eval-set run holds
 

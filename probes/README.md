@@ -472,3 +472,27 @@ The LLM layer loses nothing (oracle 13 of 13); every miss is the tagger's, and
 12 of its 15 misses are **neutral clips tagged emotional** — a
 speaker-independent tagger does not know how this caller sounds when calm.
 The 39 test pairs are now spent for this family of taggers.
+
+### R3 on the test pairs — PR-006 (2026-09-22)
+
+`src/s2slab/r3probe.py` and `modal_app/r3_probe.py`: Qwen2-Audio-7B-Instruct
+on a Modal A10 is given each clip and asked *"Is the person speaking upset?"*
+— no transcript, no tag — and its p(Yes) is read off one forward pass, as for
+the side-channel. Full registration and results: `docs/preregistration.md`,
+PR-006. Evidence: `runs/prosody/pr006.json`.
+
+**The three points on the plan's axis**, same 39 pairs, same question
+(SAD · FEA · ANG, of 13):
+
+| | answered right | ranked right |
+|---|---|---|
+| R1 blind | 0 · 0 · 1 | 3 · 5 · 8 |
+| R1 + $0 affect tag | 7 · 7 · 11 | 10 · 8 · 13 |
+| R3, hears the audio | 11 · 11 · 9 | **13 · 13 · 13** |
+
+R3 hears the difference in every pair (Claim A, supported) and every one of its
+8 misses on the strict metric is a calm clip it calls upset (Claim B, not
+supported: anger 9 against the tag's 11, sign test p = 0.21). It also
+transcribed all 39 neutral clips word for word. The 39 pairs are now spent for
+R3 as well; whether a perfect ranking is hearing or memory of CREMA-D is what
+the own-voice mini set is for.
