@@ -55,6 +55,12 @@ image = (
     .pip_install_from_requirements(str(REPO / "requirements" / "r0.txt"))
     .pip_install("scipy==1.15.3", "praat-parselmouth==0.4.7")
     .run_function(download_weights)
+    # Qwen2.5-Omni's processor loads an image and a video processor even for audio-only
+    # input, and they import Pillow and torchvision (the first smoke test failed on it).
+    # After the weights, so that layer stays cached; torch==2.14.0 in the same call makes
+    # pip pick the torchvision built for it rather than move torch.
+    .pip_install("torch==2.14.0", "torchvision", index_url="https://download.pytorch.org/whl/cu126")
+    .pip_install("pillow==11.3.0")
     .apt_install("gcc")                     # torch 2.14's Triton helpers compile a C stub on first use
     .env({"HF_HUB_OFFLINE": "1"})
     .add_local_dir(REPO / "src" / "s2slab", "/root/s2slab", ignore=["**/__pycache__"])
@@ -68,6 +74,14 @@ app = modal.App("s2s-lab-r4", image=image)
 def _gpu_name() -> str:
     return subprocess.run(["nvidia-smi", "--query-gpu=name,driver_version", "--format=csv,noheader"],
                           capture_output=True, text=True).stdout.strip()
+
+
+def _versions() -> str:
+    """The library versions the run actually used (torchvision is resolved, not pinned)."""
+    import torch
+    import torchvision
+    import transformers
+    return f"torch {torch.__version__}, torchvision {torchvision.__version__}, transformers {transformers.__version__}"
 
 
 def _free_gpu() -> None:
@@ -90,7 +104,7 @@ def bench(rung_ids: list[str]) -> dict:
     for rung_id in rung_ids:
         tables[rung_id] = report(rung_id, probe_clips(), TARGET_SR)
         _free_gpu()
-    return {"gpu": _gpu_name(), "tables": tables, "seconds": time.perf_counter() - t0}
+    return {"gpu": _gpu_name(), "versions": _versions(), "tables": tables, "seconds": time.perf_counter() - t0}
 
 
 @app.function(gpu="L40S", timeout=60 * 60, scaledown_window=60)
@@ -112,7 +126,7 @@ def evaluate(rung_ids: list[str], commit: str, limit: int = 0) -> dict:
         results[rung_id] = run(rung_id, limit=limit or None, machine=machine)
         results[rung_id]["commit"] = commit
         _free_gpu()
-    return {"results": results, "seconds": time.perf_counter() - t0}
+    return {"results": results, "versions": _versions(), "seconds": time.perf_counter() - t0}
 
 
 def results_path(rung_id: str, limit: int = 0, tag: str = "") -> pathlib.Path:
@@ -147,5 +161,6 @@ def main(rung: str = "r4-gpu", evalset: bool = False, limit: int = 0, tag: str =
         for table in out["tables"].values():
             print(table, "\n")
         print(f"commit {commit} · GPU {out['gpu']}")
+    print(out["versions"])
     print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
           f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
