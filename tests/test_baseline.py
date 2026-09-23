@@ -178,6 +178,55 @@ def test_the_dev_report_has_both_taggers_and_the_baseline_size_curve():
     assert "| all | - | - | 3 of 3 | 3 of 3 |" in text and "| 1 | - | - |" in text
 
 
+# --------------------------------------------------------------------------- #
+# The fresh pairs
+# --------------------------------------------------------------------------- #
+
+
+def test_the_fresh_draw_uses_only_leftover_test_actors_and_takes_what_the_lowest_threshold_gives():
+    from s2slab.baseline import FRESH_PER_EMOTION, format_fresh_counts, fresh_sides, select_fresh
+    ratings = fake_ratings()
+    v1 = select(ratings)[1]
+    sides = fresh_sides(ratings, v1)
+    original = ps.split_actors(ACTORS)
+    assert {a for a, s in sides.items() if s == "test"} == {a for a in ACTORS if original[a] == "test"} - {p.actor for p in v1}
+    chosen, pairs, counts = select_fresh(ratings, v1)
+    assert chosen == {e: 0.9 for e in ps.EMOTIONS} and len(pairs) == 3 * FRESH_PER_EMOTION
+    assert all(p.split == "test" and sides[p.actor] == "test" and p.id.split("-")[1].startswith("f") for p in pairs)
+    assert not {p.actor for p in pairs} & {p.actor for p in v1}
+    assert len({p.neutral for p in pairs}) == len(pairs)                          # no neutral clip in two pairs
+    assert pairs[0].id == "sad-f01" and pairs[13].id == "fea-f01"
+    # sadness heard as intended by only two of the leftover actors: the draw takes those two, at 50%
+    leftover = sorted(a for a, s in sides.items() if s == "test")
+    ratings2 = fake_ratings(lambda a, s, e: "N" if (e == "SAD" and a not in leftover[:2]) else ps.VOTE[e])
+    chosen2, pairs2, counts2 = select_fresh(ratings2, v1)
+    assert chosen2["SAD"] == 0.5 and sum(p.emotion == "SAD" for p in pairs2) == 2
+    assert counts2["SAD"] == {t: 2 for t in ps.THRESHOLDS} and chosen2["ANG"] == 0.9
+    text = format_fresh_counts(counts2, chosen2)
+    assert "| at least 50% | **2** | · | · |" in text and "chosen (bold): SAD at least 50%" in text
+
+
+def test_the_fresh_set_freezes_verifies_and_stays_locked_without_a_registration(tmp_path):
+    import soundfile as sf
+    from s2slab.baseline import freeze_fresh
+    from s2slab.prosodyset import Pair, load, verify, write_pairs
+    pairs = [Pair("ang-f01", "test", "ANG", "1090", "DFA", "1090_DFA_NEU_XX", "1090_DFA_ANG_XX", 0.9, 0.9, 10, 10, 60.0, 0.8)]
+    write_pairs(pairs, tmp_path / "pairs.tsv")
+    (tmp_path / "audio").mkdir()
+    for c in (pairs[0].neutral, pairs[0].loaded):
+        sf.write(str(tmp_path / "audio" / f"{c}.wav"), np.zeros(16_000, np.float32), 16_000, subtype="PCM_16")
+    manifest = json.loads(freeze_fresh(tmp_path).read_text(encoding="utf-8"))
+    assert manifest["set"] == "prosody-fresh" and manifest["version"] == 2 and len(manifest["clips"]) == 2
+    assert verify(tmp_path) == []
+    with pytest.raises(FileExistsError, match="never re-frozen"):
+        freeze_fresh(tmp_path)
+    with pytest.raises(PermissionError, match="preregistration"):
+        load("test", tmp_path)
+    assert [lp.pair for lp in load("test", tmp_path, confirm="PR-007")] == pairs
+    (tmp_path / "audio" / f"{pairs[0].loaded}.wav").write_bytes(b"not audio")
+    assert verify(tmp_path) == [f"audio/{pairs[0].loaded}.wav: changed"]
+
+
 def test_the_own_report_uses_the_other_calm_takes_as_each_pairs_baseline():
     seen = []
 

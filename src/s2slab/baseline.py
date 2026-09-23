@@ -37,11 +37,14 @@ touches the 39 (the test split of probes/prosody is not read here).
     python -m s2slab.baseline train    the relative tagger on the training clips, held-out actors, save tagger-relative.json
     python -m s2slab.baseline dev      both taggers on the 21 DEV pairs, and told-apart against baseline size
     python -m s2slab.baseline own      the author's five pairs, each calm take's baseline = the other four
+    python -m s2slab.baseline fresh    draw PR-007's pairs from the leftover test-side actors -> probes/prosody2/
+    python -m s2slab.baseline fetch-fresh | verify-fresh     their audio and baseline clips; freeze; check
 """
 
 from __future__ import annotations
 
 import csv
+import datetime
 import json
 import pathlib
 
@@ -50,7 +53,8 @@ import numpy as np
 from .affect import (CACHE, LABELS, TAGGER, TRAIN_CLIPS, TRAIN_ROOT, Tagger, features_for, fit, leave_one_actor_out,
                      read_training_clips, tag_pairs, verify_training)
 from .probes import sha256_file
-from .prosodyset import MEDIA, PAIRS, PROSODY_ROOT, REPO, REVISION, Rating, fetch, read_pairs
+from .prosodyset import (CLIP_SR, EMOTIONS, MANIFEST, MEDIA, PAIRS, PROSODY_ROOT, REPO, REVISION, SEED, THRESHOLDS,
+                         Rating, _fingerprints, candidates, draw, fetch, read_pairs, split_actors)
 
 BASELINE_ROOT = PROSODY_ROOT / "baseline"
 BASELINE_CLIPS, BASELINE_MANIFEST = "baseline.tsv", "manifest.json"
@@ -237,13 +241,129 @@ def own_report(relative: Tagger, absolute: Tagger, pairs, Xn: np.ndarray, Xl: np
                       f"relative tagger, baseline = the other {len(Xn) - 1} calm takes:", tag_pairs(relative, pairs, rn, rl)])
 
 
+# --------------------------------------------------------------------------- #
+# The fresh pairs -- PR-007's test set, drawn from actors nothing has used
+# --------------------------------------------------------------------------- #
+
+FRESH_ROOT = pathlib.Path("probes/prosody2")
+FRESH_PER_EMOTION = 13
+
+
+def fresh_sides(ratings: dict[str, Rating], pairs, seed: int = SEED) -> dict[str, str]:
+    """{actor: "test" | "none"}: the TEST-side actors of the original split that
+    have no pair in the original set are the only ones the fresh draw may use.
+    Dev-side actors trained the tagger or hold the dev pairs; the 29 test-side
+    actors with a pair have been scored by everything."""
+    sides = split_actors({r.actor for r in ratings.values()}, seed)
+    used = {p.actor for p in pairs}
+    return {a: ("test" if s == "test" and a not in used else "none") for a, s in sides.items()}
+
+
+def select_fresh(ratings: dict[str, Rating], pairs, seed: int = SEED):
+    """The original rule (prosodyset.select) applied to the leftover actors, test side only.
+
+    Per emotion, in EMOTIONS order: the highest threshold in THRESHOLDS at which
+    the seeded draw fills FRESH_PER_EMOTION pairs; if none does, the LOWEST
+    threshold, with as many pairs as it gives -- recorded, not topped up.
+    Returns: ({emotion: threshold}, the pairs with ids like sad-f01 and split
+             "test", {emotion: {threshold tried: pairs drawn}}).
+    """
+    sides = fresh_sides(ratings, pairs, seed)
+    chosen, out, counts = {}, [], {}
+    for emotion in EMOTIONS:
+        counts[emotion], best = {}, None
+        for threshold in THRESHOLDS:
+            mine = draw(candidates(ratings, threshold), sides, emotion, threshold,
+                        frozenset(p.neutral for p in out), seed)
+            counts[emotion][threshold] = len(mine)
+            best = (threshold, mine)
+            if len(mine) == FRESH_PER_EMOTION:
+                break
+        chosen[emotion] = best[0]
+        out += [p._replace(id=p.id.replace("-t", "-f")) for p in best[1]]
+    return chosen, out, counts
+
+
+def format_fresh_counts(counts: dict, chosen: dict[str, float]) -> str:
+    lines = ["| raters agreeing | " + " | ".join(f"{e} (of {FRESH_PER_EMOTION})" for e in counts) + " |",
+             "|---|" + "---:|" * len(counts)]
+    for threshold in THRESHOLDS:
+        if not any(threshold in counts[e] for e in counts):
+            break
+        row = [("·" if threshold not in counts[e] else
+                f"**{counts[e][threshold]}**" if chosen.get(e) == threshold else str(counts[e][threshold]))
+               for e in counts]
+        lines.append(f"| at least {threshold:.0%} | " + " | ".join(row) + " |")
+    lines.append("chosen (bold): " + ", ".join(f"{e} at least {t:.0%}" for e, t in chosen.items()))
+    return "\n".join(lines)
+
+
+def freeze_fresh(root: pathlib.Path = FRESH_ROOT) -> pathlib.Path:
+    """manifest.json for the fresh set: the SHA-256 of pairs.tsv and every clip;
+    refuses a second freeze, a missing clip, a file that is not 16 kHz mono audio."""
+    import soundfile as sf
+    root = pathlib.Path(root)
+    out = root / MANIFEST
+    if out.exists():
+        raise FileExistsError(f"{out} exists: a frozen set is never re-frozen; make a new version")
+    pairs = read_pairs(root / PAIRS)
+    for clip in sorted({c for p in pairs for c in (p.neutral, p.loaded)}):
+        path = root / "audio" / f"{clip}.wav"
+        if not path.exists():
+            raise FileNotFoundError(f"not fetched yet: {clip}.wav")
+        try:
+            info = sf.info(str(path))
+        except Exception as e:                                     # noqa: BLE001 -- whatever soundfile raises
+            raise ValueError(f"{clip}.wav is not audio ({e}): a git-lfs pointer?") from None
+        if (info.samplerate, info.channels) != (CLIP_SR, 1) or info.duration < 0.5:
+            raise ValueError(f"{clip}.wav: {info.samplerate} Hz, {info.channels} channel(s), "
+                             f"{info.duration:.2f} s -- expected {CLIP_SR} Hz mono, at least 0.5 s")
+    ratings_sha = {name: sha256_file(PROSODY_ROOT / "source" / name) for name in ("tabulatedVotes.csv",)
+                   if (PROSODY_ROOT / "source" / name).exists()}
+    out.write_text(json.dumps({"set": "prosody-fresh", "version": 2, "frozen": datetime.date.today().isoformat(),
+                               "drawn_from": "test-side actors of the original split with no pair in probes/prosody",
+                               "source": {"repo": REPO, "revision": REVISION, "ratings_sha256": ratings_sha},
+                               "seed": SEED, "pairs": len(pairs), **_fingerprints(root)}, indent=2) + "\n",
+                   encoding="utf-8")
+    return out
+
+
 if __name__ == "__main__":
     import sys
 
-    from .prosodyset import RATINGS, read_ratings
+    from .prosodyset import RATINGS, SUMMARY, cross_check, fetch_audio, read_ratings, read_summary, verify, write_pairs
 
     cmd = sys.argv[1] if len(sys.argv) == 2 else ""
-    if cmd == "clips":
+    if cmd == "fresh":
+        ratings = read_ratings(PROSODY_ROOT / "source" / pathlib.Path(RATINGS).name)
+        v1 = read_pairs(PROSODY_ROOT / PAIRS)
+        chosen, pairs, counts = select_fresh(ratings, v1)
+        cross_check(pairs, read_summary(PROSODY_ROOT / "source" / pathlib.Path(SUMMARY).name))
+        write_pairs(pairs, FRESH_ROOT / PAIRS)
+        base = baseline_clips(ratings, v1 + pairs, {p.actor for p in pairs})
+        write_baseline_clips(base, FRESH_ROOT / "baseline" / BASELINE_CLIPS)
+        fresh = [a for a, s in fresh_sides(ratings, v1).items() if s == "test"]
+        print(f"{len(fresh)} test-side actors with no pair in {PROSODY_ROOT}; seed {SEED}\n")
+        print(format_fresh_counts(counts, chosen))
+        print(f"\n{len(pairs)} fresh pairs from {len({p.actor for p in pairs})} actors -> {FRESH_ROOT / PAIRS}; "
+              f"every chosen clip agrees with summaryTable.csv")
+        for e in EMOTIONS:
+            mine = [p for p in pairs if p.emotion == e]
+            print(f"  {e}: {len(mine)} pairs; loaded clips heard as intended by {min(p.agree_loaded for p in mine):.0%} "
+                  f"to {max(p.agree_loaded for p in mine):.0%} of raters; {len({p.sentence for p in mine})} of 12 sentences")
+        per = sorted(sum(r.actor == a for r in base) for a in {p.actor for p in pairs})
+        print(f"{len(base)} baseline clips for those actors -> {FRESH_ROOT / 'baseline' / BASELINE_CLIPS}; "
+              f"per actor {per[0]} to {per[-1]}, median {per[len(per) // 2]}")
+    elif cmd == "fetch-fresh":
+        pairs = read_pairs(FRESH_ROOT / PAIRS)
+        n = fetch_audio(pairs, FRESH_ROOT)
+        m = fetch_baseline(FRESH_ROOT / "baseline")
+        print(f"downloaded {n} pair clips and {m} baseline clips; frozen -> {freeze_fresh(FRESH_ROOT)}")
+    elif cmd == "verify-fresh":
+        problems = verify(FRESH_ROOT) + verify_baseline(FRESH_ROOT / "baseline")
+        print("\n".join(problems) if problems else "intact")
+        sys.exit(1 if problems else 0)
+    elif cmd == "clips":
         ratings = read_ratings(PROSODY_ROOT / "source" / pathlib.Path(RATINGS).name)
         pairs = read_pairs(PROSODY_ROOT / PAIRS)
         clips = baseline_clips(ratings, pairs, {p.actor for p in pairs if p.split == "dev"})
