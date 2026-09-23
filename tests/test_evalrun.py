@@ -177,3 +177,53 @@ def test_report_states_the_machine_and_the_eval_set_it_used(tmp_path):
     root = tiny_evalset(tmp_path)
     text = report(run(EchoRung(["a", "b", "c"]), root, machine="Modal T4"), root)
     assert "Modal T4" in text and "eval set built 2026-09-15, seed 1" in text
+
+
+# --------------------------------------------------------------------------- #
+# A rung with no transcript in the loop (R3), and what it adds to the file
+# --------------------------------------------------------------------------- #
+
+
+class HearingRung(Rung):
+    """Never has a transcript; can be asked afterwards what it heard."""
+
+    rung_id, description = "hearing", "a test double that hears"
+
+    def __init__(self, heard):
+        self.heard, self.hear_calls = list(heard), 0
+
+    def _respond(self, audio, sr, sink):
+        with stage("llm", sink):
+            pass
+        with stage("tts", sink):
+            reply = np.zeros(12_000, dtype=np.float32)
+        return Reply(reply, 24_000, None, "ok")
+
+    def hear(self, audio, sr):
+        self.hear_calls += 1
+        return self.heard.pop(0)
+
+
+def test_a_rung_without_a_transcript_gets_a_sentence_not_a_table_of_blanks_and_heard_is_scored_apart(tmp_path):
+    root = tiny_evalset(tmp_path)
+    rung = HearingRung(["the cat sat on the mat", "a cat barked", "well i went home"])
+    results = run(rung, root)
+    assert rung.hear_calls == 3 and all(t["transcript"] is None for t in results["turns"].values())
+    assert results["turns"]["clean-01"]["heard"] == "a cat barked"
+    assert results["peak_vram_mb"] is None or isinstance(results["peak_vram_mb"], int)
+    text = wer_tables(results, root)
+    assert "no transcript in the loop" in text and "| clean |" in text
+    assert "asked to transcribe, outside the loop" in text and "tidied reference" not in text
+    clean = [ln for ln in text.splitlines() if ln.startswith("| clean ")][0]
+    assert "11.1%" in clean                                  # the heard words score as any transcript would
+    assert "### Word error rate" in report(results, root)
+
+
+def test_a_run_file_without_heard_or_memory_prints_as_before(tmp_path):
+    root = tiny_evalset(tmp_path)
+    results = run(EchoRung(["a", "b", "c"]), root)
+    del results["peak_vram_mb"]                              # a file saved before the field existed
+    for t in results["turns"].values():
+        assert "heard" not in t
+    text = report(results, root)
+    assert "peak GPU memory" not in text and "outside the loop" not in text and "Word error rate" in text

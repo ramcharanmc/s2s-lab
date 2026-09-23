@@ -276,6 +276,7 @@ RUNGS = {
     "r2-turbo": "s2slab.r2:TwoTierCascadeTurbo",
     "r2-gpu": "s2slab.r2:TwoTierCascadeGPU",
     "r2-gpu-turbo": "s2slab.r2:TwoTierCascadeGPUTurbo",
+    "r3-gpu": "s2slab.r3:SpeechLLMCascade",
 }
 
 def get(rung_id: str) -> Rung:

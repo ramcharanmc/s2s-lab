@@ -38,6 +38,21 @@ from .wer import references, score
 
 FIRST_KEYS = {"first_audio_ms": "first audio", "first_sound_ms": "first sound"}
 
+def _peak_vram_mb(reset: bool = False) -> int | None:
+    """Peak GPU memory this process has held, in MB; None without a CUDA GPU.
+    reset=True clears the peak so a run measures its own rung's models only."""
+    try:
+        import torch
+    except ImportError:
+        return None
+    if not torch.cuda.is_available():
+        return None
+    if reset:
+        torch.cuda.reset_peak_memory_stats()
+        return None
+    return round(torch.cuda.max_memory_allocated() / 2 ** 20)
+
+
 def _finite(x: float) -> float | None:
     """NaN is not JSON. A reply that never speaks has no leading silence, and
     None says that, where NaN would either break the file or read as zero."""
@@ -49,15 +64,20 @@ def run(rung, root=EVAL_ROOT, cohorts=None, limit: int | None = None, machine: s
     Takes:   a rung id or a Rung; which cohorts (default all four); a limit for
              a smoke test; a free-text machine note ("laptop CPU", "Modal T4").
     Calls:   evalset.load() for audio and cohort; rung.load() once, outside the
-             clock; rung.respond() per clip.
-    Returns: the results dict -- provenance plus one entry per turn.
+             clock; rung.respond() per clip; and, for a rung that has hear()
+             (R3: no transcript in the loop), hear() per clip after its turn,
+             untimed, stored as "heard".
+    Returns: the results dict -- provenance plus one entry per turn, and the
+             peak GPU memory held during the run (peak_vram_mb; None on a CPU).
     """
     rung = get(rung) if isinstance(rung, str) else rung
     items = load(root, cohorts)
     if limit:
         items = items[:limit]
     manifest = json.loads((pathlib.Path(root) / MANIFEST).read_text(encoding="utf-8"))
+    _peak_vram_mb(reset=True)
     load_ms = rung.load()
+    hear = getattr(rung, "hear", None)
     turns = {}
     for item in items:
         turn = rung.respond(item.audio, TARGET_SR)
@@ -73,9 +93,12 @@ def run(rung, root=EVAL_ROOT, cohorts=None, limit: int | None = None, machine: s
                           "first_sound_ms": _finite(round(turn.first_sound_ms, 1)),
                           "stall_ms": round(turn.stall_ms, 1),
                           "chunks": [[round(ms, 1), n] for ms, n in turn.chunks]}
+        if hear is not None:
+            turns[item.id]["heard"] = hear(item.audio, TARGET_SR)
     return {"rung": rung.rung_id, "description": rung.description,
             "commit": _git_commit(), "machine": machine,
             "ran": datetime.date.today().isoformat(), "load_ms": round(load_ms, 1),
+            "peak_vram_mb": _peak_vram_mb(),
             "evalset": {"built": manifest["built"], "seed": manifest["seed"], "turns": len(turns)},
             "turns": turns}
 
@@ -131,14 +154,29 @@ def has_first_audio(results: dict) -> bool:
     return all("first_audio_ms" in t for t in results["turns"].values())
 
 def wer_tables(results: dict, root=EVAL_ROOT) -> str:
-    """WER per cohort, plus the disfluent cohort against its tidied reference."""
-    hyps = {clip: turn["transcript"] or "" for clip, turn in results["turns"].items()}
-    out = [wer_format(score(hyps, root), title="Word error rate")]
-    fluent = {k: v for k, v in hyps.items() if k in references(root, key="text_fluent")}
-    if fluent:
-        out += ["", wer_format(score(fluent, root, key="text_fluent"),
-                               title="disfluent cohort against the tidied reference "
-                                     "(fillers and false starts already removed)")]
+    """WER per cohort, plus the disfluent cohort against its tidied reference.
+
+    A rung whose turns have no transcript at all (R3: the audio goes straight
+    into the LLM) gets a sentence instead of a table of blanks. If the run
+    also holds "heard" -- the same model asked to transcribe, outside the loop
+    -- that is scored in its own table, labelled for what it is.
+    """
+    turns = results["turns"]
+    if turns and all(turn["transcript"] is None for turn in turns.values()):
+        out = ["### Word error rate", "",
+               "no transcript in the loop: the audio goes straight into the LLM, so there is nothing to score"]
+    else:
+        hyps = {clip: turn["transcript"] or "" for clip, turn in turns.items()}
+        out = [wer_format(score(hyps, root), title="Word error rate")]
+        fluent = {k: v for k, v in hyps.items() if k in references(root, key="text_fluent")}
+        if fluent:
+            out += ["", wer_format(score(fluent, root, key="text_fluent"),
+                                   title="disfluent cohort against the tidied reference "
+                                         "(fillers and false starts already removed)")]
+    heard = {clip: turn["heard"] or "" for clip, turn in turns.items() if turn.get("heard") is not None}
+    if heard:
+        out += ["", wer_format(score(heard, root), title="asked to transcribe, outside the loop "
+                                                          "(untimed; not what the reply was made from)")]
     return "\n".join(out)
 
 
@@ -148,7 +186,8 @@ def report(results: dict, root=EVAL_ROOT) -> str:
             f"commit {results['commit']} · {results['machine'] or 'machine not stated'} · "
             f"run {results['ran']} · eval set built {results['evalset']['built']}, "
             f"seed {results['evalset']['seed']}\n"
-            f"load {results['load_ms'] / 1000:.1f} s, once, before the first turn")
+            f"load {results['load_ms'] / 1000:.1f} s, once, before the first turn"
+            + (f" · peak GPU memory {results['peak_vram_mb']:,} MB" if results.get("peak_vram_mb") is not None else ""))
     silences = [t["leading_silence_ms"] for t in results["turns"].values()
                 if t["leading_silence_ms"] is not None]
     tail = f"reply leading silence: {summarize(silences)}" if silences else \
@@ -188,4 +227,3 @@ if __name__ == "__main__":
         print(report(results))
     else:
         parser.error("give a rung id, or --score a saved run")
-
