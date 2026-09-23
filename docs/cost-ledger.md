@@ -23,6 +23,9 @@ one. A failed run is still a row, since it was still billed.
 | 2026-09-22 | `4c5905d-dirty` | `modal run modal_app/r3_probe.py::own --save runs/prosody/ownvoice-r3.json` | A10 | 42 s | 47 s | \$0.014 | the own-voice mini set, dev-only: R3 ranks 3 of 5 pairs right under the registered wording, the Yes-lean gone |
 | 2026-09-23 | `f3e6982` | `modal run modal_app/r3_probe.py::evalset --rung r3-gpu --limit 8` | A10 | 60 s | 66 s | \$0.020 | R3 rung smoke test, 8 clean clips: total p50 1.63 s, peak 16.9 GB; found the transcript wrapper and the token cap (fixed in `960b491`) |
 | 2026-09-23 | `960b491` | `modal run modal_app/r3_probe.py::evalset --rung r0-gpu,r1-gpu,r3-gpu` | A10 | 718 s | 724 s | \$0.221 | **the R3 row**, one container: R0 0.44 s, R1 0.33 s to first audio, R3 1.06 s (p90 2.02); heard WER 9.1% re-scored; peak 17.0 GB |
+| 2026-09-23 | `b8092b9` | `modal run modal_app/r4_bench.py --rung r4-gpu` | L40S | — | — | ≈ \$0.01 (failed) | R4 smoke test: image built (Omni + R3 weights), then died at Qwen2.5-Omni's processor load -- Pillow and torchvision missing (fixed in `34a4209`) |
+| 2026-09-23 | `34a4209` | `modal run modal_app/r4_bench.py --rung r4-gpu` | L40S | 328 s | 333 s | \$0.180 | R4 smoke test, 30 probe clips: 8.26 s p50, leading silence 200 ms; found that the Talker samples its voice (seeded in `339092a`) |
+| 2026-09-23 | `339092a` | `modal run modal_app/r4_bench.py --rung r3-gpu,r4-gpu --evalset` | L40S | 2425 s | 2433 s | \$1.318 | **the R4 row**, one container: R3 0.69 s, R4 9.17 s p50 (p90 17.3); R4's wait = 1.33 s per second of its reply; 22.5 GB |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -31,5 +34,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$0.642 + two failed runs | \$36.93 |
+| Modal | \$2.140 + three failed runs | \$36.93 |
 | Vast.ai | \$0 | \$5.86 |

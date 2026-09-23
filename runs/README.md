@@ -30,6 +30,8 @@ Smoke tests, `--limit` runs and reply WAVs go to `results/`, which is ignored.
 | `r0-gpu/evalset-modal-a10.json` | R0 on the A10, the same-container comparator for the R3 row | `960b491` | Modal NVIDIA A10, one container: r0-gpu then r1-gpu then r3-gpu | page 20 §1, §18 |
 | `r1-gpu/evalset-modal-a10.json` | R1 on the A10, the same container | `960b491` | Modal NVIDIA A10, same container | page 20 §1, §18 |
 | `r3-gpu/evalset-modal-a10.json` · `evalset-modal-a10-report.md` | **the R3 row**: Qwen2-Audio hears each turn, no transcript in the loop; `heard` = the same model asked to transcribe, untimed; peak GPU memory; the report is the run's printed output (its `heard` table predates the wrapper rule -- `--score` the file for the current number) | `960b491` | Modal NVIDIA A10, same container | page 20 §1, §18 |
+| `r3-gpu/evalset-modal-l40s.json` | R3 re-measured on the L40S, the same-container comparator for the R4 row | `339092a` | Modal NVIDIA L40S, one container: r3-gpu then r4-gpu | page 20 §1, §19 |
+| `r4-gpu/evalset-modal-l40s.json` · `evalset-modal-l40s-report.md` | **the R4 row**: Qwen2.5-Omni hears each turn and speaks the reply itself (no transcript, no TTS), every turn seeded; peak GPU memory; the report is both rungs' printed output | `339092a` | Modal NVIDIA L40S, same container | page 20 §1, §19 |
 
 ## What an eval-set run holds
 
@@ -144,4 +146,35 @@ audio is a function of the clip alone. Expectations, to be scored:
 - R4's written replies about as long as R3's (median 16–22 words): the same
   60-token cap, a same-family 7B Thinker.
 - About \$1.2 for the run (≈ 35 min at \$1.95/h).
+
+**Scored (2026-09-23, run `339092a`, one L40S container, R3 then R4, 200 clips, \$1.318):**
+
+| L40S, 200 clips | R3 (Qwen2-Audio -> Kokoro) | R4 (Qwen2.5-Omni speaks) |
+|---|---:|---:|
+| total = first audio, p50 / p90 | 688 / 1286 ms | **9166 / 17325 ms** |
+| first sound, p50 | 991 ms | 9366 ms |
+| leading silence, p50 | 300 ms (Kokoro) | **200 ms** |
+| peak GPU memory | 16,986 MB | **22,518 MB** |
+| reply words, median / p90 | 18.5 / 39 | 22 / 37 |
+| reply audio, median / p90 | 6.3 / 15.1 s | 7.2 / 13.3 s |
+| replies that ask a question back | 32 of 200 | **180 of 200** |
+| asked to transcribe, outside the loop | 9.1% (as on the A10) | not asked |
+
+- **R4's wait is its own speech, rendered slower than real time:** total =
+  1.33 s per second of reply audio (r = 0.997 over 200 turns). The Talker and
+  token2wav make speech at about 0.75x real time, after the Thinker has
+  written the text. A streaming Talker would change first audio entirely;
+  transformers does not expose one.
+- The two models behave differently as agents: R4 asks the caller a question
+  back in 180 of 200 turns; R3 often restates the clip (on `clean-00` it
+  repeats the LibriSpeech sentence word for word).
+- **R3 is not bit-reproducible across cards:** greedy decoding, yet 157 of 200
+  replies match between the A10 and the L40S (bf16 arithmetic differs); its
+  transcription WER does not move (9.1%), and it is faster here (688 vs 1055
+  ms). Rows are compared within one container, as ever.
+- Predictions: R4 p50 7–10 s -> 9.17 s, **right**; p90 under 14 s -> 17.3,
+  **wrong**; R3 0.8–1.1 s -> 0.69, **under**; about 8x -> **13x, wrong**;
+  leading silence about 200 ms -> 200, **right**; memory 22–26 GB -> 22.5,
+  **right**; words 16–22 -> 22, **right at the edge**; about \$1.2 -> \$1.32,
+  **about right**.
 
