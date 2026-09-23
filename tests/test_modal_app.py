@@ -108,3 +108,34 @@ def test_the_a10_run_is_saved_as_evidence_and_its_smoke_test_is_not(r3_probe):
     smoke = r3_probe.results_path("r3-gpu", limit=8)
     assert smoke.relative_to(ROOT).parts[0] == "results" and "limit8" in smoke.name
     assert hasattr(r3_probe.evaluate, "remote") and hasattr(r3_probe.evalset, "info")   # a Modal Function and a LocalEntrypoint
+
+
+# --------------------------------------------------------------------------- #
+# The R4 image: the S2S rung on the L40S, with R3 beside it
+# --------------------------------------------------------------------------- #
+
+
+@pytest.fixture(scope="module")
+def r4_bench():
+    pytest.importorskip("modal")
+    spec = importlib.util.spec_from_file_location("r4_bench", ROOT / "modal_app" / "r4_bench.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_r4_image_holds_every_model_the_rungs_it_runs_load(r4_bench):
+    from s2slab import r3, r4
+    r4_rung, r3_rung = get("r4-gpu"), get("r3-gpu")
+    assert r4_rung.model.model_name == r4.MODEL and r4.MODEL in r4_bench.MODELS
+    assert r3_rung.llm.model_name == r3.MODEL and r3.MODEL in r4_bench.MODELS
+    assert f"voices/{r3_rung.tts.voice}.pt" in r4_bench.MODELS["hexgrad/Kokoro-82M"]
+    assert r4_bench.L40S_DOLLARS_PER_HOUR == 1.95
+
+
+def test_the_l40s_run_is_saved_as_evidence_and_its_smoke_test_is_not(r4_bench):
+    assert r4_bench.results_path("r4-gpu").relative_to(ROOT).parts == ("runs", "r4-gpu", "evalset-modal-l40s.json")
+    assert r4_bench.results_path("r3-gpu", tag="m20").name == "evalset-modal-l40s-m20.json"
+    smoke = r4_bench.results_path("r4-gpu", limit=8)
+    assert smoke.relative_to(ROOT).parts[0] == "results" and "limit8" in smoke.name
+    assert hasattr(r4_bench.evaluate, "remote") and hasattr(r4_bench.bench, "remote") and hasattr(r4_bench.main, "info")
