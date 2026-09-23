@@ -70,3 +70,24 @@ Re-count without the recordings or any model:
 `transcript` is a model's output from eval-set audio; no source audio or
 reference text is stored here. Datasets, pinned revisions and licences are in
 `evalset/README.md`.
+
+
+## R3 as a rung — written before the run (2026-09-23)
+
+The R3 row of the one table comes from `modal run modal_app/r3_probe.py::evalset
+--rung r0-gpu,r1-gpu,r3-gpu`: one A10 container, the frozen 200-clip eval set,
+R0 and R1 run beside R3 so the row is read against them on that day's
+hardware (M13's rule). No registration -- this is the plan's week-4 row, not a
+hypothesis -- but the expectations are written down first, to be scored:
+
+- R3 total p50 **1.5–2.5 s** on the A10 (a 7B prefill of a 3–15 s clip, about
+  40 new tokens, then Kokoro); first audio = total, since R3 is batch. R0-gpu
+  on the same A10 about 0.5 s, R1-gpu about 0.4 s to first audio: R3 waits
+  **3–5× R0** -- the "inherits R0's input-side latency, and then some" number.
+- R3's replies longer than the 0.5B model's under the same 60-token cap:
+  median words up by a third or more.
+- `heard` (the same model asked to transcribe, untimed) **5–7% normalized
+  WER** overall, accented under 20%: better than turbo's 8.6%.
+- Peak GPU memory: R3 about 17–18 GB; R0 and R1 2–3 GB.
+- About \$0.25 for the run, plus a `--limit 8` smoke test (about \$0.05) and
+  one CPU image rebuild. The plan budgeted \$5.51 for R3.

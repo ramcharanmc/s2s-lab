@@ -74,3 +74,37 @@ def test_recorded_evidence_is_never_overwritten(r0_bench):
         r0_bench.refuse_to_overwrite([recorded])
     r0_bench.refuse_to_overwrite([r0_bench.results_path("r0-gpu", tag="not-run-yet")])
     r0_bench.refuse_to_overwrite([r0_bench.results_path("r0-gpu", limit=8)])
+
+
+# --------------------------------------------------------------------------- #
+# The R3 image: the rung's eval-set run on the A10, with R0 and R1 beside it
+# --------------------------------------------------------------------------- #
+
+
+@pytest.fixture(scope="module")
+def r3_probe():
+    pytest.importorskip("modal")
+    spec = importlib.util.spec_from_file_location("r3_probe", ROOT / "modal_app" / "r3_probe.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_r3_image_holds_every_model_the_rungs_it_runs_load(r0_bench, r3_probe):
+    from s2slab import r3
+    r3_rung = get("r3-gpu")
+    assert r3_rung.llm.model_name == r3.MODEL == r3_probe.MODEL and r3.MODEL in r3_probe.MODELS
+    assert f"voices/{r3_rung.tts.voice}.pt" in r3_probe.MODELS["hexgrad/Kokoro-82M"]
+    for rung_id in ("r0-gpu", "r1-gpu"):                                   # the same-container comparators
+        rung = get(rung_id)
+        assert r0_bench.whisper_repo(rung.asr.model_name) in r3_probe.MODELS
+        assert rung.llm.model_name in r3_probe.MODELS
+        assert f"voices/{rung.tts.voice}.pt" in r3_probe.MODELS["hexgrad/Kokoro-82M"]
+
+
+def test_the_a10_run_is_saved_as_evidence_and_its_smoke_test_is_not(r3_probe):
+    assert r3_probe.results_path("r3-gpu").relative_to(ROOT).parts == ("runs", "r3-gpu", "evalset-modal-a10.json")
+    assert r3_probe.results_path("r0-gpu", tag="m19").name == "evalset-modal-a10-m19.json"
+    smoke = r3_probe.results_path("r3-gpu", limit=8)
+    assert smoke.relative_to(ROOT).parts[0] == "results" and "limit8" in smoke.name
+    assert hasattr(r3_probe.evaluate, "remote") and hasattr(r3_probe.evalset, "info")   # a Modal Function and a LocalEntrypoint
