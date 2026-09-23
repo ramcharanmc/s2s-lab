@@ -1,0 +1,194 @@
+"""
+Tests for s2slab.baseline -- which clips make a speaker's baseline, the arithmetic of
+features relative to it, and the point of the whole thing: a voice with a big
+offset of its own defeats the absolute tagger and not the relative one.
+
+No openSMILE: made-up feature vectors and made-up ratings throughout.
+"""
+
+from __future__ import annotations
+
+import json
+
+import numpy as np
+import pytest
+
+from s2slab import affect, prosodyset as ps
+from s2slab.affect import LABELS, Tagger, fit
+from s2slab.baseline import (Baseline, baseline_clips, dev_report, fetch_baseline, first_k, own_report,
+                             read_baseline_clips, relative_features, told_apart, train_relative, verify_baseline,
+                             write_baseline_clips)
+from s2slab.prosodyset import Rating, select
+
+ACTORS = [str(1001 + k) for k in range(91)]
+SENTENCES = ["IEO", "TIE", "IOM", "IWW", "TAI", "MTI", "IWL", "ITH", "DFA", "ITS", "TSI", "WSI"]
+
+
+def fake_ratings(vote=lambda actor, sentence, emotion: ps.VOTE[emotion]) -> dict[str, Rating]:
+    """As in test_affect: every actor, every sentence, the four emotions, voted as asked."""
+    out = {}
+    for a in ACTORS:
+        for s in SENTENCES:
+            for e in ("NEU", "SAD", "FEA", "ANG"):
+                clip = f"{a}_{s}_{e}_XX"
+                out[clip] = Rating(clip, a, s, e, vote(a, s, e), 0.95, 10, 60.0 if e != "NEU" else -1.0)
+    return out
+
+
+# --------------------------------------------------------------------------- #
+# Which clips make a baseline
+# --------------------------------------------------------------------------- #
+
+
+def test_a_baseline_is_the_actors_neutral_clips_heard_as_neutral_and_never_a_pairs_clip():
+    # every actor's IEO neutral clip was heard as sad
+    ratings = fake_ratings(lambda a, s, e: "S" if (e == "NEU" and s == "IEO") else ps.VOTE[e])
+    pairs = select(ratings)[1]
+    dev_actors = {p.actor for p in pairs if p.split == "dev"}
+    clips = baseline_clips(ratings, pairs, dev_actors)
+    assert clips == sorted(clips) and {r.actor for r in clips} == dev_actors
+    assert all(r.emotion == "NEU" and r.vote == "N" and r.sentence != "IEO" for r in clips)
+    in_pairs = {p.neutral for p in pairs}
+    assert not {r.clip for r in clips} & in_pairs
+    per_actor = {a: sum(r.actor == a for r in clips) for a in dev_actors}
+    assert all(11 - n == sum(p.actor == a for p in pairs) for a, n in per_actor.items())   # 12 sentences, minus IEO, minus its pairs
+
+
+def test_the_baseline_list_is_written_read_fetched_and_verified(tmp_path, monkeypatch):
+    ratings = fake_ratings()
+    pairs = select(ratings)[1]
+    clips = baseline_clips(ratings, pairs, {pairs[0].actor})[:3]
+    write_baseline_clips(clips, tmp_path / "baseline.tsv")
+    assert read_baseline_clips(tmp_path / "baseline.tsv") == [(r.clip, r.actor) for r in clips]
+
+    class Response:
+        def __init__(self, url):
+            self.url = url
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def read(self):
+            return self.url.encode()
+
+    monkeypatch.setattr(ps.urllib.request, "urlopen", lambda url, timeout: Response(url))
+    assert fetch_baseline(tmp_path) == 3 and fetch_baseline(tmp_path) == 0
+    manifest = json.loads((tmp_path / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["set"] == "prosody-baseline" and set(manifest["clips"]) == {r.clip for r in clips}
+    assert verify_baseline(tmp_path) == []
+    (tmp_path / "audio" / f"{clips[1].clip}.wav").write_bytes(b"other")
+    assert verify_baseline(tmp_path) == [f"audio/{clips[1].clip}.wav: changed"]
+
+
+# --------------------------------------------------------------------------- #
+# Features relative to the baseline
+# --------------------------------------------------------------------------- #
+
+
+def test_a_members_own_vector_is_left_out_of_its_baseline_mean():
+    b = Baseline(["a1", "a2", "a3", "b1"], ["A", "A", "A", "B"], np.array([[2.0], [4.0], [6.0], [10.0]]))
+    assert b.mean_for("A") == pytest.approx([4.0]) and b.mean_for("A", exclude="a1") == pytest.approx([5.0])
+    assert b.mean_for("A", exclude="zz") == pytest.approx([4.0])            # not a member: nothing left out
+    assert b.size("A") == 3 and b.size("C") == 0
+    with pytest.raises(ValueError, match="no baseline clips for actor C"):
+        b.mean_for("C")
+    with pytest.raises(ValueError, match="other than b1"):
+        b.mean_for("B", exclude="b1")
+    X = np.array([[2.0], [9.0], [10.0]])                                        # a1 itself, a new clip of A, b1 itself
+    with pytest.raises(ValueError):
+        relative_features(X, ["a1", "x", "b1"], ["A", "A", "B"], b)             # b1 against nothing
+    rel = relative_features(X[:2], ["a1", "x"], ["A", "A"], b)
+    assert rel.tolist() == [[2.0 - 5.0], [9.0 - 4.0]]
+
+
+def test_first_k_takes_each_actors_first_clips_by_name():
+    clips, actors = ["b2", "a3", "a1", "b1", "a2"], ["B", "A", "A", "B", "A"]
+    assert first_k(clips, actors, 2) == (["a1", "a2", "b1", "b2"], ["A", "A", "B", "B"])
+    assert first_k(clips, actors, 9) == (["a1", "a2", "a3", "b1", "b2"], ["A", "A", "A", "B", "B"])
+
+
+# --------------------------------------------------------------------------- #
+# The point: a voice's own offset
+# --------------------------------------------------------------------------- #
+
+
+def voices(n_actors=8, offset=3.0, seed=7):
+    """Four classes 3 apart in 3 dimensions; every actor shifted by their own
+    offset of the SAME size, so absolute features confuse voice with emotion."""
+    rng = np.random.default_rng(seed)
+    X, y, clips, actors = [], [], [], []
+    for a in range(n_actors):
+        voice = offset * rng.standard_normal(3)
+        for k, label in enumerate(LABELS):
+            centre = np.zeros(3) if k == 0 else 3.0 * np.eye(3)[k - 1]
+            for j in range(6):
+                X.append(centre + voice + 0.3 * rng.standard_normal(3))
+                y.append(label)
+                clips.append(f"10{a:02d}_S{j}_{label}_XX")
+                actors.append(f"10{a:02d}")
+    return np.array(X), y, clips, actors
+
+
+def test_a_voice_with_its_own_offset_defeats_the_absolute_tagger_and_not_the_relative_one(tmp_path):
+    import soundfile as sf
+    X, y, clips, actors = voices()
+    held_abs = affect.leave_one_actor_out(X, y, actors, ["a", "b", "c"])
+    right_abs = sum(r for r, _ in held_abs.values())
+    # train_relative reads a train.tsv and extracts features: give it the made-up ones through `extract`
+    (tmp_path / "audio").mkdir()
+    with open(tmp_path / "train.tsv", "w", encoding="utf-8") as f:
+        f.write("clip\tactor\tsentence\temotion\tagreement\traters\n")
+        for c, a, e in zip(clips, actors, y):
+            f.write(f"{c}\t{a}\tS\t{e}\t0.9\t10\n")
+            sf.write(str(tmp_path / "audio" / f"{c}.wav"), np.zeros(1600, np.float32), 16_000, subtype="PCM_16")
+    table = {c: x for c, x in zip(clips, X)}
+    order = iter(clips)
+    tagger, held_rel = train_relative(tmp_path, tmp_path / "cache", extract=lambda audio: table[next(order)])
+    right_rel = sum(r for r, _ in held_rel.values())
+    assert right_rel >= 0.95 * len(y) and right_abs <= 0.8 * len(y)
+    assert tagger.features == ("f0", "f1", "f2") and (tmp_path / "cache" / "train.npz").exists()
+
+
+def test_told_apart_counts_what_the_pair_table_counts():
+    X, y = np.array([[0.0], [3.0], [6.0], [9.0]]), list(LABELS)
+    model = fit(np.repeat(X, 10, axis=0), [l for l in y for _ in range(10)], ["f"])
+    pairs = select(fake_ratings())[1]
+    ang = [p for p in pairs if p.emotion == "ANG"][:3]
+    Xn, Xl = np.array([[0.0], [0.0], [6.0]]), np.array([[9.0], [3.0], [9.0]])
+    assert told_apart(model, ang, Xn, Xl) == {"ANG": (2, 3)}
+    assert "| ANG | 3 | 1 | 2 | 2 | 2 |" in affect.tag_pairs(model, ang, Xn, Xl)
+
+
+def test_the_dev_report_has_both_taggers_and_the_baseline_size_curve():
+    X, y, clips, actors = voices(n_actors=3)
+    absolute = fit(X, y, ["a", "b", "c"])
+    neutral = [k for k, e in enumerate(y) if e == "NEU"]
+    b = Baseline([clips[k] for k in neutral], [actors[k] for k in neutral], X[neutral])
+    relative = fit(relative_features(X, clips, actors, b), y, ["a", "b", "c"])
+    pairs = [p._replace(actor=a) for p, a in zip([q for q in select(fake_ratings())[1] if q.emotion == "ANG"][:3],
+                                                  ["1000", "1001", "1002"])]
+    Xn = np.vstack([X[[k for k, (e, a) in enumerate(zip(y, actors)) if e == "NEU" and a == p.actor][0]] for p in pairs])
+    Xl = np.vstack([X[[k for k, (e, a) in enumerate(zip(y, actors)) if e == "ANG" and a == p.actor][0]] for p in pairs])
+    text = dev_report(absolute, relative, pairs, Xn, Xl, [clips[k] for k in neutral], [actors[k] for k in neutral], X[neutral])
+    assert text.startswith("absolute tagger (tagger.json):") and "relative tagger (tagger-relative.json)" in text
+    assert "| baseline clips per speaker | SAD | FEA | ANG | all |" in text
+    assert "| all | - | - | 3 of 3 | 3 of 3 |" in text and "| 1 | - | - |" in text
+
+
+def test_the_own_report_uses_the_other_calm_takes_as_each_pairs_baseline():
+    seen = []
+
+    class Spy(Tagger):
+        def tag(self, x):
+            seen.append(np.asarray(x).tolist())
+            return affect.Tag("NEU", "neutral", 1.0)
+
+    spy = Spy(LABELS, ("f",), np.zeros(1), np.ones(1), np.zeros((4, 1)), np.zeros(4))
+    pairs = [p for p in select(fake_ratings())[1] if p.emotion == "ANG"][:3]
+    Xn, Xl = np.array([[1.0], [2.0], [6.0]]), np.array([[10.0], [10.0], [10.0]])
+    own_report(spy, spy, pairs, Xn, Xl)
+    absolute, relative = seen[:6], seen[6:]
+    assert relative == [[1.0 - 4.0], [10.0 - 4.0], [2.0 - 3.5], [10.0 - 3.5], [6.0 - 1.5], [10.0 - 1.5]]
