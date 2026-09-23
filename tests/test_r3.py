@@ -13,7 +13,7 @@ import numpy as np
 import pytest
 
 from s2slab.r0 import ASR_SR, SYSTEM_PROMPT
-from s2slab.r3 import MODEL, SpeechLLM, SpeechLLMCascade, unwrap_transcript
+from s2slab.r3 import HEAR_MAX_NEW_TOKENS, MODEL, SpeechLLM, SpeechLLMCascade, unwrap_transcript
 from s2slab.r3probe import TRANSCRIBE
 from s2slab.rungs import RUNGS, get
 
@@ -119,6 +119,8 @@ def test_hear_is_outside_the_turn_and_gives_the_words_without_the_wrapper():
     ("The transcription of the speech is: 'Sure, whatever you say.", "Sure, whatever you say"),   # no closing quote: the stop reads as the sentence's
     ("The transcription of the audio is: \"It's eleven o'clock.\"", "It's eleven o'clock."),
     ("the transcription is: Don't forget a jacket", "Don't forget a jacket"),
+    ("The original content of this audio is: 'there in the cedar hollow then lived olive lord'", "there in the cedar hollow then lived olive lord"),
+    ("The original content of this audio is:'relocated footnote governor robinson'", "relocated footnote governor robinson"),   # smoke test, no space
     ("Don't forget a jacket.", "Don't forget a jacket."),                    # no wrapper: unchanged
     ("", ""),
 ])
@@ -135,11 +137,12 @@ def test_the_speech_llm_asks_with_r0s_prompt_and_transcribes_with_the_probes_pro
     llm = SpeechLLM(device="cpu")
     calls = []
 
-    def fake_generate(audio, sr, system, text=""):
-        calls.append((system, text, sr))
+    def fake_generate(audio, sr, system, text="", max_new_tokens=None):
+        calls.append((system, text, sr, max_new_tokens))
         return "The transcription of the speech is: 'hello.'" if text else "Hi."
 
     monkeypatch.setattr(llm, "generate", fake_generate)
     audio = np.zeros(ASR_SR, dtype=np.float32)
     assert llm.reply(audio, ASR_SR) == "Hi." and llm.hear(audio, ASR_SR) == "hello."
-    assert calls == [(SYSTEM_PROMPT, "", ASR_SR), ("You are a helpful assistant.", TRANSCRIBE, ASR_SR)]
+    assert calls == [(SYSTEM_PROMPT, "", ASR_SR, None),                                  # the reply: the 60-token cap
+                     ("You are a helpful assistant.", TRANSCRIBE, ASR_SR, HEAR_MAX_NEW_TOKENS)]   # a transcript: room for a long clip

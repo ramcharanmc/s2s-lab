@@ -50,11 +50,14 @@ from .timing import stage
 
 MODEL = "Qwen/Qwen2-Audio-7B-Instruct"
 TRANSCRIBE_SYSTEM = "You are a helpful assistant."
+HEAR_MAX_NEW_TOKENS = 200     # a 15 s clip is 40-odd words; the reply cap (60) would cut it, and its wrapper costs 10
 # Qwen2-Audio answers a transcription request as a sentence: "The transcription
-# of the speech is: 'I'm fine.'" -- observed on all 39 PR-006 clips and the 10
-# own-voice takes. The words inside are what gets scored.
-_WRAPPER = re.compile(r"^\s*the transcription(?: of the (?:speech|audio))?(?: in this clip)? is:?\s*(.*?)\s*$",
-                      re.IGNORECASE | re.DOTALL)
+# of the speech is: 'I'm fine.'" on all 39 PR-006 clips and the 10 own-voice
+# takes; on the eval set's longer clips also "The original content of this
+# audio is: '...'" (3 of the 8 smoke-test clips). The words inside are what
+# gets scored.
+_WRAPPER = re.compile(r"^\s*the (?:original )?(?:transcription|content|text)(?: of (?:the|this) (?:speech|audio))?"
+                      r"(?: in this clip)? is:?\s*(.*?)\s*$", re.IGNORECASE | re.DOTALL)
 
 
 def unwrap_transcript(text: str) -> str:
@@ -102,12 +105,13 @@ class SpeechLLM:
             inputs = self.processor(text=prompt, audios=[audio], sampling_rate=sr, return_tensors="pt")
         return inputs.to(self.device)
 
-    def generate(self, audio: np.ndarray, sr: int, system: str, text: str = "") -> str:
-        """Greedy, capped at max_new_tokens; only the new tokens are decoded."""
+    def generate(self, audio: np.ndarray, sr: int, system: str, text: str = "",
+                 max_new_tokens: int | None = None) -> str:
+        """Greedy, capped at max_new_tokens (the reply's cap unless given); only the new tokens are decoded."""
         import torch
         inputs = self._inputs(np.asarray(audio, dtype=np.float32), sr, system, text)
         with torch.inference_mode():
-            out = self.model.generate(**inputs, max_new_tokens=self.max_new_tokens, do_sample=False)
+            out = self.model.generate(**inputs, max_new_tokens=max_new_tokens or self.max_new_tokens, do_sample=False)
         return self.processor.batch_decode(out[:, inputs["input_ids"].shape[1]:], skip_special_tokens=True)[0].strip()
 
     def reply(self, audio: np.ndarray, sr: int) -> str:
@@ -115,8 +119,9 @@ class SpeechLLM:
         return self.generate(audio, sr, SYSTEM_PROMPT)
 
     def hear(self, audio: np.ndarray, sr: int) -> str:
-        """The same model asked to write the words down (untimed; not in the loop)."""
-        return unwrap_transcript(self.generate(audio, sr, TRANSCRIBE_SYSTEM, TRANSCRIBE))
+        """The same model asked to write the words down (untimed; not in the loop),
+        with room for a long clip's words -- the reply's 60-token cap is not a transcript's."""
+        return unwrap_transcript(self.generate(audio, sr, TRANSCRIBE_SYSTEM, TRANSCRIBE, HEAR_MAX_NEW_TOKENS))
 
 
 class SpeechLLMCascade(Rung):
