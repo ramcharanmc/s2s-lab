@@ -125,3 +125,23 @@ hypothesis -- but the expectations are written down first, to be scored:
 - Same hardware matters, again: R0 measured 0.44 s here against 0.66 s on the
   T4 of 09-16 (transcripts 198 of 200 identical, WER 12.0 against 11.9).
 
+## R4 as a rung — written before the eval-set run (2026-09-23)
+
+`modal run modal_app/r4_bench.py --rung r3-gpu,r4-gpu --evalset`: one L40S
+container, R3 re-measured beside R4. Written after the probe-clip smoke test
+(`34a4209`, 30 clips, L40S, \$0.18), which already showed R4 at **8.26 s p50**
+-- the design note's 2–4 s was wrong before the eval set was touched: the
+Talker generates the reply's speech tokens one by one after the Thinker has
+written it, then token2wav renders them. The smoke test also showed the Talker
+*samples* by default; from `SEED` on, every turn is seeded, so the eval-set
+audio is a function of the clip alone. Expectations, to be scored:
+
+- R4 total p50 **7–10 s** on the 200 clips (replies capped at 60 text tokens,
+  so the eval set's longer clips should not lengthen the wait much); p90
+  under 14 s. R3 on the same L40S **0.8–1.1 s**: R4 waits about **8×** R3.
+- R4 leading silence about 200 ms (smoke: 200) against Kokoro's 300.
+- R4 peak GPU memory **22–26 GB**; R3 17 GB as on the A10.
+- R4's written replies about as long as R3's (median 16–22 words): the same
+  60-token cap, a same-family 7B Thinker.
+- About \$1.2 for the run (≈ 35 min at \$1.95/h).
+

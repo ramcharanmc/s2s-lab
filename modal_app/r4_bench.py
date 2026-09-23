@@ -57,9 +57,9 @@ image = (
     .run_function(download_weights)
     # Qwen2.5-Omni's processor loads an image and a video processor even for audio-only
     # input, and they import Pillow and torchvision (the first smoke test failed on it).
-    # After the weights, so that layer stays cached; torch==2.14.0 in the same call makes
-    # pip pick the torchvision built for it rather than move torch.
-    .pip_install("torch==2.14.0", "torchvision", index_url="https://download.pytorch.org/whl/cu126")
+    # After the weights, so that layer stays cached. 0.29.0 is what pip resolved for
+    # torch 2.14.0 on the first build (smoke test at 34a4209), now pinned.
+    .pip_install("torch==2.14.0", "torchvision==0.29.0", index_url="https://download.pytorch.org/whl/cu126")
     .pip_install("pillow==11.3.0")
     .apt_install("gcc")                     # torch 2.14's Triton helpers compile a C stub on first use
     .env({"HF_HUB_OFFLINE": "1"})
@@ -107,7 +107,7 @@ def bench(rung_ids: list[str]) -> dict:
     return {"gpu": _gpu_name(), "versions": _versions(), "tables": tables, "seconds": time.perf_counter() - t0}
 
 
-@app.function(gpu="L40S", timeout=60 * 60, scaledown_window=60)
+@app.function(gpu="L40S", timeout=90 * 60, scaledown_window=60)   # R4 at ~8 s a turn: 200 turns ~30 min, R3 ~4
 def evaluate(rung_ids: list[str], commit: str, limit: int = 0) -> dict:
     """Each rung over the frozen eval set, one container (r0_bench.evaluate, on the L40S)."""
     import os

@@ -20,6 +20,13 @@ same words were the system prompt. And there is no Kokoro: the reply audio is
 the model's, voice SPEAKER, at 24 kHz, so its leading silence, level and pitch
 are the model's own delivery, which is what PR-008 measures.
 
+THE VOICE IS SAMPLED. The Thinker's text is greedy, like every other rung's.
+The Talker is not: Qwen2.5-Omni's own defaults sample its speech tokens (top-k
+40, top-p 0.8, temperature 0.9) and token2wav starts from random noise. Those
+defaults are the model's intended delivery, so they are kept -- and every turn
+is seeded (SEED, set just before generate), so a turn's audio depends on its
+input alone: the same clip gives the same reply on a rerun, whatever came before.
+
 Turn.transcript is None (no text of the caller exists anywhere); reply_text
 is the Thinker's text, so reply length stays comparable with R0-R3. One timed
 stage, s2s: the API returns text and audio together, so the split between
@@ -48,14 +55,16 @@ OMNI_SYSTEM = ("You are Qwen, a virtual human developed by the Qwen Team, Alibab
 INSTRUCTION = SYSTEM_PROMPT          # R0's words, as the user's text beside the audio
 SPEAKER = "Chelsie"                  # the model's female voice; Kokoro's af_heart is female too
 OUT_SR = 24_000                      # the Talker's code2wav output rate
+SEED = 0                             # set before every turn: the sampled voice is reproducible per clip
 
 
 class OmniS2S:
     """Qwen2.5-Omni-7B through transformers: a clip in, the reply's text AND speech out. Greedy."""
 
     def __init__(self, model_name: str = MODEL, device: str = "cuda", max_new_tokens: int = 60,
-                 speaker: str = SPEAKER):
+                 speaker: str = SPEAKER, seed: int = SEED):
         self.model_name, self.device, self.max_new_tokens, self.speaker = model_name, device, max_new_tokens, speaker
+        self.seed = seed
         self.processor = self.model = None
         self.sr = ASR_SR
 
@@ -88,6 +97,7 @@ class OmniS2S:
         """Takes: the caller's turn. Returns: (the reply's text, the reply's audio at OUT_SR, float32 mono)."""
         import torch
         inputs = self._inputs(np.asarray(audio, dtype=np.float32), sr)
+        torch.manual_seed(self.seed)                                  # the Talker samples; see the docstring
         with torch.inference_mode():
             text_ids, wav = self.model.generate(**inputs, use_audio_in_video=False, return_audio=True,
                                                 speaker=self.speaker, thinker_max_new_tokens=self.max_new_tokens,

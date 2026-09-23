@@ -14,7 +14,7 @@ import numpy as np
 import pytest
 
 from s2slab.r0 import ASR_SR, SYSTEM_PROMPT
-from s2slab.r4 import INSTRUCTION, MODEL, OMNI_SYSTEM, OUT_SR, SPEAKER, OmniS2S, SpeechToSpeech
+from s2slab.r4 import INSTRUCTION, MODEL, OMNI_SYSTEM, OUT_SR, SEED, SPEAKER, OmniS2S, SpeechToSpeech
 from s2slab.rungs import RUNGS, get
 
 
@@ -41,7 +41,7 @@ def test_r4_is_registered_and_builds_without_any_model_library():
     assert RUNGS["r4-gpu"] == "s2slab.r4:SpeechToSpeech"
     rung = get("r4-gpu")
     assert rung.rung_id == "r4-gpu" and rung.model.model_name == MODEL and rung.model.device == "cuda"
-    assert rung.model.max_new_tokens == 60 and rung.model.speaker == SPEAKER
+    assert rung.model.max_new_tokens == 60 and rung.model.speaker == SPEAKER and rung.model.seed == SEED
     assert not hasattr(rung, "tts") and not hasattr(rung, "asr")            # no Kokoro, no Whisper
 
 
@@ -122,8 +122,12 @@ def test_speak_decodes_only_the_new_tokens_and_flattens_the_audio(monkeypatch):
             return self.a
 
     m.model, m.processor = Model(), Processor()
-    pytest.importorskip("torch")                                              # speak() opens torch.inference_mode()
+    torch = pytest.importorskip("torch")                                      # speak() opens torch.inference_mode()
+    seeds = []
+    monkeypatch.setattr(torch, "manual_seed", lambda s: seeds.append(s))
     text, wav = m.speak(np.zeros(ASR_SR, dtype=np.float32), ASR_SR)
+    assert seeds == [SEED]                                                    # every turn seeded, just before generate
+    assert "talker_do_sample" not in seen                                     # the model's own sampled delivery, kept
     assert text == "Hello there." and wav.shape == (240,) and wav.dtype == np.float32
     assert seen["decoded_shape"] == (1, 2)                                    # 9 tokens minus the 7 of the prompt
     assert seen["return_audio"] is True and seen["speaker"] == SPEAKER
