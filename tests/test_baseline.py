@@ -227,6 +227,123 @@ def test_the_fresh_set_freezes_verifies_and_stays_locked_without_a_registration(
     assert verify(tmp_path) == [f"audio/{pairs[0].loaded}.wav: changed"]
 
 
+# --------------------------------------------------------------------------- #
+# PR-007's run, on made-up features
+# --------------------------------------------------------------------------- #
+
+
+def test_the_one_sided_sign_test():
+    from s2slab.baseline import sign_test_one_sided
+    assert sign_test_one_sided(12, 4) == pytest.approx(0.0384, abs=0.0001)
+    assert sign_test_one_sided(7, 2) == pytest.approx(0.0898, abs=0.0001)
+    assert sign_test_one_sided(5, 0) == pytest.approx(1 / 32) and sign_test_one_sided(0, 0) == 1.0
+    assert sign_test_one_sided(2, 7) > 0.98                                  # the wrong way round is no evidence
+
+
+def one_feature_tagger():
+    """x below 0 is neutral, above 0 angry; sad and fear never."""
+    return Tagger(LABELS, ("f",), np.zeros(1), np.ones(1), np.array([[-10.0], [0.0], [0.0], [10.0]]),
+                  np.array([0.0, -100.0, -100.0, 0.0]))
+
+
+def fresh_root(tmp_path):
+    """Six pairs, one made-up feature carried in the audio itself (a constant of
+    value/10), two baseline clips per speaker at the speaker's baseline value.
+
+        pair     baseline  calm  upset   absolute   relative
+        sad-f01  2         1     3       not apart  apart      fixed
+        sad-f02  2         1     3       not apart  apart      fixed
+        fea-f01  0         -1    3       apart      apart
+        fea-f02  5         -1    3       apart      not apart  broken (upset tagged neutral)
+        ang-f01  0         -1    -2      not        not        (upset neutral both ways)
+        ang-f02  2         1     3       not apart  apart      fixed
+    """
+    import soundfile as sf
+    from s2slab.baseline import Rating, fetch_baseline, freeze_fresh, write_baseline_clips
+    from s2slab.prosodyset import Pair, write_pairs
+    spec = [("sad-f01", "SAD", "1101", 2, 1, 3), ("sad-f02", "SAD", "1102", 2, 1, 3), ("fea-f01", "FEA", "1103", 0, -1, 3),
+            ("fea-f02", "FEA", "1104", 5, -1, 3), ("ang-f01", "ANG", "1105", 0, -1, -2), ("ang-f02", "ANG", "1106", 2, 1, 3)]
+    (tmp_path / "audio").mkdir()
+    (tmp_path / "baseline" / "audio").mkdir(parents=True)
+    pairs, base = [], []
+    for pid, e, a, b, c, l in spec:
+        n, ld = f"{a}_DFA_NEU_XX", f"{a}_DFA_{e}_XX"
+        pairs.append(Pair(pid, "test", e, a, "DFA", n, ld, 0.9, 0.7, 10, 10, 60.0, 0.6))
+        for clip, v in ((n, c), (ld, l)):
+            sf.write(str(tmp_path / "audio" / f"{clip}.wav"), np.full(16_000, v / 10, np.float32), 16_000, subtype="PCM_16")
+        for s in ("IEO", "TIE"):
+            base.append(Rating(f"{a}_{s}_NEU_XX", a, s, "NEU", "N", 0.8, 10, -1.0))
+            sf.write(str(tmp_path / "baseline" / "audio" / f"{a}_{s}_NEU_XX.wav"), np.full(16_000, b / 10, np.float32),
+                     16_000, subtype="PCM_16")
+    write_pairs(pairs, tmp_path / "pairs.tsv")
+    write_baseline_clips(base, tmp_path / "baseline" / "baseline.tsv")
+    freeze_fresh(tmp_path)
+    fetch_baseline(tmp_path / "baseline")                                     # files exist: writes the manifest only
+    return pairs
+
+
+def carried(audio):
+    return np.array([round(float(audio[0]) * 10)])
+
+
+def test_the_registered_run_counts_fixed_and_broken_and_gives_the_verdict(tmp_path):
+    from s2slab.baseline import run_test
+    fresh_root(tmp_path)
+    t = one_feature_tagger()
+    with pytest.raises(PermissionError, match="preregistration"):
+        run_test("", root=tmp_path, cache=tmp_path / "cache", absolute=t, relative=t, extract=carried)
+    report = run_test("PR-007", str(tmp_path / "out" / "pr007.json"), root=tmp_path, cache=tmp_path / "cache",
+                      absolute=t, relative=t, extract=carried)
+    assert report.startswith("6 fresh pairs · confirms PR-007") and "12 baseline clips for 6 speakers" in report
+    assert "| S1 told apart, paired | 2 of 6 | 4 of 6 | more, and one-sided sign test p < 0.05 | FAIL |" in report
+    assert "| S2 loaded clips tagged non-neutral | 5 of 6 | 4 of 6 | at least 3 | PASS |" in report
+    assert "fixed 3: ang-f02, sad-f01, sad-f02" in report and "broken 1: fea-f02" in report
+    assert "on the 4 pairs that differ: p = 0.312" in report
+    assert "told apart per emotion (absolute -> relative): SAD 0 -> 2 of 2, FEA 2 -> 1 of 2, ANG 0 -> 1 of 2" in report
+    assert "PR-007: NOT SUPPORTED: failed S1" in report
+    assert "| fea-f02 | neutral (1.00) -> angry (1.00) | neutral (1.00) -> neutral (1.00) | apart | **not** | 2 |" in report
+    kept = json.loads((tmp_path / "out" / "pr007.json").read_text(encoding="utf-8"))
+    assert kept["apart"] == {"abs": 2, "rel": 4} and kept["S1"] is False and kept["S2"] is True
+    assert kept["rows"][3]["rel"][1]["label"] == "NEU" and kept["baseline_clips"] == {f"110{k}": 2 for k in range(1, 7)}
+    with pytest.raises(FileExistsError):
+        run_test("PR-007", str(tmp_path / "out" / "pr007.json"), root=tmp_path, cache=tmp_path / "cache",
+                 absolute=t, relative=t, extract=carried)
+    # a changed clip stops the run before anything is tagged
+    import soundfile as sf
+    sf.write(str(tmp_path / "audio" / "1101_DFA_SAD_XX.wav"), np.full(16_000, 0.9, np.float32), 16_000, subtype="PCM_16")
+    with pytest.raises(RuntimeError, match="changed"):
+        run_test("PR-007", root=tmp_path, cache=tmp_path / "cache", absolute=t, relative=t, extract=carried)
+
+
+def test_a_clear_win_is_supported_and_the_guardrail_can_fail_alone():
+    from s2slab.baseline import compare_taggers, format_criteria
+    from s2slab.prosodyset import Pair
+    t = one_feature_tagger()
+    pairs = [Pair(f"ang-f{k:02d}", "test", "ANG", f"12{k:02d}", "DFA", "n", "l", 0.9, 0.9, 10, 10, 60.0, 0.8) for k in range(1, 15)]
+    # absolute tells 2 of 14 apart; relative 14 of 14: 12 fixed, 0 broken
+    Xn = np.array([[-1.0]] * 2 + [[1.0]] * 12)
+    Xl = np.full((14, 1), 3.0)
+    r = compare_taggers(t, t, pairs, Xn, Xl, np.full((14, 1), -1.0), Xl)
+    assert (r["apart"], len(r["fixed"]), len(r["broken"])) == ({"abs": 2, "rel": 14}, 12, 0)
+    assert r["p"] == pytest.approx(1 / 4096) and r["S1"] and r["S2"]
+    assert "PR-007: SUPPORTED" in format_criteria(r, "PR-007") and "PR-007" not in format_criteria(r)
+    # the same, but the relative tagger hears three of the upset clips as neutral: S2 fails
+    Xl_rel = np.array([[-1.0]] * 3 + [[3.0]] * 11)
+    r2 = compare_taggers(t, t, pairs, Xn, Xl, np.full((14, 1), -1.0), Xl_rel)
+    assert r2["loaded_non_neutral"] == {"abs": 14, "rel": 11} and r2["S2"] is False and r2["S1"] is True
+    assert "NOT SUPPORTED: failed S2" in format_criteria(r2, "PR-007")
+
+
+def test_the_exploratory_curve_reads_the_caches_the_run_left(tmp_path):
+    from s2slab.baseline import explore_curve, run_test
+    fresh_root(tmp_path)
+    t = one_feature_tagger()
+    run_test("PR-007", root=tmp_path, cache=tmp_path / "cache", absolute=t, relative=t, extract=carried)
+    text = explore_curve("PR-007", root=tmp_path, cache=tmp_path / "cache", relative=t)
+    assert text.startswith("exploratory, after the registered analysis")
+    assert "| all | 2 of 2 | 1 of 2 | 1 of 2 | 4 of 6 |" in text and "| 1 | 2 of 2 | 1 of 2 | 1 of 2 | 4 of 6 |" in text
+
+
 def test_the_own_report_uses_the_other_calm_takes_as_each_pairs_baseline():
     seen = []
 
