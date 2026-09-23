@@ -1,0 +1,1797 @@
+{
+ "run": "38 fresh pairs \u00b7 confirms PR-007 \u00b7 absolute tagger against the per-caller baseline \u00b7 268 baseline clips for 27 speakers \u00b7 commit a591503",
+ "pairs": [
+  {
+   "id": "sad-f01",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1055",
+   "sentence": "IEO",
+   "neutral": "1055_IEO_NEU_XX",
+   "loaded": "1055_IEO_SAD_HI",
+   "agree_neutral": 0.8,
+   "agree_loaded": 0.5,
+   "raters_neutral": 10,
+   "raters_loaded": 8,
+   "intensity": 53.8,
+   "threshold": 0.5
+  },
+  {
+   "id": "sad-f02",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1075",
+   "sentence": "MTI",
+   "neutral": "1075_MTI_NEU_XX",
+   "loaded": "1075_MTI_SAD_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.7,
+   "raters_neutral": 8,
+   "raters_loaded": 10,
+   "intensity": 56.0,
+   "threshold": 0.5
+  },
+  {
+   "id": "sad-f03",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1076",
+   "sentence": "IEO",
+   "neutral": "1076_IEO_NEU_XX",
+   "loaded": "1076_IEO_SAD_HI",
+   "agree_neutral": 0.778,
+   "agree_loaded": 0.667,
+   "raters_neutral": 9,
+   "raters_loaded": 9,
+   "intensity": 72.2,
+   "threshold": 0.5
+  },
+  {
+   "id": "sad-f04",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1018",
+   "sentence": "IEO",
+   "neutral": "1018_IEO_NEU_XX",
+   "loaded": "1018_IEO_SAD_MD",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.6,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 49.0,
+   "threshold": 0.5
+  },
+  {
+   "id": "sad-f05",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1028",
+   "sentence": "WSI",
+   "neutral": "1028_WSI_NEU_XX",
+   "loaded": "1028_WSI_SAD_XX",
+   "agree_neutral": 0.5,
+   "agree_loaded": 0.7,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 84.0,
+   "threshold": 0.5
+  },
+  {
+   "id": "sad-f06",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1021",
+   "sentence": "IOM",
+   "neutral": "1021_IOM_NEU_XX",
+   "loaded": "1021_IOM_SAD_XX",
+   "agree_neutral": 0.8,
+   "agree_loaded": 0.5,
+   "raters_neutral": 10,
+   "raters_loaded": 8,
+   "intensity": 62.8,
+   "threshold": 0.5
+  },
+  {
+   "id": "sad-f07",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1031",
+   "sentence": "TAI",
+   "neutral": "1031_TAI_NEU_XX",
+   "loaded": "1031_TAI_SAD_XX",
+   "agree_neutral": 0.8,
+   "agree_loaded": 0.5,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 39.6,
+   "threshold": 0.5
+  },
+  {
+   "id": "sad-f08",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1038",
+   "sentence": "TIE",
+   "neutral": "1038_TIE_NEU_XX",
+   "loaded": "1038_TIE_SAD_XX",
+   "agree_neutral": 0.625,
+   "agree_loaded": 0.6,
+   "raters_neutral": 8,
+   "raters_loaded": 10,
+   "intensity": 62.8,
+   "threshold": 0.5
+  },
+  {
+   "id": "sad-f09",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1029",
+   "sentence": "TIE",
+   "neutral": "1029_TIE_NEU_XX",
+   "loaded": "1029_TIE_SAD_XX",
+   "agree_neutral": 0.8,
+   "agree_loaded": 0.7,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 67.7,
+   "threshold": 0.5
+  },
+  {
+   "id": "sad-f10",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1066",
+   "sentence": "TIE",
+   "neutral": "1066_TIE_NEU_XX",
+   "loaded": "1066_TIE_SAD_XX",
+   "agree_neutral": 0.727,
+   "agree_loaded": 0.5,
+   "raters_neutral": 11,
+   "raters_loaded": 10,
+   "intensity": 40.4,
+   "threshold": 0.5
+  },
+  {
+   "id": "sad-f11",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1045",
+   "sentence": "MTI",
+   "neutral": "1045_MTI_NEU_XX",
+   "loaded": "1045_MTI_SAD_XX",
+   "agree_neutral": 0.8,
+   "agree_loaded": 0.75,
+   "raters_neutral": 10,
+   "raters_loaded": 8,
+   "intensity": 39.3,
+   "threshold": 0.5
+  },
+  {
+   "id": "sad-f12",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1090",
+   "sentence": "IOM",
+   "neutral": "1090_IOM_NEU_XX",
+   "loaded": "1090_IOM_SAD_XX",
+   "agree_neutral": 0.625,
+   "agree_loaded": 0.5,
+   "raters_neutral": 8,
+   "raters_loaded": 10,
+   "intensity": 47.4,
+   "threshold": 0.5
+  },
+  {
+   "id": "fea-f01",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1052",
+   "sentence": "TAI",
+   "neutral": "1052_TAI_NEU_XX",
+   "loaded": "1052_TAI_FEA_XX",
+   "agree_neutral": 0.889,
+   "agree_loaded": 0.778,
+   "raters_neutral": 9,
+   "raters_loaded": 9,
+   "intensity": 52.1,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-f02",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1055",
+   "sentence": "IWW",
+   "neutral": "1055_IWW_NEU_XX",
+   "loaded": "1055_IWW_FEA_XX",
+   "agree_neutral": 0.75,
+   "agree_loaded": 0.9,
+   "raters_neutral": 8,
+   "raters_loaded": 10,
+   "intensity": 60.0,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-f03",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1029",
+   "sentence": "IEO",
+   "neutral": "1029_IEO_NEU_XX",
+   "loaded": "1029_IEO_FEA_HI",
+   "agree_neutral": 0.7,
+   "agree_loaded": 0.7,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 61.3,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-f04",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1068",
+   "sentence": "MTI",
+   "neutral": "1068_MTI_NEU_XX",
+   "loaded": "1068_MTI_FEA_XX",
+   "agree_neutral": 0.7,
+   "agree_loaded": 0.7,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 53.6,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-f05",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1005",
+   "sentence": "TSI",
+   "neutral": "1005_TSI_NEU_XX",
+   "loaded": "1005_TSI_FEA_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.889,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 61.4,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-f06",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1038",
+   "sentence": "TAI",
+   "neutral": "1038_TAI_NEU_XX",
+   "loaded": "1038_TAI_FEA_XX",
+   "agree_neutral": 0.778,
+   "agree_loaded": 0.6,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 67.3,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-f07",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1088",
+   "sentence": "IEO",
+   "neutral": "1088_IEO_NEU_XX",
+   "loaded": "1088_IEO_FEA_HI",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.889,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 61.9,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-f08",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1049",
+   "sentence": "TAI",
+   "neutral": "1049_TAI_NEU_XX",
+   "loaded": "1049_TAI_FEA_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.6,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 53.8,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-f09",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1044",
+   "sentence": "IEO",
+   "neutral": "1044_IEO_NEU_XX",
+   "loaded": "1044_IEO_FEA_HI",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.7,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 56.4,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-f10",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1056",
+   "sentence": "TSI",
+   "neutral": "1056_TSI_NEU_XX",
+   "loaded": "1056_TSI_FEA_XX",
+   "agree_neutral": 0.778,
+   "agree_loaded": 0.778,
+   "raters_neutral": 9,
+   "raters_loaded": 9,
+   "intensity": 58.1,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-f11",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1028",
+   "sentence": "ITH",
+   "neutral": "1028_ITH_NEU_XX",
+   "loaded": "1028_ITH_FEA_XX",
+   "agree_neutral": 0.889,
+   "agree_loaded": 0.6,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 62.0,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-f12",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1071",
+   "sentence": "ITS",
+   "neutral": "1071_ITS_NEU_XX",
+   "loaded": "1071_ITS_FEA_XX",
+   "agree_neutral": 0.7,
+   "agree_loaded": 0.667,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 56.0,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-f13",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1032",
+   "sentence": "ITS",
+   "neutral": "1032_ITS_NEU_XX",
+   "loaded": "1032_ITS_FEA_XX",
+   "agree_neutral": 0.818,
+   "agree_loaded": 0.667,
+   "raters_neutral": 11,
+   "raters_loaded": 9,
+   "intensity": 65.8,
+   "threshold": 0.6
+  },
+  {
+   "id": "ang-f01",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1041",
+   "sentence": "IEO",
+   "neutral": "1041_IEO_NEU_XX",
+   "loaded": "1041_IEO_ANG_HI",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 73.4,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-f02",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1005",
+   "sentence": "IOM",
+   "neutral": "1005_IOM_NEU_XX",
+   "loaded": "1005_IOM_ANG_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.8,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 78.2,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-f03",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1088",
+   "sentence": "WSI",
+   "neutral": "1088_WSI_NEU_XX",
+   "loaded": "1088_WSI_ANG_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.818,
+   "raters_neutral": 10,
+   "raters_loaded": 11,
+   "intensity": 72.1,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-f04",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1028",
+   "sentence": "IEO",
+   "neutral": "1028_IEO_NEU_XX",
+   "loaded": "1028_IEO_ANG_HI",
+   "agree_neutral": 0.8,
+   "agree_loaded": 0.8,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 83.8,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-f05",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1046",
+   "sentence": "DFA",
+   "neutral": "1046_DFA_NEU_XX",
+   "loaded": "1046_DFA_ANG_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.889,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 50.0,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-f06",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1057",
+   "sentence": "IEO",
+   "neutral": "1057_IEO_NEU_XX",
+   "loaded": "1057_IEO_ANG_HI",
+   "agree_neutral": 0.9,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 92.5,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-f07",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1021",
+   "sentence": "WSI",
+   "neutral": "1021_WSI_NEU_XX",
+   "loaded": "1021_WSI_ANG_XX",
+   "agree_neutral": 0.889,
+   "agree_loaded": 0.889,
+   "raters_neutral": 9,
+   "raters_loaded": 9,
+   "intensity": 72.1,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-f08",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1029",
+   "sentence": "MTI",
+   "neutral": "1029_MTI_NEU_XX",
+   "loaded": "1029_MTI_ANG_XX",
+   "agree_neutral": 0.889,
+   "agree_loaded": 0.875,
+   "raters_neutral": 9,
+   "raters_loaded": 8,
+   "intensity": 80.1,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-f09",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1073",
+   "sentence": "IWL",
+   "neutral": "1073_IWL_NEU_XX",
+   "loaded": "1073_IWL_ANG_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.8,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 66.1,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-f10",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1077",
+   "sentence": "IWL",
+   "neutral": "1077_IWL_NEU_XX",
+   "loaded": "1077_IWL_ANG_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.889,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 61.0,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-f11",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1066",
+   "sentence": "WSI",
+   "neutral": "1066_WSI_NEU_XX",
+   "loaded": "1066_WSI_ANG_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.889,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 80.4,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-f12",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1068",
+   "sentence": "TIE",
+   "neutral": "1068_TIE_NEU_XX",
+   "loaded": "1068_TIE_ANG_XX",
+   "agree_neutral": 0.889,
+   "agree_loaded": 0.9,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 52.0,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-f13",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1050",
+   "sentence": "MTI",
+   "neutral": "1050_MTI_NEU_XX",
+   "loaded": "1050_MTI_ANG_XX",
+   "agree_neutral": 0.8,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 87.8,
+   "threshold": 0.8
+  }
+ ],
+ "baseline_clips": {
+  "1005": 9,
+  "1018": 10,
+  "1021": 10,
+  "1028": 6,
+  "1029": 9,
+  "1031": 11,
+  "1032": 10,
+  "1038": 10,
+  "1041": 10,
+  "1044": 11,
+  "1045": 11,
+  "1046": 11,
+  "1049": 10,
+  "1050": 11,
+  "1052": 11,
+  "1055": 9,
+  "1056": 11,
+  "1057": 10,
+  "1066": 10,
+  "1068": 10,
+  "1071": 7,
+  "1073": 11,
+  "1075": 11,
+  "1076": 9,
+  "1077": 11,
+  "1088": 10,
+  "1090": 9
+ },
+ "rows": [
+  {
+   "id": "sad-f01",
+   "emotion": "SAD",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9903563885208616
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.9831162292662888
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9515767425242918
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.9982322426704413
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "sad-f02",
+   "emotion": "SAD",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8922829483344445
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.9997720350583335
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9890976598934782
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.9986484150537295
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "sad-f03",
+   "emotion": "SAD",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9386120583965948
+    },
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.7916160345860884
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8519739330197411
+    },
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.7008782800042616
+    }
+   ],
+   "abs_apart": false,
+   "rel_apart": false
+  },
+  {
+   "id": "sad-f04",
+   "emotion": "SAD",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.4243954886034007
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.8960898296209141
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.7305196356646181
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.9717014683929519
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "sad-f05",
+   "emotion": "SAD",
+   "abs": [
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.5498836408337832
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.8655399351728623
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9574520670643778
+    },
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.409029097939135
+    }
+   ],
+   "abs_apart": false,
+   "rel_apart": false
+  },
+  {
+   "id": "sad-f06",
+   "emotion": "SAD",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9998464080251044
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.649011132197939
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9992318211569216
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.4360122205514133
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "sad-f07",
+   "emotion": "SAD",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9868407520496801
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.6972854714492129
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.828870238977186
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.974644065567717
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "sad-f08",
+   "emotion": "SAD",
+   "abs": [
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.8883294239922902
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.8282633425264851
+    }
+   ],
+   "rel": [
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.9630827133973614
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.6144358355321652
+    }
+   ],
+   "abs_apart": false,
+   "rel_apart": false
+  },
+  {
+   "id": "sad-f09",
+   "emotion": "SAD",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8924186540045255
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.7303828894451918
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9612042767405139
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.5637592881682217
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "sad-f10",
+   "emotion": "SAD",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9815757260947557
+    },
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9804010085174414
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9666457360344202
+    },
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9319161026382373
+    }
+   ],
+   "abs_apart": false,
+   "rel_apart": false
+  },
+  {
+   "id": "sad-f11",
+   "emotion": "SAD",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9711822502823484
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.9773584547775939
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9111175354139844
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.9997597452022587
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "sad-f12",
+   "emotion": "SAD",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9615615098514925
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.8489966616193054
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9507471272750803
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.9385945782090727
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "fea-f01",
+   "emotion": "FEA",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8761949382149328
+    },
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9538573008041804
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9103725601683617
+    },
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.7597793767995014
+    }
+   ],
+   "abs_apart": false,
+   "rel_apart": false
+  },
+  {
+   "id": "fea-f02",
+   "emotion": "FEA",
+   "abs": [
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.8958684542991543
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.35097101768735095
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8629760991656326
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.9650111669631779
+    }
+   ],
+   "abs_apart": false,
+   "rel_apart": true
+  },
+  {
+   "id": "fea-f03",
+   "emotion": "FEA",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.5418236519264583
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.8117719963861705
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.5381878389572317
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.9993390945646797
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "fea-f04",
+   "emotion": "FEA",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.98103102288697
+    },
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8866569040879921
+    }
+   ],
+   "rel": [
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.730312704089055
+    },
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.5281197520772499
+    }
+   ],
+   "abs_apart": false,
+   "rel_apart": false
+  },
+  {
+   "id": "fea-f05",
+   "emotion": "FEA",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9790282432558133
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.965694582117417
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9154592759548894
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.9847100977134841
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "fea-f06",
+   "emotion": "FEA",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9973319453361102
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9314747001466155
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9942334200886942
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.9390277008690492
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "fea-f07",
+   "emotion": "FEA",
+   "abs": [
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.9999847085584405
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.9587369583826084
+    }
+   ],
+   "rel": [
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.999999981270827
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.9816354898400607
+    }
+   ],
+   "abs_apart": false,
+   "rel_apart": false
+  },
+  {
+   "id": "fea-f08",
+   "emotion": "FEA",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8302930116473258
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.9230191975187664
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.5467306967355932
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.9093557537789074
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "fea-f09",
+   "emotion": "FEA",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9947692564058129
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9738949614616882
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9867540025657107
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.596303457861052
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "fea-f10",
+   "emotion": "FEA",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9565204203297778
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.7431996542696754
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.7966779592808758
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.999975304873938
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "fea-f11",
+   "emotion": "FEA",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.7537772899026662
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.6806589769040767
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9041734178625617
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.9967656836305467
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "fea-f12",
+   "emotion": "FEA",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.947737770983068
+    },
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.762739725622298
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9540492656130416
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.9775811626646426
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "fea-f13",
+   "emotion": "FEA",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8863362488902843
+    },
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9148895764455093
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9910071771907812
+    },
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8727975475362008
+    }
+   ],
+   "abs_apart": false,
+   "rel_apart": false
+  },
+  {
+   "id": "ang-f01",
+   "emotion": "ANG",
+   "abs": [
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.8458708807586188
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9316581387977025
+    }
+   ],
+   "rel": [
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.7448588485584581
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9937652387787484
+    }
+   ],
+   "abs_apart": false,
+   "rel_apart": false
+  },
+  {
+   "id": "ang-f02",
+   "emotion": "ANG",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.991052338347182
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.5761313365464432
+    }
+   ],
+   "rel": [
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.6090055461156294
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.9592839237623104
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": false
+  },
+  {
+   "id": "ang-f03",
+   "emotion": "ANG",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8253304590924005
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9992800316912441
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9964250301596
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9999699055734013
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "ang-f04",
+   "emotion": "ANG",
+   "abs": [
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.9948727406131335
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9948378532868246
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.7005593147461715
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9999995302822738
+    }
+   ],
+   "abs_apart": false,
+   "rel_apart": true
+  },
+  {
+   "id": "ang-f05",
+   "emotion": "ANG",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9935567550049815
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9229762123542912
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9955024723362419
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9973607900720483
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "ang-f06",
+   "emotion": "ANG",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8176166605449566
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9959443198688427
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.94662551693624
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9982118321575124
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "ang-f07",
+   "emotion": "ANG",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.6810125943800966
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.8694318090649298
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8586241326153972
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9867238413608438
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "ang-f08",
+   "emotion": "ANG",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9351371908018324
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9857645076808456
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.7757142207646699
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9996604194321389
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "ang-f09",
+   "emotion": "ANG",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.6940361828474386
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9942515934982379
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9645116831781341
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9943248385651512
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "ang-f10",
+   "emotion": "ANG",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.7654942826544631
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.999995550032783
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8049194381301602
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.999993234444137
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "ang-f11",
+   "emotion": "ANG",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.8547527052618944
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9454839130234959
+    }
+   ],
+   "rel": [
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.6231829094157171
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.995561161960906
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": false
+  },
+  {
+   "id": "ang-f12",
+   "emotion": "ANG",
+   "abs": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9614134894248652
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.7653550545237843
+    }
+   ],
+   "rel": [
+    {
+     "label": "NEU",
+     "word": "neutral",
+     "p": 0.9092544013119507
+    },
+    {
+     "label": "FEA",
+     "word": "fearful",
+     "p": 0.8934770982357804
+    }
+   ],
+   "abs_apart": true,
+   "rel_apart": true
+  },
+  {
+   "id": "ang-f13",
+   "emotion": "ANG",
+   "abs": [
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.5467923712825072
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9451112406496243
+    }
+   ],
+   "rel": [
+    {
+     "label": "SAD",
+     "word": "sad",
+     "p": 0.6765346690509484
+    },
+    {
+     "label": "ANG",
+     "word": "angry",
+     "p": 0.9389234845541848
+    }
+   ],
+   "abs_apart": false,
+   "rel_apart": false
+  }
+ ],
+ "apart": {
+  "abs": 26,
+  "rel": 26
+ },
+ "loaded_non_neutral": {
+  "abs": 33,
+  "rel": 32
+ },
+ "by_emotion": {
+  "SAD": {
+   "abs": [
+    8,
+    12
+   ],
+   "rel": [
+    8,
+    12
+   ]
+  },
+  "FEA": {
+   "abs": [
+    8,
+    13
+   ],
+   "rel": [
+    9,
+    13
+   ]
+  },
+  "ANG": {
+   "abs": [
+    10,
+    13
+   ],
+   "rel": [
+    9,
+    13
+   ]
+  }
+ },
+ "fixed": [
+  "ang-f04",
+  "fea-f02"
+ ],
+ "broken": [
+  "ang-f02",
+  "ang-f11"
+ ],
+ "p": 0.6875,
+ "S1": false,
+ "S2": true
+}

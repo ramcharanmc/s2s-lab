@@ -638,3 +638,67 @@ fresh voice at 3 of 5 with no Yes-lean, so the CREMA-D figure should not be
 read as "R3 hears upset in anyone". Settling familiarity against hearing needs
 more speakers, or acted pairs from a corpus published after the model -- both
 parked.
+
+## The per-caller baseline, and the fresh pairs — PR-007 (2026-09-23)
+
+`src/s2slab/baseline.py`. The affect tagger above is speaker-independent, and
+its misses were calm clips tagged emotional (PR-005: 12 of 15; the author's
+own calm voice: angry at 0.99). The per-caller baseline gives it the missing
+piece without changing the model: every clip's 88 eGeMAPS features minus the
+mean over *the same speaker's other neutral clips* (`probes/prosody/baseline/`
+for the dev actors, 9–11 clips each; a training clip against its actor's other
+neutral training clips). Saved as `probes/prosody/tagger-relative.json`.
+
+**On the 21 dev pairs it looked like a win** — told apart 11 → 16 of 21,
+sadness 1 → 5, held-out training actors' neutral clips right 69% → 81% —
+so it was registered as PR-007. Not on the 39 locked pairs: the hypothesis
+came from their misses, so they are spent for the tagger.
+
+### The fresh pairs (`probes/prosody2/`)
+
+The original rule applied to the 32 test-side actors of the original seeded
+split that have no pair in `probes/prosody` — voices no system here had
+scored. Per emotion, the highest threshold that fills 13 pairs, else the
+lowest threshold and what it gives:
+
+| raters agreeing | SAD (of 13) | FEA (of 13) | ANG (of 13) |
+|---|---:|---:|---:|
+| at least 90% | 1 | 0 | 3 |
+| at least 80% | 1 | 6 | **13** |
+| at least 70% | 4 | 12 | · |
+| at least 60% | 8 | **13** | · |
+| at least 50% | **12** | · | · |
+
+38 pairs from 27 actors, ids `sad-f01` … `ang-f13`, split `test`, locked
+behind `--confirm PR-007` by the same `prosodyset.load` lock. Thresholds are
+lower than the original set's (60 / 80 / 90) because the clearer actors were
+drawn first. Each fresh actor's baseline: their neutral clips heard as
+neutral that are in no pair, 268 in all, 6–11 each
+(`probes/prosody2/baseline/`). Layout as `probes/prosody/`: `pairs.tsv`,
+`manifest.json`, `baseline/baseline.tsv`, `baseline/manifest.json` committed;
+audio ignored. Rebuild: `baseline fresh`, then `baseline fetch-fresh`.
+
+### The result — PR-007 not supported
+
+Registered before any fresh clip was fetched; full text and verbatim output in
+`docs/preregistration.md`, PR-007; evidence `runs/prosody/pr007.json`.
+
+| 38 fresh pairs | told apart SAD · FEA · ANG | told apart, all | loaded clip tagged non-neutral |
+|---|---|---:|---:|
+| absolute tagger | 8 · 8 · 10 | **26 of 38** | 33 |
+| relative tagger | 8 · 9 · 9 | **26 of 38** | 32 |
+
+Fixed 2, broken 2, one-sided sign test p = 0.688. The dev gain did not
+transfer at all. Both taggers miss the same way — a calm clip tagged
+emotional (mostly "sad") in 7 pairs, the upset clip tagged neutral in 5 — and
+the baseline size curve (1 / 3 / 5 / all clips: 23 / 24 / 25 / 26 told apart)
+only climbs back to even. The reading: on actors recorded in one studio, the
+tagger's calm-clip misses are clip-level, not a speaker offset a baseline can
+remove. The absolute tagger, meanwhile, replicated PR-005's ceiling on a
+second sample: 68% told apart against 62%.
+
+What was wrong in the registration: dev's 7 fixed / 2 broken on 14 actors was
+read as a rate (it is p = 0.09 one-sided), and "lower agreement means harder
+pairs" was assumed for the tagger and was false. The one place a baseline
+still plausibly helps — a new voice through a new microphone, the author's
+five pairs, calm tagged neutral 2 → 3 of 5 — is one speaker and dev-only.

@@ -21,7 +21,7 @@ Rules, from the v1 Research plan (§8):
 | PR-004 | Does a slow-tier recognizer (R2, large-v3-turbo) cut R1's word error rate by at least 3 points overall and 5 on accented speech, while the reply still starts within a second? | `415ddc7` | **Reported: not supported** (S2 failed: accented −4.3 points, needed −5; S1 −3.4 points and S3 889 ms held) |
 | PR-005 | Does telling R1's LLM one word about the caller's tone (a $0 eGeMAPS tagger) let it tell an upset caller from the same words said calmly, for fear and for anger, better than shuffled tags do? | `44a9a5f` | **Reported: not supported** (fear 7 of 13, one under the bar, p = 0.015; anger 11 of 13, p < 0.001, held; sadness 7 of 13, p = 0.025, held though expected to fail) |
 | PR-006 | Does a speech-LLM that hears the audio (R3, Qwen2-Audio) rank the upset clip above its calm twin on the 39 locked prosody pairs (Claim A), and answer at least as many pairs right as the $0 side-channel on its own metric (Claim B)? | `95c3d33` | **Reported: Claim A supported** (13 of 13 for every emotion); **Claim B not supported** (11 · 11 · 9 against 7 · 7 · 11; anger short; sign test p = 0.21) |
-| PR-007 | On 38 fresh CREMA-D pairs from actors no system here has scored, does giving the $0 tagger the speaker's own neutral clips (a per-caller baseline) let it tell more upset-calm pairs apart than the same tagger without it, without tagging the upset clips neutral? | The commit that adds this entry | Open |
+| PR-007 | On 38 fresh CREMA-D pairs from actors no system here has scored, does giving the $0 tagger the speaker's own neutral clips (a per-caller baseline) let it tell more upset-calm pairs apart than the same tagger without it, without tagging the upset clips neutral? | `02baa74` | **Reported: not supported** (26 of 38 told apart either way; fixed 2, broken 2, one-sided p = 0.69) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -1603,8 +1603,139 @@ baseline size 1 / 3 / 5 on the fresh pairs.
 
 ### Deviations
 
-*(none yet)*
+- **2026-09-23, registry row.** Its "Registered" cell was changed to the
+  registering commit's hash, `02baa74`, and its status updated, as for the
+  earlier entries.
+- **2026-09-23, verbatim output.** The per-pair table (38 rows) is kept
+  verbatim in the committed `runs/prosody/pr007-report.md`; everything else
+  the run printed is below.
+- **2026-09-23, order of steps.** The exploratory baseline-size curve
+  (`explore-fresh`) was run after the registered run had printed and saved
+  its output, but before this results text was committed -- step 6 says after
+  step 5. Nothing in the registered analysis depends on it and the saved run
+  file predates it.
 
 ### Results
 
-*(to be appended)*
+**Run:** 2026-09-23, commit `a591503`, clean tree, `verify-fresh` intact, no
+fresh feature cache beforehand, laptop CPU (deterministic; \$0); all 38 pairs,
+first and only run: `python -m s2slab.baseline test --confirm PR-007 --save
+runs/prosody/pr007.json`. Evidence: `runs/prosody/pr007.json` (every clip's tag
+and probability under both taggers, each speaker's baseline size, the counts)
+and `runs/prosody/pr007-report.md` (the complete output). V1 held: the frozen
+functions are byte-identical between `02baa74` and `a591503` (checked
+function by function before the reporting commit).
+
+**Verdict: NOT SUPPORTED — S1 failed.** The two taggers tell apart the same
+number of pairs, 26 of 38; the relative tagger fixed 2 and broke 2.
+
+Output of the run, verbatim, without the per-pair table (which is in the
+report file):
+
+```text
+38 fresh pairs · confirms PR-007 · absolute tagger against the per-caller baseline · 268 baseline clips for 27 speakers · commit a591503
+
+absolute tagger (tagger.json):
+| emotion | pairs | both right | told apart | neutral clip tagged neutral | loaded clip tagged its emotion |
+|---|---:|---:|---:|---:|---:|
+| SAD | 12 | 7 | 8 | 10 | 9 |
+| FEA | 13 | 5 | 8 | 11 | 6 |
+| ANG | 13 | 8 | 10 | 10 | 11 |
+
+pairs not told apart:
+  sad-f03: neutral clip tagged neutral (0.94), loaded clip tagged neutral (0.79)
+  sad-f05: neutral clip tagged sad (0.55), loaded clip tagged sad (0.87)
+  sad-f08: neutral clip tagged sad (0.89), loaded clip tagged sad (0.83)
+  sad-f10: neutral clip tagged neutral (0.98), loaded clip tagged neutral (0.98)
+  fea-f01: neutral clip tagged neutral (0.88), loaded clip tagged neutral (0.95)
+  fea-f02: neutral clip tagged sad (0.90), loaded clip tagged fearful (0.35)
+  fea-f04: neutral clip tagged neutral (0.98), loaded clip tagged neutral (0.89)
+  fea-f07: neutral clip tagged sad (1.00), loaded clip tagged sad (0.96)
+  fea-f13: neutral clip tagged neutral (0.89), loaded clip tagged neutral (0.91)
+  ang-f01: neutral clip tagged sad (0.85), loaded clip tagged angry (0.93)
+  ang-f04: neutral clip tagged sad (0.99), loaded clip tagged angry (0.99)
+  ang-f13: neutral clip tagged sad (0.55), loaded clip tagged angry (0.95)
+
+relative tagger (tagger-relative.json), baseline = all of each speaker's baseline clips:
+| emotion | pairs | both right | told apart | neutral clip tagged neutral | loaded clip tagged its emotion |
+|---|---:|---:|---:|---:|---:|
+| SAD | 12 | 7 | 8 | 11 | 8 |
+| FEA | 13 | 8 | 9 | 11 | 8 |
+| ANG | 13 | 8 | 9 | 9 | 11 |
+
+pairs not told apart:
+  sad-f03: neutral clip tagged neutral (0.85), loaded clip tagged neutral (0.70)
+  sad-f05: neutral clip tagged neutral (0.96), loaded clip tagged neutral (0.41)
+  sad-f08: neutral clip tagged sad (0.96), loaded clip tagged sad (0.61)
+  sad-f10: neutral clip tagged neutral (0.97), loaded clip tagged neutral (0.93)
+  fea-f01: neutral clip tagged neutral (0.91), loaded clip tagged neutral (0.76)
+  fea-f04: neutral clip tagged sad (0.73), loaded clip tagged neutral (0.53)
+  fea-f07: neutral clip tagged sad (1.00), loaded clip tagged sad (0.98)
+  fea-f13: neutral clip tagged neutral (0.99), loaded clip tagged neutral (0.87)
+  ang-f01: neutral clip tagged sad (0.74), loaded clip tagged angry (0.99)
+  ang-f02: neutral clip tagged sad (0.61), loaded clip tagged fearful (0.96)
+  ang-f11: neutral clip tagged angry (0.62), loaded clip tagged angry (1.00)
+  ang-f13: neutral clip tagged sad (0.68), loaded clip tagged angry (0.94)
+
+| criterion | absolute | relative | bar | |
+|---|---:|---:|---|---|
+| S1 told apart, paired | 26 of 38 | 26 of 38 | more, and one-sided sign test p < 0.05 | FAIL |
+| S2 loaded clips tagged non-neutral | 33 of 38 | 32 of 38 | at least 31 | PASS |
+  fixed 2: ang-f04, fea-f02
+  broken 2: ang-f02, ang-f11
+  exact one-sided sign test on the 4 pairs that differ: p = 0.688
+  told apart per emotion (absolute -> relative): SAD 8 -> 8 of 12, FEA 8 -> 9 of 13, ANG 10 -> 9 of 13
+
+PR-007: NOT SUPPORTED: failed S1
+```
+
+**Predictions, scored**
+
+| Prediction | Outcome |
+|---|---|
+| Absolute tagger tells apart 17–20 of 38, fewer than PR-005's 24 of 39 because these pairs were heard as intended by fewer raters | **Wrong, the other way:** 26 of 38 (68%) against 62% on PR-005's pairs. Rater agreement is not tagger difficulty. |
+| Relative tagger 25–28; sadness gains most | The count landed in range (26) and the gain it was meant to carry does not exist: SAD 8 → 8, FEA 8 → 9, ANG 10 → 9. **Wrong in what matters.** |
+| About 11 fixed against 3 broken, one-sided p between 0.01 and 0.05; S1 most at risk on the test rather than the count | 2 fixed, 2 broken, p = 0.688. Wrong; S1 failed on the count itself. |
+| S2 holds | Held: 33 → 32, bar 31. |
+| The remaining misses move from the calm clip to the upset one | **Wrong.** Both taggers miss the same way: the calm clip tagged emotional in 7 pairs each (six of them "sad"; `fea-f07` at 1.00 under both), the upset clip tagged neutral in 5. The baseline fixed two calm-clip misses and made two. |
+
+**What the registration got wrong.** Two things. Dev's 7 fixed against 2
+broken over 21 pairs from 14 actors was read as a rate to be scaled; it is
+p = 0.09 one-sided, and the entry called the test "close" while treating the
+direction as settled — the same dev-as-population error as PR-004 and PR-005,
+in a new coat. And the mechanism was wrong for this corpus. Subtracting a
+speaker's mean over their *other* neutral sentences removes a speaker offset;
+a calm clip that is quieter or flatter than that speaker's own average is
+still "sad" relative to it. These misses are clip-level, not speaker-level:
+on CREMA-D actors recorded in one studio, speaker offset is not what the
+tagger stumbles on. The place a baseline plausibly does help — a new voice
+through a new microphone, where every calm take read as angry — is the
+author's five pairs (calm tagged neutral 2 → 3 of 5, dev-only, one speaker),
+and that stays a dev observation.
+
+**Reported alongside, descriptively**
+
+- Per emotion, both right: absolute 7 · 5 · 8, relative 7 · 8 · 8; the
+  relative tagger names fear correctly more often (loaded fear clips tagged
+  fearful 6 → 8) without telling more fear pairs apart.
+- The absolute tagger on a second sample: 26 of 38 told apart, 68%, against
+  24 of 39 (62%) on PR-005's pairs — PR-005's ceiling replicates, a little
+  higher, on harder-rated pairs.
+- Baseline sizes 6 to 11 per speaker; the two fixed pairs had baselines of
+  9 and 6 clips, the two broken 9 and 10: nothing there.
+- Cost: \$0. The whole of M18 ran on the laptop.
+
+**Exploratory, after the registered analysis** — told apart against baseline
+size (`explore-fresh`, from the run's caches; first k baseline clips of each
+speaker by name):
+
+| baseline clips per speaker | SAD | FEA | ANG | all |
+|---:|---:|---:|---:|---:|
+| 1 | 8 of 12 | 8 of 13 | 7 of 13 | 23 of 38 |
+| 3 | 7 of 12 | 9 of 13 | 8 of 13 | 24 of 38 |
+| 5 | 9 of 12 | 8 of 13 | 8 of 13 | 25 of 38 |
+| all | 8 of 12 | 9 of 13 | 9 of 13 | 26 of 38 |
+
+A single baseline clip costs three pairs against the absolute tagger; the
+full baseline only gets back to even. Whatever a per-caller baseline buys, it
+does not buy it here.
