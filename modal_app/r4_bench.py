@@ -4,6 +4,7 @@ R4 on Modal: the S2S rung on an L40S, with R3 beside it in the same container.
     modal run modal_app/r4_bench.py --rung r4-gpu                            30 probe clips: the smoke test
     modal run modal_app/r4_bench.py --rung r3-gpu,r4-gpu --evalset --limit 8
     modal run modal_app/r4_bench.py --rung r3-gpu,r4-gpu --evalset           the R4 row, saved to runs/<rung>/evalset-modal-l40s.json
+    modal run modal_app/r4_bench.py::pairs --split dev                       PR-008's development: both rungs answer the 21 dev prosody pairs
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
@@ -129,6 +130,24 @@ def evaluate(rung_ids: list[str], commit: str, limit: int = 0) -> dict:
     return {"results": results, "versions": _versions(), "seconds": time.perf_counter() - t0}
 
 
+@app.function(gpu="L40S", timeout=45 * 60, scaledown_window=60)
+def answer(clips: dict[str, bytes], rung_ids: list[str], repeat: int = 2) -> dict:
+    """PR-008: each rung answers every prosody clip (r4probe.answer_clips), one container.
+    Returns {"gpu", "versions", "answers": {rung: {"replies", "repeat"}}, "seconds"}."""
+    import os
+    os.chdir("/root")
+    from s2slab.r4probe import answer_clips
+    from s2slab.rungs import get
+    t0 = time.perf_counter()
+    answers = {}
+    for rung_id in rung_ids:
+        rung = get(rung_id)
+        answers[rung_id] = answer_clips(rung, clips, repeat)
+        del rung
+        _free_gpu()
+    return {"gpu": _gpu_name(), "versions": _versions(), "answers": answers, "seconds": time.perf_counter() - t0}
+
+
 def results_path(rung_id: str, limit: int = 0, tag: str = "") -> pathlib.Path:
     """runs/<rung>/evalset-modal-l40s[-tag].json for the real run (committed evidence);
     results/<rung>/...-limitN.json for a smoke test (ignored)."""
@@ -161,6 +180,38 @@ def main(rung: str = "r4-gpu", evalset: bool = False, limit: int = 0, tag: str =
         for table in out["tables"].values():
             print(table, "\n")
         print(f"commit {commit} · GPU {out['gpu']}")
+    print(out["versions"])
+    print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
+
+
+@app.local_entrypoint()
+def pairs(split: str = "dev", confirm: str = "", save: str = ""):
+    """Both rungs answer the prosody pairs of one side (the test side only with a
+    registration); the replies' delivery is measured and reported on the laptop."""
+    from s2slab.r3probe import clips_for
+    from s2slab.r4probe import RUNGS, analyse, format_report, write_replies
+    from s2slab.r4probe import save as save_run
+    from s2slab.sidechannel import refuse_to_overwrite
+
+    if save:
+        refuse_to_overwrite(pathlib.Path(save))
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    prs, clips = clips_for(split, confirm)
+    t0 = time.time()
+    out = answer.remote(clips, list(RUNGS))
+    wall = time.time() - t0
+    measures, deltas = analyse(prs, out["answers"])
+    write_replies(out["answers"], REPO / "results" / "r4-gpu" / "replies" / split)
+    head = (f"{len(prs)} {split} prosody pairs" + (f" · confirms {confirm}" if confirm else "")
+            + f" · {' and '.join(RUNGS)} on {out['gpu']} · commit {commit}")
+    print(head, "\n")
+    print(format_report(prs, deltas, {r: a["repeat"] for r, a in out["answers"].items()}))
+    print(f"\nreplies written to results/r4-gpu/replies/{split}/ for listening")
+    if save:
+        save_run(pathlib.Path(save), head, prs, out["answers"], measures, deltas)
+        print(f"saved to {save}")
     print(out["versions"])
     print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
           f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
