@@ -21,6 +21,7 @@ Rules, from the v1 Research plan (§8):
 | PR-004 | Does a slow-tier recognizer (R2, large-v3-turbo) cut R1's word error rate by at least 3 points overall and 5 on accented speech, while the reply still starts within a second? | `415ddc7` | **Reported: not supported** (S2 failed: accented −4.3 points, needed −5; S1 −3.4 points and S3 889 ms held) |
 | PR-005 | Does telling R1's LLM one word about the caller's tone (a $0 eGeMAPS tagger) let it tell an upset caller from the same words said calmly, for fear and for anger, better than shuffled tags do? | `44a9a5f` | **Reported: not supported** (fear 7 of 13, one under the bar, p = 0.015; anger 11 of 13, p < 0.001, held; sadness 7 of 13, p = 0.025, held though expected to fail) |
 | PR-006 | Does a speech-LLM that hears the audio (R3, Qwen2-Audio) rank the upset clip above its calm twin on the 39 locked prosody pairs (Claim A), and answer at least as many pairs right as the $0 side-channel on its own metric (Claim B)? | `95c3d33` | **Reported: Claim A supported** (13 of 13 for every emotion); **Claim B not supported** (11 · 11 · 9 against 7 · 7 · 11; anger short; sign test p = 0.21) |
+| PR-007 | On 38 fresh CREMA-D pairs from actors no system here has scored, does giving the $0 tagger the speaker's own neutral clips (a per-caller baseline) let it tell more upset-calm pairs apart than the same tagger without it, without tagging the upset clips neutral? | The commit that adds this entry | Open |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -1424,3 +1425,186 @@ right and 0.8 four; that is calibration on the test pairs and is reported
 only to size the gap. The right experiment is a threshold set on the dev
 pairs, then a fresh test set -- as for the tagger's per-caller baseline, these
 39 pairs are spent for R3 too.
+
+---
+
+## PR-007 — Does a per-caller baseline let the $0 tagger tell an upset caller from the same voice calm?
+
+**Registered:** 2026-09-23, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+The affect tagger of PR-005 (`probes/prosody/tagger.json`, `931de62`) is
+speaker-independent: 88 eGeMAPS functionals of one clip, a softmax regression
+fitted on 16 CREMA-D actors, one word out. Its failure mode is now documented
+twice. Under PR-005, 12 of its 15 misses on the 39 locked pairs were CALM clips
+tagged emotional. Under M17, the author's calm voice through a new microphone
+was tagged angry at 0.99. A tagger that has never heard a voice has no idea
+what that voice sounds like when nothing is wrong.
+
+The per-caller baseline (`src/s2slab/baseline.py`, `e86ec9d`) changes nothing
+about the model except its input: every clip's 88 features have the mean of
+*the same speaker's other neutral clips* subtracted -- how far this is from
+this person's calm voice. Same features, same regression, same 16 training
+actors (each training clip relative to its own actor's neutral training clips,
+leave-one-out), saved as `probes/prosody/tagger-relative.json`. The deployment
+analogue is a caller's earlier calm turns.
+
+Development data, **the 21 dev pairs only**, each dev actor's baseline being
+their 9–11 neutral clips that raters heard as neutral (`probes/prosody/baseline/`):
+
+| dev, 21 pairs (7 per emotion) | told apart SAD · FEA · ANG | told apart, all | both right | loaded clip tagged non-neutral |
+|---|---|---:|---:|---:|
+| absolute tagger (PR-005's) | 1 · 6 · 4 | 11 of 21 | 9 | 14 |
+| **relative tagger** | **5 · 6 · 5** | **16 of 21** | **13** | **16** |
+| relative, baseline of 1 / 3 / 5 clips | | 11 / 13 / 15 | | |
+
+Pair by pair the relative tagger fixed 7 and broke 2 (`fea-d01`, `ang-d03`).
+Held-out training actors: neutral 81% (was 69%), sad 50% (53%), fear 39%
+(45%), anger 80% (76%). On the author's five own-voice pairs, each calm
+take's baseline being the other four: told apart 2 of 5 either way.
+
+**Why the 39 locked pairs are not the test set.** The hypothesis was read off
+PR-005's test misses. Confirming it on the same pairs would confirm a
+post-hoc hypothesis on the data that produced it. Those pairs are spent for
+the tagger; nothing here reads them.
+
+**The fresh pairs** (`probes/prosody2/`, `b9247cc`). The original rule
+(`prosodyset.select`: same actor, same sentence, both clips heard as intended
+by enough of enough raters, seeded draw, one pair per actor per emotion, at
+most 3 per sentence) applied to the 32 TEST-side actors of the original
+seeded split that have no pair in the original set -- voices no system in
+this repository has scored. Per emotion, the highest threshold that fills 13
+pairs; where none does, the lowest threshold and what it gives:
+
+| raters agreeing | SAD (of 13) | FEA (of 13) | ANG (of 13) |
+|---|---:|---:|---:|
+| at least 90% | 1 | 0 | 3 |
+| at least 80% | 1 | 6 | **13** |
+| at least 70% | 4 | 12 | · |
+| at least 60% | 8 | **13** | · |
+| at least 50% | **12** | · | · |
+
+**38 pairs from 27 actors**: SAD 12 (loaded clips heard as intended by 50–75%
+of raters), FEA 13 (60–90%), ANG 13 (80–100%). The thresholds are lower than
+the original set's (60 / 80 / 90) because the clearer actors were drawn first:
+these pairs are *harder* for both taggers, and the absolute tagger's counts
+here are not comparable to PR-005's. Each fresh actor's baseline is their
+neutral clips heard as neutral that are in no pair, 268 clips in all, 6 to 11
+per actor, median 10 (`probes/prosody2/baseline/baseline.tsv`). **All of them
+are used**; the baseline size is not chosen.
+
+What was known, and by whom: the author and the assistant have seen the dev
+table above and nothing of the fresh pairs beyond their names, ratings and
+counts. No audio of `probes/prosody2/` has been fetched at this commit
+(`probes/prosody2/audio/` does not exist), so no feature of any fresh clip
+has been extracted by anyone. The assistant ran the fresh draw read-only in a
+scratch copy to check it fills; the same draw, run by the author, produced the
+committed `pairs.tsv` line for line.
+
+### Question
+
+On 38 pairs of voices no system here has scored, does the same tagger tell
+more upset-calm pairs apart when it is given the speaker's own neutral clips
+than when it is not, without buying that by tagging the upset clips neutral?
+
+### Validity requirements
+
+| | Requirement |
+|---|---|
+| **V1 · Frozen** | `probes/prosody/tagger.json` (`931de62`), `probes/prosody/tagger-relative.json` (`e86ec9d`), `src/s2slab/affect.py` (frozen since PR-005), and in `src/s2slab/baseline.py`: `Baseline`, `relative_features`, `told_apart`, `baseline_clips`, `select_fresh`, `freeze_fresh`; `probes/prosody2/pairs.tsv` and `probes/prosody2/baseline/baseline.tsv` as committed in `b9247cc`. Reporting -- a `test` command that runs both taggers, prints the criteria and the per-pair listing and saves the run -- may be added after this commit and is tested on made-up features only. |
+| **V2 · Untouched fresh pairs** | The fresh clips and baseline clips are fetched after this commit and frozen (`verify-fresh` intact on the day of the run). No feature cache for `probes/prosody2/` exists before the run (`ls results/affect/` shows no `fresh*.npz`). The run is the first time any of these clips is read by any system here. |
+| **V3 · One run, whole set** | All 38 pairs, `python -m s2slab.baseline test --confirm PR-007 --save runs/prosody/pr007.json`, from a clean tree. CPU only, deterministic (openSMILE features, fixed models): a repeat must reproduce the tables exactly; one that does not is reported as a finding. |
+| **V4 · Evidence** | The run file (every clip's tag and probability under both taggers, the baseline size used for each speaker, the per-emotion counts) and the printed report are saved to `runs/prosody/` in the commit that reports the result. |
+
+### Primary outcome
+
+Per pair, for each tagger, **told apart**: the neutral clip tagged neutral AND
+the loaded clip tagged anything else (`baseline.told_apart`, which counts what
+`affect.tag_pairs` prints). The relative tagger's baseline for a pair is the
+mean over all of that speaker's baseline clips. Over the 38 pairs: the two
+counts, the pairs the relative tagger *fixed* (absolute wrong, relative right)
+and *broke* (the reverse).
+
+### Success criteria
+
+| | Criterion |
+|---|---|
+| **S1 · Primary, paired** | the relative tagger tells apart **more** of the 38 pairs than the absolute tagger, and an exact **one-sided** sign test on the pairs where they disagree (fixed against broken) gives **p < 0.05** |
+| **S2 · Guardrail** | loaded clips tagged non-neutral by the relative tagger number at least the absolute tagger's count **minus 2** (over 38) |
+
+**Supported if S1 and S2 both hold.** Per-emotion counts are reported, not
+deciding: 12 or 13 pairs per emotion cannot carry a verdict on their own.
+
+**Why one-sided.** The hypothesis is directional -- the baseline fixes calm
+clips -- and is registered as such here; a relative tagger that breaks more
+than it fixes is "not supported" whichever test is run. On the dev rate
+(7 fixed, 2 broken over 21 pairs) scaled to 38, about 12 fixed against 4
+broken gives p = 0.038 one-sided; the same split two-sided would not reach
+0.05, so the test is close either way, and the choice is written down before
+the numbers exist.
+
+**Why the guardrail.** Subtracting a baseline could make upset clips look
+neutral (a person whose calm voice is already loud). On dev the loaded-clip
+count went up (14 → 16); S2 catches the case where it goes down by more than
+noise.
+
+### Predictions, recorded but not criteria
+
+- **Absolute tagger:** told apart about **17 to 20 of 38** -- SAD 2–4 of 12,
+  FEA 7–9 of 13, ANG 8–10 of 13. Lower than PR-005's 24 of 39 because these
+  pairs were heard as intended by fewer raters.
+- **Relative tagger:** about **25 to 28 of 38** -- SAD 6–8, FEA 8–10, ANG
+  10–12. Sadness gains most, as on dev; fear least.
+- **S1:** about 11 fixed against 3 broken; one-sided p between 0.01 and 0.05.
+  S1 is the criterion most at risk, on the sign test rather than the count.
+- **S2 holds:** loaded clips tagged non-neutral go up or stay, as on dev.
+- The relative tagger's remaining misses are mostly SAD loaded clips tagged
+  neutral (the quiet, low-agreement sad clips), not calm clips tagged
+  emotional -- the failure mode moves from the calm clip to the upset one.
+
+### Reported alongside, descriptively
+
+Per emotion, both taggers: told apart, both right, neutral clip tagged
+neutral, loaded clip tagged its own emotion; the per-pair listing with both
+taggers' tags and probabilities; the baseline size of each speaker; the
+absolute tagger's counts as a second, harder sample of PR-005's ceiling.
+After the registered analysis and labelled exploratory: told apart against
+baseline size 1 / 3 / 5 on the fresh pairs.
+
+### Analysis plan
+
+1. Commit this entry. The frozen parts are frozen from here.
+2. `baseline fetch-fresh` (76 pair clips and 268 baseline clips from the
+   pinned CREMA-D commit, about 17 MB; the download is the author's), which
+   writes both manifests; `verify-fresh`.
+3. Add the `test` command (both taggers, criteria table, per-pair listing,
+   `--save`); test on made-up features only. Commit with the manifests.
+4. `verify-fresh`, `ls results/affect/`, a clean tree, then the one run (V2, V3). Save the evidence (V4).
+5. Record the output below, verbatim.
+6. Only after step 5: the baseline-size curve on the fresh pairs and any other
+   look, labelled exploratory.
+
+### What this cannot show
+
+- **Not a deployment number.** The baseline is 6–11 studio-clean neutral
+  sentences by the same actor in the same session -- the best case. A
+  caller's earlier turns are noisier and may not be calm.
+- **Not the original set's difficulty.** Thresholds of 50 / 60 / 80 admit
+  clips the raters were less sure about; both taggers should do worse here
+  than on PR-005's pairs, and the comparison is between the two taggers, not
+  with PR-005.
+- **Acted emotion, one corpus, 38 pairs, 27 actors.** Twelve sad pairs at 50%
+  agreement carry little on their own; hence the pooled, paired test.
+- **Not R3.** The speech-LLM is not run on these pairs; the question is
+  whether the $0 proxy improves with a baseline, not where it stands against
+  R3.
+
+### Deviations
+
+*(none yet)*
+
+### Results
+
+*(to be appended)*
