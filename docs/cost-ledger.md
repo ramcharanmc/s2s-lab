@@ -21,6 +21,8 @@ one. A failed run is still a row, since it was still billed.
 | 2026-09-22 | `fee8c03-dirty` | `modal run modal_app/r3_probe.py --split dev` | A10 | 69 s | 124 s | \$0.038 | R3 (Qwen2-Audio) on the 21 dev pairs, four wordings, dev data: ranks 21 of 21 right, answers 6 · 5 · 5 of 7 right with the `upset` wording. Dirty only by the `gcc` fix, committed next |
 | 2026-09-22 | `5c1f3aa` | `modal run modal_app/r3_probe.py --split test --confirm PR-006 --wording upset --save runs/prosody/pr006.json` | A10 | 66 s | 200 s | \$0.061 | **the PR-006 run**: R3 ranks 13 · 13 · 13 of 13 pairs right (Claim A supported), answers 11 · 11 · 9 right against the side-channel's 7 · 7 · 11 (Claim B not supported: anger, p = 0.21) |
 | 2026-09-22 | `4c5905d-dirty` | `modal run modal_app/r3_probe.py::own --save runs/prosody/ownvoice-r3.json` | A10 | 42 s | 47 s | \$0.014 | the own-voice mini set, dev-only: R3 ranks 3 of 5 pairs right under the registered wording, the Yes-lean gone |
+| 2026-09-23 | `f3e6982` | `modal run modal_app/r3_probe.py::evalset --rung r3-gpu --limit 8` | A10 | 60 s | 66 s | \$0.020 | R3 rung smoke test, 8 clean clips: total p50 1.63 s, peak 16.9 GB; found the transcript wrapper and the token cap (fixed in `960b491`) |
+| 2026-09-23 | `960b491` | `modal run modal_app/r3_probe.py::evalset --rung r0-gpu,r1-gpu,r3-gpu` | A10 | 718 s | 724 s | \$0.221 | **the R3 row**, one container: R0 0.44 s, R1 0.33 s to first audio, R3 1.06 s (p90 2.02); heard WER 9.1% re-scored; peak 17.0 GB |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -29,5 +31,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$0.401 + two failed runs | \$36.93 |
+| Modal | \$0.642 + two failed runs | \$36.93 |
 | Vast.ai | \$0 | \$5.86 |

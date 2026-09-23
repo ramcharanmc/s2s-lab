@@ -175,6 +175,12 @@ def wer_tables(results: dict, root=EVAL_ROOT) -> str:
                                          "(fillers and false starts already removed)")]
     heard = {clip: turn["heard"] or "" for clip, turn in turns.items() if turn.get("heard") is not None}
     if heard:
+        # Scored through the wrapper rule as it stands NOW, not as it stood when the run was
+        # saved: the run file keeps what the model said, and the scoring is re-done here --
+        # evalrun's own rule for every WER (the r3-gpu run of 2026-09-23 was saved with 34
+        # wrappers its code at the time did not strip).
+        from .r3 import unwrap_transcript
+        heard = {clip: unwrap_transcript(h) for clip, h in heard.items()}
         out += ["", wer_format(score(heard, root), title="asked to transcribe, outside the loop "
                                                           "(untimed; not what the reply was made from)")]
     return "\n".join(out)

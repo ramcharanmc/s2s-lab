@@ -227,3 +227,13 @@ def test_a_run_file_without_heard_or_memory_prints_as_before(tmp_path):
         assert "heard" not in t
     text = report(results, root)
     assert "peak GPU memory" not in text and "outside the loop" not in text and "Word error rate" in text
+
+
+def test_heard_is_scored_through_the_wrapper_rule_as_it_stands_now(tmp_path):
+    """A run saved with a wrapper its code did not strip is re-scored, not edited."""
+    root = tiny_evalset(tmp_path)
+    rung = HearingRung(["The speech transcribed from the audio is: 'the cat sat on the mat'", "a cat barked", "well i went home"])
+    results = run(rung, root)
+    assert results["turns"]["clean-00"]["heard"].startswith("The speech transcribed")   # the file keeps what was said
+    clean = [ln for ln in wer_tables(results, root).splitlines() if ln.startswith("| clean ")][0]
+    assert "11.1%" in clean                                                 # scored on the words alone

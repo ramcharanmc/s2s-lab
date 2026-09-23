@@ -51,13 +51,20 @@ from .timing import stage
 MODEL = "Qwen/Qwen2-Audio-7B-Instruct"
 TRANSCRIBE_SYSTEM = "You are a helpful assistant."
 HEAR_MAX_NEW_TOKENS = 200     # a 15 s clip is 40-odd words; the reply cap (60) would cut it, and its wrapper costs 10
-# Qwen2-Audio answers a transcription request as a sentence: "The transcription
-# of the speech is: 'I'm fine.'" on all 39 PR-006 clips and the 10 own-voice
-# takes; on the eval set's longer clips also "The original content of this
-# audio is: '...'" (3 of the 8 smoke-test clips). The words inside are what
-# gets scored.
-_WRAPPER = re.compile(r"^\s*the (?:original )?(?:transcription|content|text)(?: of (?:the|this) (?:speech|audio))?"
-                      r"(?: in this clip)? is:?\s*(.*?)\s*$", re.IGNORECASE | re.DOTALL)
+# Qwen2-Audio answers a transcription request as a sentence around the words:
+# "The transcription of the speech is: 'I'm fine.'" on all 39 PR-006 clips;
+# on the 200 eval-set clips also "The original content of this audio is:",
+# "The speech transcribed from the audio is:", "The exact wording spoken (in
+# the audio) is:", "The complete transcription of the speech/audio is:", "The
+# speech in the clip is transcribed as:", "The audio states:" -- 35 of 200. So
+# the rule is the shape, not the words: a short leading clause ending in "is",
+# "as", "states" or "says", then an opening quote, then the words. A transcript that begins with no such clause
+# is taken as it is.
+_QUOTES = "'\"\u2018\u2019\u201c\u201d"
+_WRAPPER = re.compile(r"^\s*(?:the |this )[^'\"\u2018\u201c]{0,110}?\b(?:is|as|states|says)\s*:?\s*[" + _QUOTES + r"](.*?)\s*$",
+                      re.IGNORECASE | re.DOTALL)
+_BARE = re.compile(r"^\s*the (?:original )?(?:transcription|content|text)(?: of (?:the|this) (?:speech|audio))?"
+                   r"(?: in this clip)? is:?\s*(.*?)\s*$", re.IGNORECASE | re.DOTALL)   # the same, unquoted
 
 
 def unwrap_transcript(text: str) -> str:
@@ -67,12 +74,11 @@ def unwrap_transcript(text: str) -> str:
     Returns: the quoted words without the wrapper and its quotes; text that
              has no wrapper comes back stripped and otherwise unchanged.
     """
-    m = _WRAPPER.match(text or "")
+    m = _WRAPPER.match(text or "") or _BARE.match(text or "")
     inner = (m.group(1) if m else (text or "")).strip()
     if m:                                  # the sentence's own full stop, then the quotes around the words
-        inner = inner.rstrip(".").strip().strip("'\"‘’“”").strip()
+        inner = inner.rstrip(".").strip().strip(_QUOTES).strip()
     return inner
-
 
 class SpeechLLM:
     """Qwen2-Audio-7B-Instruct through transformers: a clip and a prompt in, text out. Greedy."""

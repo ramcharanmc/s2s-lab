@@ -27,6 +27,9 @@ Smoke tests, `--limit` runs and reply WAVs go to `results/`, which is ignored.
 | `prosody/ownvoice-r3-report.md` | the same run's complete printed output, both per-pair tables | `4c5905d-dirty` | Modal NVIDIA A10 | page 20 §16 |
 | `prosody/pr007.json` | PR-007, the registered run: the absolute tagger against the per-caller baseline on the 38 fresh pairs, every tag and probability | `a591503` | laptop CPU | page 20 §17 |
 | `prosody/pr007-report.md` | the same run's complete printed output, with the per-pair table | `a591503` | laptop CPU | page 20 §17 |
+| `r0-gpu/evalset-modal-a10.json` | R0 on the A10, the same-container comparator for the R3 row | `960b491` | Modal NVIDIA A10, one container: r0-gpu then r1-gpu then r3-gpu | page 20 §1, §18 |
+| `r1-gpu/evalset-modal-a10.json` | R1 on the A10, the same container | `960b491` | Modal NVIDIA A10, same container | page 20 §1, §18 |
+| `r3-gpu/evalset-modal-a10.json` · `evalset-modal-a10-report.md` | **the R3 row**: Qwen2-Audio hears each turn, no transcript in the loop; `heard` = the same model asked to transcribe, untimed; peak GPU memory; the report is the run's printed output (its `heard` table predates the wrapper rule -- `--score` the file for the current number) | `960b491` | Modal NVIDIA A10, same container | page 20 §1, §18 |
 
 ## What an eval-set run holds
 
@@ -91,3 +94,34 @@ hypothesis -- but the expectations are written down first, to be scored:
 - Peak GPU memory: R3 about 17–18 GB; R0 and R1 2–3 GB.
 - About \$0.25 for the run, plus a `--limit 8` smoke test (about \$0.05) and
   one CPU image rebuild. The plan budgeted \$5.51 for R3.
+
+**Scored (2026-09-23, run `960b491`, one A10 container, R0 then R1 then R3):**
+
+| A10, 200 clips | R0-gpu | R1-gpu | R3-gpu |
+|---|---:|---:|---:|
+| total p50 / p90 | 441 / 748 ms | 451 / 754 | **1055 / 2016** |
+| first audio p50 / p90 | 441 / 748 | **333 / 483** | 1055 / 2016 (batch) |
+| first sound p50 / p90 | 760 / 1063 | 651 / 787 | 1363 / 2318 |
+| LLM stage p50 | 315 | 263 | **971** |
+| peak GPU memory | 1,851 MB | 1,684 MB | **16,993 MB** |
+| reply words, median / p90 | 14 / 26 | 14 / 26 | **19 / 41** |
+| WER in the loop, normalized | 12.0% | 12.0% (identical transcripts and replies) | none: no transcript exists |
+| asked to transcribe, outside the loop | | | **9.1%** re-scored (15.5% as the run printed it) |
+
+- Total p50 1.5–2.5 s -> **1.06 s, under**; 3–5x R0 -> **2.4x R0's total, 3.2x
+  R1's first audio: under**. R3's 971 ms LLM stage is the input-side wait the
+  plan warned about; Kokoro adds 87 ms and 300 ms of leading silence.
+- Replies a third longer -> **+36% (median 14 -> 19 words), right**; the 7B
+  model also asks a question back in 34 of 200 replies against R0's 8.
+- Heard WER 5–7% -> **9.1%, wrong** -- but only after re-scoring: Qwen2-Audio
+  wrapped 35 of 200 transcripts in seven different sentences and the run's
+  code stripped two, so the run printed 15.5%. The saved file keeps what the
+  model said; `evalrun` now scores it through the wrapper rule as it stands.
+  Re-scored: clean 1.8, slow 1.9, disfluent 8.8, accented 23.2 (predicted under
+  20: wrong). Better than base.en in the loop (12.0), a hair behind turbo
+  (8.6); eight clips come back short, one code-switched into Chinese.
+- Memory 17–18 GB -> 17.0 GB, right; R0/R1 2–3 GB -> 1.7–1.9, under.
+- Cost about \$0.25 -> \$0.221, right; the smoke test \$0.020.
+- Same hardware matters, again: R0 measured 0.44 s here against 0.66 s on the
+  T4 of 09-16 (transcripts 198 of 200 identical, WER 12.0 against 11.9).
+

@@ -119,6 +119,15 @@ def test_hear_is_outside_the_turn_and_gives_the_words_without_the_wrapper():
     ("The transcription of the speech is: 'Sure, whatever you say.", "Sure, whatever you say"),   # no closing quote: the stop reads as the sentence's
     ("The transcription of the audio is: \"It's eleven o'clock.\"", "It's eleven o'clock."),
     ("the transcription is: Don't forget a jacket", "Don't forget a jacket"),
+    ("The speech transcribed from the audio is: 'we wish to talk with him answered kenneth talk.'", "we wish to talk with him answered kenneth talk."),
+    ("The exact wording spoken in the audio is: 'Oh, that made him so angry!'", "Oh, that made him so angry!"),
+    ("The exact wording spoken is: 'okay.'", "okay."),
+    ("The complete transcription of the audio is: 'So aside other countries that I want to go'", "So aside other countries that I want to go"),
+    ("The speech in the clip is transcribed as: 'what of the farm olaf'", "what of the farm olaf"),
+    ("The audio states: 'Well, that - that makes sense.'", "Well, that - that makes sense."),
+    ("The exact transcription of the speech is: \"It is.\"", "It is."),
+    ("The Christmas holidays came and she and Anne returned to the parsonage", "The Christmas holidays came and she and Anne returned to the parsonage"),   # starts with "The", no wrapper
+    ("the vicious character of sin is brought out by the words who gave himself for our sins.", "the vicious character of sin is brought out by the words who gave himself for our sins."),   # "is" but no quote
     ("The original content of this audio is: 'there in the cedar hollow then lived olive lord'", "there in the cedar hollow then lived olive lord"),
     ("The original content of this audio is:'relocated footnote governor robinson'", "relocated footnote governor robinson"),   # smoke test, no space
     ("Don't forget a jacket.", "Don't forget a jacket."),                    # no wrapper: unchanged
