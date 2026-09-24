@@ -162,3 +162,15 @@ def test_the_r5_image_holds_the_model_the_adapter_loads_and_saves_evidence_only_
     assert r5_bench.results_path("r5-moshi", True, limit=8).relative_to(ROOT).parts[0] == "results"
     assert r5_bench.results_path("r5-moshi", False).relative_to(ROOT).parts[0] == "results"
     assert hasattr(r5_bench.smoke, "remote") and hasattr(r5_bench.evaluate, "remote") and hasattr(r5_bench.main, "info")
+
+
+def test_the_personaplex_image_pins_the_adapters_weights_and_runs_on_functions_of_its_own(r5_bench):
+    from s2slab import r5
+    m = r5.get("r5-personaplex")
+    assert (r5_bench.PERSONAPLEX_REPO, r5_bench.PERSONAPLEX_REVISION) == (m.repo, m.revision)
+    assert "voices.tgz" in r5_bench.PERSONAPLEX_FILES and r5_bench.HF_SECRET == "huggingface-secret"
+    assert r5_bench.functions("r5-moshi") == (r5_bench.smoke, r5_bench.evaluate)
+    assert r5_bench.functions("r5-personaplex") == (r5_bench.smoke_personaplex, r5_bench.evaluate_personaplex)
+    assert hasattr(r5_bench.smoke_personaplex, "remote") and hasattr(r5_bench.evaluate_personaplex, "remote")
+    with pytest.raises(KeyError):
+        r5_bench.functions("r5-nothing")

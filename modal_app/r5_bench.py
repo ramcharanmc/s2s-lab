@@ -1,23 +1,31 @@
 """
-R5 on Modal: full-duplex Moshi on an A10, driven by s2slab.duplex.
+R5 on Modal: full-duplex models on an A10, driven by s2slab.duplex.
 
     modal run modal_app/r5_bench.py                                  30 probe clips: the smoke test (dev)
     modal run modal_app/r5_bench.py --evalset --limit 8              eval-set smoke test -> results/
     modal run modal_app/r5_bench.py --evalset                        the R5 row -> runs/r5-moshi/evalset-modal-a10.json
+    modal run modal_app/r5_bench.py --model r5-personaplex           the same three, for PersonaPlex
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
            saves the run's JSON, writes the listening files, prints the report
-  image    its OWN image: the `moshi` package pins torch below 2.10, so this is
-           torch 2.8 (CUDA 12.6), not the 2.14 of the R0-R4 images; Moshi's
-           weights (kyutai/moshiko-pytorch-bf16, CC-BY-4.0, not gated) baked
-           in on CPU at build time
-  A10      loads Moshi once, then one conversation per clip: the clip, then
-           duplex.TAIL_S of silence, one 80 ms frame at a time
+  image    ONE PER MODEL, because each brings its own package named `moshi`:
+             Moshi       Kyutai's `moshi` 0.2.13 pins torch below 2.10, so torch
+                         2.8 (CUDA 12.6), not the 2.14 of the R0-R4 images;
+                         kyutai/moshiko-pytorch-bf16 (CC-BY-4.0, not gated)
+             PersonaPlex NVIDIA's fork (github NVIDIA/personaplex, MIT, pinned
+                         by commit) pins torch below 2.5 and numpy below 2.2, so
+                         torch 2.4.1 (CUDA 12.4); nvidia/personaplex-7b-v1
+                         (NVIDIA Open Model License, gated: the build reads the
+                         HF token from the Modal secret HF_SECRET, as HF_TOKEN)
+           weights baked in on CPU at build time, pinned where the repo allows
+  A10      loads the model once, then one conversation per clip: duplex.LEAD_S of
+           silence (the model opens the call), the clip, then duplex.TAIL_S of
+           silence, one 80 ms frame at a time
 
 The smoke test also sends back the first LISTEN conversations as stereo WAVs
-(caller left, Moshi right, on one timeline) under results/r5-moshi/listen/, so
-the voiced threshold and the gaps can be checked by ear before the real run.
+(caller left, the model right, on one timeline) under results/<model>/listen/,
+so the voiced threshold and the gaps can be checked by ear before the real run.
 
 The same guardrails as the other benches: explicit timeout, no container kept
 warm, scale down 60 s after the call, HF_HUB_OFFLINE=1, evidence never overwritten.
@@ -36,12 +44,35 @@ A10_DOLLARS_PER_HOUR = 1.10     # Modal's A10 rate, checked 2026-08-19 (v2 §5)
 MODELS = {"kyutai/moshiko-pytorch-bf16": None}
 LISTEN = 3
 
+# PersonaPlex: the same values as s2slab.r5 (a test checks), written out here because
+# the build step runs before src/s2slab is added to the image.
+PERSONAPLEX_REPO = "nvidia/personaplex-7b-v1"
+PERSONAPLEX_REVISION = "fdaf4090a61cb315c138a1faee287ffd6c716309"      # the weights on 2026-09-24
+PERSONAPLEX_FILES = ["config.json", "model.safetensors", "tokenizer-e351c8d8-checkpoint125.safetensors",
+                     "tokenizer_spm_32k_3.model", "voices.tgz"]
+PERSONAPLEX_CODE = ("git+https://github.com/NVIDIA/personaplex.git"
+                    "@3428dfd95309a7f3c84fd93259ded0f810d1ff91#subdirectory=moshi")  # main on 2026-09-24
+HF_SECRET = "huggingface-secret"
+
 
 def download_weights() -> None:
     """Runs once, inside the image build, on CPU."""
     from huggingface_hub import snapshot_download
     for repo, files in MODELS.items():
         snapshot_download(repo, allow_patterns=files)
+
+
+def download_personaplex() -> None:
+    """Runs once, inside the PersonaPlex image build, on CPU, with the HF token.
+    The voices are unpacked beside the weights, where the package's offline.py looks for them."""
+    import tarfile
+
+    from huggingface_hub import snapshot_download
+    d = pathlib.Path(snapshot_download(PERSONAPLEX_REPO, revision=PERSONAPLEX_REVISION,
+                                       allow_patterns=PERSONAPLEX_FILES))
+    with tarfile.open(d / "voices.tgz", "r:gz") as tar:
+        tar.extractall(path=d)
+    print("voices:", sorted(p.name for p in (d / "voices").iterdir()))
 
 
 image = (
@@ -62,6 +93,23 @@ image = (
     .add_local_dir(REPO / "evalset", "/root/evalset")
 )
 
+personaplex_image = (
+    modal.Image.from_registry("nvidia/cuda:12.4.1-cudnn-runtime-ubuntu22.04", add_python="3.12")
+    # git to install the package from GitHub; the rest as the repo's Dockerfile (Opus) and
+    # the Moshi image (gcc, PortAudio) have them.
+    .apt_install("git", "gcc", "pkg-config", "libopus-dev", "libportaudio2")
+    # The package requires torch >=2.2,<2.5 and numpy >=1.26,<2.2 (its pyproject.toml at the pinned
+    # commit). It imports tqdm without declaring it; the pins below all have Python 3.12 wheels.
+    .pip_install("torch==2.4.1", index_url="https://download.pytorch.org/whl/cu124")
+    .pip_install(f"moshi-personaplex @ {PERSONAPLEX_CODE}", "numpy==1.26.4", "scipy==1.13.1",
+                 "soundfile==0.14.0", "tqdm==4.67.1", "praat-parselmouth==0.4.7")
+    .run_function(download_personaplex, secrets=[modal.Secret.from_name(HF_SECRET)])
+    .env({"HF_HUB_OFFLINE": "1"})
+    .add_local_dir(REPO / "src" / "s2slab", "/root/s2slab", ignore=["**/__pycache__"])
+    .add_local_dir(REPO / "probes" / "endpointing", "/root/probes/endpointing")
+    .add_local_dir(REPO / "evalset", "/root/evalset")
+)
+
 app = modal.App("s2s-lab-r5", image=image)
 
 
@@ -74,7 +122,13 @@ def _versions() -> str:
     import importlib.metadata as md
 
     import torch
-    return f"torch {torch.__version__}, moshi {md.version('moshi')}"
+    got = []
+    for dist in ("moshi", "moshi-personaplex"):
+        try:
+            got.append(f"{dist} {md.version(dist)}")
+        except md.PackageNotFoundError:
+            pass
+    return ", ".join([f"torch {torch.__version__}", *got])
 
 
 def _drive(model_id: str, items: list, listen: int = 0) -> tuple[dict, dict]:
@@ -102,8 +156,7 @@ def _drive(model_id: str, items: list, listen: int = 0) -> tuple[dict, dict]:
     return results, wavs
 
 
-@app.function(gpu="A10G", timeout=30 * 60, scaledown_window=60)
-def smoke(model_id: str, commit: str) -> dict:
+def _smoke(model_id: str, commit: str) -> dict:
     """The 30 probe clips (dev), with LISTEN stereo files for listening."""
     import os
     os.chdir("/root")
@@ -120,8 +173,7 @@ def smoke(model_id: str, commit: str) -> dict:
     return {"results": results, "listen": wavs, "seconds": time.perf_counter() - t0}
 
 
-@app.function(gpu="A10G", timeout=60 * 60, scaledown_window=60)
-def evaluate(model_id: str, commit: str, limit: int = 0) -> dict:
+def _evaluate(model_id: str, commit: str, limit: int = 0) -> dict:
     """The frozen eval set, verified first."""
     import os
     os.chdir("/root")
@@ -135,6 +187,31 @@ def evaluate(model_id: str, commit: str, limit: int = 0) -> dict:
     results, _ = _drive(model_id, items)
     results.update(machine=f"Modal {_gpu_name()}", commit=commit, versions=_versions())
     return {"results": results, "seconds": time.perf_counter() - t0}
+
+
+@app.function(gpu="A10G", timeout=30 * 60, scaledown_window=60)
+def smoke(model_id: str, commit: str) -> dict:
+    return _smoke(model_id, commit)
+
+
+@app.function(gpu="A10G", timeout=60 * 60, scaledown_window=60)
+def evaluate(model_id: str, commit: str, limit: int = 0) -> dict:
+    return _evaluate(model_id, commit, limit)
+
+
+@app.function(gpu="A10G", timeout=30 * 60, scaledown_window=60, image=personaplex_image)
+def smoke_personaplex(model_id: str, commit: str) -> dict:
+    return _smoke(model_id, commit)
+
+
+@app.function(gpu="A10G", timeout=60 * 60, scaledown_window=60, image=personaplex_image)
+def evaluate_personaplex(model_id: str, commit: str, limit: int = 0) -> dict:
+    return _evaluate(model_id, commit, limit)
+
+
+def functions(model_id: str):
+    """(smoke, evaluate) on the image that carries this model's package."""
+    return {"r5-moshi": (smoke, evaluate), "r5-personaplex": (smoke_personaplex, evaluate_personaplex)}[model_id]
 
 
 def results_path(model_id: str, evalset: bool, limit: int = 0, tag: str = "") -> pathlib.Path:
@@ -153,13 +230,14 @@ def main(model: str = "r5-moshi", evalset: bool = False, limit: int = 0, tag: st
     from s2slab.duplex import report, save
     from s2slab.sidechannel import refuse_to_overwrite
 
+    run_smoke, run_evaluate = functions(model)
     path = results_path(model, evalset, limit, tag)
     if (REPO / "runs") in path.parents:
         refuse_to_overwrite(path)
     commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
                             capture_output=True, text=True).stdout.strip()
     t0 = time.time()
-    out = evaluate.remote(model, commit, limit) if evalset else smoke.remote(model, commit)
+    out = run_evaluate.remote(model, commit, limit) if evalset else run_smoke.remote(model, commit)
     wall = time.time() - t0
     results = out["results"]
     if path.exists():
