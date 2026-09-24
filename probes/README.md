@@ -702,3 +702,25 @@ read as a rate (it is p = 0.09 one-sided), and "lower agreement means harder
 pairs" was assumed for the tagger and was false. The one place a baseline
 still plausibly helps — a new voice through a new microphone, the author's
 five pairs, calm tagged neutral 2 → 3 of 5 — is one speaker and dev-only.
+
+### Does R4's voice react? PR-008 (2026-09-23)
+
+`src/s2slab/r4probe.py`, `modal_app/r4_bench.py::pairs`. The prosody pairs go
+in as the caller's turn; R4 (Qwen2.5-Omni, speaking for itself) and R3
+(Qwen2-Audio, Kokoro speaking its text) answer both clips of each pair, and
+the F0 range of the reply to the upset clip is compared with the reply to the
+calm clip: wider, narrower, or the same within +-0.5 st. Full registration
+and results: `docs/preregistration.md`, PR-008; evidence
+`runs/prosody/pr008.json`.
+
+| 39 test pairs | wider | same | narrower |
+|---|---:|---:|---:|
+| R3 (Qwen2-Audio -> Kokoro) | 12 | 21 | 6 |
+| R4 (Qwen2.5-Omni speaks) | 14 | 9 | 16 |
+
+**Not supported, and no consistent direction** (two-sided p = 0.86). R4's
+voice moves more than Kokoro's -- only 9 of 39 pairs inside the band -- but
+either way, and its words do not change. On dev it had looked like
+flattening (5 against 11); on the test pairs that did not survive. By the
+plan's own sentence, on this measure the rung bought nothing. The 39 pairs
+are now spent for R4's delivery as well.

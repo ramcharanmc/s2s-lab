@@ -1,0 +1,2640 @@
+{
+ "run": "39 test prosody pairs \u00b7 confirms PR-008 \u00b7 r3-gpu and r4-gpu on NVIDIA L40S, 580.95.05 \u00b7 commit f4da0bc",
+ "pairs": [
+  {
+   "id": "sad-t01",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1006",
+   "sentence": "TIE",
+   "neutral": "1006_TIE_NEU_XX",
+   "loaded": "1006_TIE_SAD_XX",
+   "agree_neutral": 0.818,
+   "agree_loaded": 0.778,
+   "raters_neutral": 11,
+   "raters_loaded": 9,
+   "intensity": 62.3,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t02",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1083",
+   "sentence": "IOM",
+   "neutral": "1083_IOM_NEU_XX",
+   "loaded": "1083_IOM_SAD_XX",
+   "agree_neutral": 0.778,
+   "agree_loaded": 0.667,
+   "raters_neutral": 9,
+   "raters_loaded": 9,
+   "intensity": 60.7,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t03",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1048",
+   "sentence": "TAI",
+   "neutral": "1048_TAI_NEU_XX",
+   "loaded": "1048_TAI_SAD_XX",
+   "agree_neutral": 0.7,
+   "agree_loaded": 0.636,
+   "raters_neutral": 10,
+   "raters_loaded": 11,
+   "intensity": 43.1,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t04",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1089",
+   "sentence": "MTI",
+   "neutral": "1089_MTI_NEU_XX",
+   "loaded": "1089_MTI_SAD_XX",
+   "agree_neutral": 0.7,
+   "agree_loaded": 0.889,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 59.2,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t05",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1036",
+   "sentence": "MTI",
+   "neutral": "1036_MTI_NEU_XX",
+   "loaded": "1036_MTI_SAD_XX",
+   "agree_neutral": 0.889,
+   "agree_loaded": 0.7,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 72.3,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t06",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1058",
+   "sentence": "IEO",
+   "neutral": "1058_IEO_NEU_XX",
+   "loaded": "1058_IEO_SAD_HI",
+   "agree_neutral": 1.0,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 91.2,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t07",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1003",
+   "sentence": "WSI",
+   "neutral": "1003_WSI_NEU_XX",
+   "loaded": "1003_WSI_SAD_XX",
+   "agree_neutral": 0.6,
+   "agree_loaded": 0.6,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 59.8,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t08",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1025",
+   "sentence": "IEO",
+   "neutral": "1025_IEO_NEU_XX",
+   "loaded": "1025_IEO_SAD_LO",
+   "agree_neutral": 0.778,
+   "agree_loaded": 0.625,
+   "raters_neutral": 9,
+   "raters_loaded": 8,
+   "intensity": 71.8,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t09",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1078",
+   "sentence": "IEO",
+   "neutral": "1078_IEO_NEU_XX",
+   "loaded": "1078_IEO_SAD_HI",
+   "agree_neutral": 0.778,
+   "agree_loaded": 0.7,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 75.0,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t10",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1037",
+   "sentence": "MTI",
+   "neutral": "1037_MTI_NEU_XX",
+   "loaded": "1037_MTI_SAD_XX",
+   "agree_neutral": 0.6,
+   "agree_loaded": 0.7,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 74.1,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t11",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1014",
+   "sentence": "TAI",
+   "neutral": "1014_TAI_NEU_XX",
+   "loaded": "1014_TAI_SAD_XX",
+   "agree_neutral": 0.7,
+   "agree_loaded": 0.667,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 54.7,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t12",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1060",
+   "sentence": "IOM",
+   "neutral": "1060_IOM_NEU_XX",
+   "loaded": "1060_IOM_SAD_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.6,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 57.8,
+   "threshold": 0.6
+  },
+  {
+   "id": "sad-t13",
+   "split": "test",
+   "emotion": "SAD",
+   "actor": "1013",
+   "sentence": "ITH",
+   "neutral": "1013_ITH_NEU_XX",
+   "loaded": "1013_ITH_SAD_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.818,
+   "raters_neutral": 11,
+   "raters_loaded": 11,
+   "intensity": 56.6,
+   "threshold": 0.6
+  },
+  {
+   "id": "fea-t01",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1009",
+   "sentence": "IEO",
+   "neutral": "1009_IEO_NEU_XX",
+   "loaded": "1009_IEO_FEA_HI",
+   "agree_neutral": 0.875,
+   "agree_loaded": 0.9,
+   "raters_neutral": 8,
+   "raters_loaded": 10,
+   "intensity": 77.1,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t02",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1058",
+   "sentence": "TAI",
+   "neutral": "1058_TAI_NEU_XX",
+   "loaded": "1058_TAI_FEA_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 64.1,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t03",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1036",
+   "sentence": "TSI",
+   "neutral": "1036_TSI_NEU_XX",
+   "loaded": "1036_TSI_FEA_XX",
+   "agree_neutral": 0.889,
+   "agree_loaded": 0.889,
+   "raters_neutral": 9,
+   "raters_loaded": 9,
+   "intensity": 88.6,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t04",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1063",
+   "sentence": "IEO",
+   "neutral": "1063_IEO_NEU_XX",
+   "loaded": "1063_IEO_FEA_HI",
+   "agree_neutral": 0.8,
+   "agree_loaded": 0.818,
+   "raters_neutral": 10,
+   "raters_loaded": 11,
+   "intensity": 61.1,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t05",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1012",
+   "sentence": "IEO",
+   "neutral": "1012_IEO_NEU_XX",
+   "loaded": "1012_IEO_FEA_HI",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.8,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 67.0,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t06",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1010",
+   "sentence": "ITH",
+   "neutral": "1010_ITH_NEU_XX",
+   "loaded": "1010_ITH_FEA_XX",
+   "agree_neutral": 0.8,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 8,
+   "intensity": 61.6,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t07",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1006",
+   "sentence": "IWW",
+   "neutral": "1006_IWW_NEU_XX",
+   "loaded": "1006_IWW_FEA_XX",
+   "agree_neutral": 0.8,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 69.0,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t08",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1043",
+   "sentence": "IWW",
+   "neutral": "1043_IWW_NEU_XX",
+   "loaded": "1043_IWW_FEA_XX",
+   "agree_neutral": 0.889,
+   "agree_loaded": 0.875,
+   "raters_neutral": 9,
+   "raters_loaded": 8,
+   "intensity": 57.7,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t09",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1026",
+   "sentence": "IWL",
+   "neutral": "1026_IWL_NEU_XX",
+   "loaded": "1026_IWL_FEA_XX",
+   "agree_neutral": 0.8,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 8,
+   "intensity": 56.4,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t10",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1059",
+   "sentence": "ITS",
+   "neutral": "1059_ITS_NEU_XX",
+   "loaded": "1059_ITS_FEA_XX",
+   "agree_neutral": 0.875,
+   "agree_loaded": 1.0,
+   "raters_neutral": 8,
+   "raters_loaded": 10,
+   "intensity": 64.7,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t11",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1086",
+   "sentence": "TSI",
+   "neutral": "1086_TSI_NEU_XX",
+   "loaded": "1086_TSI_FEA_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 56.8,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t12",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1037",
+   "sentence": "TSI",
+   "neutral": "1037_TSI_NEU_XX",
+   "loaded": "1037_TSI_FEA_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 73.4,
+   "threshold": 0.8
+  },
+  {
+   "id": "fea-t13",
+   "split": "test",
+   "emotion": "FEA",
+   "actor": "1040",
+   "sentence": "ITS",
+   "neutral": "1040_ITS_NEU_XX",
+   "loaded": "1040_ITS_FEA_XX",
+   "agree_neutral": 0.889,
+   "agree_loaded": 0.889,
+   "raters_neutral": 9,
+   "raters_loaded": 9,
+   "intensity": 57.1,
+   "threshold": 0.8
+  },
+  {
+   "id": "ang-t01",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1065",
+   "sentence": "TIE",
+   "neutral": "1065_TIE_NEU_XX",
+   "loaded": "1065_TIE_ANG_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 73.2,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t02",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1009",
+   "sentence": "WSI",
+   "neutral": "1009_WSI_NEU_XX",
+   "loaded": "1009_WSI_ANG_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 9,
+   "intensity": 80.7,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t03",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1006",
+   "sentence": "WSI",
+   "neutral": "1006_WSI_NEU_XX",
+   "loaded": "1006_WSI_ANG_XX",
+   "agree_neutral": 0.909,
+   "agree_loaded": 1.0,
+   "raters_neutral": 11,
+   "raters_loaded": 10,
+   "intensity": 60.4,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t04",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1004",
+   "sentence": "IEO",
+   "neutral": "1004_IEO_NEU_XX",
+   "loaded": "1004_IEO_ANG_HI",
+   "agree_neutral": 0.9,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 85.1,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t05",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1051",
+   "sentence": "IEO",
+   "neutral": "1051_IEO_NEU_XX",
+   "loaded": "1051_IEO_ANG_HI",
+   "agree_neutral": 1.0,
+   "agree_loaded": 1.0,
+   "raters_neutral": 11,
+   "raters_loaded": 10,
+   "intensity": 61.8,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t06",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1074",
+   "sentence": "IEO",
+   "neutral": "1074_IEO_NEU_XX",
+   "loaded": "1074_IEO_ANG_HI",
+   "agree_neutral": 1.0,
+   "agree_loaded": 1.0,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 85.5,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t07",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1013",
+   "sentence": "DFA",
+   "neutral": "1013_DFA_NEU_XX",
+   "loaded": "1013_DFA_ANG_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 81.1,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t08",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1036",
+   "sentence": "DFA",
+   "neutral": "1036_DFA_NEU_XX",
+   "loaded": "1036_DFA_ANG_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 1.0,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 77.7,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t09",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1039",
+   "sentence": "DFA",
+   "neutral": "1039_DFA_NEU_XX",
+   "loaded": "1039_DFA_ANG_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.9,
+   "raters_neutral": 9,
+   "raters_loaded": 10,
+   "intensity": 61.1,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t10",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1042",
+   "sentence": "ITH",
+   "neutral": "1042_ITH_NEU_XX",
+   "loaded": "1042_ITH_ANG_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 1.0,
+   "raters_neutral": 10,
+   "raters_loaded": 8,
+   "intensity": 69.5,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t11",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1025",
+   "sentence": "IOM",
+   "neutral": "1025_IOM_NEU_XX",
+   "loaded": "1025_IOM_ANG_XX",
+   "agree_neutral": 0.9,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 75.3,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t12",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1089",
+   "sentence": "IWL",
+   "neutral": "1089_IWL_NEU_XX",
+   "loaded": "1089_IWL_ANG_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 69.2,
+   "threshold": 0.9
+  },
+  {
+   "id": "ang-t13",
+   "split": "test",
+   "emotion": "ANG",
+   "actor": "1008",
+   "sentence": "TSI",
+   "neutral": "1008_TSI_NEU_XX",
+   "loaded": "1008_TSI_ANG_XX",
+   "agree_neutral": 1.0,
+   "agree_loaded": 0.9,
+   "raters_neutral": 10,
+   "raters_loaded": 10,
+   "intensity": 83.7,
+   "threshold": 0.9
+  }
+ ],
+ "replies": {
+  "r3-gpu": {
+   "1006_TIE_NEU_XX": {
+    "text": "I'm sorry, I cannot provide answers on political matters. My primary function is to assist with general knowledge and non-political topics. If you have any other inquiries, please feel free to ask.",
+    "total_ms": 1414.9,
+    "pitch_hz": 195.638,
+    "range_st": 7.334,
+    "level_db": -21.038,
+    "seconds": 12.925
+   },
+   "1006_TIE_SAD_XX": {
+    "text": "I'm sorry, but I cannot provide answers on political matters. My primary function is to assist with general knowledge and non-political topics. If you have any other inquiries, please feel free to ask.",
+    "total_ms": 1205.9,
+    "pitch_hz": 195.533,
+    "range_st": 7.534,
+    "level_db": -20.89,
+    "seconds": 13.05
+   },
+   "1083_IOM_NEU_XX": {
+    "text": "Great, I hope you have a safe and productive meeting! Is there anything else you'd like to talk about?",
+    "total_ms": 733.1,
+    "pitch_hz": 198.179,
+    "range_st": 7.506,
+    "level_db": -20.977,
+    "seconds": 5.625
+   },
+   "1083_IOM_SAD_XX": {
+    "text": "I see, sounds like you're busy. Is there anything specific you'd like to talk about related to the meeting?",
+    "total_ms": 727.2,
+    "pitch_hz": 197.468,
+    "range_st": 7.897,
+    "level_db": -20.777,
+    "seconds": 6.2
+   },
+   "1048_TAI_NEU_XX": {
+    "text": "Okay, thank you for letting me know. Is there anything else I can assist you with?",
+    "total_ms": 607.5,
+    "pitch_hz": 194.966,
+    "range_st": 7.689,
+    "level_db": -21.118,
+    "seconds": 5.075
+   },
+   "1048_TAI_SAD_XX": {
+    "text": "I'm sorry to hear that. Is there anything you would like to know or talk about related to the airplane being full?",
+    "total_ms": 754.9,
+    "pitch_hz": 192.903,
+    "range_st": 7.305,
+    "level_db": -21.195,
+    "seconds": 6.775
+   },
+   "1089_MTI_NEU_XX": {
+    "text": "I hope so too! Cold weather can be nice for outdoor activities.",
+    "total_ms": 485.3,
+    "pitch_hz": 199.03,
+    "range_st": 6.885,
+    "level_db": -21.716,
+    "seconds": 4.325
+   },
+   "1089_MTI_SAD_XX": {
+    "text": "I hope so too. It's been really warm lately and I'm ready for some cooler weather.",
+    "total_ms": 634.7,
+    "pitch_hz": 191.439,
+    "range_st": 7.716,
+    "level_db": -21.527,
+    "seconds": 5.15
+   },
+   "1036_MTI_NEU_XX": {
+    "text": "I hope so too! It's been pretty warm lately.",
+    "total_ms": 434.0,
+    "pitch_hz": 195.25,
+    "range_st": 8.196,
+    "level_db": -21.608,
+    "seconds": 3.125
+   },
+   "1036_MTI_SAD_XX": {
+    "text": "I hope so too. It's been really warm lately and I'm ready for some cooler weather.",
+    "total_ms": 646.3,
+    "pitch_hz": 192.053,
+    "range_st": 7.738,
+    "level_db": -21.514,
+    "seconds": 5.15
+   },
+   "1058_IEO_NEU_XX": {
+    "text": "Yes, it is eleven o'clock now. Is there anything specific you would like to know or talk about at this time?",
+    "total_ms": 752.3,
+    "pitch_hz": 196.64,
+    "range_st": 7.268,
+    "level_db": -20.912,
+    "seconds": 6.65
+   },
+   "1058_IEO_SAD_HI": {
+    "text": "Oh, I didn't realize it was that late. Is everything okay?",
+    "total_ms": 507.5,
+    "pitch_hz": 198.978,
+    "range_st": 19.54,
+    "level_db": -21.466,
+    "seconds": 3.975
+   },
+   "1003_WSI_NEU_XX": {
+    "text": "Okay, we'll stop in a couple of minutes. Is there anything else you would like to talk about before we hang up?",
+    "total_ms": 797.8,
+    "pitch_hz": 192.807,
+    "range_st": 7.199,
+    "level_db": -21.358,
+    "seconds": 6.225
+   },
+   "1003_WSI_SAD_XX": {
+    "text": "Okay, we'll stop in a couple of minutes. Is there anything else you'd like to talk about before we hang up?",
+    "total_ms": 787.6,
+    "pitch_hz": 193.683,
+    "range_st": 7.236,
+    "level_db": -21.333,
+    "seconds": 6.05
+   },
+   "1025_IEO_NEU_XX": {
+    "text": "Yes, it's eleven o'clock now.",
+    "total_ms": 360.1,
+    "pitch_hz": 199.058,
+    "range_st": 7.736,
+    "level_db": -20.99,
+    "seconds": 2.5
+   },
+   "1025_IEO_SAD_LO": {
+    "text": "Yes, it's eleven o'clock now. Is there anything you would like to know or talk about?",
+    "total_ms": 668.7,
+    "pitch_hz": 198.159,
+    "range_st": 7.105,
+    "level_db": -20.887,
+    "seconds": 5.1
+   },
+   "1078_IEO_NEU_XX": {
+    "text": "Yes, it is eleven o'clock.",
+    "total_ms": 327.4,
+    "pitch_hz": 205.351,
+    "range_st": 7.487,
+    "level_db": -21.305,
+    "seconds": 2.325
+   },
+   "1078_IEO_SAD_HI": {
+    "text": "Oh, I'm sorry to hear that! Is there anything you would like to talk about or ask me?",
+    "total_ms": 677.8,
+    "pitch_hz": 195.334,
+    "range_st": 7.497,
+    "level_db": -20.894,
+    "seconds": 5.05
+   },
+   "1037_MTI_NEU_XX": {
+    "text": "I hope so too! Cold weather can be nice for outdoor activities.",
+    "total_ms": 473.7,
+    "pitch_hz": 197.534,
+    "range_st": 6.976,
+    "level_db": -21.795,
+    "seconds": 4.325
+   },
+   "1037_MTI_SAD_XX": {
+    "text": "I hope so too, it's been pretty warm lately.",
+    "total_ms": 431.6,
+    "pitch_hz": 197.73,
+    "range_st": 7.527,
+    "level_db": -21.785,
+    "seconds": 3.125
+   },
+   "1014_TAI_NEU_XX": {
+    "text": "Okay, thank you for letting me know. Is there anything else I can assist you with?",
+    "total_ms": 625.5,
+    "pitch_hz": 194.219,
+    "range_st": 7.681,
+    "level_db": -21.146,
+    "seconds": 5.075
+   },
+   "1014_TAI_SAD_XX": {
+    "text": "The airplane is almost there.",
+    "total_ms": 282.9,
+    "pitch_hz": 205.254,
+    "range_st": 9.166,
+    "level_db": -21.439,
+    "seconds": 2.25
+   },
+   "1060_IOM_NEU_XX": {
+    "text": "I see, sounds like you're busy. Is there anything specific you'd like to talk about related to the meeting?",
+    "total_ms": 711.1,
+    "pitch_hz": 197.749,
+    "range_st": 7.902,
+    "level_db": -20.777,
+    "seconds": 6.2
+   },
+   "1060_IOM_SAD_XX": {
+    "text": "I'm sorry you're not feeling well. Is there anything specific you would like help with before the meeting?",
+    "total_ms": 691.3,
+    "pitch_hz": 196.401,
+    "range_st": 7.507,
+    "level_db": -21.389,
+    "seconds": 5.825
+   },
+   "1013_ITH_NEU_XX": {
+    "text": "That's great! Having a doctor's appointment can be important for your health. Is there anything specific you want to talk about or ask the doctor?",
+    "total_ms": 872.3,
+    "pitch_hz": 191.763,
+    "range_st": 8.054,
+    "level_db": -20.83,
+    "seconds": 8.625
+   },
+   "1013_ITH_SAD_XX": {
+    "text": "I'm sorry to hear that! Is there anything specific you would like to talk about or ask me? I'm here to help.",
+    "total_ms": 815.9,
+    "pitch_hz": 198.563,
+    "range_st": 8.314,
+    "level_db": -21.017,
+    "seconds": 6.4
+   },
+   "1009_IEO_NEU_XX": {
+    "text": "Yes, it is eleven o'clock.",
+    "total_ms": 318.9,
+    "pitch_hz": 203.068,
+    "range_st": 7.525,
+    "level_db": -21.352,
+    "seconds": 2.325
+   },
+   "1009_IEO_FEA_HI": {
+    "text": "Oh my, I didn't realize it was that late! Is everything okay?",
+    "total_ms": 532.6,
+    "pitch_hz": 200.589,
+    "range_st": 8.971,
+    "level_db": -21.717,
+    "seconds": 4.2
+   },
+   "1058_TAI_NEU_XX": {
+    "text": "Okay, thank you for letting me know. Is there anything else I can assist you with?",
+    "total_ms": 593.8,
+    "pitch_hz": 194.25,
+    "range_st": 7.681,
+    "level_db": -21.156,
+    "seconds": 5.075
+   },
+   "1058_TAI_FEA_XX": {
+    "text": "Oh no, that's not good. Is there anything you can do to make more space or is it too full already?",
+    "total_ms": 759.4,
+    "pitch_hz": 195.726,
+    "range_st": 7.642,
+    "level_db": -21.011,
+    "seconds": 6.15
+   },
+   "1036_TSI_NEU_XX": {
+    "text": "The surface is slick because it has a smooth and shiny finish.",
+    "total_ms": 458.3,
+    "pitch_hz": 200.471,
+    "range_st": 6.308,
+    "level_db": -21.037,
+    "seconds": 4.025
+   },
+   "1036_TSI_FEA_XX": {
+    "text": "The surface is slick because it has a shiny finish.",
+    "total_ms": 412.7,
+    "pitch_hz": 196.3,
+    "range_st": 6.749,
+    "level_db": -21.593,
+    "seconds": 3.425
+   },
+   "1063_IEO_NEU_XX": {
+    "text": "Yes, it is eleven o'clock now.",
+    "total_ms": 351.6,
+    "pitch_hz": 200.628,
+    "range_st": 7.323,
+    "level_db": -21.132,
+    "seconds": 2.55
+   },
+   "1063_IEO_FEA_HI": {
+    "text": "Oh, I'm sorry! I didn't realize it was that late. Is there anything important you needed to do at eleven o'clock?",
+    "total_ms": 846.9,
+    "pitch_hz": 194.753,
+    "range_st": 8.59,
+    "level_db": -21.144,
+    "seconds": 7.05
+   },
+   "1012_IEO_NEU_XX": {
+    "text": "Yes, it is eleven o'clock.",
+    "total_ms": 330.8,
+    "pitch_hz": 203.395,
+    "range_st": 7.546,
+    "level_db": -21.238,
+    "seconds": 2.325
+   },
+   "1012_IEO_FEA_HI": {
+    "text": "Oh dear, I didn't realize it was that late. Is everything okay?",
+    "total_ms": 534.7,
+    "pitch_hz": 198.73,
+    "range_st": 8.534,
+    "level_db": -21.903,
+    "seconds": 4.225
+   },
+   "1010_ITH_NEU_XX": {
+    "text": "That's great! Having a doctor's appointment can be important for your health. Is there anything specific you want to talk about or ask the doctor?",
+    "total_ms": 875.0,
+    "pitch_hz": 191.447,
+    "range_st": 8.038,
+    "level_db": -20.862,
+    "seconds": 8.625
+   },
+   "1010_ITH_FEA_XX": {
+    "text": "Oh, I'm sorry to hear that! Is there anything specific you need help with?",
+    "total_ms": 580.0,
+    "pitch_hz": 199.62,
+    "range_st": 7.694,
+    "level_db": -21.04,
+    "seconds": 4.65
+   },
+   "1006_IWW_NEU_XX": {
+    "text": "I'm sorry, I don't have any information about this. Can you provide more context or details?",
+    "total_ms": 655.8,
+    "pitch_hz": 203.064,
+    "range_st": 6.214,
+    "level_db": -21.138,
+    "seconds": 5.95
+   },
+   "1006_IWW_FEA_XX": {
+    "text": "I'm sorry, but I don't have any information about this topic. Can you please provide more context or clarify your question?",
+    "total_ms": 780.9,
+    "pitch_hz": 196.948,
+    "range_st": 8.264,
+    "level_db": -21.105,
+    "seconds": 7.625
+   },
+   "1043_IWW_NEU_XX": {
+    "text": "I'm sorry, I don't understand your question. Could you please provide more context or clarify your inquiry?",
+    "total_ms": 703.6,
+    "pitch_hz": 201.763,
+    "range_st": 7.758,
+    "level_db": -21.439,
+    "seconds": 6.75
+   },
+   "1043_IWW_FEA_XX": {
+    "text": "I'm sorry you're feeling that way. Can you tell me more about what's been going on?",
+    "total_ms": 659.3,
+    "pitch_hz": 203.296,
+    "range_st": 7.638,
+    "level_db": -21.345,
+    "seconds": 4.5
+   },
+   "1026_IWL_NEU_XX": {
+    "text": "Sure, I can help you with that! What kind of alarm clock are you looking for? Do you have any specific features in mind?",
+    "total_ms": 832.6,
+    "pitch_hz": 197.661,
+    "range_st": 7.851,
+    "level_db": -21.242,
+    "seconds": 6.875
+   },
+   "1026_IWL_FEA_XX": {
+    "text": "I understand your concern. Would you like me to help you find a new alarm clock or do you have any specific brand in mind?",
+    "total_ms": 825.3,
+    "pitch_hz": 194.276,
+    "range_st": 8.233,
+    "level_db": -21.476,
+    "seconds": 7.825
+   },
+   "1059_ITS_NEU_XX": {
+    "text": "Yes, it's possible that you've seen this before. Can you give me more context or details about what you're referring to?",
+    "total_ms": 804.0,
+    "pitch_hz": 198.528,
+    "range_st": 7.927,
+    "level_db": -20.783,
+    "seconds": 7.5
+   },
+   "1059_ITS_FEA_XX": {
+    "text": "Yes, it's possible that you've seen this before. Can you remember where or when you saw it last time?",
+    "total_ms": 744.6,
+    "pitch_hz": 190.128,
+    "range_st": 7.072,
+    "level_db": -21.475,
+    "seconds": 6.075
+   },
+   "1086_TSI_NEU_XX": {
+    "text": "The surface is slick because it has a smooth and shiny finish that makes it difficult to get a good grip on.",
+    "total_ms": 695.7,
+    "pitch_hz": 199.792,
+    "range_st": 7.159,
+    "level_db": -20.939,
+    "seconds": 6.625
+   },
+   "1086_TSI_FEA_XX": {
+    "text": "I understand your concern. Can you please provide more context or information about the surface you're referring to?",
+    "total_ms": 670.9,
+    "pitch_hz": 194.464,
+    "range_st": 8.481,
+    "level_db": -21.568,
+    "seconds": 7.225
+   },
+   "1037_TSI_NEU_XX": {
+    "text": "The surface is very smooth.",
+    "total_ms": 284.2,
+    "pitch_hz": 192.138,
+    "range_st": 8.827,
+    "level_db": -21.476,
+    "seconds": 2.275
+   },
+   "1037_TSI_FEA_XX": {
+    "text": "The surface is slick because it has a smooth and shiny finish.",
+    "total_ms": 462.2,
+    "pitch_hz": 198.806,
+    "range_st": 6.342,
+    "level_db": -20.977,
+    "seconds": 4.025
+   },
+   "1040_ITS_NEU_XX": {
+    "text": "Yes, you might have seen it before because it's a common phrase or situation. Can I help you with something specific about it?",
+    "total_ms": 835.7,
+    "pitch_hz": 198.502,
+    "range_st": 6.97,
+    "level_db": -20.707,
+    "seconds": 7.55
+   },
+   "1040_ITS_FEA_XX": {
+    "text": "Yes, it's possible that you've seen this before. Can you remember where or when you saw it last time?",
+    "total_ms": 734.3,
+    "pitch_hz": 189.611,
+    "range_st": 7.055,
+    "level_db": -21.564,
+    "seconds": 6.075
+   },
+   "1065_TIE_NEU_XX": {
+    "text": "I'm sorry, I cannot provide answers on political matters. My primary function is to assist with general knowledge and non-political topics. If you have any other inquiries, please feel free to ask.",
+    "total_ms": 1125.5,
+    "pitch_hz": 196.012,
+    "range_st": 7.376,
+    "level_db": -21.146,
+    "seconds": 12.925
+   },
+   "1065_TIE_ANG_XX": {
+    "text": "Exactly as you described it! Can I help with anything else?",
+    "total_ms": 449.9,
+    "pitch_hz": 197.307,
+    "range_st": 7.153,
+    "level_db": -21.82,
+    "seconds": 3.825
+   },
+   "1009_WSI_NEU_XX": {
+    "text": "Okay, I'll be here when you're ready to continue. Take your time.",
+    "total_ms": 573.9,
+    "pitch_hz": 196.213,
+    "range_st": 8.761,
+    "level_db": -21.547,
+    "seconds": 4.075
+   },
+   "1009_WSI_ANG_XX": {
+    "text": "Okay, we'll stop in a couple of minutes. Is there anything else you would like to talk about before we hang up?",
+    "total_ms": 776.4,
+    "pitch_hz": 192.099,
+    "range_st": 7.22,
+    "level_db": -21.404,
+    "seconds": 6.225
+   },
+   "1006_WSI_NEU_XX": {
+    "text": "Okay, we'll stop in a couple of minutes. Is there anything else you would like to talk about before we hang up?",
+    "total_ms": 776.0,
+    "pitch_hz": 191.274,
+    "range_st": 7.213,
+    "level_db": -21.318,
+    "seconds": 6.225
+   },
+   "1006_WSI_ANG_XX": {
+    "text": "Okay, I'll be here when you're ready. Take your time.",
+    "total_ms": 525.7,
+    "pitch_hz": 194.247,
+    "range_st": 9.001,
+    "level_db": -22.004,
+    "seconds": 3.25
+   },
+   "1004_IEO_NEU_XX": {
+    "text": "Yes, it is eleven o'clock.",
+    "total_ms": 328.6,
+    "pitch_hz": 205.19,
+    "range_st": 7.451,
+    "level_db": -21.368,
+    "seconds": 2.325
+   },
+   "1004_IEO_ANG_HI": {
+    "text": "I'm sorry, but I cannot engage in discussions regarding political matters at this time. My primary function is to provide assistance on a wide range of non-political subjects. If you have any other inquiries, please feel free to ask.",
+    "total_ms": 1324.1,
+    "pitch_hz": 194.889,
+    "range_st": 7.36,
+    "level_db": -21.143,
+    "seconds": 15.125
+   },
+   "1051_IEO_NEU_XX": {
+    "text": "Yes, it is eleven o'clock now.",
+    "total_ms": 347.0,
+    "pitch_hz": 202.377,
+    "range_st": 7.251,
+    "level_db": -21.093,
+    "seconds": 2.55
+   },
+   "1051_IEO_ANG_HI": {
+    "text": "Sorry, I don't know the time now. I can't help you with this.",
+    "total_ms": 567.5,
+    "pitch_hz": 201.704,
+    "range_st": 8.744,
+    "level_db": -21.205,
+    "seconds": 3.625
+   },
+   "1074_IEO_NEU_XX": {
+    "text": "Yes, it is eleven o'clock now.",
+    "total_ms": 347.9,
+    "pitch_hz": 202.224,
+    "range_st": 7.232,
+    "level_db": -21.056,
+    "seconds": 2.55
+   },
+   "1074_IEO_ANG_HI": {
+    "text": "I'm sorry, but it's not appropriate to raise your voice or speak in an angry tone. Can we please have this conversation in a more civil manner?",
+    "total_ms": 915.3,
+    "pitch_hz": 184.947,
+    "range_st": 7.734,
+    "level_db": -21.653,
+    "seconds": 8.625
+   },
+   "1013_DFA_NEU_XX": {
+    "text": "I won't forget a jacket. It's important to stay warm.",
+    "total_ms": 477.9,
+    "pitch_hz": 197.461,
+    "range_st": 8.243,
+    "level_db": -21.216,
+    "seconds": 3.675
+   },
+   "1013_DFA_ANG_XX": {
+    "text": "I won't forget a jacket. It's important to stay warm.",
+    "total_ms": 463.9,
+    "pitch_hz": 197.692,
+    "range_st": 8.243,
+    "level_db": -21.127,
+    "seconds": 3.675
+   },
+   "1036_DFA_NEU_XX": {
+    "text": "I won't forget a jacket. It's important to stay warm.",
+    "total_ms": 472.9,
+    "pitch_hz": 198.006,
+    "range_st": 8.25,
+    "level_db": -21.187,
+    "seconds": 3.675
+   },
+   "1036_DFA_ANG_XX": {
+    "text": "I won't forget a jacket. It's important to stay warm and comfortable, especially on chilly days.",
+    "total_ms": 650.1,
+    "pitch_hz": 190.769,
+    "range_st": 7.57,
+    "level_db": -21.349,
+    "seconds": 6.3
+   },
+   "1039_DFA_NEU_XX": {
+    "text": "I won't forget a jacket. It's important to stay warm.",
+    "total_ms": 479.3,
+    "pitch_hz": 196.581,
+    "range_st": 8.318,
+    "level_db": -21.123,
+    "seconds": 3.675
+   },
+   "1039_DFA_ANG_XX": {
+    "text": "I won't forget a jacket. It's important to stay warm.",
+    "total_ms": 468.2,
+    "pitch_hz": 195.539,
+    "range_st": 8.447,
+    "level_db": -21.186,
+    "seconds": 3.675
+   },
+   "1042_ITH_NEU_XX": {
+    "text": "That's great! What kind of appointment is it?",
+    "total_ms": 400.3,
+    "pitch_hz": 204.068,
+    "range_st": 7.801,
+    "level_db": -20.529,
+    "seconds": 2.8
+   },
+   "1042_ITH_ANG_XX": {
+    "text": "I'm sorry to hear that. Is there anything I can help you with regarding your doctor's appointment?",
+    "total_ms": 661.1,
+    "pitch_hz": 203.129,
+    "range_st": 7.521,
+    "level_db": -21.286,
+    "seconds": 5.75
+   },
+   "1025_IOM_NEU_XX": {
+    "text": "I see, sounds like you're busy. Is there anything specific you'd like to talk about related to the meeting?",
+    "total_ms": 731.2,
+    "pitch_hz": 197.775,
+    "range_st": 7.807,
+    "level_db": -20.707,
+    "seconds": 6.2
+   },
+   "1025_IOM_ANG_XX": {
+    "text": "I understand you're angry, but please tell me more about the situation. Is there anything specific you would like to know or discuss?",
+    "total_ms": 804.7,
+    "pitch_hz": 194.721,
+    "range_st": 7.804,
+    "level_db": -21.3,
+    "seconds": 8.125
+   },
+   "1089_IWL_NEU_XX": {
+    "text": "Sure! I can help you find and purchase a new alarm clock. What type of alarm clock are you interested in? Do you have any specific features in mind?",
+    "total_ms": 957.7,
+    "pitch_hz": 193.103,
+    "range_st": 7.858,
+    "level_db": -21.318,
+    "seconds": 9.15
+   },
+   "1089_IWL_ANG_XX": {
+    "text": "Sure, I can help you with that! What kind of alarm clock are you looking for? Do you have any specific features in mind?",
+    "total_ms": 828.6,
+    "pitch_hz": 197.379,
+    "range_st": 7.903,
+    "level_db": -21.253,
+    "seconds": 6.875
+   },
+   "1008_TSI_NEU_XX": {
+    "text": "The surface is very smooth.",
+    "total_ms": 274.8,
+    "pitch_hz": 193.082,
+    "range_st": 8.81,
+    "level_db": -21.458,
+    "seconds": 2.275
+   },
+   "1008_TSI_ANG_XX": {
+    "text": "The surface feels smooth and shiny.",
+    "total_ms": 306.7,
+    "pitch_hz": 197.779,
+    "range_st": 8.039,
+    "level_db": -21.739,
+    "seconds": 2.425
+   }
+  },
+  "r4-gpu": {
+   "1006_TIE_NEU_XX": {
+    "text": "Oh, that's great! What happened?",
+    "total_ms": 4246.3,
+    "pitch_hz": 308.556,
+    "range_st": 13.06,
+    "level_db": -17.556,
+    "seconds": 3.1
+   },
+   "1006_TIE_SAD_XX": {
+    "text": "Oh, that's interesting. What happened?",
+    "total_ms": 4600.0,
+    "pitch_hz": 224.9,
+    "range_st": 13.677,
+    "level_db": -18.68,
+    "seconds": 3.4
+   },
+   "1083_IOM_NEU_XX": {
+    "text": "Okay, so you're on your way to the meeting. Anything else you need help with?",
+    "total_ms": 5933.6,
+    "pitch_hz": 235.449,
+    "range_st": 5.297,
+    "level_db": -17.514,
+    "seconds": 4.68
+   },
+   "1083_IOM_SAD_XX": {
+    "text": "Okay, so you're on your way to the meeting. Anything else you need help with?",
+    "total_ms": 6371.8,
+    "pitch_hz": 246.987,
+    "range_st": 5.652,
+    "level_db": -16.647,
+    "seconds": 5.1
+   },
+   "1048_TAI_NEU_XX": {
+    "text": "Oh, that's a bit of a bummer. Are you worried about getting a seat? If you need help with anything else, just let me know.",
+    "total_ms": 9482.5,
+    "pitch_hz": 234.825,
+    "range_st": 7.275,
+    "level_db": -17.121,
+    "seconds": 7.5
+   },
+   "1048_TAI_SAD_XX": {
+    "text": "Oh, that's good to know. Are you planning to book a flight soon?",
+    "total_ms": 5600.6,
+    "pitch_hz": 260.84,
+    "range_st": 8.009,
+    "level_db": -16.931,
+    "seconds": 4.3
+   },
+   "1089_MTI_NEU_XX": {
+    "text": "Well, that's interesting. What made you think that? Maybe you can check the weather forecast to be sure. So, what are you planning to do if it's cold tomorrow?",
+    "total_ms": 13316.3,
+    "pitch_hz": 264.309,
+    "range_st": 10.253,
+    "level_db": -17.308,
+    "seconds": 10.46
+   },
+   "1089_MTI_SAD_XX": {
+    "text": "Well, that's a possibility. You should probably check the weather forecast just to be sure. So, what are you planning to do if it does get cold tomorrow?",
+    "total_ms": 11853.6,
+    "pitch_hz": 254.17,
+    "range_st": 10.294,
+    "level_db": -16.899,
+    "seconds": 9.36
+   },
+   "1036_MTI_NEU_XX": {
+    "text": "Well, that's interesting. What made you think that? Maybe you can check the weather forecast to be sure. So, what are you planning to do if it's cold tomorrow?",
+    "total_ms": 14485.4,
+    "pitch_hz": 249.139,
+    "range_st": 9.451,
+    "level_db": -17.785,
+    "seconds": 11.24
+   },
+   "1036_MTI_SAD_XX": {
+    "text": "Oh, that's not good. Are you planning to go out tomorrow? If so, you might want to wear more clothes.",
+    "total_ms": 9955.1,
+    "pitch_hz": 246.329,
+    "range_st": 7.648,
+    "level_db": -19.491,
+    "seconds": 7.9
+   },
+   "1058_IEO_NEU_XX": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to at this hour?",
+    "total_ms": 8108.8,
+    "pitch_hz": 260.946,
+    "range_st": 12.312,
+    "level_db": -17.317,
+    "seconds": 6.48
+   },
+   "1058_IEO_SAD_HI": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to at this hour?",
+    "total_ms": 9066.8,
+    "pitch_hz": 250.83,
+    "range_st": 9.507,
+    "level_db": -18.204,
+    "seconds": 7.22
+   },
+   "1003_WSI_NEU_XX": {
+    "text": "Okay, so you'll be stopping in a couple of minutes. Anything else you need to know?",
+    "total_ms": 5798.7,
+    "pitch_hz": 247.094,
+    "range_st": 8.144,
+    "level_db": -17.271,
+    "seconds": 4.56
+   },
+   "1003_WSI_SAD_XX": {
+    "text": "Okay, so you'll be stopping in a couple of minutes. Anything else you need to know?",
+    "total_ms": 6118.7,
+    "pitch_hz": 250.752,
+    "range_st": 7.236,
+    "level_db": -16.64,
+    "seconds": 4.88
+   },
+   "1025_IEO_NEU_XX": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to at this hour?",
+    "total_ms": 8223.8,
+    "pitch_hz": 253.135,
+    "range_st": 9.455,
+    "level_db": -17.006,
+    "seconds": 6.54
+   },
+   "1025_IEO_SAD_LO": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to at this hour?",
+    "total_ms": 7359.0,
+    "pitch_hz": 255.718,
+    "range_st": 10.083,
+    "level_db": -17.422,
+    "seconds": 5.86
+   },
+   "1078_IEO_NEU_XX": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to at this hour?",
+    "total_ms": 8101.0,
+    "pitch_hz": 235.776,
+    "range_st": 10.324,
+    "level_db": -17.451,
+    "seconds": 6.48
+   },
+   "1078_IEO_SAD_HI": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to at this hour?",
+    "total_ms": 7667.4,
+    "pitch_hz": 255.459,
+    "range_st": 8.743,
+    "level_db": -18.364,
+    "seconds": 6.04
+   },
+   "1037_MTI_NEU_XX": {
+    "text": "Well, that's a possibility. You should probably check the weather forecast just to be sure. So, what are you planning to do if it does get cold tomorrow?",
+    "total_ms": 11270.2,
+    "pitch_hz": 244.552,
+    "range_st": 11.578,
+    "level_db": -17.625,
+    "seconds": 9.28
+   },
+   "1037_MTI_SAD_XX": {
+    "text": "Well, that's interesting. What made you think that? Maybe you can check the weather forecast. So, what are you planning to do if it's cold tomorrow?",
+    "total_ms": 12572.3,
+    "pitch_hz": 258.919,
+    "range_st": 10.096,
+    "level_db": -17.598,
+    "seconds": 10.32
+   },
+   "1014_TAI_NEU_XX": {
+    "text": "Oh, that's good to know. Are you planning to book a flight soon?",
+    "total_ms": 5510.5,
+    "pitch_hz": 281.225,
+    "range_st": 9.928,
+    "level_db": -17.88,
+    "seconds": 4.3
+   },
+   "1014_TAI_SAD_XX": {
+    "text": "You said \"The airplane is almost.\" What are you trying to say? Is it about the flight being almost ready to take off? Or something else? Let me know so I can help you better.",
+    "total_ms": 15272.5,
+    "pitch_hz": 225.745,
+    "range_st": 5.598,
+    "level_db": -17.159,
+    "seconds": 11.88
+   },
+   "1060_IOM_NEU_XX": {
+    "text": "Okay, so you're on your way to the meeting. Anything else you need help with?",
+    "total_ms": 6096.2,
+    "pitch_hz": 249.243,
+    "range_st": 5.521,
+    "level_db": -16.537,
+    "seconds": 4.78
+   },
+   "1060_IOM_SAD_XX": {
+    "text": "Well, you can use a heating pad, take a warm bath, or just put on some warm clothes. What do you think you'll do?",
+    "total_ms": 8996.9,
+    "pitch_hz": 247.491,
+    "range_st": 7.364,
+    "level_db": -17.256,
+    "seconds": 7.14
+   },
+   "1013_ITH_NEU_XX": {
+    "text": "Oh, that's good. Are you feeling okay? If you need any help with the appointment, like finding the location or what to bring, just let me know.",
+    "total_ms": 12528.0,
+    "pitch_hz": 256.594,
+    "range_st": 8.162,
+    "level_db": -17.738,
+    "seconds": 9.42
+   },
+   "1013_ITH_SAD_XX": {
+    "text": "Oh, that's good. Are you feeling okay? Let me know if you need any help with the appointment.",
+    "total_ms": 8652.5,
+    "pitch_hz": 231.587,
+    "range_st": 5.217,
+    "level_db": -18.236,
+    "seconds": 6.78
+   },
+   "1009_IEO_NEU_XX": {
+    "text": "Oh, 11 o'clock already? Time flies, doesn't it? What's on your mind?",
+    "total_ms": 7124.7,
+    "pitch_hz": 219.884,
+    "range_st": 5.512,
+    "level_db": -18.512,
+    "seconds": 5.66
+   },
+   "1009_IEO_FEA_HI": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What's on your mind?",
+    "total_ms": 7923.5,
+    "pitch_hz": 241.214,
+    "range_st": 6.865,
+    "level_db": -16.749,
+    "seconds": 6.32
+   },
+   "1058_TAI_NEU_XX": {
+    "text": "Oh, that's good to know. Are you planning to book a flight soon?",
+    "total_ms": 5386.4,
+    "pitch_hz": 260.532,
+    "range_st": 7.765,
+    "level_db": -17.779,
+    "seconds": 4.18
+   },
+   "1058_TAI_FEA_XX": {
+    "text": "Oh, that's good to know. Are you planning to book a flight soon?",
+    "total_ms": 5845.4,
+    "pitch_hz": 257.792,
+    "range_st": 5.596,
+    "level_db": -18.928,
+    "seconds": 4.58
+   },
+   "1036_TSI_NEU_XX": {
+    "text": "Well, that could mean a few things. Maybe it's a smooth surface like glass or polished metal. Or it could be that the surface is wet and shiny. What exactly are you talking about? It'd be great if you could give me a bit more context.",
+    "total_ms": 19189.2,
+    "pitch_hz": 238.24,
+    "range_st": 8.867,
+    "level_db": -16.773,
+    "seconds": 14.62
+   },
+   "1036_TSI_FEA_XX": {
+    "text": "Oh, that's not good. Slick surfaces can be really slippery. Are you having trouble with something because of it? Let me know if you need any advice.",
+    "total_ms": 11584.4,
+    "pitch_hz": 232.646,
+    "range_st": 9.414,
+    "level_db": -18.444,
+    "seconds": 9.24
+   },
+   "1063_IEO_NEU_XX": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to at this hour?",
+    "total_ms": 8894.6,
+    "pitch_hz": 248.295,
+    "range_st": 8.475,
+    "level_db": -17.718,
+    "seconds": 7.14
+   },
+   "1063_IEO_FEA_HI": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to this late?",
+    "total_ms": 7144.5,
+    "pitch_hz": 275.353,
+    "range_st": 11.206,
+    "level_db": -16.401,
+    "seconds": 5.54
+   },
+   "1012_IEO_NEU_XX": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What's on your mind?",
+    "total_ms": 7394.1,
+    "pitch_hz": 268.65,
+    "range_st": 7.941,
+    "level_db": -16.925,
+    "seconds": 5.84
+   },
+   "1012_IEO_FEA_HI": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to at this hour?",
+    "total_ms": 8218.7,
+    "pitch_hz": 244.795,
+    "range_st": 7.819,
+    "level_db": -18.165,
+    "seconds": 6.64
+   },
+   "1010_ITH_NEU_XX": {
+    "text": "Oh, that's good. Are you sure it's a doctor's appointment? Let me know if you need any help with it.",
+    "total_ms": 8679.3,
+    "pitch_hz": 236.847,
+    "range_st": 9.574,
+    "level_db": -18.033,
+    "seconds": 6.9
+   },
+   "1010_ITH_FEA_XX": {
+    "text": "Oh, that's good. Are you feeling okay? If you need any help with the appointment, like finding the location or what to bring, just let me know.",
+    "total_ms": 11598.4,
+    "pitch_hz": 243.058,
+    "range_st": 8.55,
+    "level_db": -18.179,
+    "seconds": 9.52
+   },
+   "1006_IWW_NEU_XX": {
+    "text": "Well, it seems like you're not sure about something. Can you tell me a bit more? Maybe I can help you figure it out.",
+    "total_ms": 9016.4,
+    "pitch_hz": 259.626,
+    "range_st": 9.517,
+    "level_db": -17.039,
+    "seconds": 7.36
+   },
+   "1006_IWW_FEA_XX": {
+    "text": "Well, it seems like you're not sure what something is about. Maybe you can give me a bit more detail? I'd be happy to help figure it out.",
+    "total_ms": 10973.6,
+    "pitch_hz": 268.259,
+    "range_st": 9.675,
+    "level_db": -16.897,
+    "seconds": 8.66
+   },
+   "1043_IWW_NEU_XX": {
+    "text": "Well, it seems like you're not sure what something is about. Could you give me a bit more information? Maybe I can help you figure it out.",
+    "total_ms": 10828.2,
+    "pitch_hz": 229.592,
+    "range_st": 4.99,
+    "level_db": -18.083,
+    "seconds": 8.5
+   },
+   "1043_IWW_FEA_XX": {
+    "text": "Well, it seems like you're not sure about something. Can you tell me a bit more? Maybe I can help you figure it out.",
+    "total_ms": 9248.6,
+    "pitch_hz": 289.148,
+    "range_st": 8.975,
+    "level_db": -16.596,
+    "seconds": 7.34
+   },
+   "1026_IWL_NEU_XX": {
+    "text": "Sure, what kind of alarm clock are you thinking about? Digital or analog? And do you want any special features like a snooze button or a bright light? Let me know so I can help you better.",
+    "total_ms": 14519.1,
+    "pitch_hz": 221.666,
+    "range_st": 8.699,
+    "level_db": -17.591,
+    "seconds": 11.34
+   },
+   "1026_IWL_FEA_XX": {
+    "text": "Well, you could look for a new one at your local electronics store. Or, you know, there are lots of great alarm clocks available online too. What kind of features are you looking for in a new alarm clock?",
+    "total_ms": 16254.4,
+    "pitch_hz": 221.677,
+    "range_st": 8.407,
+    "level_db": -17.414,
+    "seconds": 12.36
+   },
+   "1059_ITS_NEU_XX": {
+    "text": "Well, that's good to hear. What do you think you've seen before?",
+    "total_ms": 5847.3,
+    "pitch_hz": 256.971,
+    "range_st": 9.653,
+    "level_db": -17.233,
+    "seconds": 3.94
+   },
+   "1059_ITS_FEA_XX": {
+    "text": "Well, that's interesting. What do you think you've seen before?",
+    "total_ms": 5578.6,
+    "pitch_hz": 246.767,
+    "range_st": 10.0,
+    "level_db": -16.473,
+    "seconds": 4.28
+   },
+   "1086_TSI_NEU_XX": {
+    "text": "Oh, slick surface? That could be a good thing if it's for something like a car or a skateboard. But if it's a floor, it might be a bit slippery. What's the context?",
+    "total_ms": 15467.1,
+    "pitch_hz": 236.475,
+    "range_st": 10.506,
+    "level_db": -17.004,
+    "seconds": 11.96
+   },
+   "1086_TSI_FEA_XX": {
+    "text": "Oh, slick surface? That could be a bit tricky. Are you talking about a floor or something else? Let me know so I can give you better advice.",
+    "total_ms": 12048.1,
+    "pitch_hz": 232.314,
+    "range_st": 9.639,
+    "level_db": -17.639,
+    "seconds": 9.54
+   },
+   "1037_TSI_NEU_XX": {
+    "text": "Oh, slick surface? That could be a bit tricky. Are you talking about a floor or something else? Let me know more so I can help better.",
+    "total_ms": 11697.5,
+    "pitch_hz": 251.678,
+    "range_st": 11.179,
+    "level_db": -17.762,
+    "seconds": 9.26
+   },
+   "1037_TSI_FEA_XX": {
+    "text": "Oh, a slick surface? That could be slippery. Be careful when you're around it. What made you mention that?",
+    "total_ms": 11267.4,
+    "pitch_hz": 210.488,
+    "range_st": 9.075,
+    "level_db": -18.343,
+    "seconds": 9.06
+   },
+   "1040_ITS_NEU_XX": {
+    "text": "Well, that's good to hear. What do you think you've seen before?",
+    "total_ms": 5165.7,
+    "pitch_hz": 257.079,
+    "range_st": 9.127,
+    "level_db": -17.207,
+    "seconds": 3.96
+   },
+   "1040_ITS_FEA_XX": {
+    "text": "Well, that's interesting. Have you seen it where? Maybe I can help you figure out what it is.",
+    "total_ms": 9350.7,
+    "pitch_hz": 222.402,
+    "range_st": 5.519,
+    "level_db": -17.376,
+    "seconds": 7.58
+   },
+   "1065_TIE_NEU_XX": {
+    "text": "Oh, that's interesting. What happened?",
+    "total_ms": 4570.8,
+    "pitch_hz": 227.626,
+    "range_st": 13.62,
+    "level_db": -18.572,
+    "seconds": 3.54
+   },
+   "1065_TIE_ANG_XX": {
+    "text": "Oh, that's great! What happened?",
+    "total_ms": 4242.4,
+    "pitch_hz": 288.605,
+    "range_st": 13.861,
+    "level_db": -17.063,
+    "seconds": 3.16
+   },
+   "1009_WSI_NEU_XX": {
+    "text": "Okay, no problem. When you're ready, just let me know.",
+    "total_ms": 5933.4,
+    "pitch_hz": 243.144,
+    "range_st": 9.04,
+    "level_db": -16.957,
+    "seconds": 4.78
+   },
+   "1009_WSI_ANG_XX": {
+    "text": "Okay, so you'll be stopping in a couple of minutes. Anything else you need to know?",
+    "total_ms": 6224.5,
+    "pitch_hz": 254.604,
+    "range_st": 7.85,
+    "level_db": -16.74,
+    "seconds": 5.04
+   },
+   "1006_WSI_NEU_XX": {
+    "text": "Okay, so you'll be stopping in a couple of minutes. Anything else you need to know?",
+    "total_ms": 6131.9,
+    "pitch_hz": 250.27,
+    "range_st": 7.709,
+    "level_db": -17.248,
+    "seconds": 4.9
+   },
+   "1006_WSI_ANG_XX": {
+    "text": "Okay, I'll stop in a couple of minutes. Is there anything else you need me to do?",
+    "total_ms": 6661.2,
+    "pitch_hz": 254.541,
+    "range_st": 6.681,
+    "level_db": -18.081,
+    "seconds": 5.42
+   },
+   "1004_IEO_NEU_XX": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to at this hour?",
+    "total_ms": 7321.3,
+    "pitch_hz": 245.3,
+    "range_st": 9.882,
+    "level_db": -16.933,
+    "seconds": 5.82
+   },
+   "1004_IEO_ANG_HI": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to at this hour?",
+    "total_ms": 8426.2,
+    "pitch_hz": 249.82,
+    "range_st": 7.943,
+    "level_db": -18.818,
+    "seconds": 6.62
+   },
+   "1051_IEO_NEU_XX": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to at this hour?",
+    "total_ms": 7815.7,
+    "pitch_hz": 246.108,
+    "range_st": 9.236,
+    "level_db": -17.898,
+    "seconds": 6.18
+   },
+   "1051_IEO_ANG_HI": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to this late?",
+    "total_ms": 7411.3,
+    "pitch_hz": 275.899,
+    "range_st": 10.351,
+    "level_db": -16.471,
+    "seconds": 5.96
+   },
+   "1074_IEO_NEU_XX": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What are you up to at this hour?",
+    "total_ms": 8419.4,
+    "pitch_hz": 230.221,
+    "range_st": 7.969,
+    "level_db": -18.083,
+    "seconds": 6.64
+   },
+   "1074_IEO_ANG_HI": {
+    "text": "Oh, it's 11 o'clock already? Time flies, doesn't it? What's on your agenda for today?",
+    "total_ms": 7377.4,
+    "pitch_hz": 236.491,
+    "range_st": 7.945,
+    "level_db": -18.119,
+    "seconds": 5.74
+   },
+   "1013_DFA_NEU_XX": {
+    "text": "Sure, I'll make sure to bring a jacket. What's the weather like today?",
+    "total_ms": 5970.1,
+    "pitch_hz": 267.82,
+    "range_st": 12.808,
+    "level_db": -16.68,
+    "seconds": 4.88
+   },
+   "1013_DFA_ANG_XX": {
+    "text": "Sure, I'll make sure to bring a jacket. What's the weather like today?",
+    "total_ms": 5817.2,
+    "pitch_hz": 280.969,
+    "range_st": 11.739,
+    "level_db": -18.018,
+    "seconds": 4.68
+   },
+   "1036_DFA_NEU_XX": {
+    "text": "Sure, I'll make sure to remind you. Is there anything else you need help with?",
+    "total_ms": 5939.9,
+    "pitch_hz": 243.261,
+    "range_st": 9.003,
+    "level_db": -17.437,
+    "seconds": 4.88
+   },
+   "1036_DFA_ANG_XX": {
+    "text": "Sure, I'll make sure to bring a jacket. What's the weather like today?",
+    "total_ms": 5770.9,
+    "pitch_hz": 286.484,
+    "range_st": 13.481,
+    "level_db": -18.125,
+    "seconds": 4.58
+   },
+   "1039_DFA_NEU_XX": {
+    "text": "Sure, I'll make sure to bring a jacket. What's the weather like today?",
+    "total_ms": 5786.9,
+    "pitch_hz": 233.538,
+    "range_st": 11.634,
+    "level_db": -17.401,
+    "seconds": 4.66
+   },
+   "1039_DFA_ANG_XX": {
+    "text": "Sure, I'll make sure to bring a jacket. What's the weather like today?",
+    "total_ms": 5631.4,
+    "pitch_hz": 256.987,
+    "range_st": 11.518,
+    "level_db": -15.819,
+    "seconds": 4.42
+   },
+   "1042_ITH_NEU_XX": {
+    "text": "Oh, that's good. Are you sure it's a doctor's appointment? Let me know if you need any help with it.",
+    "total_ms": 7801.5,
+    "pitch_hz": 249.213,
+    "range_st": 7.862,
+    "level_db": -17.74,
+    "seconds": 6.2
+   },
+   "1042_ITH_ANG_XX": {
+    "text": "Oh, that's great! Are you sure it's a doctor's appointment? Let me know if you need any help with it.",
+    "total_ms": 8116.4,
+    "pitch_hz": 269.183,
+    "range_st": 9.645,
+    "level_db": -17.92,
+    "seconds": 6.48
+   },
+   "1025_IOM_NEU_XX": {
+    "text": "Okay, so you're on your way to the meeting. Anything else you need help with?",
+    "total_ms": 5876.3,
+    "pitch_hz": 238.828,
+    "range_st": 5.337,
+    "level_db": -17.076,
+    "seconds": 4.72
+   },
+   "1025_IOM_ANG_XX": {
+    "text": "Okay, so you're on your way to the meeting. Anything else you need help with?",
+    "total_ms": 6137.7,
+    "pitch_hz": 257.853,
+    "range_st": 6.384,
+    "level_db": -16.701,
+    "seconds": 4.98
+   },
+   "1089_IWL_NEU_XX": {
+    "text": "Well, there are quite a few good alarm clocks out there. You could look for ones with a nice big display so you can see the time clearly. And some have snooze buttons that are easy to reach. What kind of features are you looking for? Maybe a digital one with a snooze",
+    "total_ms": 21344.1,
+    "pitch_hz": 229.03,
+    "range_st": 8.399,
+    "level_db": -18.128,
+    "seconds": 16.72
+   },
+   "1089_IWL_ANG_XX": {
+    "text": "Sure, what kind of alarm clock are you thinking about? Digital or analog? And do you want any special features like a snooze button or a bright light? Let me know so I can help you better.",
+    "total_ms": 14210.6,
+    "pitch_hz": 230.997,
+    "range_st": 10.754,
+    "level_db": -17.335,
+    "seconds": 10.82
+   },
+   "1008_TSI_NEU_XX": {
+    "text": "Oh, slick surface? That could be a bit tricky. Are you talking about a floor or something else? Let me know more so I can help you out.",
+    "total_ms": 12475.1,
+    "pitch_hz": 240.538,
+    "range_st": 8.331,
+    "level_db": -18.11,
+    "seconds": 10.4
+   },
+   "1008_TSI_ANG_XX": {
+    "text": "Oh, slick surface? That could be a bit tricky. Are you talking about a floor or something else? Let me know more so I can help better.",
+    "total_ms": 11408.3,
+    "pitch_hz": 262.337,
+    "range_st": 10.454,
+    "level_db": -17.148,
+    "seconds": 8.94
+   }
+  }
+ },
+ "repeat": {
+  "r3-gpu": {
+   "1006_TIE_NEU_XX": 0.159847,
+   "1006_TIE_SAD_XX": 0.213841
+  },
+  "r4-gpu": {
+   "1006_TIE_NEU_XX": 0.0,
+   "1006_TIE_SAD_XX": 0.0
+  }
+ },
+ "deltas": {
+  "r3-gpu": [
+   {
+    "id": "sad-t01",
+    "emotion": "SAD",
+    "d_range_st": 0.2,
+    "d_pitch_st": -0.009,
+    "d_level_db": 0.148,
+    "direction": "same",
+    "words_calm": 32,
+    "words_upset": 33
+   },
+   {
+    "id": "sad-t02",
+    "emotion": "SAD",
+    "d_range_st": 0.391,
+    "d_pitch_st": -0.062,
+    "d_level_db": 0.2,
+    "direction": "same",
+    "words_calm": 19,
+    "words_upset": 19
+   },
+   {
+    "id": "sad-t03",
+    "emotion": "SAD",
+    "d_range_st": -0.384,
+    "d_pitch_st": -0.184,
+    "d_level_db": -0.077,
+    "direction": "same",
+    "words_calm": 16,
+    "words_upset": 22
+   },
+   {
+    "id": "sad-t04",
+    "emotion": "SAD",
+    "d_range_st": 0.831,
+    "d_pitch_st": -0.673,
+    "d_level_db": 0.189,
+    "direction": "wider",
+    "words_calm": 12,
+    "words_upset": 16
+   },
+   {
+    "id": "sad-t05",
+    "emotion": "SAD",
+    "d_range_st": -0.458,
+    "d_pitch_st": -0.286,
+    "d_level_db": 0.094,
+    "direction": "same",
+    "words_calm": 9,
+    "words_upset": 16
+   },
+   {
+    "id": "sad-t06",
+    "emotion": "SAD",
+    "d_range_st": 12.272,
+    "d_pitch_st": 0.205,
+    "d_level_db": -0.554,
+    "direction": "wider",
+    "words_calm": 21,
+    "words_upset": 11
+   },
+   {
+    "id": "sad-t07",
+    "emotion": "SAD",
+    "d_range_st": 0.037,
+    "d_pitch_st": 0.078,
+    "d_level_db": 0.025,
+    "direction": "same",
+    "words_calm": 22,
+    "words_upset": 21
+   },
+   {
+    "id": "sad-t08",
+    "emotion": "SAD",
+    "d_range_st": -0.631,
+    "d_pitch_st": -0.078,
+    "d_level_db": 0.103,
+    "direction": "narrower",
+    "words_calm": 5,
+    "words_upset": 16
+   },
+   {
+    "id": "sad-t09",
+    "emotion": "SAD",
+    "d_range_st": 0.01,
+    "d_pitch_st": -0.866,
+    "d_level_db": 0.411,
+    "direction": "same",
+    "words_calm": 5,
+    "words_upset": 18
+   },
+   {
+    "id": "sad-t10",
+    "emotion": "SAD",
+    "d_range_st": 0.551,
+    "d_pitch_st": 0.017,
+    "d_level_db": 0.01,
+    "direction": "wider",
+    "words_calm": 12,
+    "words_upset": 9
+   },
+   {
+    "id": "sad-t11",
+    "emotion": "SAD",
+    "d_range_st": 1.485,
+    "d_pitch_st": 0.957,
+    "d_level_db": -0.293,
+    "direction": "wider",
+    "words_calm": 16,
+    "words_upset": 5
+   },
+   {
+    "id": "sad-t12",
+    "emotion": "SAD",
+    "d_range_st": -0.395,
+    "d_pitch_st": -0.118,
+    "d_level_db": -0.612,
+    "direction": "same",
+    "words_calm": 19,
+    "words_upset": 18
+   },
+   {
+    "id": "sad-t13",
+    "emotion": "SAD",
+    "d_range_st": 0.26,
+    "d_pitch_st": 0.603,
+    "d_level_db": -0.187,
+    "direction": "same",
+    "words_calm": 25,
+    "words_upset": 22
+   },
+   {
+    "id": "fea-t01",
+    "emotion": "FEA",
+    "d_range_st": 1.446,
+    "d_pitch_st": -0.213,
+    "d_level_db": -0.365,
+    "direction": "wider",
+    "words_calm": 5,
+    "words_upset": 12
+   },
+   {
+    "id": "fea-t02",
+    "emotion": "FEA",
+    "d_range_st": -0.039,
+    "d_pitch_st": 0.131,
+    "d_level_db": 0.145,
+    "direction": "same",
+    "words_calm": 16,
+    "words_upset": 21
+   },
+   {
+    "id": "fea-t03",
+    "emotion": "FEA",
+    "d_range_st": 0.441,
+    "d_pitch_st": -0.364,
+    "d_level_db": -0.556,
+    "direction": "same",
+    "words_calm": 12,
+    "words_upset": 10
+   },
+   {
+    "id": "fea-t04",
+    "emotion": "FEA",
+    "d_range_st": 1.267,
+    "d_pitch_st": -0.515,
+    "d_level_db": -0.012,
+    "direction": "wider",
+    "words_calm": 6,
+    "words_upset": 21
+   },
+   {
+    "id": "fea-t05",
+    "emotion": "FEA",
+    "d_range_st": 0.988,
+    "d_pitch_st": -0.402,
+    "d_level_db": -0.665,
+    "direction": "wider",
+    "words_calm": 5,
+    "words_upset": 12
+   },
+   {
+    "id": "fea-t06",
+    "emotion": "FEA",
+    "d_range_st": -0.344,
+    "d_pitch_st": 0.724,
+    "d_level_db": -0.178,
+    "direction": "same",
+    "words_calm": 25,
+    "words_upset": 14
+   },
+   {
+    "id": "fea-t07",
+    "emotion": "FEA",
+    "d_range_st": 2.05,
+    "d_pitch_st": -0.529,
+    "d_level_db": 0.033,
+    "direction": "wider",
+    "words_calm": 16,
+    "words_upset": 21
+   },
+   {
+    "id": "fea-t08",
+    "emotion": "FEA",
+    "d_range_st": -0.12,
+    "d_pitch_st": 0.131,
+    "d_level_db": 0.094,
+    "direction": "same",
+    "words_calm": 17,
+    "words_upset": 16
+   },
+   {
+    "id": "fea-t09",
+    "emotion": "FEA",
+    "d_range_st": 0.382,
+    "d_pitch_st": -0.299,
+    "d_level_db": -0.234,
+    "direction": "same",
+    "words_calm": 24,
+    "words_upset": 25
+   },
+   {
+    "id": "fea-t10",
+    "emotion": "FEA",
+    "d_range_st": -0.855,
+    "d_pitch_st": -0.748,
+    "d_level_db": -0.692,
+    "direction": "narrower",
+    "words_calm": 21,
+    "words_upset": 19
+   },
+   {
+    "id": "fea-t11",
+    "emotion": "FEA",
+    "d_range_st": 1.322,
+    "d_pitch_st": -0.468,
+    "d_level_db": -0.629,
+    "direction": "wider",
+    "words_calm": 22,
+    "words_upset": 18
+   },
+   {
+    "id": "fea-t12",
+    "emotion": "FEA",
+    "d_range_st": -2.485,
+    "d_pitch_st": 0.591,
+    "d_level_db": 0.499,
+    "direction": "narrower",
+    "words_calm": 5,
+    "words_upset": 12
+   },
+   {
+    "id": "fea-t13",
+    "emotion": "FEA",
+    "d_range_st": 0.085,
+    "d_pitch_st": -0.793,
+    "d_level_db": -0.857,
+    "direction": "same",
+    "words_calm": 23,
+    "words_upset": 19
+   },
+   {
+    "id": "ang-t01",
+    "emotion": "ANG",
+    "d_range_st": -0.223,
+    "d_pitch_st": 0.114,
+    "d_level_db": -0.674,
+    "direction": "same",
+    "words_calm": 32,
+    "words_upset": 11
+   },
+   {
+    "id": "ang-t02",
+    "emotion": "ANG",
+    "d_range_st": -1.541,
+    "d_pitch_st": -0.367,
+    "d_level_db": 0.143,
+    "direction": "narrower",
+    "words_calm": 12,
+    "words_upset": 22
+   },
+   {
+    "id": "ang-t03",
+    "emotion": "ANG",
+    "d_range_st": 1.788,
+    "d_pitch_st": 0.267,
+    "d_level_db": -0.686,
+    "direction": "wider",
+    "words_calm": 22,
+    "words_upset": 10
+   },
+   {
+    "id": "ang-t04",
+    "emotion": "ANG",
+    "d_range_st": -0.091,
+    "d_pitch_st": -0.892,
+    "d_level_db": 0.225,
+    "direction": "same",
+    "words_calm": 5,
+    "words_upset": 39
+   },
+   {
+    "id": "ang-t05",
+    "emotion": "ANG",
+    "d_range_st": 1.493,
+    "d_pitch_st": -0.058,
+    "d_level_db": -0.112,
+    "direction": "wider",
+    "words_calm": 6,
+    "words_upset": 13
+   },
+   {
+    "id": "ang-t06",
+    "emotion": "ANG",
+    "d_range_st": 0.502,
+    "d_pitch_st": -1.546,
+    "d_level_db": -0.597,
+    "direction": "wider",
+    "words_calm": 6,
+    "words_upset": 27
+   },
+   {
+    "id": "ang-t07",
+    "emotion": "ANG",
+    "d_range_st": 0.0,
+    "d_pitch_st": 0.02,
+    "d_level_db": 0.089,
+    "direction": "same",
+    "words_calm": 10,
+    "words_upset": 10
+   },
+   {
+    "id": "ang-t08",
+    "emotion": "ANG",
+    "d_range_st": -0.68,
+    "d_pitch_st": -0.645,
+    "d_level_db": -0.162,
+    "direction": "narrower",
+    "words_calm": 10,
+    "words_upset": 16
+   },
+   {
+    "id": "ang-t09",
+    "emotion": "ANG",
+    "d_range_st": 0.129,
+    "d_pitch_st": -0.092,
+    "d_level_db": -0.063,
+    "direction": "same",
+    "words_calm": 10,
+    "words_upset": 10
+   },
+   {
+    "id": "ang-t10",
+    "emotion": "ANG",
+    "d_range_st": -0.28,
+    "d_pitch_st": -0.08,
+    "d_level_db": -0.757,
+    "direction": "same",
+    "words_calm": 8,
+    "words_upset": 17
+   },
+   {
+    "id": "ang-t11",
+    "emotion": "ANG",
+    "d_range_st": -0.003,
+    "d_pitch_st": -0.269,
+    "d_level_db": -0.593,
+    "direction": "same",
+    "words_calm": 19,
+    "words_upset": 23
+   },
+   {
+    "id": "ang-t12",
+    "emotion": "ANG",
+    "d_range_st": 0.045,
+    "d_pitch_st": 0.379,
+    "d_level_db": 0.065,
+    "direction": "same",
+    "words_calm": 29,
+    "words_upset": 24
+   },
+   {
+    "id": "ang-t13",
+    "emotion": "ANG",
+    "d_range_st": -0.771,
+    "d_pitch_st": 0.416,
+    "d_level_db": -0.281,
+    "direction": "narrower",
+    "words_calm": 5,
+    "words_upset": 6
+   }
+  ],
+  "r4-gpu": [
+   {
+    "id": "sad-t01",
+    "emotion": "SAD",
+    "d_range_st": 0.617,
+    "d_pitch_st": -5.475,
+    "d_level_db": -1.124,
+    "direction": "wider",
+    "words_calm": 5,
+    "words_upset": 5
+   },
+   {
+    "id": "sad-t02",
+    "emotion": "SAD",
+    "d_range_st": 0.355,
+    "d_pitch_st": 0.828,
+    "d_level_db": 0.867,
+    "direction": "same",
+    "words_calm": 15,
+    "words_upset": 15
+   },
+   {
+    "id": "sad-t03",
+    "emotion": "SAD",
+    "d_range_st": 0.734,
+    "d_pitch_st": 1.819,
+    "d_level_db": 0.19,
+    "direction": "wider",
+    "words_calm": 25,
+    "words_upset": 13
+   },
+   {
+    "id": "sad-t04",
+    "emotion": "SAD",
+    "d_range_st": 0.041,
+    "d_pitch_st": -0.677,
+    "d_level_db": 0.409,
+    "direction": "same",
+    "words_calm": 29,
+    "words_upset": 28
+   },
+   {
+    "id": "sad-t05",
+    "emotion": "SAD",
+    "d_range_st": -1.803,
+    "d_pitch_st": -0.196,
+    "d_level_db": -1.706,
+    "direction": "narrower",
+    "words_calm": 29,
+    "words_upset": 20
+   },
+   {
+    "id": "sad-t06",
+    "emotion": "SAD",
+    "d_range_st": -2.805,
+    "d_pitch_st": -0.684,
+    "d_level_db": -0.887,
+    "direction": "narrower",
+    "words_calm": 17,
+    "words_upset": 17
+   },
+   {
+    "id": "sad-t07",
+    "emotion": "SAD",
+    "d_range_st": -0.908,
+    "d_pitch_st": 0.254,
+    "d_level_db": 0.631,
+    "direction": "narrower",
+    "words_calm": 16,
+    "words_upset": 16
+   },
+   {
+    "id": "sad-t08",
+    "emotion": "SAD",
+    "d_range_st": 0.628,
+    "d_pitch_st": 0.176,
+    "d_level_db": -0.416,
+    "direction": "wider",
+    "words_calm": 17,
+    "words_upset": 17
+   },
+   {
+    "id": "sad-t09",
+    "emotion": "SAD",
+    "d_range_st": -1.581,
+    "d_pitch_st": 1.388,
+    "d_level_db": -0.913,
+    "direction": "narrower",
+    "words_calm": 17,
+    "words_upset": 17
+   },
+   {
+    "id": "sad-t10",
+    "emotion": "SAD",
+    "d_range_st": -1.482,
+    "d_pitch_st": 0.988,
+    "d_level_db": 0.027,
+    "direction": "narrower",
+    "words_calm": 28,
+    "words_upset": 26
+   },
+   {
+    "id": "sad-t11",
+    "emotion": "SAD",
+    "d_range_st": -4.33,
+    "d_pitch_st": -3.804,
+    "d_level_db": 0.721,
+    "direction": "narrower",
+    "words_calm": 13,
+    "words_upset": 35
+   },
+   {
+    "id": "sad-t12",
+    "emotion": "SAD",
+    "d_range_st": 1.843,
+    "d_pitch_st": -0.122,
+    "d_level_db": -0.719,
+    "direction": "wider",
+    "words_calm": 15,
+    "words_upset": 24
+   },
+   {
+    "id": "sad-t13",
+    "emotion": "SAD",
+    "d_range_st": -2.945,
+    "d_pitch_st": -1.775,
+    "d_level_db": -0.498,
+    "direction": "narrower",
+    "words_calm": 27,
+    "words_upset": 18
+   },
+   {
+    "id": "fea-t01",
+    "emotion": "FEA",
+    "d_range_st": 1.353,
+    "d_pitch_st": 1.603,
+    "d_level_db": 1.763,
+    "direction": "wider",
+    "words_calm": 12,
+    "words_upset": 13
+   },
+   {
+    "id": "fea-t02",
+    "emotion": "FEA",
+    "d_range_st": -2.169,
+    "d_pitch_st": -0.183,
+    "d_level_db": -1.149,
+    "direction": "narrower",
+    "words_calm": 13,
+    "words_upset": 13
+   },
+   {
+    "id": "fea-t03",
+    "emotion": "FEA",
+    "d_range_st": 0.547,
+    "d_pitch_st": -0.411,
+    "d_level_db": -1.671,
+    "direction": "wider",
+    "words_calm": 46,
+    "words_upset": 27
+   },
+   {
+    "id": "fea-t04",
+    "emotion": "FEA",
+    "d_range_st": 2.731,
+    "d_pitch_st": 1.791,
+    "d_level_db": 1.317,
+    "direction": "wider",
+    "words_calm": 17,
+    "words_upset": 16
+   },
+   {
+    "id": "fea-t05",
+    "emotion": "FEA",
+    "d_range_st": -0.122,
+    "d_pitch_st": -1.61,
+    "d_level_db": -1.24,
+    "direction": "same",
+    "words_calm": 13,
+    "words_upset": 17
+   },
+   {
+    "id": "fea-t06",
+    "emotion": "FEA",
+    "d_range_st": -1.024,
+    "d_pitch_st": 0.448,
+    "d_level_db": -0.146,
+    "direction": "narrower",
+    "words_calm": 20,
+    "words_upset": 27
+   },
+   {
+    "id": "fea-t07",
+    "emotion": "FEA",
+    "d_range_st": 0.158,
+    "d_pitch_st": 0.566,
+    "d_level_db": 0.142,
+    "direction": "same",
+    "words_calm": 24,
+    "words_upset": 28
+   },
+   {
+    "id": "fea-t08",
+    "emotion": "FEA",
+    "d_range_st": 3.985,
+    "d_pitch_st": 3.993,
+    "d_level_db": 1.487,
+    "direction": "wider",
+    "words_calm": 27,
+    "words_upset": 24
+   },
+   {
+    "id": "fea-t09",
+    "emotion": "FEA",
+    "d_range_st": -0.292,
+    "d_pitch_st": 0.001,
+    "d_level_db": 0.177,
+    "direction": "same",
+    "words_calm": 37,
+    "words_upset": 39
+   },
+   {
+    "id": "fea-t10",
+    "emotion": "FEA",
+    "d_range_st": 0.347,
+    "d_pitch_st": -0.701,
+    "d_level_db": 0.76,
+    "direction": "same",
+    "words_calm": 12,
+    "words_upset": 10
+   },
+   {
+    "id": "fea-t11",
+    "emotion": "FEA",
+    "d_range_st": -0.867,
+    "d_pitch_st": -0.307,
+    "d_level_db": -0.635,
+    "direction": "narrower",
+    "words_calm": 33,
+    "words_upset": 28
+   },
+   {
+    "id": "fea-t12",
+    "emotion": "FEA",
+    "d_range_st": -2.104,
+    "d_pitch_st": -3.094,
+    "d_level_db": -0.581,
+    "direction": "narrower",
+    "words_calm": 27,
+    "words_upset": 19
+   },
+   {
+    "id": "fea-t13",
+    "emotion": "FEA",
+    "d_range_st": -3.608,
+    "d_pitch_st": -2.509,
+    "d_level_db": -0.169,
+    "direction": "narrower",
+    "words_calm": 12,
+    "words_upset": 18
+   },
+   {
+    "id": "ang-t01",
+    "emotion": "ANG",
+    "d_range_st": 0.241,
+    "d_pitch_st": 4.109,
+    "d_level_db": 1.509,
+    "direction": "same",
+    "words_calm": 5,
+    "words_upset": 5
+   },
+   {
+    "id": "ang-t02",
+    "emotion": "ANG",
+    "d_range_st": -1.19,
+    "d_pitch_st": 0.797,
+    "d_level_db": 0.217,
+    "direction": "narrower",
+    "words_calm": 10,
+    "words_upset": 16
+   },
+   {
+    "id": "ang-t03",
+    "emotion": "ANG",
+    "d_range_st": -1.028,
+    "d_pitch_st": 0.293,
+    "d_level_db": -0.833,
+    "direction": "narrower",
+    "words_calm": 16,
+    "words_upset": 17
+   },
+   {
+    "id": "ang-t04",
+    "emotion": "ANG",
+    "d_range_st": -1.939,
+    "d_pitch_st": 0.316,
+    "d_level_db": -1.885,
+    "direction": "narrower",
+    "words_calm": 17,
+    "words_upset": 17
+   },
+   {
+    "id": "ang-t05",
+    "emotion": "ANG",
+    "d_range_st": 1.115,
+    "d_pitch_st": 1.978,
+    "d_level_db": 1.427,
+    "direction": "wider",
+    "words_calm": 17,
+    "words_upset": 16
+   },
+   {
+    "id": "ang-t06",
+    "emotion": "ANG",
+    "d_range_st": -0.024,
+    "d_pitch_st": 0.465,
+    "d_level_db": -0.036,
+    "direction": "same",
+    "words_calm": 17,
+    "words_upset": 15
+   },
+   {
+    "id": "ang-t07",
+    "emotion": "ANG",
+    "d_range_st": -1.069,
+    "d_pitch_st": 0.83,
+    "d_level_db": -1.338,
+    "direction": "narrower",
+    "words_calm": 13,
+    "words_upset": 13
+   },
+   {
+    "id": "ang-t08",
+    "emotion": "ANG",
+    "d_range_st": 4.478,
+    "d_pitch_st": 2.831,
+    "d_level_db": -0.688,
+    "direction": "wider",
+    "words_calm": 15,
+    "words_upset": 13
+   },
+   {
+    "id": "ang-t09",
+    "emotion": "ANG",
+    "d_range_st": -0.116,
+    "d_pitch_st": 1.656,
+    "d_level_db": 1.582,
+    "direction": "same",
+    "words_calm": 13,
+    "words_upset": 13
+   },
+   {
+    "id": "ang-t10",
+    "emotion": "ANG",
+    "d_range_st": 1.783,
+    "d_pitch_st": 1.334,
+    "d_level_db": -0.18,
+    "direction": "wider",
+    "words_calm": 20,
+    "words_upset": 20
+   },
+   {
+    "id": "ang-t11",
+    "emotion": "ANG",
+    "d_range_st": 1.047,
+    "d_pitch_st": 1.327,
+    "d_level_db": 0.375,
+    "direction": "wider",
+    "words_calm": 15,
+    "words_upset": 15
+   },
+   {
+    "id": "ang-t12",
+    "emotion": "ANG",
+    "d_range_st": 2.355,
+    "d_pitch_st": 0.148,
+    "d_level_db": 0.793,
+    "direction": "wider",
+    "words_calm": 53,
+    "words_upset": 37
+   },
+   {
+    "id": "ang-t13",
+    "emotion": "ANG",
+    "d_range_st": 2.123,
+    "d_pitch_st": 1.502,
+    "d_level_db": 0.962,
+    "direction": "wider",
+    "words_calm": 28,
+    "words_upset": 27
+   }
+  ]
+ }
+}

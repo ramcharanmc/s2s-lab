@@ -22,7 +22,7 @@ Rules, from the v1 Research plan (§8):
 | PR-005 | Does telling R1's LLM one word about the caller's tone (a $0 eGeMAPS tagger) let it tell an upset caller from the same words said calmly, for fear and for anger, better than shuffled tags do? | `44a9a5f` | **Reported: not supported** (fear 7 of 13, one under the bar, p = 0.015; anger 11 of 13, p < 0.001, held; sadness 7 of 13, p = 0.025, held though expected to fail) |
 | PR-006 | Does a speech-LLM that hears the audio (R3, Qwen2-Audio) rank the upset clip above its calm twin on the 39 locked prosody pairs (Claim A), and answer at least as many pairs right as the $0 side-channel on its own metric (Claim B)? | `95c3d33` | **Reported: Claim A supported** (13 of 13 for every emotion); **Claim B not supported** (11 · 11 · 9 against 7 · 7 · 11; anger short; sign test p = 0.21) |
 | PR-007 | On 38 fresh CREMA-D pairs from actors no system here has scored, does giving the $0 tagger the speaker's own neutral clips (a per-caller baseline) let it tell more upset-calm pairs apart than the same tagger without it, without tagging the upset clips neutral? | `02baa74` | **Reported: not supported** (26 of 38 told apart either way; fixed 2, broken 2, one-sided p = 0.69) |
-| PR-008 | When the caller's voice is upset rather than calm, with the same words, does R4 (Qwen2.5-Omni, speaking for itself) answer with a wider pitch range -- beyond chance and beyond what R3's words carry into Kokoro? | The commit that adds this entry | Open |
+| PR-008 | When the caller's voice is upset rather than calm, with the same words, does R4 (Qwen2.5-Omni, speaking for itself) answer with a wider pitch range -- beyond chance and beyond what R3's words carry into Kokoro? | `f4da0bc` | **Reported: not supported** (R4 14 wider / 16 narrower of 39; no consistent direction, p = 0.86) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -1876,8 +1876,82 @@ reply WAVs are kept in `results/` for listening and are not committed.
 
 ### Deviations
 
-*(none yet)*
+- **2026-09-24, registry row.** Its "Registered" cell was changed to the
+  registering commit's hash, `f4da0bc`, and its status updated, as for the
+  earlier entries.
+- **2026-09-24, the printed output.** The registered run's printed output was
+  overwritten when the same command was invoked a second time the next
+  morning (`| tee results/r4-gpu/pr008-report.md`); the overwrite guard
+  refused that invocation before any call to Modal, so no second answer to any
+  test pair exists. The report committed as `runs/prosody/pr008-report.md` and
+  quoted below is regenerated from the saved run file by the frozen
+  `format_report` and `format_criteria`; the run file itself is untouched. The
+  run's cost line was lost with it and is estimated from the saved turn times.
 
 ### Results
 
-*(to be appended)*
+**Run:** 2026-09-23 20:32, commit `f4da0bc` (the registering commit), clean
+tree, `prosodyset verify` intact, Modal NVIDIA L40S; all 39 pairs, first and
+only run: `modal run modal_app/r4_bench.py::pairs --split test --confirm
+PR-008 --save runs/prosody/pr008.json`. Evidence: `runs/prosody/pr008.json`
+(every reply's text, timing and measures; every pair's deltas and direction;
+the seeding check) and `runs/prosody/pr008-report.md` (regenerated -- see
+Deviations). Reply audio in `results/r4-gpu/replies/test/`, not committed.
+
+**Verdict: NOT SUPPORTED -- S1 and S2 failed; the secondary finds no
+consistent direction.** R4's reply to the upset clip had the wider pitch range
+on 14 pairs and the narrower on 16; R3's on 12 and 6.
+
+The criteria, as the frozen `format_criteria` prints them from the run file:
+
+```text
+| criterion | R4 | R3 | bar | |
+|---|---|---|---|---|
+| S1 R4's reply wider for the upset caller | 14 wider, 16 narrower, 9 same | | more wider, one-sided sign test p = 0.708 < 0.05 | FAIL |
+| S2 R4 against R3, pair by pair | wider where R3 is not: 11 | wider where R4 is not: 9 | more, one-sided sign test p = 0.412 < 0.05 | FAIL |
+| R3 for reference | | 12 wider, 6 narrower, 21 same | | |
+  secondary, two-sided: R4's delivery moves consistently one way -- 14 wider against 16 narrower, p = 0.856
+
+PR-008: NOT SUPPORTED: failed S1, S2
+PR-008 secondary: no consistent direction
+```
+
+The full per-emotion table and the per-pair listing are in
+`runs/prosody/pr008-report.md`. Per emotion, R4 wider / same / narrower: sad
+4 / 2 / 7 (median -0.9 st), fear 4 / 4 / 5 (-0.1), anger 6 / 3 / 4 (+0.2).
+
+**Predictions, scored**
+
+| Prediction | Outcome |
+|---|---|
+| S1 fails | Right. |
+| S2 fails; about 7 against 5 | Right on the verdict; 11 against 9. |
+| R4 about 9 wider, 20 narrower, 10 same | **Wrong:** 14 / 16 / 9 -- nearly even, not flattening. |
+| The secondary close to 0.05, "narrower" | **Wrong:** p = 0.856, no direction at all. |
+| Fear flattens most, anger least | **Wrong:** sadness flattened most (7 of 13 narrower); fear even; anger slightly wider. |
+| R3 mostly "same", about 26 of 39 | 21 of 39: roughly. |
+| R3's words run longer for the upset clip, about 17 -> 21 | **Wrong:** 16 -> 17. |
+| R4's seeding check prints "identical" | Right. |
+
+**What the registration got wrong.** Dev's 5 wider against 11 narrower on 21
+pairs was read as a direction; on 39 fresh pairs it is 14 against 16. The
+fourth time dev was read as the population (PR-004, PR-005, PR-007, now this).
+What the registration got right was not to turn the claim toward dev's
+direction: registered as "narrower", this would have been a confident false
+start; registered as the plan wrote it, with the other direction as a
+secondary, the secondary is what showed that dev's direction was noise.
+
+**Reported alongside, descriptively**
+
+- R4's voice moves a lot but either way: only 9 of its 39 pairs fall inside
+  +-0.5 st, against R3's 21. Its words do not change (17 -> 17 median).
+- On `sad-t06` R3's reply to the upset clip ("Oh, I didn't realize it was
+  that late. Is everything okay?") measured a 19.5 st range, +12.3 st over
+  its calm twin -- most likely an octave jump in the pitch track on Kokoro's
+  question intonation. It changes no count; only the direction is used.
+- R4 answered `sad-t06`'s calm and upset clips with the same words and
+  different deliveries (-2.8 st): the Talker's sampling, seeded, differs with
+  the input even when the text does not.
+- Turn times: R3 median 653 ms, R4 8012 ms (the replies here are short).
+- Cost: about \$0.45 (estimated from the saved turn times -- the printed cost
+  line was lost; see Deviations).

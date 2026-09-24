@@ -26,6 +26,8 @@ one. A failed run is still a row, since it was still billed.
 | 2026-09-23 | `b8092b9` | `modal run modal_app/r4_bench.py --rung r4-gpu` | L40S | — | — | ≈ \$0.01 (failed) | R4 smoke test: image built (Omni + R3 weights), then died at Qwen2.5-Omni's processor load -- Pillow and torchvision missing (fixed in `34a4209`) |
 | 2026-09-23 | `34a4209` | `modal run modal_app/r4_bench.py --rung r4-gpu` | L40S | 328 s | 333 s | \$0.180 | R4 smoke test, 30 probe clips: 8.26 s p50, leading silence 200 ms; found that the Talker samples its voice (seeded in `339092a`) |
 | 2026-09-23 | `339092a` | `modal run modal_app/r4_bench.py --rung r3-gpu,r4-gpu --evalset` | L40S | 2425 s | 2433 s | \$1.318 | **the R4 row**, one container: R3 0.69 s, R4 9.17 s p50 (p90 17.3); R4's wait = 1.33 s per second of its reply; 22.5 GB |
+| 2026-09-23 | `a677969` | `modal run modal_app/r4_bench.py::pairs --split dev` | L40S | 340 s | 362 s | \$0.196 | PR-008 development: R3 and R4 answer the 21 dev prosody pairs; R4 5 wider / 11 narrower; the seeding holds |
+| 2026-09-23 | `f4da0bc` | `modal run modal_app/r4_bench.py::pairs --split test --confirm PR-008 --save runs/prosody/pr008.json` | L40S | ≈ 820 s | ≈ 840 s | ≈ \$0.45 | **the PR-008 run**: R4 14 wider / 16 narrower -- not supported, no direction. Times and cost estimated from the saved turn times: the printed cost line was overwritten (PR-008 Deviations); Modal's dashboard has the exact bill |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -34,5 +36,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$2.140 + three failed runs | \$36.93 |
+| Modal | \$2.786 + three failed runs | \$36.93 |
 | Vast.ai | \$0 | \$5.86 |

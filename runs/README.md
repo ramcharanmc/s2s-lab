@@ -32,6 +32,8 @@ Smoke tests, `--limit` runs and reply WAVs go to `results/`, which is ignored.
 | `r3-gpu/evalset-modal-a10.json` · `evalset-modal-a10-report.md` | **the R3 row**: Qwen2-Audio hears each turn, no transcript in the loop; `heard` = the same model asked to transcribe, untimed; peak GPU memory; the report is the run's printed output (its `heard` table predates the wrapper rule -- `--score` the file for the current number) | `960b491` | Modal NVIDIA A10, same container | page 20 §1, §18 |
 | `r3-gpu/evalset-modal-l40s.json` | R3 re-measured on the L40S, the same-container comparator for the R4 row | `339092a` | Modal NVIDIA L40S, one container: r3-gpu then r4-gpu | page 20 §1, §19 |
 | `r4-gpu/evalset-modal-l40s.json` · `evalset-modal-l40s-report.md` | **the R4 row**: Qwen2.5-Omni hears each turn and speaks the reply itself (no transcript, no TTS), every turn seeded; peak GPU memory; the report is both rungs' printed output | `339092a` | Modal NVIDIA L40S, same container | page 20 §1, §19 |
+| `prosody/pr008.json` | PR-008, the registered run: R3 and R4 answer the 39 locked prosody pairs as a caller's turn; every reply's text and measures, every pair's direction | `f4da0bc` | Modal NVIDIA L40S | page 20 §19 |
+| `prosody/pr008-report.md` | the same run's report, regenerated from the run file by the frozen code (the printed output was overwritten; PR-008 Deviations) | `f4da0bc` | Modal NVIDIA L40S | page 20 §19 |
 
 ## What an eval-set run holds
 
