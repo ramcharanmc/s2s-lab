@@ -23,6 +23,7 @@ Rules, from the v1 Research plan (§8):
 | PR-006 | Does a speech-LLM that hears the audio (R3, Qwen2-Audio) rank the upset clip above its calm twin on the 39 locked prosody pairs (Claim A), and answer at least as many pairs right as the $0 side-channel on its own metric (Claim B)? | `95c3d33` | **Reported: Claim A supported** (13 of 13 for every emotion); **Claim B not supported** (11 · 11 · 9 against 7 · 7 · 11; anger short; sign test p = 0.21) |
 | PR-007 | On 38 fresh CREMA-D pairs from actors no system here has scored, does giving the $0 tagger the speaker's own neutral clips (a per-caller baseline) let it tell more upset-calm pairs apart than the same tagger without it, without tagging the upset clips neutral? | `02baa74` | **Reported: not supported** (26 of 38 told apart either way; fixed 2, broken 2, one-sided p = 0.69) |
 | PR-008 | When the caller's voice is upset rather than calm, with the same words, does R4 (Qwen2.5-Omni, speaking for itself) answer with a wider pitch range -- beyond chance and beyond what R3's words carry into Kokoro? | `f4da0bc` | **Reported: not supported** (R4 14 wider / 16 narrower of 39; no consistent direction, p = 0.86) |
+| PR-009 | On two Kokoro voices and eight neutral sentences the render was not developed on, does raising a PHQ-9 or YMRS score move pitch, range, rate and pauses the way page 09's mapping says, at every step and within tolerance? | The commit that adds this entry | Open |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -1955,3 +1956,145 @@ secondary, the secondary is what showed that dev's direction was noise.
 - Turn times: R3 median 653 ms, R4 8012 ms (the replies here are short).
 - Cost: about \$0.45 (estimated from the saved turn times -- the printed cost
   line was lost; see Deviations).
+
+
+## PR-009 — Does the severity render do what page 09's mapping says, on voices and sentences it was not built on?
+
+**Registered:** 2026-09-24, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+v1 P2c (Notion page 16, weeks 5-6) and page 09 §6: a clinical severity score
+becomes acoustic targets, and "for fixed text, increasing severity must
+monotonically move each target feature in the specified direction, verified by
+extracting features from the generated audio." Page 16 §8 makes the same
+property part of its duplex go/no-go: "controllability demonstrated within
+tolerance monotonically with severity."
+
+`src/s2slab/severity.py` (`88330df`, `0056da9`): page 09's PHQ-9 and YMRS
+formulas, taken word for word, give four acoustic targets -- pitch offset
+(Hz), pitch range scale, speaking rate, pause length. A neutral Kokoro clip is
+edited to them in one Praat pass (pitch tier and duration tier, overlap-add
+resynthesis: page 09 §7, strategy 5), and the result is measured again from
+the audio: median F0 offset, middle-half F0 spread, speech time from the
+clip's durations, silent time where the render's time map puts each pause.
+Page 09's non-acoustic outputs (response latency, elaboration, interruption)
+are not rendered.
+
+Development data, **dev voices and sentences only**: Kokoro `af_heart` and
+`am_michael`, four neutral sentences (`DEV_SENTENCES`), both conditions at six
+scores each -- 16 sweeps, 64 feature sweeps, 96 checks per feature. Run twice,
+because Kokoro speaks a sentence differently every time:
+
+| dev, 2 voices x 4 sentences | assistant's run (scratch) | author's run (`0056da9`) |
+|---|---:|---:|
+| feature sweeps in order | 62 of 64 | 63 of 64 |
+| -- pitch offset, rate, pauses | 48 of 48 | 48 of 48 |
+| -- pitch range | 14 of 16 | 15 of 16 |
+| rate within 10% | 96 of 96 | 96 of 96 |
+| pauses within 10% | 96 of 96 | 96 of 96 |
+| pitch offset within 3 Hz or 10%, the larger | 89 of 96 | 92 of 96 |
+| pitch range within 10% | 86 of 96 | 85 of 96 |
+
+The pitch-offset row applies this entry's tolerance (`within`) to the two
+saved dev runs; the module's own report used 3 Hz alone (87 and 90 of 96).
+Every dev sweep out of order was a pitch-range sweep, and a mania one. At
+YMRS 60 the offset landed between 0.7 Hz under and 9.4 Hz over its +45 Hz.
+
+**Decisions made on dev, disclosed.** Each is in the module docstring:
+(1) the pitch compression is centred on the median of the measured F0, not
+page 09's mean -- octave jumps drag the mean; (2) range is measured as the
+middle-half spread, which a linear edit scales exactly; (3) rate is measured
+from durations, not voiced frames, which drifted by up to 9% at 1.8x speed;
+(4) pauses are measured where the time map puts them, so a pause shortened
+below 150 ms still counts; (5) page 09's "f0_variance_scale" is applied as its
+own formula applies it, to deviations, so the spread scales by that factor.
+The thresholds below were set from the two dev runs above.
+
+**What was known, and by whom.** The held-out voices and sentences below were
+chosen and written by the assistant with this entry; no code here has spoken
+either voice for the severity work or any of the eight sentences. The author
+made listening files on dev (`dev --listen`); no listening notes are part of
+this registration.
+
+### Question
+
+On two Kokoro voices and eight neutral sentences the render was not developed
+on, does raising the severity move every rendered feature the way page 09's
+mapping says, at every step, and land each feature within a stated tolerance
+of its target?
+
+### Validity requirements
+
+| | Requirement |
+|---|---|
+| **V1 · Frozen** | In `src/s2slab/severity.py`, as committed with this entry: `normalize`, `depression`, `mania`, `CONDITIONS`, `SCORES`, `trim`, `f0_hz`, `duration_points`, `warp`, `render`, `silent_s`, `achieved`, `run`, `kokoro_speaker`, and every name in the PR-009 section (`TEST_VOICES`, `TEST_SENTENCES`, the thresholds, `in_order`, `within`, `criteria`, `validity`, `registered_run`). `report` and `format_criteria` may gain lines, tested on made-up runs only. |
+| **V2 · Held out** | `af_sarah`, `am_adam` and the eight `TEST_SENTENCES` reach Kokoro for the first time in the registered run. `registered_run` is the only path to them; it refuses without `--confirm PR-009` and before any TTS loads. The tests use a fake TTS. |
+| **V3 · One run, whole set** | All 32 sweeps, `PYTHONPATH=src python -m s2slab.severity test --confirm PR-009 \| tee results/severity/pr009-report.txt`, from a clean tree (the run file's commit must not end in `-dirty`). Kokoro speaks each neutral clip once; every render is made from that clip. A crashed run writes no run file; it is reported here and repeated once, in full. |
+| **V4 · Evidence** | `runs/severity/pr009.json` -- every target and measure, every neutral clip's SHA-256, the criteria -- and the printed report, committed to `runs/severity/` with the results. The renders and the exact (32-bit float) neutral clips stay in `results/severity/pr009/`, ignored; from those clips any render can be made again. |
+
+### Primary outcome
+
+For each of the 32 sweeps (2 voices x 8 sentences x 2 conditions, six scores
+each): whether each feature is in order at every step (`in_order`), and for
+each of the 192 renders whether each feature is within tolerance (`within`),
+as computed at this commit.
+
+### Success criteria -- all five must hold
+
+| | Criterion |
+|---|---|
+| **S1 · Page 09's monotonicity test** | Pitch offset, rate and pauses in order in **every** sweep: 96 of 96 |
+| **S2 · Pitch range in order** | At least **28 of 32** range sweeps in order |
+| **S3 · Rate and pauses on target** | **Every** check within 10% of its target: 384 of 384 |
+| **S4 · Pitch offset on target** | At least **90%** of the 192 checks within 3 Hz or 10% of the target, whichever is larger |
+| **S5 · Pitch range on target** | At least **80%** of the 192 checks within 10% |
+
+**Supported if S1 to S5 all hold.** A feature that cannot be measured at a
+step (no voiced frames, no pause) counts as out of order and as a miss. S1 is
+page 09's own test; S2 to S5 hold the render to the targets and give the
+range, its weak feature on dev, bars of its own rather than excusing it.
+
+### Predictions, recorded but not criteria
+
+- **S1 and S3 hold.** 96 of 96; 384 of 384.
+- **S2 holds narrowly:** 29 to 31 of 32. Any sweep out of order is pitch range, under mania.
+- **S4 holds:** about 94%; the misses are mania at YMRS 40 and 60, overshooting by 3 to 9 Hz.
+- **S5 holds:** about 85-90%.
+- `am_adam` misses more range checks than `af_sarah`.
+- **Supported.**
+
+### Reported alongside, descriptively
+
+The full sweep table (`report`): every target and every measure, misses marked;
+counts per voice and per condition; the neutral clips' lengths.
+
+### Analysis plan
+
+1. Commit this entry together with the frozen code above.
+2. A clean tree, then the one run (V2, V3). Save the evidence (V4).
+3. Record the output below, verbatim.
+4. Only after step 3: any further look, labelled exploratory -- including listening.
+
+### What this cannot show
+
+- **Not whether it sounds natural, or like anyone.** Nobody listens and rates
+  here; page 09 §7 expects audible processing beyond about +-30% rate or
+  40 Hz, and mania at YMRS 60 asks for both. Measured features moving on
+  command is the whole claim.
+- **Not clinical validity of any kind.** Page 09's formulas are one page's
+  hand-written anchors, not fitted to clinical speech; a render that meets
+  them is a render that meets them. Nothing here is a depressed or manic voice.
+- **Not page 09's disentanglement ablation** (§4.4): that needs raters.
+- **One TTS, two held-out voices, eight sentences.** Offsets are in Hz, as
+  page 09 writes them, so the same score moves a lower voice further in
+  semitones.
+
+### Deviations
+
+None yet.
+
+### Results
+
+Pending.

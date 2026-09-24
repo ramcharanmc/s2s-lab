@@ -173,3 +173,95 @@ def test_on_real_kokoro_speech_offset_rate_and_pauses_stay_in_order():
     results = severity.run(severity.kokoro_speaker(), voices=("af_heart",), sentences={"d1": severity.DEV_SENTENCES["d1"]})
     for row in results["rows"]:
         assert not [m for m in row["monotone"] if " f0_dev_scale:" not in m], row["monotone"]
+
+
+# --------------------------------------------------------------------------- #
+# PR-009: the held-out set, the criteria, the lock -- on made-up runs and a fake TTS only
+# --------------------------------------------------------------------------- #
+
+
+def made_up_run(nudge=None) -> dict:
+    """32 sweeps whose measures equal their targets exactly; nudge(row_index, step, achieved) may spoil them."""
+    rows = []
+    for i, (voice, sid, condition) in enumerate((v, s, c) for v in severity.TEST_VOICES
+                                                for s in severity.TEST_SENTENCES for c in severity.SCORES):
+        steps = []
+        for k, score in enumerate(severity.SCORES[condition]):
+            t = severity.CONDITIONS[condition](score)
+            a = {f: getattr(t, f) for f in severity.FIELDS}
+            if nudge:
+                nudge(i, k, a)
+            steps.append({"score": score, "target": {f: getattr(t, f) for f in severity.FIELDS}, "achieved": a,
+                          "misses": []})
+        rows.append({"voice": voice, "sentence": sid, "condition": condition, "steps": steps, "monotone": []})
+    return {"rows": rows, "voices": list(severity.TEST_VOICES), "sentences": dict(severity.TEST_SENTENCES),
+            "scores": {k: list(v) for k, v in severity.SCORES.items()}, "commit": "abc1234"}
+
+
+def test_the_held_out_set_shares_nothing_with_dev():
+    assert not set(severity.TEST_VOICES) & set(severity.DEV_VOICES) and len(severity.TEST_SENTENCES) == 8
+    assert not set(severity.TEST_SENTENCES.values()) & set(severity.DEV_SENTENCES.values())
+    assert all(". " in text for text in severity.TEST_SENTENCES.values())
+    assert len(severity.TEST_VOICES) * len(severity.TEST_SENTENCES) * len(severity.SCORES) == 32
+
+
+def test_a_run_that_meets_every_target_is_supported_and_says_so():
+    results = made_up_run()
+    c = severity.criteria(results)
+    assert c["supported"] and (c["S1"]["of"], c["S2"]["of"], c["S3"]["of"], c["S4"]["of"], c["S5"]["of"]) == (96, 32, 384, 192, 192)
+    assert severity.format_criteria(results).endswith("PR-009: SUPPORTED")
+
+
+def test_the_thresholds_sit_where_the_registration_puts_them():
+    def spoil_range_order(n):                      # in n sweeps the range stands still at the first step
+        return lambda i, k, a: a.__setitem__("f0_dev_scale", 1.0) if i < n and k == 1 else None
+    assert severity.criteria(made_up_run(spoil_range_order(4)))["S2"]["pass"]              # 28 of 32 in order
+    c = severity.criteria(made_up_run(spoil_range_order(5)))                               # 27 of 32
+    assert not c["S2"]["pass"] and not c["supported"]
+    one_pause = lambda i, k, a: a.__setitem__("pause_scale", a["pause_scale"] * 1.2) if (i, k) == (0, 3) else None
+    assert not severity.criteria(made_up_run(one_pause))["S3"]["pass"]                     # every check must hold
+    offset = lambda i, k, a: a.__setitem__("f0_offset_hz", a["f0_offset_hz"] + 4.4) if k == 5 and i < 19 else None
+    c = severity.criteria(made_up_run(offset))                                             # +4.4 at mania 60 is inside 10% of 45
+    assert c["S4"]["met"] == 192 - 10 and c["S4"]["pass"]                                   # the 10 depression rows at 27 miss (4.4 > 3 and > 2.5)
+    assert severity.within("f0_offset_hz", 45.0, 49.5) and not severity.within("f0_offset_hz", 45.0, 49.6)
+    assert severity.within("f0_offset_hz", -5.0, -8.0) and not severity.within("rate", 1.8, float("nan"))
+    nan_pause = lambda i, k, a: a.__setitem__("pause_scale", float("nan")) if (i, k) == (0, 2) else None
+    assert not severity.in_order(made_up_run(nan_pause)["rows"][0], "pause_scale")         # unmeasured is out of order
+
+
+def test_a_run_on_the_wrong_set_or_a_dirty_tree_is_not_the_registered_run():
+    results = made_up_run()
+    results["commit"] = "abc1234-dirty"
+    assert "NOT THE REGISTERED RUN" in severity.format_criteria(results)
+    results = made_up_run()
+    results["voices"] = list(severity.DEV_VOICES)
+    assert "not the held-out voices" in severity.format_criteria(results)
+
+
+def test_the_registered_run_is_locked_refuses_to_overwrite_and_keeps_its_neutral_clips_exactly(tmp_path, monkeypatch):
+    import hashlib
+    import json
+
+    import soundfile as sf
+    monkeypatch.setattr(severity, "TEST_SENTENCES", {"t1": severity.TEST_SENTENCES["t1"]})   # 4 sweeps, not 32: speed
+    loaded = []
+
+    def speaker():
+        loaded.append(1)
+        return lambda text, who: np.concatenate([np.zeros(SR // 4, np.float32), voice(), np.zeros(SR // 4, np.float32)])
+
+    run_path = tmp_path / "pr009.json"
+    with pytest.raises(PermissionError, match="--confirm PR-009"):
+        severity.registered_run("PR-008", speaker, run_path, tmp_path / "audio")
+    run_path.write_text("{}")
+    with pytest.raises(FileExistsError):
+        severity.registered_run("PR-009", speaker, run_path, tmp_path / "audio")
+    assert loaded == []                                      # both refusals came before any TTS loaded
+    run_path.unlink()
+    results = severity.registered_run("PR-009", speaker, run_path, tmp_path / "audio")
+    saved = json.loads(run_path.read_text(encoding="utf-8"))
+    assert saved["registration"] == "PR-009" and len(saved["rows"]) == 4 and saved["commit"]
+    assert all(saved["criteria"][k]["pass"] for k in ("S1", "S3", "S4", "S5"))   # S2 needs 28 sweeps; there are 4
+    row = saved["rows"][0]
+    exact, _ = sf.read(str(tmp_path / "audio" / severity.synthetic_name(row["voice"], row["sentence"])), dtype="float32")
+    assert hashlib.sha256(exact.tobytes()).hexdigest() == row["neutral_sha256"] == results["rows"][0]["neutral_sha256"]

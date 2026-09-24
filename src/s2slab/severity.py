@@ -22,6 +22,8 @@ synthetic (page 16 §9).
 
     python -m s2slab.severity dev [--listen]     Kokoro, the dev voices and sentences, both
                                                  sweeps; laptop CPU, a few minutes, $0
+    python -m s2slab.severity test --confirm PR-009
+                                                 the registered held-out run, once
 
 WHAT IS RENDERED -- page 09's four acoustic outputs:
     f0_offset_hz   every pitch point shifted by this many Hz
@@ -298,10 +300,12 @@ def synthetic_name(voice: str, sentence_id: str, t: Targets | None = None) -> st
     return f"synthetic-{what}-{voice}-{sentence_id}.wav"
 
 
-def write_synthetic(path, audio: np.ndarray, sr: int, voice: str, text: str, t: Targets | None = None) -> None:
-    """A 16-bit WAV whose own metadata says it is synthetic: title, comment and software tags."""
+def write_synthetic(path, audio: np.ndarray, sr: int, voice: str, text: str, t: Targets | None = None,
+                    subtype: str = "PCM_16") -> None:
+    """A WAV whose own metadata says it is synthetic: title, comment and software tags. 16-bit
+    for listening; "FLOAT" keeps a neutral clip exact, so a run can be re-scored from it."""
     import soundfile as sf
-    with sf.SoundFile(str(path), "w", samplerate=sr, channels=1, subtype="PCM_16") as f:
+    with sf.SoundFile(str(path), "w", samplerate=sr, channels=1, subtype=subtype) as f:
         f.title = "synthetic " + ("neutral" if t is None else f"{t.condition} {t.score:g}")
         f.comment = f"{SYNTHETIC_NOTE} Voice {voice}. Text: {text}"
         f.software = "s2s-lab severity.py"
@@ -324,13 +328,18 @@ def kokoro_speaker():
 def run(speak, voices=DEV_VOICES, sentences=DEV_SENTENCES, scores=SCORES, sr: int = KOKORO_SR, listen=None) -> dict:
     """Every voice x sentence spoken once, trimmed, then swept through every score of each
     condition and measured again. Takes speak(text, voice) -> audio at sr; `listen`, a folder
-    for the WAVs, or None. Returns {"sr", "tolerance", "rows": one per voice x sentence x condition}."""
+    for the WAVs, or None. Returns {"sr", "tolerance", "rows": one per voice x sentence x condition}.
+    Each row carries the SHA-256 of its neutral clip's float32 samples; with `listen`, that clip
+    is written exactly (32-bit float), so every render can be made again from it -- Kokoro
+    itself never speaks a sentence the same way twice."""
+    import hashlib
     rows = []
     for voice in voices:
         for sid, text in sentences.items():
             neutral = trim(speak(text, voice), sr)
+            digest = hashlib.sha256(np.ascontiguousarray(neutral, dtype=np.float32).tobytes()).hexdigest()
             if listen is not None:
-                write_synthetic(listen / synthetic_name(voice, sid), neutral, sr, voice, text)
+                write_synthetic(listen / synthetic_name(voice, sid), neutral, sr, voice, text, subtype="FLOAT")
             for condition, levels in scores.items():
                 steps = []
                 for score in levels:
@@ -340,7 +349,8 @@ def run(speak, voices=DEV_VOICES, sentences=DEV_SENTENCES, scores=SCORES, sr: in
                     if listen is not None:
                         write_synthetic(listen / synthetic_name(voice, sid, t), r.audio, sr, voice, text, t)
                 rows.append({"voice": voice, "sentence": sid, "condition": condition,
-                             "neutral_s": round(len(neutral) / sr, 2), "monotone": monotone(steps),
+                             "neutral_s": round(len(neutral) / sr, 2), "neutral_sha256": digest,
+                             "monotone": monotone(steps),
                              "steps": [{"score": t.score, "target": {f: getattr(t, f) for f in FIELDS},
                                         "achieved": dict(a._asdict()), "misses": misses(a, t)} for t, a in steps]})
     return {"sr": sr, "tolerance": TOLERANCE, "rows": rows}
@@ -380,18 +390,165 @@ def report(results: dict) -> str:
     return "\n".join(lines)
 
 
+# --------------------------------------------------------------------------- #
+# PR-009: the held-out test (docs/preregistration.md)
+#
+#     python -m s2slab.severity test --confirm PR-009
+#
+# Held-out voices and sentences, fixed with the registration; none of them had been spoken
+# by any code here before the registered run. The run refuses without the confirmation and
+# refuses to overwrite its evidence, both before Kokoro loads.
+# --------------------------------------------------------------------------- #
+
+REGISTRATION = "PR-009"
+RUN_PATH = "runs/severity/pr009.json"
+AUDIO_DIR = "results/severity/pr009"          # the renders and the exact neutral clips (ignored)
+TEST_VOICES = ("af_sarah", "am_adam")          # neither used in the severity dev work
+TEST_SENTENCES = {  # neutral content, a sentence break each; written with the registration
+    "t1": "The train leaves at nine. I bought a ticket, and then I found a seat by the window.",
+    "t2": "I cleaned the windows today. It took most of the morning, but the light is better now.",
+    "t3": "Our neighbour painted the fence. It is green now, and it looks much newer.",
+    "t4": "I walked to the post office. The line was short, so I was back before lunch.",
+    "t5": "The library opens at ten. I returned two books, and I borrowed a new one.",
+    "t6": "We planted tomatoes last spring. They grew well, and we had enough for the whole summer.",
+    "t7": "The meeting moved to Thursday. I changed my calendar, and I sent a note to the team.",
+    "t8": "I made soup for dinner. It needed more salt, so I added some at the table.",
+}
+IN_ORDER_FIELDS = ("f0_offset_hz", "rate", "pause_scale")    # S1
+S2_MIN_RANGE_IN_ORDER = 28          # of the 32 range sweeps
+S4_OFFSET_SHARE = 0.90
+S5_RANGE_SHARE = 0.80
+CRITERION_REL = 0.10                # rate, pauses, range: within 10% of the target
+OFFSET_FLOOR_HZ = 3.0               # the pitch offset: within 3 Hz or 10% of the target, whichever is larger
+
+
+def in_order(row: dict, field: str) -> bool:
+    """One sweep (a saved row) and one feature: every step moved the way its target moved. A
+    feature that could not be measured (NaN) at any step counts as out of order."""
+    steps = row["steps"]
+    for s0, s1 in zip(steps, steps[1:]):
+        want = s1["target"][field] - s0["target"][field]
+        have = s1["achieved"][field] - s0["achieved"][field]
+        if want == 0:
+            continue
+        if have != have or have * want <= 0:
+            return False
+    return True
+
+
+def within(field: str, target: float, got: float) -> bool:
+    """PR-009's tolerance for one check. An unmeasured value (NaN) is a miss."""
+    if got != got:
+        return False
+    if field == "f0_offset_hz":
+        return abs(got - target) <= max(OFFSET_FLOOR_HZ, CRITERION_REL * abs(target))
+    return abs(got / target - 1) <= CRITERION_REL
+
+
+def criteria(results: dict) -> dict:
+    """PR-009's five criteria from a saved run. Returns {"S1".."S5": {"met", "of", "pass"}, "supported"}."""
+    rows = results["rows"]
+
+    def share(fields):
+        checks = [(s, f) for r in rows for s in r["steps"] for f in fields]
+        return sum(within(f, s["target"][f], s["achieved"][f]) for s, f in checks), len(checks)
+
+    s1 = sum(in_order(r, f) for r in rows for f in IN_ORDER_FIELDS), len(rows) * len(IN_ORDER_FIELDS)
+    s2 = sum(in_order(r, "f0_dev_scale") for r in rows), len(rows)
+    s3, s4, s5 = share(("rate", "pause_scale")), share(("f0_offset_hz",)), share(("f0_dev_scale",))
+    out = {"S1": {"met": s1[0], "of": s1[1], "pass": s1[0] == s1[1]},
+           "S2": {"met": s2[0], "of": s2[1], "pass": s2[0] >= S2_MIN_RANGE_IN_ORDER},
+           "S3": {"met": s3[0], "of": s3[1], "pass": s3[0] == s3[1]},
+           "S4": {"met": s4[0], "of": s4[1], "pass": s4[0] >= S4_OFFSET_SHARE * s4[1]},
+           "S5": {"met": s5[0], "of": s5[1], "pass": s5[0] >= S5_RANGE_SHARE * s5[1]}}
+    out["supported"] = all(v["pass"] for v in out.values())
+    return out
+
+
+def validity(results: dict) -> list[str]:
+    """What would make a run not the registered one: the wrong set, a tree with uncommitted changes."""
+    problems = []
+    if tuple(results.get("voices", ())) != TEST_VOICES or results.get("sentences") != TEST_SENTENCES:
+        problems.append("not the held-out voices and sentences")
+    if {k: tuple(v) for k, v in results.get("scores", {}).items()} != SCORES:
+        problems.append("not the registered scores")
+    if len(results["rows"]) != len(TEST_VOICES) * len(TEST_SENTENCES) * len(SCORES):
+        problems.append(f"{len(results['rows'])} sweeps, not {len(TEST_VOICES) * len(TEST_SENTENCES) * len(SCORES)}")
+    if str(results.get("commit", "")).endswith("-dirty") or results.get("commit") in (None, "", "unknown"):
+        problems.append(f"commit {results.get('commit')!r}: not a clean committed tree")
+    return problems
+
+
+def format_criteria(results: dict) -> str:
+    """The verdict block, as the registration words it."""
+    c = criteria(results)
+    pct = lambda k: f" ({100 * c[k]['met'] / c[k]['of']:.1f}%)" if c[k]["of"] else ""
+    mark = lambda k: "PASS" if c[k]["pass"] else "FAIL"
+    lines = [f"{REGISTRATION}, the registered criteria (docs/preregistration.md):",
+             f"  S1  page 09's monotonicity test -- pitch offset, rate, pauses in order, every sweep: "
+             f"{c['S1']['met']} of {c['S1']['of']}   {mark('S1')}",
+             f"  S2  pitch range in order, at least {S2_MIN_RANGE_IN_ORDER} of 32: {c['S2']['met']} of {c['S2']['of']}   {mark('S2')}",
+             f"  S3  rate and pauses within 10%, every check: {c['S3']['met']} of {c['S3']['of']}   {mark('S3')}",
+             f"  S4  pitch offset within 3 Hz or 10%, at least 90%: {c['S4']['met']} of {c['S4']['of']}{pct('S4')}   {mark('S4')}",
+             f"  S5  pitch range within 10%, at least 80%: {c['S5']['met']} of {c['S5']['of']}{pct('S5')}   {mark('S5')}"]
+    problems = validity(results)
+    if problems:
+        lines.append(f"{REGISTRATION}: NOT THE REGISTERED RUN -- " + "; ".join(problems))
+    elif c["supported"]:
+        lines.append(f"{REGISTRATION}: SUPPORTED")
+    else:
+        lines.append(f"{REGISTRATION}: NOT SUPPORTED -- failed " + ", ".join(k for k in ("S1", "S2", "S3", "S4", "S5")
+                                                                         if not c[k]["pass"]))
+    return "\n".join(lines)
+
+
+def registered_run(confirm: str, speaker=None, run_path=RUN_PATH, audio_dir=AUDIO_DIR) -> dict:
+    """The one PR-009 run. Checks the confirmation and the evidence path BEFORE any TTS loads;
+    speaker() -> speak (default: Kokoro). Saves the run file (every measure, the neutral clips'
+    SHA-256, the criteria) and writes the renders and the exact neutral clips to audio_dir."""
+    import datetime
+    import json
+    import pathlib
+
+    from .sidechannel import refuse_to_overwrite
+    from .sweep import _git_commit
+    if confirm != REGISTRATION:
+        raise PermissionError(f"the held-out voices and sentences are locked: run with --confirm {REGISTRATION}, "
+                              "once, after the registration is committed")
+    run_path = pathlib.Path(run_path)
+    refuse_to_overwrite(run_path)
+    audio = pathlib.Path(audio_dir)
+    audio.mkdir(parents=True, exist_ok=True)
+    speak = (speaker or kokoro_speaker)()
+    results = run(speak, voices=TEST_VOICES, sentences=TEST_SENTENCES, listen=audio)
+    results.update(registration=REGISTRATION, commit=_git_commit(),
+                   ran=datetime.datetime.now().isoformat(timespec="seconds"), voices=list(TEST_VOICES),
+                   sentences=dict(TEST_SENTENCES), scores={k: list(v) for k, v in SCORES.items()})
+    results["criteria"] = criteria(results)
+    run_path.parent.mkdir(parents=True, exist_ok=True)
+    run_path.write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")
+    return results
+
+
 if __name__ == "__main__":
     import json
     import pathlib
     import sys
 
     args = sys.argv[1:]
-    if not args or args[0] != "dev" or set(args[1:]) - {"--listen"}:
-        sys.exit("usage: python -m s2slab.severity dev [--listen]")
-    out = pathlib.Path("results/severity")
-    listen = out / "listen" if "--listen" in args else None
-    (listen or out).mkdir(parents=True, exist_ok=True)
-    results = run(kokoro_speaker(), listen=listen)
-    (out / "dev.json").write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")
-    print(report(results))
-    print(f"\nsaved -> {out / 'dev.json'}" + (f"; listen: {listen}/" if listen else ""))
+    if args[:1] == ["dev"] and not set(args[1:]) - {"--listen"}:
+        out = pathlib.Path("results/severity")
+        listen = out / "listen" if "--listen" in args else None
+        (listen or out).mkdir(parents=True, exist_ok=True)
+        results = run(kokoro_speaker(), listen=listen)
+        (out / "dev.json").write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")
+        print(report(results))
+        print(f"\nsaved -> {out / 'dev.json'}" + (f"; listen: {listen}/" if listen else ""))
+    elif args[:1] == ["test"] and len(args) == 3 and args[1] == "--confirm":
+        results = registered_run(args[2])
+        print(report(results))
+        print("\n" + format_criteria(results))
+        print(f"\nsaved -> {RUN_PATH}; renders and exact neutral clips: {AUDIO_DIR}/")
+    else:
+        sys.exit("usage: python -m s2slab.severity dev [--listen]\n"
+                 f"       python -m s2slab.severity test --confirm {REGISTRATION}")
