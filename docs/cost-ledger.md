@@ -28,6 +28,10 @@ one. A failed run is still a row, since it was still billed.
 | 2026-09-23 | `339092a` | `modal run modal_app/r4_bench.py --rung r3-gpu,r4-gpu --evalset` | L40S | 2425 s | 2433 s | \$1.318 | **the R4 row**, one container: R3 0.69 s, R4 9.17 s p50 (p90 17.3); R4's wait = 1.33 s per second of its reply; 22.5 GB |
 | 2026-09-23 | `a677969` | `modal run modal_app/r4_bench.py::pairs --split dev` | L40S | 340 s | 362 s | \$0.196 | PR-008 development: R3 and R4 answer the 21 dev prosody pairs; R4 5 wider / 11 narrower; the seeding holds |
 | 2026-09-23 | `f4da0bc` | `modal run modal_app/r4_bench.py::pairs --split test --confirm PR-008 --save runs/prosody/pr008.json` | L40S | ≈ 820 s | ≈ 840 s | ≈ \$0.45 | **the PR-008 run**: R4 14 wider / 16 narrower -- not supported, no direction. Times and cost estimated from the saved turn times: the printed cost line was overwritten (PR-008 Deviations); Modal's dashboard has the exact bill |
+| 2026-09-24 | `c1adf16` | `modal run modal_app/r5_bench.py` | A10 | — | — | ≪ \$0.01 (failed) | R5 smoke test: image built (torch 2.8, moshi 0.2.13, the moshiko weights), then died loading the probe clips -- Praat missing (fixed in `bef00df`) |
+| 2026-09-24 | `bef00df` | `modal run modal_app/r5_bench.py` | A10 | 379 s | ≈ 386 s | \$0.118 | R5 smoke test, Moshi, 30 probe clips, no lead-in: it greets 0.4-2 s into every clip, over the caller; 24 of 30 unanswered within a 4 s tail (lead-in and 8 s tail in `236486b`). End-to-end time back-computed from the cost line; the printed output was overwritten by the next smoke test |
+| 2026-09-24 | `43b747b` | `modal run modal_app/r5_bench.py` | A10 | 521 s | 529 s | \$0.162 | R5 smoke test, Moshi, 3.2 s lead-in: opens every call ("Hello, how is it going?"), 17 of 30 unanswered within 8 s; RTF 0.70, 16.6 GB. This run also built the PersonaPlex image (CPU, not in the row) |
+| 2026-09-24 | `43b747b` | `modal run modal_app/r5_bench.py --model r5-personaplex` | A10 | 793 s | 806 s | \$0.246 | R5 smoke test, PersonaPlex: answers 30 of 30, gap p50 410 ms; its greeting lasts to 3.28 s, one frame into the caller (lead-in lengthened in the next commit); RTF 0.77, 18.1 GB, load 44 s |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -36,5 +40,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$2.786 + three failed runs | \$36.93 |
+| Modal | \$3.312 + four failed runs | \$36.93 |
 | Vast.ai | \$0 | \$5.86 |

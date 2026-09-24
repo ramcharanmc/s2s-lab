@@ -194,7 +194,9 @@ def smoke(model_id: str, commit: str) -> dict:
     return _smoke(model_id, commit)
 
 
-@app.function(gpu="A10G", timeout=60 * 60, scaledown_window=60)
+# Two hours: 200 conversations of LEAD_S + clip + TAIL_S at RTF 0.7-0.8 are about 50 minutes of
+# stream work, and PersonaPlex adds about 5 s of prompts per call (its probe smoke test, 2026-09-24).
+@app.function(gpu="A10G", timeout=120 * 60, scaledown_window=60)
 def evaluate(model_id: str, commit: str, limit: int = 0) -> dict:
     return _evaluate(model_id, commit, limit)
 
@@ -204,7 +206,7 @@ def smoke_personaplex(model_id: str, commit: str) -> dict:
     return _smoke(model_id, commit)
 
 
-@app.function(gpu="A10G", timeout=60 * 60, scaledown_window=60, image=personaplex_image)
+@app.function(gpu="A10G", timeout=120 * 60, scaledown_window=60, image=personaplex_image)
 def evaluate_personaplex(model_id: str, commit: str, limit: int = 0) -> dict:
     return _evaluate(model_id, commit, limit)
 

@@ -25,6 +25,17 @@ toward overlap or backchannels. The tail went from 4 s to 8 s on the same
 run: 24 of 30 clips got no answer within 4 s, and a short tail cannot tell
 "waits longer" from "never answers".
 
+THE SECOND DEV FIX, on the smoke tests of both models at 43b747b (2026-09-24).
+PersonaPlex's greeting ("Hello, this is phone support. How can I help you
+today?") lasts until 3.28 s, one frame into the caller wherever the clip's
+speech starts at once, so LEAD_S went from 3.2 to 4.8 s. And a sentence the
+model says into a pause of the caller's came out as three or four voiced runs,
+split where its level dips between words, and each counted as a backchannel:
+runs at most MERGE_S apart are now one utterance, and only an utterance that
+STARTS while the caller is talking is a backchannel (shorter than
+BACKCHANNEL_S) or an interruption (BACKCHANNEL_S or longer). A greeting still
+going as the caller starts counts as overlap, and as neither.
+
     model.begin(seed)                      fresh streaming state, seeded
     model.step(frame) -> (audio | None,    one 80 ms frame in (24 kHz), what it says
                           text  | None)    back in that step out; None while warming up
@@ -37,15 +48,23 @@ WHAT IS MEASURED, ALL IN STREAM TIME -- the model's choices, not the GPU's speed
                    going at or after it. Negative when the model was already talking as the
                    caller stopped; None when it said nothing within the tail.
     overlap        the share of the caller's speech the model spent voicing too
-    backchannels   voiced runs shorter than BACKCHANNEL_S that start before the caller ends
-    reply text     the model's text tokens emitted after the caller ends
+    backchannels   utterances shorter than BACKCHANNEL_S that start while the caller is talking
+    interruptions  utterances of BACKCHANNEL_S or longer that start while the caller is talking
+                   (an answer begun before the caller's last word counts here too)
+    reply text     the model's text tokens emitted after the caller ends. The text stream is
+                   the model's own "inner monologue", not a transcript, and both models skip
+                   pieces in it ("that' a blood thinner", "I' sorry": the s and the m are never
+                   emitted), so it shows what was said, not word for word
     opened         whether the model spoke before the caller started (its greeting)
     pieces         every text piece with its step, kept so gaps in the text stream can be found
+    setup          wall time of model.begin(): PersonaPlex's voice and role prompts run there,
+                   before the call can start; outside the stream time and the RTF
 
 A chunk emitted at step i can be heard from (i + 1) * FRAME_S -- the frame had to
 arrive before the model could answer it -- so that is its stream time. A chunk
 is VOICED when its RMS is above VOICED_DB; a run needs MIN_RUN voiced chunks in a
-row (a single loud chunk is a click, not speech).
+row (a single loud chunk is a click, not speech), and runs at most MERGE_S apart
+are one utterance (the pauses between words).
 
 AND ONE HARDWARE NUMBER, apart: the real-time factor, wall time per second of
 stream. Below 1.0 the model can run live; the plan's "5 conversations per A100"
@@ -71,10 +90,11 @@ from .vad import FRAME_MS, frame_speech_prob
 SR = 24_000                   # Mimi's rate
 FRAME_S = 0.08                # 12.5 Hz
 FRAME = int(SR * FRAME_S)     # 1920 samples
-LEAD_S = 3.2                  # silence before the caller: the model's greeting (40 frames)
+LEAD_S = 4.8                  # silence before the caller: the model's greeting (60 frames)
 TAIL_S = 8.0                  # silence after the clip: time to answer (100 frames)
 VOICED_DB = -35.0             # an output chunk is voiced above this RMS, dBFS
 MIN_RUN = 2                   # chunks in a row: 160 ms
+MERGE_S = 0.24                # runs at most this far apart are one utterance: 3 quiet chunks
 BACKCHANNEL_S = 1.0
 SEED = 0
 REPEAT = 2
@@ -87,6 +107,7 @@ class Conversation(NamedTuple):
     wall_s: float             # wall time for all steps
     stream_s: float           # len(steps) * FRAME_S
     lead_s: float = 0.0       # silence streamed before the caller's clip
+    begin_s: float = 0.0      # wall time of model.begin(): set-up before the stream
 
 
 def to_model_rate(audio: np.ndarray, sr: int = IN_SR) -> np.ndarray:
@@ -109,7 +130,9 @@ def converse(model, audio: np.ndarray, sr: int = IN_SR, seed: int = SEED, tail_s
     x = np.concatenate([np.zeros(int(round(lead_s * SR)), np.float32), x, np.zeros(int(tail_s * SR), np.float32)])
     x = np.concatenate([x, np.zeros((-len(x)) % FRAME, np.float32)])
     out, text = [], []
+    t_begin = time.perf_counter()
     model.begin(seed)
+    begin_s = time.perf_counter() - t_begin
     try:
         t0 = time.perf_counter()
         for k in range(0, len(x), FRAME):
@@ -119,7 +142,7 @@ def converse(model, audio: np.ndarray, sr: int = IN_SR, seed: int = SEED, tail_s
         wall = time.perf_counter() - t0
     finally:
         model.end()
-    return Conversation(out, text, wall, len(out) * FRAME_S, lead_s)
+    return Conversation(out, text, wall, len(out) * FRAME_S, lead_s, begin_s)
 
 
 def caller_span(audio: np.ndarray, sr: int = IN_SR) -> tuple[float, float] | None:
@@ -133,7 +156,8 @@ def caller_span(audio: np.ndarray, sr: int = IN_SR) -> tuple[float, float] | Non
 
 
 def voiced_runs(conv: Conversation) -> list[tuple[float, float]]:
-    """(start, end) in stream time of every voiced run of MIN_RUN chunks or more."""
+    """(start, end) in stream time of every voiced run of MIN_RUN chunks or more,
+    runs at most MERGE_S apart joined into one utterance."""
     voiced = []
     for c in conv.out:
         rms = 0.0 if c is None or not len(c) else float(np.sqrt(np.mean(np.square(c, dtype=np.float64))))
@@ -149,7 +173,13 @@ def voiced_runs(conv: Conversation) -> list[tuple[float, float]]:
             i = j + 1
         else:
             i += 1
-    return runs
+    merged: list[tuple[float, float]] = []
+    for a, b in runs:
+        if merged and a - merged[-1][1] <= MERGE_S + 1e-9:
+            merged[-1] = (merged[-1][0], b)
+        else:
+            merged.append((a, b))
+    return merged
 
 
 def measure(audio: np.ndarray, conv: Conversation, sr: int = IN_SR) -> dict:
@@ -158,20 +188,23 @@ def measure(audio: np.ndarray, conv: Conversation, sr: int = IN_SR) -> dict:
     runs = voiced_runs(conv)
     out = {"stream_s": round(conv.stream_s, 2), "wall_s": round(conv.wall_s, 3),
            "rtf": round(conv.wall_s / conv.stream_s, 3) if conv.stream_s else None,
+           "setup_s": round(conv.begin_s, 3),
            "runs": [[round(a, 2), round(b, 2)] for a, b in runs],
            "pieces": [[k, t] for k, t in enumerate(conv.text) if t]}
     if span is None:
         return {**out, "caller_end_s": None, "gap_ms": None, "overlap": None, "backchannels": 0,
-                "voiced_during_caller": False, "opened": bool(runs), "reply_text": ""}
+                "interruptions": 0, "voiced_during_caller": False, "opened": bool(runs), "reply_text": ""}
     start, end = span[0] + conv.lead_s, span[1] + conv.lead_s
     after = [r for r in runs if r[1] > end]
     gap = None if not after else round((after[0][0] - end) * 1000, 1)
     talk = end - start
     overlap = sum(max(0.0, min(b, end) - max(a, start)) for a, b in runs) / talk if talk > 0 else 0.0
     during = [r for r in runs if r[0] < end and r[1] > start]
+    begun = [b - a for a, b in runs if start <= a < end]         # utterances begun while the caller talks
     reply = "".join(t for k, t in enumerate(conv.text) if t and (k + 1) * FRAME_S >= end).strip()
     return {**out, "caller_end_s": round(end, 3), "gap_ms": gap, "overlap": round(overlap, 3),
-            "backchannels": sum(1 for a, b in during if b - a < BACKCHANNEL_S and a < end),
+            "backchannels": sum(1 for d in begun if d < BACKCHANNEL_S),
+            "interruptions": sum(1 for d in begun if d >= BACKCHANNEL_S),
             "voiced_during_caller": bool(during), "opened": any(a < start for a, _ in runs),
             "reply_text": " ".join(reply.split())}
 
@@ -224,17 +257,20 @@ def report(results: dict) -> str:
              + (f" · peak GPU memory {results['peak_vram_mb']:,} MB" if results.get("peak_vram_mb") else ""), "",
              "stream time: what a caller would hear, independent of the GPU's speed", "",
              "| cohort | clips | opened the call | response gap p50 ms | p90 ms | no answer within the tail | "
-             "voiced while the caller spoke | backchannels | median overlap | median RTF |",
-             "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+             "voiced while the caller spoke | backchannels | interruptions | median overlap | median RTF | "
+             "median set-up s |",
+             "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for name, ts in groups.items():
         gaps = [t["gap_ms"] for t in ts if t["gap_ms"] is not None]
         s = summarize(gaps) if gaps else None
         ov = [t["overlap"] for t in ts if t["overlap"] is not None]
         rtf = [t["rtf"] for t in ts if t["rtf"] is not None]
+        setup = [t["setup_s"] for t in ts if t.get("setup_s") is not None]
         cells = [str(sum(bool(t.get("opened")) for t in ts)), fmt(s, "p50") if s else "—", fmt(s, "p90") if s else "—",
                  str(sum(t["gap_ms"] is None for t in ts)), str(sum(t["voiced_during_caller"] for t in ts)),
-                 str(sum(t["backchannels"] for t in ts)),
-                 f"{np.median(ov):.2f}" if ov else "—", f"{np.median(rtf):.2f}" if rtf else "—"]
+                 str(sum(t["backchannels"] for t in ts)), str(sum(t.get("interruptions", 0) for t in ts)),
+                 f"{np.median(ov):.2f}" if ov else "—", f"{np.median(rtf):.2f}" if rtf else "—",
+                 f"{np.median(setup):.2f}" if setup else "—"]
         lines.append(f"| {name} | {len(ts)} | " + " | ".join(cells) + " |")
     neg = [t for t in turns.values() if t["gap_ms"] is not None and t["gap_ms"] < 0]
     lines += ["", f"already talking as the caller stopped (negative gap): {len(neg)} of {len(turns)}",
