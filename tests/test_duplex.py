@@ -76,11 +76,11 @@ def test_a_run_needs_two_voiced_chunks_and_is_heard_one_frame_after_its_step():
     assert voiced_runs(conv_of([LOUD * 0.01] * 5)) == []                         # -43 dBFS: below VOICED_DB
 
 
-def test_the_clip_is_streamed_at_24k_in_80ms_frames_with_the_tail_and_the_model_is_closed():
+def test_the_clip_is_streamed_at_24k_in_80ms_frames_after_the_lead_and_before_the_tail():
     m = FakeDuplex()
-    conv = converse(m, np.zeros(IN_SR, np.float32))                              # 1 s + 4 s of tail = 5 s at 24 kHz
-    assert m.frames == [FRAME] * 63 and len(conv.out) == 63 and conv.stream_s == pytest.approx(5.04)
-    assert (m.began, m.ended) == (1, 1) and conv.wall_s >= 0
+    conv = converse(m, np.zeros(IN_SR, np.float32))                              # 3.2 s + 1 s + 8 s = 12.2 s at 24 kHz
+    assert m.frames == [FRAME] * 153 and len(conv.out) == 153 and conv.stream_s == pytest.approx(12.24)
+    assert (m.began, m.ended) == (1, 1) and conv.wall_s >= 0 and conv.lead_s == duplex.LEAD_S
 
 
 # --------------------------------------------------------------------------- #
@@ -91,16 +91,17 @@ def test_the_clip_is_streamed_at_24k_in_80ms_frames_with_the_tail_and_the_model_
 def test_an_answer_after_the_caller_stops_has_a_positive_gap_and_its_words():
     # the caller stops at 2.0 s; the model speaks from step 29, heard from 30 * 0.08 = 2.4 s
     m = FakeDuplex(speak=range(29, 41), text={30: " Sure", 31: ",", 32: " I can", 10: " hm"})
-    t = measure(clip(), converse(m, clip()))
+    t = measure(clip(), converse(m, clip(), lead_s=0, tail_s=4.0))
     assert t["caller_end_s"] == pytest.approx(2.0) and t["gap_ms"] == pytest.approx(400.0)
     assert t["overlap"] == 0 and t["voiced_during_caller"] is False and t["backchannels"] == 0
     assert t["reply_text"] == "Sure, I can"                                     # the step-10 piece came before the end
     assert t["rtf"] >= 0 and t["stream_s"] == pytest.approx(7.04)              # a fake is fast: its RTF can round to 0.000
+    assert t["opened"] is False and t["pieces"] == [[10, " hm"], [30, " Sure"], [31, ","], [32, " I can"]]
 
 
 def test_talking_over_the_end_is_a_negative_gap_with_overlap_and_a_backchannel():
     m = FakeDuplex(speak=range(20, 31))                                          # heard 1.68 -> 2.56 s
-    t = measure(clip(), converse(m, clip()))
+    t = measure(clip(), converse(m, clip(), lead_s=0))
     assert t["gap_ms"] == pytest.approx(-320.0)
     assert t["overlap"] == pytest.approx(0.32 / 1.5, abs=0.001)                  # 1.68 -> 2.0 of the caller's 0.5 -> 2.0
     assert t["voiced_during_caller"] is True and t["backchannels"] == 1          # 0.88 s, shorter than 1 s
@@ -108,7 +109,20 @@ def test_talking_over_the_end_is_a_negative_gap_with_overlap_and_a_backchannel()
 
 def test_silence_through_the_tail_is_no_answer():
     t = measure(clip(), converse(FakeDuplex(), clip()))
-    assert t["gap_ms"] is None and t["overlap"] == 0 and t["runs"] == []
+    assert t["gap_ms"] is None and t["overlap"] == 0 and t["runs"] == [] and t["opened"] is False
+
+
+def test_a_greeting_in_the_lead_in_is_the_opening_not_overlap_and_the_caller_is_measured_after_it():
+    # lead 3.2 s: the caller speaks 3.7 -> 5.2 s of stream time. The model greets at steps 5-20
+    # (heard 0.48 -> 1.76 s) and answers from step 69 (heard 5.6 s): gap 400 ms, no overlap.
+    m = FakeDuplex(speak=list(range(5, 21)) + list(range(69, 80)))
+    conv = converse(m, clip())
+    t = measure(clip(), conv)
+    assert t["opened"] is True and t["caller_end_s"] == pytest.approx(5.2) and t["gap_ms"] == pytest.approx(400.0)
+    assert t["overlap"] == 0 and t["voiced_during_caller"] is False and t["backchannels"] == 0
+    a = duplex.stereo(clip(), conv)                                              # the caller comes in after the lead
+    k = int(duplex.LEAD_S * SR)
+    assert not a[:k, 0].any() and np.abs(a[k + int(0.6 * SR):k + int(1.9 * SR), 0]).mean() > 0.05
 
 
 # --------------------------------------------------------------------------- #
@@ -135,10 +149,13 @@ def test_a_seeded_model_answers_a_clip_the_same_twice_and_an_unseeded_one_does_n
 
 
 def test_the_report_gives_the_gap_the_silences_and_the_overlap_per_cohort(tmp_path):
+    # after the 3.2 s lead the clean callers speak 3.7 -> 5.2 s: a greeting at steps 5-20, an answer from step 69
+    greet_then_answer = FakeDuplex(speak=list(range(5, 21)) + list(range(69, 81)), text={2: " Hi", 70: " Sure"})
     results = {"rung": "r5-fake", "description": "a fake", "machine": "laptop", "commit": "abc", "load_s": 1.0,
-               **run_items(FakeDuplex(speak=range(29, 41), text={30: " Sure"}), ITEMS)}
+               **run_items(greet_then_answer, ITEMS)}
     text = report(results)
-    assert "| clean | 2 | — | — | 0 | 0 | 0 | 0.00 |" in text                   # two clips carry no percentile (timing.py's rule)
+    assert "| clean | 2 | 2 | — | — | 0 | 0 | 0 | 0.00 |" in text               # opened both; two clips carry no percentile
+    assert results["turns"]["clean-00"]["pieces"] == [[2, " Hi"], [70, " Sure"]]
     assert "| accented | 1 |" in text and "| all | 3 |" in text
     assert "already talking as the caller stopped (negative gap): 0 of 3" in text
     assert "the same clip driven twice: clean-00 identical, clean-01 identical" in text
