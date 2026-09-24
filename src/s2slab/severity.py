@@ -20,6 +20,9 @@ synthetic (page 16 §9).
     got = achieved(neutral, r, sr)     the four features, measured again from the audio
     misses(got, t)                     [] when every target is met within TOLERANCE
 
+    python -m s2slab.severity dev [--listen]     Kokoro, the dev voices and sentences, both
+                                                 sweeps; laptop CPU, a few minutes, $0
+
 WHAT IS RENDERED -- page 09's four acoustic outputs:
     f0_offset_hz   every pitch point shifted by this many Hz
     f0_dev_scale   page 09's "f0_variance_scale", applied the way its own formula applies it:
@@ -265,3 +268,130 @@ def sweep(neutral: np.ndarray, sr: int, condition: str, scores) -> list[tuple[Ta
         t = CONDITIONS[condition](score)
         rows.append((t, achieved(neutral, render(neutral, sr, t), sr)))
     return rows
+
+
+# --------------------------------------------------------------------------- #
+# The dev run: real TTS speech, fixed sentences, both sweeps
+#
+#     python -m s2slab.severity dev             the table; results/severity/dev.json
+#     python -m s2slab.severity dev --listen    and every render as a WAV under
+#                                               results/severity/listen/, named and tagged synthetic
+# --------------------------------------------------------------------------- #
+
+KOKORO_SR = 24_000
+DEV_VOICES = ("af_heart", "am_michael")
+DEV_SENTENCES = {   # neutral content, so that only the delivery changes (page 09 §4.4); each has a sentence break
+    "d1": "I went to the shop this morning. It was closed, so I came back home.",
+    "d2": "My sister called yesterday. We talked for a while, and then I made dinner.",
+    "d3": "The bus was late again. I waited by the stop, and then it started to rain.",
+    "d4": "We moved the table into the kitchen. It fits better there, and the room looks bigger.",
+}
+SCORES = {"depression": (0, 5, 10, 15, 20, 27),    # both ends and page 09's band edges: mild 5, moderate 10, severe 15
+          "mania": (0, 12, 20, 26, 40, 60)}        # mild 12, moderate 20, severe 26
+SYNTHETIC_NOTE = ("SYNTHETIC SPEECH: text-to-speech with its prosody edited to page 09's severity mapping. "
+                  "Research code; no clinical validity is claimed or implied.")
+
+
+def synthetic_name(voice: str, sentence_id: str, t: Targets | None = None) -> str:
+    """Every file this module writes says what it is in its name (page 16 §9)."""
+    what = "neutral" if t is None else f"{t.condition}-{t.score:g}"
+    return f"synthetic-{what}-{voice}-{sentence_id}.wav"
+
+
+def write_synthetic(path, audio: np.ndarray, sr: int, voice: str, text: str, t: Targets | None = None) -> None:
+    """A 16-bit WAV whose own metadata says it is synthetic: title, comment and software tags."""
+    import soundfile as sf
+    with sf.SoundFile(str(path), "w", samplerate=sr, channels=1, subtype="PCM_16") as f:
+        f.title = "synthetic " + ("neutral" if t is None else f"{t.condition} {t.score:g}")
+        f.comment = f"{SYNTHETIC_NOTE} Voice {voice}. Text: {text}"
+        f.software = "s2s-lab severity.py"
+        f.write(np.clip(np.asarray(audio, dtype=np.float32), -1.0, 1.0))
+
+
+def kokoro_speaker():
+    """speak(text, voice) -> float32 at KOKORO_SR, through R0's Kokoro. Kokoro is not
+    bit-identical between runs, so each neutral clip is made once and every render reuses it."""
+    from .r0 import KokoroTTS
+    tts = KokoroTTS()
+    tts.load()
+
+    def speak(text: str, voice: str) -> np.ndarray:
+        parts = [np.asarray(r.audio, dtype=np.float32) for r in tts.pipeline(text, voice=voice) if r.audio is not None]
+        return np.concatenate(parts) if parts else np.zeros(0, np.float32)
+    return speak
+
+
+def run(speak, voices=DEV_VOICES, sentences=DEV_SENTENCES, scores=SCORES, sr: int = KOKORO_SR, listen=None) -> dict:
+    """Every voice x sentence spoken once, trimmed, then swept through every score of each
+    condition and measured again. Takes speak(text, voice) -> audio at sr; `listen`, a folder
+    for the WAVs, or None. Returns {"sr", "tolerance", "rows": one per voice x sentence x condition}."""
+    rows = []
+    for voice in voices:
+        for sid, text in sentences.items():
+            neutral = trim(speak(text, voice), sr)
+            if listen is not None:
+                write_synthetic(listen / synthetic_name(voice, sid), neutral, sr, voice, text)
+            for condition, levels in scores.items():
+                steps = []
+                for score in levels:
+                    t = CONDITIONS[condition](score)
+                    r = render(neutral, sr, t)
+                    steps.append((t, achieved(neutral, r, sr)))
+                    if listen is not None:
+                        write_synthetic(listen / synthetic_name(voice, sid, t), r.audio, sr, voice, text, t)
+                rows.append({"voice": voice, "sentence": sid, "condition": condition,
+                             "neutral_s": round(len(neutral) / sr, 2), "monotone": monotone(steps),
+                             "steps": [{"score": t.score, "target": {f: getattr(t, f) for f in FIELDS},
+                                        "achieved": dict(a._asdict()), "misses": misses(a, t)} for t, a in steps]})
+    return {"sr": sr, "tolerance": TOLERANCE, "rows": rows}
+
+
+def report(results: dict) -> str:
+    """The sweep table: per condition, the target at each score, then what each voice x sentence
+    reached; a * marks a value outside its tolerance. Then the two counts page 09 asks for."""
+    fmt = {"f0_offset_hz": "{:+.1f}", "f0_dev_scale": "{:.2f}", "rate": "{:.2f}", "pause_scale": "{:.2f}"}
+    lines = [SYNTHETIC_NOTE, ""]
+    rows = results["rows"]
+    for condition in dict.fromkeys(r["condition"] for r in rows):
+        mine = [r for r in rows if r["condition"] == condition]
+        scores = [s["score"] for s in mine[0]["steps"]]
+        lines += [f"## {condition}, scores {' '.join(f'{s:g}' for s in scores)}", ""]
+        for field in FIELDS:
+            target = " ".join(fmt[field].format(s["target"][field]) for s in mine[0]["steps"])
+            lines.append(f"{field:13s} target  {target}")
+            for r in mine:
+                vals = []
+                for s in r["steps"]:
+                    v = s["achieved"][field]
+                    missed = any(m.startswith(field) for m in s["misses"])
+                    vals.append("nan" if v != v else fmt[field].format(v) + ("*" if missed else ""))
+                bad = any(f" {field}:" in m for m in r["monotone"])
+                lines.append(f"{'':13s} {r['voice']}:{r['sentence']}  {' '.join(vals)}{'   OUT OF ORDER' if bad else ''}")
+            lines.append("")
+    sweeps = [(r, f) for r in rows for f in FIELDS]
+    ordered = sum(not any(f" {f}:" in m for m in r["monotone"]) for r, f in sweeps)
+    lines.append(f"monotonicity: {ordered} of {len(sweeps)} feature sweeps in order "
+                 "(a sweep = one voice, sentence, condition and feature, every step)")
+    for field in FIELDS:
+        checks = [(s, field) for r in rows for s in r["steps"]
+                  if not (field == "pause_scale" and s["achieved"][field] != s["achieved"][field])]
+        met = sum(not any(m.startswith(field) for m in s["misses"]) for s, _ in checks)
+        lines.append(f"within tolerance, {field}: {met} of {len(checks)}")
+    return "\n".join(lines)
+
+
+if __name__ == "__main__":
+    import json
+    import pathlib
+    import sys
+
+    args = sys.argv[1:]
+    if not args or args[0] != "dev" or set(args[1:]) - {"--listen"}:
+        sys.exit("usage: python -m s2slab.severity dev [--listen]")
+    out = pathlib.Path("results/severity")
+    listen = out / "listen" if "--listen" in args else None
+    (listen or out).mkdir(parents=True, exist_ok=True)
+    results = run(kokoro_speaker(), listen=listen)
+    (out / "dev.json").write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")
+    print(report(results))
+    print(f"\nsaved -> {out / 'dev.json'}" + (f"; listen: {listen}/" if listen else ""))

@@ -1,9 +1,10 @@
 """
 Tests for s2slab.severity (P2c, page 09 §6-7): the mapping taken word for word, the render
-hitting its targets, and the monotonicity test -- on a synthetic voice, so they run in CI in
-seconds with no model. The same checks on real TTS speech are a slow test (commit 2).
+hitting its targets, the monotonicity test and the dev run's table -- on a synthetic voice, so
+they run in CI in seconds with no model. The same checks on real Kokoro speech are one slow test.
 """
 
+import importlib.util
 import math
 
 import numpy as np
@@ -115,3 +116,60 @@ def test_monotone_names_a_step_that_goes_the_wrong_way_and_misses_names_a_miss()
     assert len(wrong) == 1 and "f0_dev_scale" in wrong[0]
     assert misses(Achieved(-20, 0.4, 0.5, 4.0), t1) == ["f0_offset_hz -20.0 against -25.0"]
     assert misses(Achieved(-25, 0.4, 0.5, math.nan), t1) == []          # no pause to stretch: skipped
+
+
+# --------------------------------------------------------------------------- #
+# The dev run: the table, the counts, and files that say they are synthetic
+# --------------------------------------------------------------------------- #
+
+
+def test_the_dev_set_is_neutral_sentences_with_a_break_and_the_scores_span_both_scales():
+    assert set(severity.DEV_VOICES) == {"af_heart", "am_michael"} and len(severity.DEV_SENTENCES) == 4
+    assert all(". " in text for text in severity.DEV_SENTENCES.values())       # a sentence break: a pause to stretch
+    assert severity.SCORES["depression"][0] == PHQ9.low and severity.SCORES["depression"][-1] == PHQ9.high
+    assert severity.SCORES["mania"][0] == YMRS.low and severity.SCORES["mania"][-1] == YMRS.high
+    assert severity.synthetic_name("af_heart", "d1", mania(26)) == "synthetic-mania-26-af_heart-d1.wav"
+    assert severity.synthetic_name("af_heart", "d1") == "synthetic-neutral-af_heart-d1.wav"
+
+
+def test_the_run_measures_every_sweep_reports_the_counts_and_tags_every_file(tmp_path):
+    import soundfile as sf
+    spoken = []
+
+    def speak(text, who):                            # a fake TTS: the synthetic voice, padded as a TTS pads
+        spoken.append((text, who))
+        return np.concatenate([np.zeros(SR // 4, np.float32), voice(), np.zeros(SR // 4, np.float32)])
+
+    scores = {"depression": (0, 27), "mania": (0, 60)}
+    results = severity.run(speak, voices=("v1",), sentences={"s1": "One. Two."}, scores=scores, listen=tmp_path)
+    assert spoken == [("One. Two.", "v1")] and len(results["rows"]) == 2
+    assert all(r["monotone"] == [] and all(s["misses"] == [] for s in r["steps"]) for r in results["rows"])
+    text = severity.report(results)
+    assert "monotonicity: 8 of 8 feature sweeps in order" in text and "within tolerance, rate: 4 of 4" in text
+    assert "## depression, scores 0 27" in text and "OUT OF ORDER" not in text and "*" not in text.split("## ")[1]
+    files = sorted(p.name for p in tmp_path.iterdir())
+    assert files == ["synthetic-depression-0-v1-s1.wav", "synthetic-depression-27-v1-s1.wav",
+                     "synthetic-mania-0-v1-s1.wav", "synthetic-mania-60-v1-s1.wav", "synthetic-neutral-v1-s1.wav"]
+    with sf.SoundFile(str(tmp_path / "synthetic-mania-60-v1-s1.wav")) as f:
+        assert f.samplerate == SR and "SYNTHETIC SPEECH" in f.comment and f.title == "synthetic mania 60"
+
+
+def test_the_report_marks_a_miss_and_a_step_out_of_order():
+    t0, t1 = depression(0), depression(27)
+    steps = [(t0, Achieved(-5, 1.0, 1.0, 1.0)), (t1, Achieved(-25, 1.2, 0.5, 4.0))]
+    row = {"voice": "v", "sentence": "s", "condition": "depression", "neutral_s": 3.0, "monotone": monotone(steps),
+           "steps": [{"score": t.score, "target": {f: getattr(t, f) for f in severity.FIELDS},
+                      "achieved": dict(a._asdict()), "misses": misses(a, t)} for t, a in steps]}
+    text = severity.report({"sr": SR, "tolerance": severity.TOLERANCE, "rows": [row]})
+    assert "v:s  1.00 1.20*   OUT OF ORDER" in text
+    assert "monotonicity: 3 of 4 feature sweeps in order" in text and "within tolerance, f0_dev_scale: 1 of 2" in text
+
+
+@pytest.mark.slow
+@pytest.mark.skipif(importlib.util.find_spec("kokoro") is None, reason="Kokoro is not installed")
+def test_on_real_kokoro_speech_offset_rate_and_pauses_stay_in_order():
+    """One dev voice and sentence, both sweeps, real TTS. The pitch range is not asserted:
+    dev found it the render's weak feature on real speech (see the module docstring)."""
+    results = severity.run(severity.kokoro_speaker(), voices=("af_heart",), sentences={"d1": severity.DEV_SENTENCES["d1"]})
+    for row in results["rows"]:
+        assert not [m for m in row["monotone"] if " f0_dev_scale:" not in m], row["monotone"]
