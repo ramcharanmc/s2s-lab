@@ -22,6 +22,7 @@ Rules, from the v1 Research plan (§8):
 | PR-005 | Does telling R1's LLM one word about the caller's tone (a $0 eGeMAPS tagger) let it tell an upset caller from the same words said calmly, for fear and for anger, better than shuffled tags do? | `44a9a5f` | **Reported: not supported** (fear 7 of 13, one under the bar, p = 0.015; anger 11 of 13, p < 0.001, held; sadness 7 of 13, p = 0.025, held though expected to fail) |
 | PR-006 | Does a speech-LLM that hears the audio (R3, Qwen2-Audio) rank the upset clip above its calm twin on the 39 locked prosody pairs (Claim A), and answer at least as many pairs right as the $0 side-channel on its own metric (Claim B)? | `95c3d33` | **Reported: Claim A supported** (13 of 13 for every emotion); **Claim B not supported** (11 · 11 · 9 against 7 · 7 · 11; anger short; sign test p = 0.21) |
 | PR-007 | On 38 fresh CREMA-D pairs from actors no system here has scored, does giving the $0 tagger the speaker's own neutral clips (a per-caller baseline) let it tell more upset-calm pairs apart than the same tagger without it, without tagging the upset clips neutral? | `02baa74` | **Reported: not supported** (26 of 38 told apart either way; fixed 2, broken 2, one-sided p = 0.69) |
+| PR-008 | When the caller's voice is upset rather than calm, with the same words, does R4 (Qwen2.5-Omni, speaking for itself) answer with a wider pitch range -- beyond chance and beyond what R3's words carry into Kokoro? | The commit that adds this entry | Open |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -1739,3 +1740,144 @@ speaker by name):
 A single baseline clip costs three pairs against the absolute tagger; the
 full baseline only gets back to even. Whatever a per-caller baseline buys, it
 does not buy it here.
+
+---
+
+## PR-008 — Does R4's own voice react to the caller's voice?
+
+**Registered:** 2026-09-23, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+The v2 plan, R4: "No TTS text roundtrip; the model chooses its own delivery.
+... Measure whether output F0 variance actually moves with sentiment. If it
+doesn't, the rung bought nothing -- and that is the finding."
+
+R4 is built (`src/s2slab/r4.py`, `r4-gpu`): Qwen2.5-Omni-7B hears the turn
+and speaks the reply itself, no ASR and no TTS. On the eval set it takes 9.2 s
+p50 on an L40S against R3's 0.69 s in the same container (`640cae3`). Its
+Talker samples its speech (the model's own defaults); every turn is seeded
+(`SEED`), and on the dev run answering a clip twice gave byte-identical audio.
+
+The measure (`src/s2slab/r4probe.py`): the prosody pairs go in as the
+caller's turn -- same actor, same sentence, once calm and once upset. Each
+rung answers both clips; for each pair, the F0 range (10th-90th percentile,
+semitones, `prosodycheck.features` after resampling to 16 kHz) of the reply to
+the upset clip minus that of the reply to the calm clip is `d_range`, and the
+pair's DIRECTION is "wider" (d_range > +0.5 st), "narrower" (< -0.5) or
+"same". The comparator is R3 (Qwen2-Audio hears the clip, Kokoro speaks its
+text): Kokoro takes its delivery from the words alone, so any effect in R3 is
+the upset clip changing the words, which Kokoro then voices.
+
+Development data, **the 21 dev pairs only** (`a677969`, L40S, \$0.20):
+
+| dev, 21 pairs | wider | same | narrower | median d range | reply words, calm -> upset |
+|---|---:|---:|---:|---:|---|
+| R3 (Qwen2-Audio -> Kokoro) | 4 | 14 | 3 | +0.0 st | 17 -> 21 |
+| **R4 (Qwen2.5-Omni speaks)** | **5** | **5** | **11** | **-0.6 st** | 17 -> 17 |
+
+Fear, R4: 1 wider, 5 narrower, median -1.2 st.
+
+**Two decisions made on the dev pairs, disclosed.** (1) The design note
+counted a pair as moving when d_range > 0. On dev, R3's Kokoro proved not
+bit-deterministic (a clip answered twice differed by up to 0.18 in sample
+value), and where R3 wrote the same words for both clips its d_range stayed
+within +-0.05 st, which that rule counted as "wider". The band of +-0.5 st --
+ten times that jitter, the same for both directions -- was set from this.
+(2) Dev says R4 flattens rather than widens. The registered claim is kept as
+the plan's (wider), not turned to fit dev; the two-sided question is
+registered beside it as a secondary, with its own verdict.
+
+What was known, and by whom: the 39 test pairs have been heard by
+Qwen2-Audio before, as yes/no questions under PR-006; neither rung has ever
+answered one as a caller's turn, R4 has never heard one, and nothing here is
+tuned -- the rungs answer as built. The author and the assistant have seen
+PR-005's and PR-006's per-pair results on those pairs, which say nothing
+about either rung's reply.
+
+### Question
+
+When the caller's voice is upset rather than calm, with the same words, does
+R4 answer in a voice with a wider pitch range -- more than chance, and more
+than R3's words carry into Kokoro?
+
+### Validity requirements
+
+| | Requirement |
+|---|---|
+| **V1 · Frozen** | `src/s2slab/r4.py` (`OmniS2S`, `SpeechToSpeech`, `SEED`, `SPEAKER`, `INSTRUCTION`), `src/s2slab/r3.py`, and in `src/s2slab/r4probe.py`: `answer_clips`, `to_16k`, `measure`, `pair_deltas`, `direction`, `counts`, `TIE_ST`, `compare`, `format_criteria`; `modal_app/r4_bench.py`'s image, `answer` and `pairs`. All as committed with this entry. Reporting beyond `format_criteria` may be added and is tested on made-up replies only. |
+| **V2 · Untouched test pairs** | `prosodyset verify` intact on the day of the run; the test clips reach R3-as-a-rung and R4 for the first time in the registered run (`r3probe.clips_for` refuses the test side without a registration). |
+| **V3 · One run, whole set** | All 39 pairs, `modal run modal_app/r4_bench.py::pairs --split test --confirm PR-008 --save runs/prosody/pr008.json`, from a clean tree. R4 is seeded per turn; R3's text is greedy and its Kokoro jitter sits far inside the band. A repeat that changes a pair's direction is reported as a finding. A crashed run is reported and repeated once, in full. |
+| **V4 · Evidence** | The run file (every reply's text, timing and measures; every pair's deltas and direction; the seeding check) and the printed report go to `runs/prosody/` in the commit that reports the result. Reply audio stays in `results/` (ignored). |
+
+### Primary outcome
+
+For each rung and each of the 39 test pairs: `d_range` and its direction, as
+`r4probe.pair_deltas` computes them at this commit.
+
+### Success criteria
+
+| | Criterion |
+|---|---|
+| **S1 · R4 widens** | R4's pairs: more "wider" than "narrower", and an exact **one-sided** sign test on wider against narrower gives **p < 0.05** |
+| **S2 · R4 beats R3** | pairs where R4 is wider and R3 is not, against pairs where R3 is wider and R4 is not: more of the first, one-sided sign test **p < 0.05** |
+
+**Supported if S1 and S2 both hold.** Pairs that are "same" or unmeasured
+count toward neither side.
+
+**Registered secondary, with its own verdict:** the **two-sided** sign test on
+R4's wider against narrower -- does R4's delivery move consistently in either
+direction? Reported as "moves consistently -- wider / narrower" at p < 0.05,
+else "no consistent direction". It cannot turn S1's verdict.
+
+**Why one-sided for S1.** The plan's question is directional: an agent that
+hears distress should sound more engaged, not less. Dev points the other way,
+and the claim is registered as the plan wrote it rather than as dev suggests;
+the other direction is what the secondary is for.
+
+### Predictions, recorded but not criteria
+
+- **S1 fails.** R4 about 9 wider, 20 narrower, 10 same of 39 (scaling dev).
+- **S2 fails** with it: R4 wider where R3 is not on about 7 pairs, R3 wider
+  where R4 is not on about 5.
+- **The secondary is close:** at 9 against 20 the two-sided p is about 0.06;
+  it is a coin toss whether it reaches 0.05 ("narrower").
+- Fear flattens most (as on dev); anger least.
+- R3 mostly "same" (about 26 of 39); its words run longer for the upset clip
+  (about 17 -> 21), R4's do not.
+- R4's seeding check prints "identical" again.
+
+### Reported alongside, descriptively
+
+Per emotion, both rungs: wider / same / narrower, median d_range, d_pitch
+and d_level; reply word counts, calm against upset; every pair's deltas side
+by side; the seeding check; a few replies' texts to both clips of a pair. The
+reply WAVs are kept in `results/` for listening and are not committed.
+
+### Analysis plan
+
+1. Commit this entry together with the frozen code above.
+2. `prosodyset verify`, a clean tree, then the one run (V2, V3). Save the evidence (V4).
+3. Record the output below, verbatim.
+4. Only after step 3: any further look, labelled exploratory.
+
+### What this cannot show
+
+- **Not whether R4's delivery is appropriate.** A flatter voice could be a
+  calmer, deliberately soothing one; F0 range measures animation, not care.
+  Nobody listens and rates here.
+- **Not the model's ceiling.** One speaker voice (Chelsie), the model's own
+  default sampling, one seed; another seed gives other audio.
+- **Not Kokoro's.** R3 is the comparator for text leaking into voice, not a
+  claim about what a prosody-aware TTS could do.
+- **Acted emotion, one corpus, 39 pairs, 13 per emotion** -- per emotion is
+  reported, not decided.
+
+### Deviations
+
+*(none yet)*
+
+### Results
+
+*(to be appended)*

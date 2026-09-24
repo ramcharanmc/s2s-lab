@@ -190,7 +190,7 @@ def pairs(split: str = "dev", confirm: str = "", save: str = ""):
     """Both rungs answer the prosody pairs of one side (the test side only with a
     registration); the replies' delivery is measured and reported on the laptop."""
     from s2slab.r3probe import clips_for
-    from s2slab.r4probe import RUNGS, analyse, format_report, write_replies
+    from s2slab.r4probe import RUNGS, analyse, compare, format_criteria, format_report, write_replies
     from s2slab.r4probe import save as save_run
     from s2slab.sidechannel import refuse_to_overwrite
 
@@ -208,6 +208,8 @@ def pairs(split: str = "dev", confirm: str = "", save: str = ""):
             + f" · {' and '.join(RUNGS)} on {out['gpu']} · commit {commit}")
     print(head, "\n")
     print(format_report(prs, deltas, {r: a["repeat"] for r, a in out["answers"].items()}))
+    if split == "test":
+        print("\n" + format_criteria(compare(deltas), confirm))
     print(f"\nreplies written to results/r4-gpu/replies/{split}/ for listening")
     if save:
         save_run(pathlib.Path(save), head, prs, out["answers"], measures, deltas)
