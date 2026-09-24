@@ -32,6 +32,10 @@ one. A failed run is still a row, since it was still billed.
 | 2026-09-24 | `bef00df` | `modal run modal_app/r5_bench.py` | A10 | 379 s | ≈ 386 s | \$0.118 | R5 smoke test, Moshi, 30 probe clips, no lead-in: it greets 0.4-2 s into every clip, over the caller; 24 of 30 unanswered within a 4 s tail (lead-in and 8 s tail in `236486b`). End-to-end time back-computed from the cost line; the printed output was overwritten by the next smoke test |
 | 2026-09-24 | `43b747b` | `modal run modal_app/r5_bench.py` | A10 | 521 s | 529 s | \$0.162 | R5 smoke test, Moshi, 3.2 s lead-in: opens every call ("Hello, how is it going?"), 17 of 30 unanswered within 8 s; RTF 0.70, 16.6 GB. This run also built the PersonaPlex image (CPU, not in the row) |
 | 2026-09-24 | `43b747b` | `modal run modal_app/r5_bench.py --model r5-personaplex` | A10 | 793 s | 806 s | \$0.246 | R5 smoke test, PersonaPlex: answers 30 of 30, gap p50 410 ms; its greeting lasts to 3.28 s, one frame into the caller (lead-in lengthened in the next commit); RTF 0.77, 18.1 GB, load 44 s |
+| 2026-09-24 | `6723cb4` | `modal run modal_app/r5_bench.py --evalset --limit 8` | A10 | 191 s | 196 s | \$0.060 | R5 eval-set smoke test, Moshi, 8 clips, 4.8 s lead-in: not evidence |
+| 2026-09-24 | `6723cb4` | `modal run modal_app/r5_bench.py --model r5-personaplex --evalset --limit 8` | A10 | 252 s | 257 s | \$0.079 | R5 eval-set smoke test, PersonaPlex, 8 clips: set-up 5.8 s a call; not evidence |
+| 2026-09-24 | `6723cb4` | `modal run modal_app/r5_bench.py --evalset` | A10 | 2833 s | 2839 s | \$0.867 | **the R5 row, Moshi**: 96 of 200 answered, gap p50 150 ms; RTF 0.69; 16.6 GB (`runs/r5-moshi/`) |
+| 2026-09-24 | `6723cb4` | `modal run modal_app/r5_bench.py --model r5-personaplex --evalset` | A10G | 4479 s | 4490 s | \$1.372 | **the R5 row, PersonaPlex**: 192 of 200 answered, gap p50 460 / p90 758 ms; set-up 5.95 s a call; RTF 0.80; 18.1 GB (`runs/r5-personaplex/`). Estimated at the A10 rate |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -40,5 +44,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$3.312 + four failed runs | \$36.93 |
+| Modal | \$5.690 + four failed runs | \$36.93 |
 | Vast.ai | \$0 | \$5.86 |

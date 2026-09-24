@@ -33,6 +33,8 @@ Smoke tests, `--limit` runs and reply WAVs go to `results/`, which is ignored.
 | `r3-gpu/evalset-modal-l40s.json` | R3 re-measured on the L40S, the same-container comparator for the R4 row | `339092a` | Modal NVIDIA L40S, one container: r3-gpu then r4-gpu | page 20 §1, §19 |
 | `r4-gpu/evalset-modal-l40s.json` · `evalset-modal-l40s-report.md` | **the R4 row**: Qwen2.5-Omni hears each turn and speaks the reply itself (no transcript, no TTS), every turn seeded; peak GPU memory; the report is both rungs' printed output | `339092a` | Modal NVIDIA L40S, same container | page 20 §1, §19 |
 | `prosody/pr008.json` | PR-008, the registered run: R3 and R4 answer the 39 locked prosody pairs as a caller's turn; every reply's text and measures, every pair's direction | `f4da0bc` | Modal NVIDIA L40S | page 20 §19 |
+| `r5-moshi/evalset-modal-a10.json` · `evalset-modal-a10-report.md` | **the R5 row, Moshi**: full duplex, one conversation per clip (4.8 s lead-in, the clip, 8 s tail), every step's text piece and voiced run, seeded; the report is the run's printed output | `6723cb4` | Modal NVIDIA A10 | page 20 §1, §20 |
+| `r5-personaplex/evalset-modal-a10.json` · `evalset-modal-a10-report.md` | **the R5 row, PersonaPlex**: the same driver, R0's instruction as its role, voice NATF2; set-up time per call | `6723cb4` | Modal NVIDIA **A10G** (the file name says a10) | page 20 §1, §20 |
 | `prosody/pr008-report.md` | the same run's report, regenerated from the run file by the frozen code (the printed output was overwritten; PR-008 Deviations) | `f4da0bc` | Modal NVIDIA L40S | page 20 §19 |
 
 ## What an eval-set run holds
@@ -72,6 +74,22 @@ The transcripts are a model's, of the scripted lines in
 Re-count without the recordings or any model:
 
     python -c "import json; d = json.load(open('runs/bargein/pr003-70ms.json', encoding='utf-8')); print({p: sum(not o['correct'] for o in os) for p, os in d['outcomes'].items()})"
+## What a full-duplex run holds
+
+`rung`, `description`, `machine`, `commit`, `versions`, `load_s`,
+`peak_vram_mb`; `repeat` (the first two clips driven twice: the largest output
+difference, 0 when identical); and `turns`, one entry per clip: `cohort`,
+`stream_s`, `wall_s`, `rtf`, `setup_s`, `runs` (every voiced utterance of the
+model, `[start, end]` in stream time), `pieces` (every text piece with its
+80 ms step), `caller_end_s` (with the lead-in), `gap_ms`, `overlap`,
+`backchannels`, `interruptions`, `voiced_during_caller`, `opened`,
+`reply_text`. The definitions are in `src/s2slab/duplex.py`; no audio is
+stored.
+
+Re-count the answers without any model:
+
+    python -c "import json; t = json.load(open('runs/r5-personaplex/evalset-modal-a10.json', encoding='utf-8'))['turns']; print(sum(v['gap_ms'] is not None for v in t.values()), 'of', len(t))"
+
 ## Sources
 
 `transcript` is a model's output from eval-set audio; no source audio or
@@ -180,3 +198,67 @@ audio is a function of the clip alone. Expectations, to be scored:
   **right**; words 16–22 -> 22, **right at the edge**; about \$1.2 -> \$1.32,
   **about right**.
 
+## R5 as a rung — full duplex (2026-09-24)
+
+`modal run modal_app/r5_bench.py --evalset` and the same with `--model
+r5-personaplex`. Written after the runs: unlike R3 and R4, no expectations
+were written down before the eval set was touched, so none are scored. The
+plan's own two claims are checked instead -- "Verify the ~200 ms and
+5-per-A100 claims with your own numbers" (v2, R5).
+
+Two models behind one driver (`s2slab.duplex`), each in its own image because
+each ships a package named `moshi`: the same-container rule cannot hold
+between them. The stream-time measures do not depend on the card; the RTF
+does. Every conversation is 4.8 s of silence (the model opens the call), the
+clip, then 8 s of silence, seeded. Both settings were decided on the 30 probe
+clips, in two dev fixes (`236486b`, `6723cb4`); `src/s2slab/duplex.py` gives
+the reasons.
+
+**Measured (2026-09-24, commit `6723cb4`, 200 clips each, \$0.867 + \$1.372):**
+
+| 200 clips | Moshi (moshiko) | PersonaPlex (R0's instruction as its role, voice NATF2) |
+|---|---:|---:|
+| card | A10 | A10G |
+| answered within the 8 s tail | 96 | **192** |
+| response gap, p50 | **150 ms** | 460 ms |
+| response gap, p90 | — (96 answers; the rule wants 100) | 758 ms |
+| gaps between 300 and 800 ms | 10 of 96 | 150 of 192 |
+| already talking as the caller stopped | 24 | 12 |
+| clips where it spoke while the caller spoke | 65 | 73 |
+| backchannels / interruptions | 55 / 35 | 50 / 46 |
+| reply words, median | 11 | 16 |
+| replies that end in a question | 13 | **115** |
+| RTF, median (worst) | 0.69 (1.68: the first call, before anything is warm) | 0.80 (0.82) |
+| set-up before each call | 0.01 s | **5.95 s** |
+| peak GPU memory | 16,621 MB | 18,138 MB |
+
+- **The ~200 ms claim holds for Moshi's answers, not for Moshi.** When it
+  answers, the gap is 150 ms p50, and 24 of its 96 answers begin before the
+  caller's last word. But after "Hello, how is it going?" it stays silent
+  through the whole 8 s tail on 104 of 200 clips; on the slow cohort it
+  answers 18 of 50. Its replies are open chat, since it has no role.
+- **PersonaPlex waits, then answers.** 192 of 200 answered, 150 of them
+  between 300 and 800 ms: a steady rhythm, close to an endpointer's, but
+  chosen by the model. The role took hold: it opens every call as customer
+  service and ends 115 of 200 replies with a question.
+- **5 per A100: not tested.** No A100 run. On a 24 GB A10 one conversation
+  fits (16.6 and 18.1 GB), at RTF 0.69 and 0.80: one conversation per card.
+- **PersonaPlex's set-up is a real cost.** It replays its voice prompt and
+  its role before every call: 5.95 s before it can hear the caller, outside
+  the stream time and the RTF.
+- **The text stream is not a transcript.** Both models skip pieces in their
+  inner monologue ("What' the problem?", "I' be here"), so `reply_text` shows
+  what was said, not word for word. The reply audio was not transcribed.
+- **Not bit-reproducible across cards, reproducible on one.** PersonaPlex's
+  greeting on the A10 smoke test was "Hello, this is phone support. How can I
+  help you today?"; on the A10G eval run, with the same seed and the same
+  silence, "Hello, thank you for calling customer service. How can I assist
+  you today?". On one card, each clip's conversation repeats exactly
+  (`clean-00`, `clean-01` driven twice: identical).
+- **Not the same quantity as R0-R4's latency.** R0-R4 are handed a finished
+  turn and timed from the clip's end to first audio: the endpointer's wait is
+  not in those numbers. R5's gap includes the model's own decision that the
+  caller has finished.
+- The PersonaPlex file is named `a10` but ran on an A10G: Modal's `A10G`
+  request landed on either card. Its report keeps the package's own "Done
+  loading" prints, three per call.
