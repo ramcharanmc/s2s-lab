@@ -162,3 +162,12 @@ def test_the_moshi_adapter_is_registered_and_builds_without_the_package():
     m.end()                                                                      # nothing open: a no-op
     with pytest.raises(KeyError, match="r5-moshi"):
         r5.get("r5-nothing")
+
+
+def test_the_listening_file_puts_the_caller_left_and_the_model_right_where_it_is_heard():
+    from s2slab.duplex import stereo
+    conv = conv_of([None, LOUD, QUIET])
+    a = stereo(np.full(IN_SR // 10, 0.1, np.float32), conv)                     # 0.1 s of caller
+    assert a.shape == (4 * FRAME, 2) and a.dtype == np.float32
+    assert abs(float(a[200:2000, 0].mean()) - 0.1) < 0.005 and not a[:, 0][3 * FRAME:].any()   # resampling rings at the edges
+    assert not a[:2 * FRAME, 1].any() and np.allclose(a[2 * FRAME:3 * FRAME, 1], 0.3)   # step 1 heard from 2 * 80 ms

@@ -157,6 +157,21 @@ def measure(audio: np.ndarray, conv: Conversation, sr: int = IN_SR) -> dict:
             "voiced_during_caller": bool(during), "reply_text": " ".join(reply.split())}
 
 
+def stereo(audio: np.ndarray, conv: Conversation, sr: int = IN_SR) -> np.ndarray:
+    """One conversation for listening: the caller on the left, the model on the right,
+    at SR on the stream's timeline -- each output chunk placed where it is heard,
+    (i + 1) * FRAME_S. Returns float32 of shape (samples, 2)."""
+    left = to_model_rate(audio, sr)
+    n = max(len(left), (len(conv.out) + 1) * FRAME)
+    out = np.zeros((n, 2), np.float32)
+    out[:len(left), 0] = left
+    for i, c in enumerate(conv.out):
+        if c is not None and len(c):
+            k = (i + 1) * FRAME
+            out[k:k + len(c), 1] = c[: n - k]
+    return out
+
+
 def run_items(model, items, seed: int = SEED, repeat: int = REPEAT) -> dict:
     """Every eval item through the model, one conversation each; the first `repeat`
     items a second time at the end. Takes items with .id, .cohort, .audio (16 kHz).

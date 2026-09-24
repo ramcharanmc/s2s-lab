@@ -139,3 +139,26 @@ def test_the_l40s_run_is_saved_as_evidence_and_its_smoke_test_is_not(r4_bench):
     smoke = r4_bench.results_path("r4-gpu", limit=8)
     assert smoke.relative_to(ROOT).parts[0] == "results" and "limit8" in smoke.name
     assert hasattr(r4_bench.evaluate, "remote") and hasattr(r4_bench.bench, "remote") and hasattr(r4_bench.main, "info")
+
+
+# --------------------------------------------------------------------------- #
+# The R5 image: full-duplex Moshi on the A10
+# --------------------------------------------------------------------------- #
+
+
+@pytest.fixture(scope="module")
+def r5_bench():
+    pytest.importorskip("modal")
+    spec = importlib.util.spec_from_file_location("r5_bench", ROOT / "modal_app" / "r5_bench.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_r5_image_holds_the_model_the_adapter_loads_and_saves_evidence_only_for_the_full_eval_set(r5_bench):
+    from s2slab import r5
+    assert r5.get("r5-moshi").repo in r5_bench.MODELS and r5_bench.A10_DOLLARS_PER_HOUR == 1.10
+    assert r5_bench.results_path("r5-moshi", True).relative_to(ROOT).parts == ("runs", "r5-moshi", "evalset-modal-a10.json")
+    assert r5_bench.results_path("r5-moshi", True, limit=8).relative_to(ROOT).parts[0] == "results"
+    assert r5_bench.results_path("r5-moshi", False).relative_to(ROOT).parts[0] == "results"
+    assert hasattr(r5_bench.smoke, "remote") and hasattr(r5_bench.evaluate, "remote") and hasattr(r5_bench.main, "info")
