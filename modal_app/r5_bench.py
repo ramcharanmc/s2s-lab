@@ -50,6 +50,9 @@ image = (
     .pip_install("torch==2.8.0", index_url="https://download.pytorch.org/whl/cu126")
     .pip_install("moshi==0.2.13", "numpy==2.2.6", "scipy==1.15.3", "soundfile==0.14.0")
     .run_function(download_weights)
+    # Praat, because the probe loader counts syllable nuclei (prosody.count_syllable_nuclei) as it
+    # loads -- the first smoke test died there. After the weights, so that layer stays cached.
+    .pip_install("praat-parselmouth==0.4.7")
     # gcc for torch's Triton helpers (as in every GPU image here); PortAudio because the
     # package depends on sounddevice, which looks for the library when imported.
     .apt_install("gcc", "libportaudio2")
