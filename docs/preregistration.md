@@ -23,7 +23,7 @@ Rules, from the v1 Research plan (§8):
 | PR-006 | Does a speech-LLM that hears the audio (R3, Qwen2-Audio) rank the upset clip above its calm twin on the 39 locked prosody pairs (Claim A), and answer at least as many pairs right as the $0 side-channel on its own metric (Claim B)? | `95c3d33` | **Reported: Claim A supported** (13 of 13 for every emotion); **Claim B not supported** (11 · 11 · 9 against 7 · 7 · 11; anger short; sign test p = 0.21) |
 | PR-007 | On 38 fresh CREMA-D pairs from actors no system here has scored, does giving the $0 tagger the speaker's own neutral clips (a per-caller baseline) let it tell more upset-calm pairs apart than the same tagger without it, without tagging the upset clips neutral? | `02baa74` | **Reported: not supported** (26 of 38 told apart either way; fixed 2, broken 2, one-sided p = 0.69) |
 | PR-008 | When the caller's voice is upset rather than calm, with the same words, does R4 (Qwen2.5-Omni, speaking for itself) answer with a wider pitch range -- beyond chance and beyond what R3's words carry into Kokoro? | `f4da0bc` | **Reported: not supported** (R4 14 wider / 16 narrower of 39; no consistent direction, p = 0.86) |
-| PR-009 | On two Kokoro voices and eight neutral sentences the render was not developed on, does raising a PHQ-9 or YMRS score move pitch, range, rate and pauses the way page 09's mapping says, at every step and within tolerance? | The commit that adds this entry | Open |
+| PR-009 | On two Kokoro voices and eight neutral sentences the render was not developed on, does raising a PHQ-9 or YMRS score move pitch, range, rate and pauses the way page 09's mapping says, at every step and within tolerance? | `6c43d5e` | **Reported: not supported** (S4 failed: pitch offset on target in 169 of 192 checks, 88.0%, needed 173; S1 96 of 96, S2 29 of 32, S3 384 of 384, S5 177 of 192 held) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -2093,8 +2093,98 @@ counts per voice and per condition; the neutral clips' lengths.
 
 ### Deviations
 
-None yet.
+- **2026-09-24, registry row.** Its "Registered" cell was changed to the
+  registering commit's hash, `6c43d5e`, and its status updated, as for the
+  earlier entries.
 
 ### Results
 
-Pending.
+**Run:** 2026-09-24 18:15, commit `6c43d5e` (the registering commit), clean
+tree, laptop CPU (WSL), Kokoro-82M; all 32 sweeps, first and only run:
+`PYTHONPATH=src python -m s2slab.severity test --confirm PR-009 | tee
+results/severity/pr009-report.txt`. Run file `runs/severity/pr009.json`
+(every target and measure, every neutral clip's SHA-256); the printed output
+as `runs/severity/pr009-report.md` (standard output only -- the libraries'
+warnings went to the terminal). \$0.
+
+The criteria, verbatim:
+
+```
+PR-009, the registered criteria (docs/preregistration.md):
+  S1  page 09's monotonicity test -- pitch offset, rate, pauses in order, every sweep: 96 of 96   PASS
+  S2  pitch range in order, at least 28 of 32: 29 of 32   PASS
+  S3  rate and pauses within 10%, every check: 384 of 384   PASS
+  S4  pitch offset within 3 Hz or 10%, at least 90%: 169 of 192 (88.0%)   FAIL
+  S5  pitch range within 10%, at least 80%: 177 of 192 (92.2%)   PASS
+PR-009: NOT SUPPORTED -- failed S4
+```
+
+and the report's summary lines above it, verbatim (its pitch-offset line uses
+the module's own 3 Hz rule, not S4's):
+
+```
+monotonicity: 125 of 128 feature sweeps in order (a sweep = one voice, sentence, condition and feature, every step)
+within tolerance, f0_offset_hz: 166 of 192
+within tolerance, f0_dev_scale: 177 of 192
+within tolerance, rate: 192 of 192
+within tolerance, pause_scale: 192 of 192
+```
+
+**Verdict: not supported.** S4 failed: 169 of 192 pitch-offset checks within
+tolerance, 88.0%, where 90% -- 173 checks -- was needed; four short. The
+other four held. Page 09's own test, S1, passed on every sweep: raising the
+severity moved the pitch offset, the rate and the pauses the way the mapping
+says at every step, 96 of 96. Rate and pauses met every target (384 of 384).
+The pitch range, the weak feature on dev, passed both of its bars: 29 of 32
+sweeps in order, all three out of order under mania; 92.2% within 10%.
+
+**Where S4 failed** -- pitch offset, measured minus target, over the 16
+sweeps at each score:
+
+| condition, score | target | mean error | largest | misses |
+|---|---:|---:|---:|---:|
+| depression 0 · 5 · 10 · 15 · 20 · 27 | -5.0 to -25.0 Hz | +0.4 to +1.0 Hz | +3.2 | 1 (PHQ-9 10) |
+| mania 0 | 0 | +0.8 | +2.2 | 0 |
+| mania 12 | +9.0 | +0.9 | +5.4 | 1 |
+| mania 20 | +15.0 | +1.4 | +6.3 | 3 |
+| mania 26 | +19.5 | +1.5 | +6.4 | 3 |
+| mania 40 | +30.0 | +2.7 | +11.9 | 7 |
+| mania 60 | +45.0 | +5.3 | +11.8 | 8 |
+
+The error leans one way: 159 of the 192 measured medians sit above their
+target, and the mean error is above zero at every score of both conditions --
+about a hertz on depression, more the higher mania raises the pitch. 22 of the 23 misses are mania. Two clips
+carry 11 of them: `am_adam:t8` (6, including the one depression miss, -9.2 Hz
+against -12.4) and `af_sarah:t4` (5). By voice: `af_sarah` 86 of 96,
+`am_adam` 83 of 96.
+
+**Predictions, scored**
+
+| Prediction | Outcome |
+|---|---|
+| S1 and S3 hold: 96 of 96, 384 of 384 | Right. |
+| S2 holds narrowly, 29 to 31 of 32; any sweep out of order is range, under mania | Right: 29 of 32, all three mania. |
+| S4 holds, about 94%; the misses are mania at YMRS 40 and 60, overshooting by 3 to 9 Hz | **Wrong:** 88.0%, S4 failed. Misses from YMRS 12 up, and one on depression; overshoot to +11.9 Hz. |
+| S5 about 85-90% | **Wrong, the good way:** 92.2%. |
+| `am_adam` misses more range checks than `af_sarah` | Right by one: 8 against 7. |
+| Supported | **Wrong.** |
+
+**What the registration got wrong.** S4's bar of 90% sat three and six points
+under dev's 92.7% and 95.8% -- two runs of 96 checks on four sentences. On
+eight new sentences the pitch overshot more, and two clips carried half the
+misses. A small dev set read as the population again, the fifth time (PR-004,
+PR-005, PR-007, PR-008): this time in a tolerance rather than a direction.
+The bar is kept as registered; the render fails it. What held is the claim
+page 09 itself makes -- every feature moves the right way at every step --
+and the duration edit: rate within 0.7% of its target on every check, pauses
+within 8.3%.
+
+**Reported alongside, descriptively (after the verdict)**
+
+- The offset error leans upward and grows with the upward shift and the
+  speed-up together (mania 60 is +45 Hz at 1.8x), which points at the render
+  or the measure rather than at chance. Which one is not tested here: the
+  resynthesis at high speed, the median as the measure, or the compression
+  centred on the measured median are all candidates. Exploratory, and the
+  natural first question for any second version.
+- Neutral clips, 3.75 to 4.76 s; every one had its sentence-break pause.

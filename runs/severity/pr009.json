@@ -1,0 +1,3550 @@
+{
+ "sr": 24000,
+ "tolerance": {
+  "f0_offset_hz": 3.0,
+  "f0_dev_scale": 0.1,
+  "rate": 0.1,
+  "pause_scale": 0.1
+ },
+ "rows": [
+  {
+   "voice": "af_sarah",
+   "sentence": "t1",
+   "condition": "depression",
+   "neutral_s": 4.27,
+   "neutral_sha256": "b82b295d99bf16aba155a1bb09f8582a2eea0b77126883f563d4d9476b96e21d",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -4.575953662294438,
+      "f0_dev_scale": 0.9887228626995989,
+      "rate": 0.9971751412429378,
+      "pause_scale": 0.9864864864864865
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -8.940970016911223,
+      "f0_dev_scale": 0.8806929586186218,
+      "rate": 0.9058734215112857,
+      "pause_scale": 1.5405405405405403
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -10.521914956165517,
+      "f0_dev_scale": 0.7761982335322984,
+      "rate": 0.812303444043875,
+      "pause_scale": 2.081081081081081
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -16.34998089024205,
+      "f0_dev_scale": 0.6613779441483659,
+      "rate": 0.7192033752981825,
+      "pause_scale": 2.6216216216216215
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -20.637670531901563,
+      "f0_dev_scale": 0.5609047033195448,
+      "rate": 0.6276020445958959,
+      "pause_scale": 3.175675675675676
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -24.307313486882833,
+      "f0_dev_scale": 0.3992753360957662,
+      "rate": 0.49858757062146886,
+      "pause_scale": 3.945945945945946
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t1",
+   "condition": "mania",
+   "neutral_s": 4.27,
+   "neutral_sha256": "b82b295d99bf16aba155a1bb09f8582a2eea0b77126883f563d4d9476b96e21d",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 0.6220431124049242,
+      "f0_dev_scale": 0.9813039686482389,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 9.125425316298276,
+      "f0_dev_scale": 1.1320289957585665,
+      "rate": 1.1575509981008072,
+      "pause_scale": 0.8513513513513513
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 18.376781003612933,
+      "f0_dev_scale": 1.222527978622087,
+      "rate": 1.2677700296291858,
+      "pause_scale": 0.7702702702702702
+     },
+     "misses": [
+      "f0_offset_hz +18.4 against +15.0"
+     ]
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 20.528974665946805,
+      "f0_dev_scale": 1.311234350773153,
+      "rate": 1.3435889302989452,
+      "pause_scale": 0.6891891891891893
+     },
+     "misses": []
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 33.088885818898405,
+      "f0_dev_scale": 1.4599181953605735,
+      "rate": 1.5228371649920007,
+      "pause_scale": 0.5135135135135135
+     },
+     "misses": [
+      "f0_offset_hz +33.1 against +30.0"
+     ]
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 51.761894568146204,
+      "f0_dev_scale": 1.710448112863855,
+      "rate": 1.7867386536190313,
+      "pause_scale": 0.28378378378378377
+     },
+     "misses": [
+      "f0_offset_hz +51.8 against +45.0"
+     ]
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t2",
+   "condition": "depression",
+   "neutral_s": 4.48,
+   "neutral_sha256": "8eac35aa52a6c6b07ade3382a11e1c3bf44b95756c7b7d4ef264c519c5ec4303",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -4.480106616274583,
+      "f0_dev_scale": 0.9875402918587475,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -8.47325351664577,
+      "f0_dev_scale": 0.8780417785230044,
+      "rate": 0.9067048437127179,
+      "pause_scale": 1.5441176470588236
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -12.138202429255358,
+      "f0_dev_scale": 0.7763438599078714,
+      "rate": 0.813646420669474,
+      "pause_scale": 2.0882352941176467
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -15.389549102067576,
+      "f0_dev_scale": 0.6628898462033386,
+      "rate": 0.720783377723684,
+      "pause_scale": 2.6323529411764706
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -19.506751511009185,
+      "f0_dev_scale": 0.559023144603531,
+      "rate": 0.629130392792594,
+      "pause_scale": 3.191176470588235
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -24.529584063309983,
+      "f0_dev_scale": 0.40692843025066666,
+      "rate": 0.4993429697766097,
+      "pause_scale": 3.955882352941176
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t2",
+   "condition": "mania",
+   "neutral_s": 4.48,
+   "neutral_sha256": "8eac35aa52a6c6b07ade3382a11e1c3bf44b95756c7b7d4ef264c519c5ec4303",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 0.8142930578413257,
+      "f0_dev_scale": 0.9985268475915632,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 10.361774653215093,
+      "f0_dev_scale": 1.1480190118507012,
+      "rate": 1.1618426416632697,
+      "pause_scale": 0.8676470588235293
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 17.37929755160377,
+      "f0_dev_scale": 1.2542193287963603,
+      "rate": 1.2660160750725322,
+      "pause_scale": 0.7647058823529411
+     },
+     "misses": []
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 21.04263088846841,
+      "f0_dev_scale": 1.3384195352823374,
+      "rate": 1.3494517852122576,
+      "pause_scale": 0.7058823529411764
+     },
+     "misses": []
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 32.02215492669927,
+      "f0_dev_scale": 1.4984416596607937,
+      "rate": 1.5309462658004735,
+      "pause_scale": 0.5294117647058822
+     },
+     "misses": []
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 49.88957002765227,
+      "f0_dev_scale": 1.834386684463923,
+      "rate": 1.8029416416258106,
+      "pause_scale": 0.30882352941176466
+     },
+     "misses": [
+      "f0_offset_hz +49.9 against +45.0"
+     ]
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t3",
+   "condition": "depression",
+   "neutral_s": 3.86,
+   "neutral_sha256": "6d6d95b567d5e51c1a9f8d95c47b44c4b0c855d63e92ead8f4d280dd54097d45",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -3.9367145197755633,
+      "f0_dev_scale": 0.9722089065630706,
+      "rate": 1.0029411764705882,
+      "pause_scale": 1.0222222222222221
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -8.093522739227211,
+      "f0_dev_scale": 0.8418390753515134,
+      "rate": 0.9092828176212432,
+      "pause_scale": 1.5777777777777777
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -11.60980169008522,
+      "f0_dev_scale": 0.7749790302838336,
+      "rate": 0.8139558013247667,
+      "pause_scale": 2.111111111111111
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -16.332924099692747,
+      "f0_dev_scale": 0.6608282672678428,
+      "rate": 0.7227702660932076,
+      "pause_scale": 2.6888888888888887
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -19.476331187735894,
+      "f0_dev_scale": 0.5627713180634284,
+      "rate": 0.6286824861534679,
+      "pause_scale": 3.222222222222222
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -24.203084023788477,
+      "f0_dev_scale": 0.3945469787066122,
+      "rate": 0.49926793557833077,
+      "pause_scale": 4.0
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t3",
+   "condition": "mania",
+   "neutral_s": 3.86,
+   "neutral_sha256": "6d6d95b567d5e51c1a9f8d95c47b44c4b0c855d63e92ead8f4d280dd54097d45",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 0.22165771543672008,
+      "f0_dev_scale": 0.9712547199867947,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 9.258302963674282,
+      "f0_dev_scale": 1.1003471344584712,
+      "rate": 1.161196952283659,
+      "pause_scale": 0.8666666666666667
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 15.354445895832896,
+      "f0_dev_scale": 1.201391047432413,
+      "rate": 1.269073315965761,
+      "pause_scale": 0.7777777777777777
+     },
+     "misses": []
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 20.59173586213774,
+      "f0_dev_scale": 1.2830981089894908,
+      "rate": 1.3502499546286977,
+      "pause_scale": 0.7111111111111111
+     },
+     "misses": []
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 29.897278035155665,
+      "f0_dev_scale": 1.4359948083018206,
+      "rate": 1.533733133433283,
+      "pause_scale": 0.5333333333333333
+     },
+     "misses": []
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 45.76714223754581,
+      "f0_dev_scale": 1.5620188521903995,
+      "rate": 1.7964702783387478,
+      "pause_scale": 0.2888888888888889
+     },
+     "misses": [
+      "f0_dev_scale 1.56 against 1.80"
+     ]
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t4",
+   "condition": "depression",
+   "neutral_s": 4.36,
+   "neutral_sha256": "d5882f074d0471ae557b34d03028cd3dab34c98c6e17ecc6612d974c5f875635",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -5.36164226769003,
+      "f0_dev_scale": 0.9366416580394593,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -7.770819261712546,
+      "f0_dev_scale": 0.8399136680356365,
+      "rate": 0.9071787837219937,
+      "pause_scale": 1.546875
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -9.55268998304868,
+      "f0_dev_scale": 0.7261690621159413,
+      "rate": 0.8161996617452121,
+      "pause_scale": 2.109375
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -15.103292651270039,
+      "f0_dev_scale": 0.6311908399046924,
+      "rate": 0.7216819846254579,
+      "pause_scale": 2.640625
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -18.30192882477553,
+      "f0_dev_scale": 0.5346993434690029,
+      "rate": 0.6300679609594987,
+      "pause_scale": 3.2031249999999996
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -23.51229866011684,
+      "f0_dev_scale": 0.39581411975954317,
+      "rate": 0.5,
+      "pause_scale": 3.96875
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t4",
+   "condition": "mania",
+   "neutral_s": 4.36,
+   "neutral_sha256": "d5882f074d0471ae557b34d03028cd3dab34c98c6e17ecc6612d974c5f875635",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 0.8485684187186564,
+      "f0_dev_scale": 0.9206182474648527,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 11.37894626113382,
+      "f0_dev_scale": 1.0443932003452132,
+      "rate": 1.1598420286842652,
+      "pause_scale": 0.859375
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 21.337426939782432,
+      "f0_dev_scale": 1.1355010366831952,
+      "rate": 1.2662752106203727,
+      "pause_scale": 0.765625
+     },
+     "misses": [
+      "f0_offset_hz +21.3 against +15.0",
+      "f0_dev_scale 1.14 against 1.27"
+     ]
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 25.45525687965082,
+      "f0_dev_scale": 1.2424441484393953,
+      "rate": 1.3435868109377116,
+      "pause_scale": 0.6875
+     },
+     "misses": [
+      "f0_offset_hz +25.5 against +19.5"
+     ]
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 36.44311119611851,
+      "f0_dev_scale": 1.3745263543640962,
+      "rate": 1.5380639826347615,
+      "pause_scale": 0.546875
+     },
+     "misses": [
+      "f0_offset_hz +36.4 against +30.0",
+      "f0_dev_scale 1.37 against 1.53"
+     ]
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 56.58033486792536,
+      "f0_dev_scale": 1.5772575217814664,
+      "rate": 1.796053028626607,
+      "pause_scale": 0.296875
+     },
+     "misses": [
+      "f0_offset_hz +56.6 against +45.0",
+      "f0_dev_scale 1.58 against 1.80"
+     ]
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t5",
+   "condition": "depression",
+   "neutral_s": 4.26,
+   "neutral_sha256": "fd006257fb2af2515e00562a53935df6ea3c6106dba81e0d6ebfbc7ccc586761",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -3.920094764665123,
+      "f0_dev_scale": 0.9697387316264063,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -8.732461710032908,
+      "f0_dev_scale": 0.8722327783586901,
+      "rate": 0.9078951393349853,
+      "pause_scale": 1.5636363636363635
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -11.258494600512364,
+      "f0_dev_scale": 0.7775814269776248,
+      "rate": 0.8138270160590079,
+      "pause_scale": 2.109090909090909
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -15.161618802707409,
+      "f0_dev_scale": 0.6609891414134736,
+      "rate": 0.7203883495145631,
+      "pause_scale": 2.6545454545454543
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -18.964288787068824,
+      "f0_dev_scale": 0.5568869821262361,
+      "rate": 0.6295872046158415,
+      "pause_scale": 3.2363636363636363
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -24.22935526180163,
+      "f0_dev_scale": 0.40825173622688615,
+      "rate": 0.49999999999999994,
+      "pause_scale": 4.018181818181818
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t5",
+   "condition": "mania",
+   "neutral_s": 4.26,
+   "neutral_sha256": "fd006257fb2af2515e00562a53935df6ea3c6106dba81e0d6ebfbc7ccc586761",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 0.49420330079274777,
+      "f0_dev_scale": 0.9802301129926182,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 8.429287723266725,
+      "f0_dev_scale": 1.1024556065327078,
+      "rate": 1.162553858206032,
+      "pause_scale": 0.8727272727272726
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 13.293870692441402,
+      "f0_dev_scale": 1.2095600809954132,
+      "rate": 1.265995563896946,
+      "pause_scale": 0.7636363636363636
+     },
+     "misses": []
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 17.551384968815086,
+      "f0_dev_scale": 1.333837779601858,
+      "rate": 1.3452386348184742,
+      "pause_scale": 0.6909090909090908
+     },
+     "misses": []
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 33.21573515703321,
+      "f0_dev_scale": 1.4489732604446395,
+      "rate": 1.5316074653822997,
+      "pause_scale": 0.5272727272727272
+     },
+     "misses": [
+      "f0_offset_hz +33.2 against +30.0"
+     ]
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 48.25496535073023,
+      "f0_dev_scale": 1.7089147801359552,
+      "rate": 1.805499229458999,
+      "pause_scale": 0.3090909090909091
+     },
+     "misses": [
+      "f0_offset_hz +48.3 against +45.0"
+     ]
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t6",
+   "condition": "depression",
+   "neutral_s": 4.62,
+   "neutral_sha256": "42fb0061300dd5f4af6646a10f36ea17f8911a25aa37c7fdbdbaf4c58a99d803",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -4.24912115120415,
+      "f0_dev_scale": 1.014904419968608,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -8.456687633484563,
+      "f0_dev_scale": 0.906287134136135,
+      "rate": 0.9039021549213744,
+      "pause_scale": 1.527027027027027
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -12.464201970606155,
+      "f0_dev_scale": 0.7985307996022498,
+      "rate": 0.8142351243824596,
+      "pause_scale": 2.0945945945945947
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -16.4122919344791,
+      "f0_dev_scale": 0.6829571623368457,
+      "rate": 0.7194733751583892,
+      "pause_scale": 2.6216216216216215
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -20.361078372563952,
+      "f0_dev_scale": 0.5714281035414577,
+      "rate": 0.6267710387626118,
+      "pause_scale": 3.162162162162162
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -25.34018205639174,
+      "f0_dev_scale": 0.4170011160726643,
+      "rate": 0.49807445442875486,
+      "pause_scale": 3.9324324324324325
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t6",
+   "condition": "mania",
+   "neutral_s": 4.62,
+   "neutral_sha256": "42fb0061300dd5f4af6646a10f36ea17f8911a25aa37c7fdbdbaf4c58a99d803",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 0.262360363844067,
+      "f0_dev_scale": 1.016411599322214,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 8.837391129934588,
+      "f0_dev_scale": 1.1940494370774104,
+      "rate": 1.161242050130939,
+      "pause_scale": 0.8648648648648649
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 16.39669573705268,
+      "f0_dev_scale": 1.293446089737167,
+      "rate": 1.2635521120262698,
+      "pause_scale": 0.7567567567567568
+     },
+     "misses": []
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 20.558519316515202,
+      "f0_dev_scale": 1.3704461275671664,
+      "rate": 1.3438780811637707,
+      "pause_scale": 0.6891891891891893
+     },
+     "misses": []
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 33.8135373020211,
+      "f0_dev_scale": 1.5963623185221567,
+      "rate": 1.5297925120336449,
+      "pause_scale": 0.5270270270270271
+     },
+     "misses": [
+      "f0_offset_hz +33.8 against +30.0"
+     ]
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 47.22810125111042,
+      "f0_dev_scale": 1.8433954122443763,
+      "rate": 1.7879154426588328,
+      "pause_scale": 0.28378378378378377
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t7",
+   "condition": "depression",
+   "neutral_s": 4.76,
+   "neutral_sha256": "eafba14bdc8384e6da06272fe08b75649057efb3a92efd996205cd238fdf53a9",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -4.655821767552737,
+      "f0_dev_scale": 0.9769604583984652,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -9.001764390017883,
+      "f0_dev_scale": 0.8820917980861664,
+      "rate": 0.9074243813015582,
+      "pause_scale": 1.5499999999999998
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -13.292353668062248,
+      "f0_dev_scale": 0.7507374810742578,
+      "rate": 0.8131347267733849,
+      "pause_scale": 2.0875
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -16.58169706976838,
+      "f0_dev_scale": 0.65218081882183,
+      "rate": 0.7208409811446688,
+      "pause_scale": 2.6374999999999997
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -20.067349499237963,
+      "f0_dev_scale": 0.5489591432369573,
+      "rate": 0.6284882951990477,
+      "pause_scale": 3.1874999999999996
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -25.303776985926845,
+      "f0_dev_scale": 0.40041069572689714,
+      "rate": 0.4987405541561713,
+      "pause_scale": 3.95
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t7",
+   "condition": "mania",
+   "neutral_s": 4.76,
+   "neutral_sha256": "eafba14bdc8384e6da06272fe08b75649057efb3a92efd996205cd238fdf53a9",
+   "monotone": [
+    "mania f0_dev_scale: 20 -> 26 moved -0.065, should move +0.080"
+   ],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 0.4338505386940028,
+      "f0_dev_scale": 0.9695431004458562,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 8.989774554530754,
+      "f0_dev_scale": 1.0958200533242861,
+      "rate": 1.1572743655934927,
+      "pause_scale": 0.85
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 15.303751133292565,
+      "f0_dev_scale": 1.1625735157661068,
+      "rate": 1.2652262470545947,
+      "pause_scale": 0.7625
+     },
+     "misses": []
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 20.2626324906536,
+      "f0_dev_scale": 1.097673929627709,
+      "rate": 1.3476836686944316,
+      "pause_scale": 0.7000000000000001
+     },
+     "misses": [
+      "f0_dev_scale 1.10 against 1.35"
+     ]
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 30.191805602345795,
+      "f0_dev_scale": 1.3740047781213138,
+      "rate": 1.5286870084122823,
+      "pause_scale": 0.5249999999999999
+     },
+     "misses": [
+      "f0_dev_scale 1.37 against 1.53"
+     ]
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 46.75654691299755,
+      "f0_dev_scale": 1.44327649162107,
+      "rate": 1.797922854278201,
+      "pause_scale": 0.3
+     },
+     "misses": [
+      "f0_dev_scale 1.44 against 1.80"
+     ]
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t8",
+   "condition": "depression",
+   "neutral_s": 4.19,
+   "neutral_sha256": "00b54fa8cc907ec2cff02660febe78b7d284817d4a2b543b90ac2198a394793c",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -5.648651313512403,
+      "f0_dev_scale": 0.9362584828868997,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -8.36714130559713,
+      "f0_dev_scale": 0.8502172058341048,
+      "rate": 0.9074252549750585,
+      "pause_scale": 1.5483870967741935
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -12.441377573570634,
+      "f0_dev_scale": 0.7245077598018596,
+      "rate": 0.8148049527359873,
+      "pause_scale": 2.096774193548387
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -16.35903191000122,
+      "f0_dev_scale": 0.6053262924247939,
+      "rate": 0.7221482393001029,
+      "pause_scale": 2.6451612903225805
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -19.686446333423106,
+      "f0_dev_scale": 0.543720336016066,
+      "rate": 0.6294677294934431,
+      "pause_scale": 3.193548387096774
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -24.573565176417446,
+      "f0_dev_scale": 0.39428063457277773,
+      "rate": 0.5000000000000001,
+      "pause_scale": 3.967741935483871
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "af_sarah",
+   "sentence": "t8",
+   "condition": "mania",
+   "neutral_s": 4.19,
+   "neutral_sha256": "00b54fa8cc907ec2cff02660febe78b7d284817d4a2b543b90ac2198a394793c",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 1.026877270076767,
+      "f0_dev_scale": 0.9286251125866896,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 10.794352554184002,
+      "f0_dev_scale": 1.1177616287950012,
+      "rate": 1.1587930591433482,
+      "pause_scale": 0.8548387096774194
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 15.878670806438436,
+      "f0_dev_scale": 1.1561435188693645,
+      "rate": 1.2686567164179106,
+      "pause_scale": 0.7741935483870968
+     },
+     "misses": []
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 18.186874553167428,
+      "f0_dev_scale": 1.2521764316229118,
+      "rate": 1.3404045618810718,
+      "pause_scale": 0.6774193548387096
+     },
+     "misses": []
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 30.370019345999083,
+      "f0_dev_scale": 1.412343169191279,
+      "rate": 1.532106646639129,
+      "pause_scale": 0.5322580645161291
+     },
+     "misses": []
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 46.079309746591974,
+      "f0_dev_scale": 1.6352957293108006,
+      "rate": 1.810459587955626,
+      "pause_scale": 0.32258064516129037
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t1",
+   "condition": "depression",
+   "neutral_s": 4.19,
+   "neutral_sha256": "665c7d35b06ee72073ae93cd92b1fe48baa38e5c27f7b7eecbb072b73dfbe383",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -4.556965076927369,
+      "f0_dev_scale": 0.9444375415079431,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -8.431327437752529,
+      "f0_dev_scale": 0.829493226525403,
+      "rate": 0.9069048436963244,
+      "pause_scale": 1.5555555555555554
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -12.05452158444838,
+      "f0_dev_scale": 0.8058951230108617,
+      "rate": 0.8122635874975114,
+      "pause_scale": 2.0888888888888886
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -16.03813813589771,
+      "f0_dev_scale": 0.6459583560255442,
+      "rate": 0.7199403258018722,
+      "pause_scale": 2.6444444444444444
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -19.862361113262168,
+      "f0_dev_scale": 0.5485660597978708,
+      "rate": 0.627709866010238,
+      "pause_scale": 3.1999999999999997
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -24.894355215940223,
+      "f0_dev_scale": 0.40473185048376964,
+      "rate": 0.4980026631158456,
+      "pause_scale": 3.9555555555555557
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t1",
+   "condition": "mania",
+   "neutral_s": 4.19,
+   "neutral_sha256": "665c7d35b06ee72073ae93cd92b1fe48baa38e5c27f7b7eecbb072b73dfbe383",
+   "monotone": [
+    "mania f0_dev_scale: 26 -> 40 moved -0.189, should move +0.187"
+   ],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -0.027415832909596816,
+      "f0_dev_scale": 0.9258111338636523,
+      "rate": 1.002680965147453,
+      "pause_scale": 1.0222222222222221
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 8.535515911223584,
+      "f0_dev_scale": 1.1182414393011124,
+      "rate": 1.161085024642012,
+      "pause_scale": 0.8666666666666667
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 15.826223074723913,
+      "f0_dev_scale": 1.1458902785604481,
+      "rate": 1.26458157227388,
+      "pause_scale": 0.7555555555555555
+     },
+     "misses": []
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 17.606529624568793,
+      "f0_dev_scale": 1.5526985368381707,
+      "rate": 1.34508181981658,
+      "pause_scale": 0.6888888888888889
+     },
+     "misses": [
+      "f0_dev_scale 1.55 against 1.35"
+     ]
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 30.038487489905833,
+      "f0_dev_scale": 1.363936444664785,
+      "rate": 1.533703545493379,
+      "pause_scale": 0.5333333333333333
+     },
+     "misses": [
+      "f0_dev_scale 1.36 against 1.53"
+     ]
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 48.10061577485587,
+      "f0_dev_scale": 1.513711729267597,
+      "rate": 1.796781167427336,
+      "pause_scale": 0.2888888888888889
+     },
+     "misses": [
+      "f0_offset_hz +48.1 against +45.0",
+      "f0_dev_scale 1.51 against 1.80"
+     ]
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t2",
+   "condition": "depression",
+   "neutral_s": 4.45,
+   "neutral_sha256": "0db0220f6000e5bcf23ff4fe2dbc8345e8e508347287972ab255cc5f38041f9f",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -3.04172240506189,
+      "f0_dev_scale": 0.9035090963101673,
+      "rate": 0.9949874686716792,
+      "pause_scale": 0.9583333333333334
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -7.662196673820702,
+      "f0_dev_scale": 0.8111914385753628,
+      "rate": 0.9044310285909557,
+      "pause_scale": 1.5208333333333333
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -11.22205514236957,
+      "f0_dev_scale": 0.7380709097399389,
+      "rate": 0.8133301464813739,
+      "pause_scale": 2.0833333333333335
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -15.440722255363795,
+      "f0_dev_scale": 0.6188825671890941,
+      "rate": 0.7204427910352962,
+      "pause_scale": 2.625
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -18.86182992457296,
+      "f0_dev_scale": 0.5262778775352686,
+      "rate": 0.6258086974798196,
+      "pause_scale": 3.125
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -24.190813273840874,
+      "f0_dev_scale": 0.37225316874608705,
+      "rate": 0.49625,
+      "pause_scale": 3.854166666666667
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t2",
+   "condition": "mania",
+   "neutral_s": 4.45,
+   "neutral_sha256": "0db0220f6000e5bcf23ff4fe2dbc8345e8e508347287972ab255cc5f38041f9f",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 0.823982426392746,
+      "f0_dev_scale": 0.9471316318371655,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 10.76722507229357,
+      "f0_dev_scale": 1.029021661260784,
+      "rate": 1.162447386079424,
+      "pause_scale": 0.875
+     },
+     "misses": [
+      "f0_dev_scale 1.03 against 1.16"
+     ]
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 17.64935109967348,
+      "f0_dev_scale": 1.1666158550162857,
+      "rate": 1.26742577418325,
+      "pause_scale": 0.7708333333333334
+     },
+     "misses": []
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 22.332270099349728,
+      "f0_dev_scale": 1.1978500275196673,
+      "rate": 1.3445473018740124,
+      "pause_scale": 0.6875000000000001
+     },
+     "misses": [
+      "f0_dev_scale 1.20 against 1.35"
+     ]
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 32.244047200553155,
+      "f0_dev_scale": 1.4669786045470974,
+      "rate": 1.5294476459540587,
+      "pause_scale": 0.5208333333333334
+     },
+     "misses": []
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 52.43540084367797,
+      "f0_dev_scale": 1.672434773556113,
+      "rate": 1.7957029777610252,
+      "pause_scale": 0.2916666666666667
+     },
+     "misses": [
+      "f0_offset_hz +52.4 against +45.0"
+     ]
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t3",
+   "condition": "depression",
+   "neutral_s": 3.75,
+   "neutral_sha256": "c0a431d753eda306b77cc6388dd578de3df7a49591a1daf62d2d826c483f42c3",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -4.94827746490509,
+      "f0_dev_scale": 0.983406715475101,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -8.586835872855147,
+      "f0_dev_scale": 0.8617413919563145,
+      "rate": 0.9058107360265635,
+      "pause_scale": 1.5294117647058822
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -11.759034239680446,
+      "f0_dev_scale": 0.7770909124244002,
+      "rate": 0.8141582355925628,
+      "pause_scale": 2.0882352941176467
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -15.910584345538297,
+      "f0_dev_scale": 0.6361181760517659,
+      "rate": 0.7206572563246831,
+      "pause_scale": 2.6176470588235294
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -19.633561661209868,
+      "f0_dev_scale": 0.5477423688018179,
+      "rate": 0.6287742589775503,
+      "pause_scale": 3.176470588235294
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -24.80573444312688,
+      "f0_dev_scale": 0.4073084262220844,
+      "rate": 0.49926793557833093,
+      "pause_scale": 3.941176470588235
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t3",
+   "condition": "mania",
+   "neutral_s": 3.75,
+   "neutral_sha256": "c0a431d753eda306b77cc6388dd578de3df7a49591a1daf62d2d826c483f42c3",
+   "monotone": [
+    "mania f0_dev_scale: 20 -> 26 moved -0.056, should move +0.080"
+   ],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -0.07907166892033501,
+      "f0_dev_scale": 1.0110809603690893,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 9.334710736708473,
+      "f0_dev_scale": 1.1003004493855733,
+      "rate": 1.1590426285228723,
+      "pause_scale": 0.8529411764705881
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 15.483969011158678,
+      "f0_dev_scale": 1.2834932142355577,
+      "rate": 1.2663046001021214,
+      "pause_scale": 0.7647058823529411
+     },
+     "misses": []
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 20.470719185522768,
+      "f0_dev_scale": 1.2279897954441026,
+      "rate": 1.342894179807361,
+      "pause_scale": 0.676470588235294
+     },
+     "misses": []
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 32.64633311056622,
+      "f0_dev_scale": 1.3651729005548345,
+      "rate": 1.5320104829651817,
+      "pause_scale": 0.5294117647058822
+     },
+     "misses": [
+      "f0_dev_scale 1.37 against 1.53"
+     ]
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 47.359503491348505,
+      "f0_dev_scale": 1.5876627834716885,
+      "rate": 1.796904160720167,
+      "pause_scale": 0.29411764705882354
+     },
+     "misses": [
+      "f0_dev_scale 1.59 against 1.80"
+     ]
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t4",
+   "condition": "depression",
+   "neutral_s": 4.15,
+   "neutral_sha256": "7c6597da8c049387ea9075a30b11357e92c3450ce3af179bb8a357e6e4bec8f0",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -3.2716468404853174,
+      "f0_dev_scale": 1.0200278890567598,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -7.463649264832853,
+      "f0_dev_scale": 0.9172210710234003,
+      "rate": 0.9074135688575664,
+      "pause_scale": 1.5499999999999998
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -11.56609995752801,
+      "f0_dev_scale": 0.775221536205119,
+      "rate": 0.8148114616812278,
+      "pause_scale": 2.0999999999999996
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -15.565277092884614,
+      "f0_dev_scale": 0.6776757191349588,
+      "rate": 0.7221838840654139,
+      "pause_scale": 2.65
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -19.018300056806183,
+      "f0_dev_scale": 0.5672407062761609,
+      "rate": 0.6295555337931422,
+      "pause_scale": 3.1999999999999997
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -24.537835875255666,
+      "f0_dev_scale": 0.4180014287020143,
+      "rate": 0.5000000000000001,
+      "pause_scale": 3.975
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t4",
+   "condition": "mania",
+   "neutral_s": 4.15,
+   "neutral_sha256": "7c6597da8c049387ea9075a30b11357e92c3450ce3af179bb8a357e6e4bec8f0",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 2.195558182736974,
+      "f0_dev_scale": 0.9883582671158662,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 9.847138926039094,
+      "f0_dev_scale": 1.1728133036308037,
+      "rate": 1.1585695527921527,
+      "pause_scale": 0.85
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 16.350567391666985,
+      "f0_dev_scale": 1.3133600059679909,
+      "rate": 1.2637786983079409,
+      "pause_scale": 0.7499999999999999
+     },
+     "misses": []
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 22.965454128553276,
+      "f0_dev_scale": 1.418385364050334,
+      "rate": 1.3423819822507272,
+      "pause_scale": 0.675
+     },
+     "misses": [
+      "f0_offset_hz +23.0 against +19.5"
+     ]
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 33.64765784666007,
+      "f0_dev_scale": 1.529126378082222,
+      "rate": 1.537147736976943,
+      "pause_scale": 0.5499999999999999
+     },
+     "misses": [
+      "f0_offset_hz +33.6 against +30.0"
+     ]
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 54.02783327523183,
+      "f0_dev_scale": 1.8783372508343665,
+      "rate": 1.807555582334157,
+      "pause_scale": 0.325
+     },
+     "misses": [
+      "f0_offset_hz +54.0 against +45.0"
+     ]
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t5",
+   "condition": "depression",
+   "neutral_s": 4.02,
+   "neutral_sha256": "93ada8e9f116b1f49c6cea2c959892edb07f5b0aa18e67c27767a1dc02936c14",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -4.254727608871761,
+      "f0_dev_scale": 1.0048867976092843,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -7.834727962851886,
+      "f0_dev_scale": 0.8891634247966417,
+      "rate": 0.9069031032298922,
+      "pause_scale": 1.5454545454545456
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -11.528746070121358,
+      "f0_dev_scale": 0.8083078383551533,
+      "rate": 0.813983231490692,
+      "pause_scale": 2.090909090909091
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -16.071334931524277,
+      "f0_dev_scale": 0.6740833596598628,
+      "rate": 0.7212168015310747,
+      "pause_scale": 2.6363636363636362
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -19.286901635196486,
+      "f0_dev_scale": 0.5807000433421415,
+      "rate": 0.6285664120797119,
+      "pause_scale": 3.1818181818181817
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -24.502061870945468,
+      "f0_dev_scale": 0.4271051118917023,
+      "rate": 0.49930264993026496,
+      "pause_scale": 3.9545454545454546
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t5",
+   "condition": "mania",
+   "neutral_s": 4.02,
+   "neutral_sha256": "93ada8e9f116b1f49c6cea2c959892edb07f5b0aa18e67c27767a1dc02936c14",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 0.6866178092615627,
+      "f0_dev_scale": 1.025587540177371,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 8.432007751501644,
+      "f0_dev_scale": 1.2931896687234596,
+      "rate": 1.1568445288201317,
+      "pause_scale": 0.8409090909090909
+     },
+     "misses": [
+      "f0_dev_scale 1.29 against 1.16"
+     ]
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 15.43527192341115,
+      "f0_dev_scale": 1.3898595043954889,
+      "rate": 1.2678176184152279,
+      "pause_scale": 0.7727272727272728
+     },
+     "misses": []
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 19.81607070138888,
+      "f0_dev_scale": 1.4648869715728188,
+      "rate": 1.343255581264461,
+      "pause_scale": 0.6818181818181818
+     },
+     "misses": []
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 29.887054385419972,
+      "f0_dev_scale": 1.5973083686429137,
+      "rate": 1.5364532107794926,
+      "pause_scale": 0.5454545454545454
+     },
+     "misses": []
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 48.51559323804916,
+      "f0_dev_scale": 1.6929663589337323,
+      "rate": 1.8061044311780037,
+      "pause_scale": 0.31818181818181823
+     },
+     "misses": [
+      "f0_offset_hz +48.5 against +45.0"
+     ]
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t6",
+   "condition": "depression",
+   "neutral_s": 4.44,
+   "neutral_sha256": "51ffbe8475a8ca8f756a3d9f2f35fef54389dbd355aeb689224a49b753fa2d71",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -3.103690662407942,
+      "f0_dev_scale": 0.9805696991827585,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -6.916412597280157,
+      "f0_dev_scale": 0.8439427868383413,
+      "rate": 0.9085694619708615,
+      "pause_scale": 1.5625
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -11.649949657792234,
+      "f0_dev_scale": 0.7680821180540047,
+      "rate": 0.8149964841271203,
+      "pause_scale": 2.104166666666667
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -15.27887120106567,
+      "f0_dev_scale": 0.643231115411625,
+      "rate": 0.723067559342666,
+      "pause_scale": 2.666666666666667
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -19.480367482012852,
+      "f0_dev_scale": 0.5537800179922793,
+      "rate": 0.6297793386786827,
+      "pause_scale": 3.2083333333333335
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -24.896077915761367,
+      "f0_dev_scale": 0.4063104214345642,
+      "rate": 0.5000000000000001,
+      "pause_scale": 3.9791666666666665
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t6",
+   "condition": "mania",
+   "neutral_s": 4.44,
+   "neutral_sha256": "51ffbe8475a8ca8f756a3d9f2f35fef54389dbd355aeb689224a49b753fa2d71",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 0.8960104445309867,
+      "f0_dev_scale": 0.9908435453945977,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 9.757414979354536,
+      "f0_dev_scale": 1.1113392478924498,
+      "rate": 1.1590526598209714,
+      "pause_scale": 0.8541666666666666
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 15.092215160355948,
+      "f0_dev_scale": 1.2403329677541706,
+      "rate": 1.267436588163124,
+      "pause_scale": 0.7708333333333334
+     },
+     "misses": []
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 20.49747039277142,
+      "f0_dev_scale": 1.3587514298296834,
+      "rate": 1.349137625097594,
+      "pause_scale": 0.7083333333333334
+     },
+     "misses": []
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 35.594762186529465,
+      "f0_dev_scale": 1.683947431021096,
+      "rate": 1.5353548407941717,
+      "pause_scale": 0.5416666666666667
+     },
+     "misses": [
+      "f0_offset_hz +35.6 against +30.0"
+     ]
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 52.98954385125583,
+      "f0_dev_scale": 1.9270256819894998,
+      "rate": 1.8038605348567958,
+      "pause_scale": 0.3125
+     },
+     "misses": [
+      "f0_offset_hz +53.0 against +45.0"
+     ]
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t7",
+   "condition": "depression",
+   "neutral_s": 4.57,
+   "neutral_sha256": "9b853bd3098d90b278721643d58f29aafdd1df0da73f5bdf0aaa4d168e29c6df",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -2.380156634253453,
+      "f0_dev_scale": 0.9686542523351138,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -6.490779467874702,
+      "f0_dev_scale": 0.8870138585401072,
+      "rate": 0.9067509927930579,
+      "pause_scale": 1.543478260869565
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -10.80612018136354,
+      "f0_dev_scale": 0.7749756310087285,
+      "rate": 0.8153481182684598,
+      "pause_scale": 2.108695652173913
+     },
+     "misses": []
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -15.133125400609643,
+      "f0_dev_scale": 0.6669742777403233,
+      "rate": 0.7221876487169162,
+      "pause_scale": 2.652173913043478
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -19.201585862616696,
+      "f0_dev_scale": 0.5584771558130719,
+      "rate": 0.6302029759584977,
+      "pause_scale": 3.2173913043478257
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -24.139574379855773,
+      "f0_dev_scale": 0.41071639272126736,
+      "rate": 0.5,
+      "pause_scale": 3.9782608695652173
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t7",
+   "condition": "mania",
+   "neutral_s": 4.57,
+   "neutral_sha256": "9b853bd3098d90b278721643d58f29aafdd1df0da73f5bdf0aaa4d168e29c6df",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 1.5329944046816735,
+      "f0_dev_scale": 0.9854442107912385,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 9.698735398955208,
+      "f0_dev_scale": 1.1990704824506817,
+      "rate": 1.1614407328474372,
+      "pause_scale": 0.8695652173913043
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 15.012876584255295,
+      "f0_dev_scale": 1.3027053221728,
+      "rate": 1.2655889145496537,
+      "pause_scale": 0.7608695652173912
+     },
+     "misses": []
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 21.643348903382318,
+      "f0_dev_scale": 1.3861680399016927,
+      "rate": 1.350788781770377,
+      "pause_scale": 0.717391304347826
+     },
+     "misses": []
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 28.710616130345485,
+      "f0_dev_scale": 1.6149172942138428,
+      "rate": 1.5356592405772733,
+      "pause_scale": 0.5434782608695652
+     },
+     "misses": []
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 52.214100354757576,
+      "f0_dev_scale": 1.670465057902671,
+      "rate": 1.8005585674388043,
+      "pause_scale": 0.30434782608695654
+     },
+     "misses": [
+      "f0_offset_hz +52.2 against +45.0"
+     ]
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t8",
+   "condition": "depression",
+   "neutral_s": 3.94,
+   "neutral_sha256": "1ee288f960fc3fbf4df37e3253be5783217409ede99714639e898ae0a2fb2104",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": -5.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": -2.109869921767242,
+      "f0_dev_scale": 0.9708883207402433,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 5,
+     "target": {
+      "f0_offset_hz": -8.703703703703702,
+      "f0_dev_scale": 0.8888888888888888,
+      "rate": 0.9074074074074074,
+      "pause_scale": 1.5555555555555556
+     },
+     "achieved": {
+      "f0_offset_hz": -6.957655402901423,
+      "f0_dev_scale": 0.852831500097608,
+      "rate": 0.9076575616823623,
+      "pause_scale": 1.564102564102564
+     },
+     "misses": []
+    },
+    {
+     "score": 10,
+     "target": {
+      "f0_offset_hz": -12.407407407407407,
+      "f0_dev_scale": 0.7777777777777778,
+      "rate": 0.8148148148148149,
+      "pause_scale": 2.111111111111111
+     },
+     "achieved": {
+      "f0_offset_hz": -9.203725295699755,
+      "f0_dev_scale": 0.7817901796285488,
+      "rate": 0.8152329920581762,
+      "pause_scale": 2.128205128205128
+     },
+     "misses": [
+      "f0_offset_hz -9.2 against -12.4"
+     ]
+    },
+    {
+     "score": 15,
+     "target": {
+      "f0_offset_hz": -16.11111111111111,
+      "f0_dev_scale": 0.6666666666666667,
+      "rate": 0.7222222222222222,
+      "pause_scale": 2.666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": -13.72768566094041,
+      "f0_dev_scale": 0.6670597823160463,
+      "rate": 0.7242249857620089,
+      "pause_scale": 2.717948717948718
+     },
+     "misses": []
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": -19.814814814814813,
+      "f0_dev_scale": 0.5555555555555556,
+      "rate": 0.6296296296296297,
+      "pause_scale": 3.2222222222222223
+     },
+     "achieved": {
+      "f0_offset_hz": -18.569551893050857,
+      "f0_dev_scale": 0.5272785513111795,
+      "rate": 0.6290887074146817,
+      "pause_scale": 3.230769230769231
+     },
+     "misses": []
+    },
+    {
+     "score": 27,
+     "target": {
+      "f0_offset_hz": -25.0,
+      "f0_dev_scale": 0.4,
+      "rate": 0.5,
+      "pause_scale": 4.0
+     },
+     "achieved": {
+      "f0_offset_hz": -23.602256663652526,
+      "f0_dev_scale": 0.40770253819300656,
+      "rate": 0.49929676511954996,
+      "pause_scale": 4.0
+     },
+     "misses": []
+    }
+   ]
+  },
+  {
+   "voice": "am_adam",
+   "sentence": "t8",
+   "condition": "mania",
+   "neutral_s": 3.94,
+   "neutral_sha256": "1ee288f960fc3fbf4df37e3253be5783217409ede99714639e898ae0a2fb2104",
+   "monotone": [],
+   "steps": [
+    {
+     "score": 0,
+     "target": {
+      "f0_offset_hz": 0.0,
+      "f0_dev_scale": 1.0,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "achieved": {
+      "f0_offset_hz": 1.8339612265876326,
+      "f0_dev_scale": 0.9769220390925561,
+      "rate": 1.0,
+      "pause_scale": 1.0
+     },
+     "misses": []
+    },
+    {
+     "score": 12,
+     "target": {
+      "f0_offset_hz": 9.0,
+      "f0_dev_scale": 1.1600000000000001,
+      "rate": 1.1600000000000001,
+      "pause_scale": 0.86
+     },
+     "achieved": {
+      "f0_offset_hz": 14.428433722263435,
+      "f0_dev_scale": 1.1337146383003742,
+      "rate": 1.1617442526384683,
+      "pause_scale": 0.8717948717948718
+     },
+     "misses": [
+      "f0_offset_hz +14.4 against +9.0"
+     ]
+    },
+    {
+     "score": 20,
+     "target": {
+      "f0_offset_hz": 15.0,
+      "f0_dev_scale": 1.2666666666666666,
+      "rate": 1.2666666666666666,
+      "pause_scale": 0.7666666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 18.887918778289617,
+      "f0_dev_scale": 1.2471711660983937,
+      "rate": 1.2717177144904173,
+      "pause_scale": 0.7948717948717948
+     },
+     "misses": [
+      "f0_offset_hz +18.9 against +15.0"
+     ]
+    },
+    {
+     "score": 26,
+     "target": {
+      "f0_offset_hz": 19.5,
+      "f0_dev_scale": 1.3466666666666667,
+      "rate": 1.3466666666666667,
+      "pause_scale": 0.6966666666666667
+     },
+     "achieved": {
+      "f0_offset_hz": 25.851876573692834,
+      "f0_dev_scale": 1.330847083111241,
+      "rate": 1.3510299224584938,
+      "pause_scale": 0.717948717948718
+     },
+     "misses": [
+      "f0_offset_hz +25.9 against +19.5"
+     ]
+    },
+    {
+     "score": 40,
+     "target": {
+      "f0_offset_hz": 30.0,
+      "f0_dev_scale": 1.5333333333333332,
+      "rate": 1.5333333333333332,
+      "pause_scale": 0.5333333333333334
+     },
+     "achieved": {
+      "f0_offset_hz": 41.92502351955423,
+      "f0_dev_scale": 1.5395895882398898,
+      "rate": 1.535052159342738,
+      "pause_scale": 0.5384615384615384
+     },
+     "misses": [
+      "f0_offset_hz +41.9 against +30.0"
+     ]
+    },
+    {
+     "score": 60,
+     "target": {
+      "f0_offset_hz": 45.0,
+      "f0_dev_scale": 1.8,
+      "rate": 1.8,
+      "pause_scale": 0.30000000000000004
+     },
+     "achieved": {
+      "f0_offset_hz": 56.80589472975299,
+      "f0_dev_scale": 1.8199873950656886,
+      "rate": 1.8038999809447185,
+      "pause_scale": 0.30769230769230765
+     },
+     "misses": [
+      "f0_offset_hz +56.8 against +45.0"
+     ]
+    }
+   ]
+  }
+ ],
+ "registration": "PR-009",
+ "commit": "6c43d5e",
+ "ran": "2026-09-24T18:15:40",
+ "voices": [
+  "af_sarah",
+  "am_adam"
+ ],
+ "sentences": {
+  "t1": "The train leaves at nine. I bought a ticket, and then I found a seat by the window.",
+  "t2": "I cleaned the windows today. It took most of the morning, but the light is better now.",
+  "t3": "Our neighbour painted the fence. It is green now, and it looks much newer.",
+  "t4": "I walked to the post office. The line was short, so I was back before lunch.",
+  "t5": "The library opens at ten. I returned two books, and I borrowed a new one.",
+  "t6": "We planted tomatoes last spring. They grew well, and we had enough for the whole summer.",
+  "t7": "The meeting moved to Thursday. I changed my calendar, and I sent a note to the team.",
+  "t8": "I made soup for dinner. It needed more salt, so I added some at the table."
+ },
+ "scores": {
+  "depression": [
+   0,
+   5,
+   10,
+   15,
+   20,
+   27
+  ],
+  "mania": [
+   0,
+   12,
+   20,
+   26,
+   40,
+   60
+  ]
+ },
+ "criteria": {
+  "S1": {
+   "met": 96,
+   "of": 96,
+   "pass": true
+  },
+  "S2": {
+   "met": 29,
+   "of": 32,
+   "pass": true
+  },
+  "S3": {
+   "met": 384,
+   "of": 384,
+   "pass": true
+  },
+  "S4": {
+   "met": 169,
+   "of": 192,
+   "pass": false
+  },
+  "S5": {
+   "met": 177,
+   "of": 192,
+   "pass": true
+  },
+  "supported": false
+ }
+}

@@ -35,6 +35,7 @@ Smoke tests, `--limit` runs and reply WAVs go to `results/`, which is ignored.
 | `prosody/pr008.json` | PR-008, the registered run: R3 and R4 answer the 39 locked prosody pairs as a caller's turn; every reply's text and measures, every pair's direction | `f4da0bc` | Modal NVIDIA L40S | page 20 §19 |
 | `r5-moshi/evalset-modal-a10.json` · `evalset-modal-a10-report.md` | **the R5 row, Moshi**: full duplex, one conversation per clip (4.8 s lead-in, the clip, 8 s tail), every step's text piece and voiced run, seeded; the report is the run's printed output | `6723cb4` | Modal NVIDIA A10 | page 20 §1, §20 |
 | `r5-personaplex/evalset-modal-a10.json` · `evalset-modal-a10-report.md` | **the R5 row, PersonaPlex**: the same driver, R0's instruction as its role, voice NATF2; set-up time per call | `6723cb4` | Modal NVIDIA **A10G** (the file name says a10) | page 20 §1, §20 |
+| `severity/pr009.json` · `pr009-report.md` | **PR-009, the registered run**: the severity render on the held-out voices and sentences -- every target and measure, each neutral clip's SHA-256, the criteria; the report is the run's printed output. Not supported (S4) | `6c43d5e` | laptop CPU (WSL), Kokoro-82M, \$0 | page 20 §21 |
 | `prosody/pr008-report.md` | the same run's report, regenerated from the run file by the frozen code (the printed output was overwritten; PR-008 Deviations) | `f4da0bc` | Modal NVIDIA L40S | page 20 §19 |
 
 ## What an eval-set run holds
@@ -89,6 +90,21 @@ stored.
 Re-count the answers without any model:
 
     python -c "import json; t = json.load(open('runs/r5-personaplex/evalset-modal-a10.json', encoding='utf-8'))['turns']; print(sum(v['gap_ms'] is not None for v in t.values()), 'of', len(t))"
+
+## What a severity run holds
+
+`registration`, `commit`, `ran`, `voices`, `sentences`, `scores`, `sr`,
+`tolerance`, `criteria`; and `rows`, one per voice x sentence x condition:
+`neutral_s`, `neutral_sha256` (of the clip's float32 samples), `monotone`, and
+`steps`, one per score: `target` and `achieved` for `f0_offset_hz`,
+`f0_dev_scale`, `rate`, `pause_scale`, and the misses. The definitions are in
+`src/s2slab/severity.py`. The renders and the exact neutral clips stay in
+`results/severity/pr009/` (ignored); from those clips, any render can be made
+again. Every file is synthetic speech and says so.
+
+Re-count the criteria without any audio or model:
+
+    PYTHONPATH=src python -c "import json; from s2slab.severity import format_criteria; print(format_criteria(json.load(open('runs/severity/pr009.json', encoding='utf-8'))))"
 
 ## Sources
 
