@@ -174,3 +174,9 @@ def test_the_personaplex_image_pins_the_adapters_weights_and_runs_on_functions_o
     assert hasattr(r5_bench.smoke_personaplex, "remote") and hasattr(r5_bench.evaluate_personaplex, "remote")
     with pytest.raises(KeyError):
         r5_bench.functions("r5-nothing")
+
+
+
+def test_the_ft1_dialogues_run_is_moshi_on_the_a10_and_reads_only_the_dev_fold(r5_bench):
+    assert hasattr(r5_bench.dialogues_remote, "remote") and hasattr(r5_bench.dialogues, "info")
+    assert r5_bench.DIALOGUE_TAIL_S == 4.0

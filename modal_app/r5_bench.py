@@ -5,6 +5,8 @@ R5 on Modal: full-duplex models on an A10, driven by s2slab.duplex.
     modal run modal_app/r5_bench.py --evalset --limit 8              eval-set smoke test -> results/
     modal run modal_app/r5_bench.py --evalset                        the R5 row -> runs/r5-moshi/evalset-modal-a10.json
     modal run modal_app/r5_bench.py --model r5-personaplex           the same three, for PersonaPlex
+    modal run modal_app/r5_bench.py::dialogues --limit 50            FT-1 dev: Moshi answering the user
+                                                                     channel of DailyTalk dev dialogues
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
@@ -209,6 +211,102 @@ def smoke_personaplex(model_id: str, commit: str) -> dict:
 @app.function(gpu="A10G", timeout=120 * 60, scaledown_window=60, image=personaplex_image)
 def evaluate_personaplex(model_id: str, commit: str, limit: int = 0) -> dict:
     return _evaluate(model_id, commit, limit)
+
+
+# --------------------------------------------------------------------------- #
+# FT-1: Moshi answering the user channel of DailyTalk dialogues (dev fold only)
+# --------------------------------------------------------------------------- #
+
+DIALOGUE_TAIL_S = 4.0      # silence after the dialogue: time for the model's last answer
+
+
+def _dialogues(model_id: str, commit: str, users: dict, listen: int = 0) -> dict:
+    """users: {dialogue number: the user (right) channel as a 24 kHz 16-bit WAV}. Each is streamed
+    through the model from its first frame -- no lead-in: the dialogue's own opening silence on the
+    user's side is where the answerer speaks first -- then DIALOGUE_TAIL_S of silence. Returns
+    turngaps.summary(user, model) per dialogue, the run's measures, and the first `listen`
+    conversations as stereo WAVs (the user left, the model right)."""
+    import io
+    import os
+
+    import soundfile as sf
+    import torch
+    os.chdir("/root")
+    from s2slab import duplex, r5
+    from s2slab.turngaps import ipus, summary
+    torch.cuda.reset_peak_memory_stats()
+    model = r5.get(model_id)
+    t0 = time.perf_counter()
+    model.load()
+    load_s = time.perf_counter() - t0
+    rows, wavs = {}, {}
+    for k, n in enumerate(sorted(users)):
+        user, sr = sf.read(io.BytesIO(users[n]), dtype="float32")
+        conv = duplex.converse(model, user, sr=sr, lead_s=0.0, tail_s=DIALOGUE_TAIL_S)
+        both = duplex.stereo(user, conv, sr)
+        rows[n] = {**summary(ipus(both[:, 0], sr), ipus(both[:, 1], sr)),
+                   "rtf": round(conv.wall_s / conv.stream_s, 3), "setup_s": round(conv.begin_s, 3),
+                   "text": "".join(t for t in conv.text if t).strip()}
+        if k < listen:
+            buf = io.BytesIO()
+            sf.write(buf, both, sr, format="WAV", subtype="PCM_16")
+            wavs[n] = buf.getvalue()
+    results = {"rung": model.rung_id, "description": model.description, "load_s": round(load_s, 1),
+               "peak_vram_mb": round(torch.cuda.max_memory_allocated() / 2 ** 20),
+               "machine": f"Modal {_gpu_name()}", "commit": commit, "versions": _versions(),
+               "tail_s": DIALOGUE_TAIL_S, "rows": rows}
+    return {"results": results, "listen": wavs, "seconds": time.perf_counter() - t0}
+
+
+@app.function(gpu="A10G", timeout=60 * 60, scaledown_window=60)
+def dialogues_remote(model_id: str, commit: str, users: dict, listen: int = 0) -> dict:
+    return _dialogues(model_id, commit, users, listen)
+
+
+@app.local_entrypoint()
+def dialogues(model: str = "r5-moshi", limit: int = 0, listen: int = 3):
+    """FT-1 dev: the model answers the user channel of the DailyTalk dev dialogues on this machine;
+    the human reference is measured here, on the laptop, from the same files."""
+    import io
+    import json
+
+    import soundfile as sf
+
+    from s2slab import dailytalk
+    if model != "r5-moshi":
+        raise SystemExit("the dialogues run is Moshi's (FT-1); PersonaPlex has its own image and is not part of FT-1")
+    os_root = REPO / dailytalk.ROOT
+    ids = dailytalk.dialogue_ids("dev", os_root)[: limit or None]
+    if not ids:
+        raise SystemExit(f"no dev dialogues under {os_root}: download them first (see FT-1 part 1)")
+    users, ref = {}, {}
+    for n in ids:
+        left, right = dailytalk.load(n, os_root)
+        ref[n] = dailytalk.reference(left, right)
+        buf = io.BytesIO()
+        sf.write(buf, right, dailytalk.SR, format="WAV", subtype="PCM_16")
+        users[n] = buf.getvalue()
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    t0 = time.time()
+    out = dialogues_remote.remote(model, commit, users, listen)
+    wall = time.time() - t0
+    results = out["results"]
+    results["reference"] = ref
+    path = REPO / "results" / model / f"dailytalk-dev-{len(ids)}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")   # results/ is scratch
+    for n, data in out["listen"].items():
+        d = REPO / "results" / model / "dailytalk-listen"
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f"dev-{n}.wav").write_bytes(data)
+    print(f"{results['rung']}: {results['description']}")
+    print(f"{results['machine']} · commit {commit} · load {results['load_s']:.0f} s · peak GPU memory {results['peak_vram_mb']:,} MB\n")
+    print(dailytalk.report(results["rows"], ref, model))
+    print(f"\nsaved -> {path.relative_to(REPO)}" + (f"; listen: results/{model}/dailytalk-listen/" if out["listen"] else ""))
+    print(results.get("versions", ""))
+    print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * A10_DOLLARS_PER_HOUR:.3f} at the A10 rate. Modal's dashboard has the exact bill.")
 
 
 def functions(model_id: str):
