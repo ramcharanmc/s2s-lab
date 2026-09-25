@@ -6,3 +6,4 @@ results/
 *.wav
 *.bak
 probes/prosody/source/
+data/
