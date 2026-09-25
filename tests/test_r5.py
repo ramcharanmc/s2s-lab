@@ -23,7 +23,7 @@ def test_the_role_is_wrapped_in_system_tags_once():
     assert r5.system_tags(r0.SYSTEM_PROMPT).startswith("<system> You are a friendly phone agent")
 
 
-def test_both_models_are_known_and_nothing_else_is():
-    assert set(r5.MODELS) == {"r5-moshi", "r5-personaplex"}
-    with pytest.raises(KeyError, match="r5-moshi, r5-personaplex"):
+def test_the_three_models_are_known_and_nothing_else_is():
+    assert set(r5.MODELS) == {"r5-moshi", "r5-moshi-lora", "r5-personaplex"}
+    with pytest.raises(KeyError, match="r5-moshi, r5-moshi-lora, r5-personaplex"):
         r5.get("r5-nothing")

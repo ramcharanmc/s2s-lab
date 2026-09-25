@@ -52,6 +52,7 @@ import contextlib
 import numpy as np
 
 MOSHI_REPO = "kyutai/moshiko-pytorch-bf16"
+FT1_DIR = "/ft1"             # FT-1's adapter on Modal: the `ft1` volume, holding lora.safetensors and config.json
 PAD_PIECES = (0, 3)          # text-stream ids that mean "nothing said this step" (moshi/server.py)
 
 
@@ -61,17 +62,20 @@ class MoshiDuplex:
     rung_id = "r5-moshi"
     description = "R5 full duplex: Kyutai Moshi (moshiko, 7B, bf16) -- no turns, both streams at once"
 
-    def __init__(self, repo: str = MOSHI_REPO, device: str = "cuda", temp: float = 0.8, temp_text: float = 0.7):
+    def __init__(self, repo: str = MOSHI_REPO, device: str = "cuda", temp: float = 0.8, temp_text: float = 0.7,
+                 lora_weights: str | None = None, config_path: str | None = None):
         self.repo, self.device, self.temp, self.temp_text = repo, device, temp, temp_text
+        self.lora_weights, self.config_path = lora_weights, config_path
         self.mimi = self.lm = self.tokenizer = self.gen = None
         self._stack = None
 
     def load(self) -> None:
         import torch
         from moshi.models import LMGen, loaders
-        info = loaders.CheckpointInfo.from_hf_repo(self.repo)
+        info = loaders.CheckpointInfo.from_hf_repo(self.repo, lora_weights=self.lora_weights, config_path=self.config_path)
         self.mimi = info.get_mimi(device=self.device)
-        self.lm = info.get_moshi(device=self.device, dtype=torch.bfloat16)
+        extra = {"fuse_lora": True} if self.lora_weights else {}      # merged into the weights: same maths, base speed
+        self.lm = info.get_moshi(device=self.device, dtype=torch.bfloat16, **extra)
         if hasattr(self.lm, "dep_q"):                   # Moshi reads 8 of Mimi's codebooks
             self.mimi.set_num_codebooks(self.lm.dep_q)
         self.tokenizer = info.get_text_tokenizer()
@@ -197,7 +201,19 @@ class PersonaPlexDuplex:
             self._stack = None
 
 
-MODELS = {"r5-moshi": MoshiDuplex, "r5-personaplex": PersonaPlexDuplex}
+class MoshiLoraDuplex(MoshiDuplex):
+    """FT-1's fine-tuned Moshi: the same model and sampling, plus the LoRA trained on DailyTalk
+    (test fold removed; vast/ft1.sh). moshi loads it from the checkpoint's own config.json, which
+    names the rank and scaling, and fuses it into the weights."""
+
+    rung_id = "r5-moshi-lora"
+    description = "R5 full duplex: Moshi (moshiko) with FT-1's LoRA -- DailyTalk, PR-010's test fold never trained on"
+
+    def __init__(self, lora_dir: str = FT1_DIR, **kwargs):
+        super().__init__(lora_weights=f"{lora_dir}/lora.safetensors", config_path=f"{lora_dir}/config.json", **kwargs)
+
+
+MODELS = {"r5-moshi": MoshiDuplex, "r5-moshi-lora": MoshiLoraDuplex, "r5-personaplex": PersonaPlexDuplex}
 
 
 def get(model_id: str):

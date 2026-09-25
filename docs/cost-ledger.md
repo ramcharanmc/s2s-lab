@@ -36,6 +36,7 @@ one. A failed run is still a row, since it was still billed.
 | 2026-09-24 | `6723cb4` | `modal run modal_app/r5_bench.py --model r5-personaplex --evalset --limit 8` | A10 | 252 s | 257 s | \$0.079 | R5 eval-set smoke test, PersonaPlex, 8 clips: set-up 5.8 s a call; not evidence |
 | 2026-09-24 | `6723cb4` | `modal run modal_app/r5_bench.py --evalset` | A10 | 2833 s | 2839 s | \$0.867 | **the R5 row, Moshi**: 96 of 200 answered, gap p50 150 ms; RTF 0.69; 16.6 GB (`runs/r5-moshi/`) |
 | 2026-09-24 | `6723cb4` | `modal run modal_app/r5_bench.py --model r5-personaplex --evalset` | A10G | 4479 s | 4490 s | \$1.372 | **the R5 row, PersonaPlex**: 192 of 200 answered, gap p50 460 / p90 758 ms; set-up 5.95 s a call; RTF 0.80; 18.1 GB (`runs/r5-personaplex/`). Estimated at the A10 rate |
+| 2026-09-24 | `97c3a06` | `modal run modal_app/r5_bench.py::dialogues --limit 50` | A10 | 1071 s | 1097 s | \$0.335 | FT-1 dev: base Moshi answering the user channel of 50 DailyTalk dev dialogues: gap median 160 ms against the reference's 420, 42 overlapping turn changes against 0; distance 478 ms. Dev data, not evidence |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -44,5 +45,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$5.690 + four failed runs | \$36.93 |
+| Modal | \$6.025 + four failed runs | \$36.93 |
 | Vast.ai | \$0 | \$5.86 |

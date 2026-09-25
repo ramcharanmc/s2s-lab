@@ -7,6 +7,8 @@ R5 on Modal: full-duplex models on an A10, driven by s2slab.duplex.
     modal run modal_app/r5_bench.py --model r5-personaplex           the same three, for PersonaPlex
     modal run modal_app/r5_bench.py::dialogues --limit 50            FT-1 dev: Moshi answering the user
                                                                      channel of DailyTalk dev dialogues
+    modal run modal_app/r5_bench.py::pr010 --confirm PR-010          FT-1's registered test: base Moshi,
+                                                                     then Moshi + LoRA, one container
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
@@ -113,6 +115,8 @@ personaplex_image = (
 )
 
 app = modal.App("s2s-lab-r5", image=image)
+# FT-1's adapter, copied off the Vast machine and put here with `modal volume put ft1 ...` (vast/README.md).
+ft1_volume = modal.Volume.from_name("ft1", create_if_missing=True)
 
 
 def _gpu_name() -> str:
@@ -306,6 +310,78 @@ def dialogues(model: str = "r5-moshi", limit: int = 0, listen: int = 3):
     print(f"\nsaved -> {path.relative_to(REPO)}" + (f"; listen: results/{model}/dailytalk-listen/" if out["listen"] else ""))
     print(results.get("versions", ""))
     print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * A10_DOLLARS_PER_HOUR:.3f} at the A10 rate. Modal's dashboard has the exact bill.")
+
+
+@app.function(gpu="A10G", timeout=150 * 60, scaledown_window=60, volumes={"/ft1": ft1_volume})
+def pr010_remote(commit: str, users: dict, listen: int = 0) -> dict:
+    """PR-010: base Moshi, then Moshi + FT-1's LoRA, in ONE container, on the same dialogues and seeds."""
+    import gc
+    import hashlib
+    import json as _json
+
+    import torch
+    adapter = pathlib.Path("/ft1/lora.safetensors")
+    if not adapter.exists() or not pathlib.Path("/ft1/config.json").exists():
+        raise RuntimeError("the ft1 volume has no lora.safetensors and config.json: see vast/README.md, step 6")
+    base = _dialogues("r5-moshi", commit, users, listen)
+    gc.collect()
+    torch.cuda.empty_cache()
+    lora = _dialogues("r5-moshi-lora", commit, users, listen)
+    return {"base": base, "lora": lora, "adapter_sha256": hashlib.sha256(adapter.read_bytes()).hexdigest(),
+            "adapter_config": _json.loads(pathlib.Path("/ft1/config.json").read_text())}
+
+
+@app.local_entrypoint()
+def pr010(confirm: str = "", listen: int = 3):
+    """PR-010's one registered run: the 100 test dialogues, base then LoRA, the criterion, the evidence."""
+    import io
+    import json
+
+    import soundfile as sf
+
+    from s2slab import dailytalk
+    from s2slab.sidechannel import refuse_to_overwrite
+    if confirm != dailytalk.REGISTRATION:
+        raise SystemExit(f"the test dialogues are locked: run with --confirm {dailytalk.REGISTRATION}, once")
+    path = REPO / "runs" / "ft1" / "pr010.json"
+    refuse_to_overwrite(path)
+    root = REPO / dailytalk.ROOT
+    missing = [n for n in dailytalk.TEST_IDS if not (root / "data_stereo" / f"{n}.wav").exists()]
+    if missing:
+        raise SystemExit(f"{len(missing)} test dialogues are not downloaded (first: {missing[0]}): see vast/README.md, step 1")
+    users, ref = {}, {}
+    for n in dailytalk.TEST_IDS:
+        left, right = dailytalk.load(n, root, confirm=confirm)
+        ref[n] = dailytalk.reference(left, right)
+        buf = io.BytesIO()
+        sf.write(buf, right, dailytalk.SR, format="WAV", subtype="PCM_16")
+        users[n] = buf.getvalue()
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    t0 = time.time()
+    out = pr010_remote.remote(commit, users, listen)
+    wall = time.time() - t0
+    base, lora = out["base"]["results"], out["lora"]["results"]
+    results = {"registration": dailytalk.REGISTRATION, "commit": commit, "ids": list(dailytalk.TEST_IDS),
+               "adapter_sha256": out["adapter_sha256"], "adapter_config": out["adapter_config"],
+               "machine": base["machine"], "versions": base["versions"], "tail_s": base["tail_s"],
+               "base": base, "lora": lora, "reference": ref}
+    results["criteria"] = dailytalk.pr010(base["rows"], lora["rows"], ref)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")
+    for tag in ("base", "lora"):
+        for n, data in out[tag]["listen"].items():
+            d = REPO / "results" / "ft1" / "listen"
+            d.mkdir(parents=True, exist_ok=True)
+            (d / f"test-{n}-{tag}.wav").write_bytes(data)
+    print(f"{base['machine']} · commit {commit} · adapter sha256 {out['adapter_sha256'][:12]}")
+    print(f"peak GPU memory: base {base['peak_vram_mb']:,} MB, LoRA {lora['peak_vram_mb']:,} MB\n")
+    print("## base Moshi\n\n" + dailytalk.report(base["rows"], ref, "base Moshi"))
+    print("\n## Moshi + FT-1's LoRA\n\n" + dailytalk.report(lora["rows"], ref, "Moshi + LoRA"))
+    print("\n" + dailytalk.format_pr010(results))
+    print(f"\nsaved -> {path.relative_to(REPO)}; listen: results/ft1/listen/")
+    print(f"{out['base']['seconds'] + out['lora']['seconds']:.0f} s inside the function, {wall:.0f} s end to end: "
           f"about ${wall / 3600 * A10_DOLLARS_PER_HOUR:.3f} at the A10 rate. Modal's dashboard has the exact bill.")
 
 

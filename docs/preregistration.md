@@ -24,6 +24,7 @@ Rules, from the v1 Research plan (§8):
 | PR-007 | On 38 fresh CREMA-D pairs from actors no system here has scored, does giving the $0 tagger the speaker's own neutral clips (a per-caller baseline) let it tell more upset-calm pairs apart than the same tagger without it, without tagging the upset clips neutral? | `02baa74` | **Reported: not supported** (26 of 38 told apart either way; fixed 2, broken 2, one-sided p = 0.69) |
 | PR-008 | When the caller's voice is upset rather than calm, with the same words, does R4 (Qwen2.5-Omni, speaking for itself) answer with a wider pitch range -- beyond chance and beyond what R3's words carry into Kokoro? | `f4da0bc` | **Reported: not supported** (R4 14 wider / 16 narrower of 39; no consistent direction, p = 0.86) |
 | PR-009 | On two Kokoro voices and eight neutral sentences the render was not developed on, does raising a PHQ-9 or YMRS score move pitch, range, rate and pauses the way page 09's mapping says, at every step and within tolerance? | `6c43d5e` | **Reported: not supported** (S4 failed: pitch offset on target in 169 of 192 checks, 88.0%, needed 173; S1 96 of 96, S2 29 of 32, S3 384 of 384, S5 177 of 192 held) |
+| PR-010 | Does a LoRA trained on DailyTalk (kyutai's moshi-finetune, test fold held out) move Moshi's turn gaps closer to DailyTalk's own, on 100 held-out dialogues? | The commit that adds this entry | Open |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -2188,3 +2189,130 @@ within 8.3%.
   centred on the measured median are all candidates. Exploratory, and the
   natural first question for any second version.
 - Neutral clips, 3.75 to 4.76 s; every one had its sentence-break pause.
+
+## PR-010 — Does a LoRA move Moshi's turn-taking toward the dialogues it was trained on?
+
+**Registered:** 2026-09-25, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+v2 plan, FT-1 (Notion page 17 §7.1): "Instead [of a patient model]: measure overlap ratio and
+turn-gap distribution before and after LoRA, against a human-human reference. Pre-registered
+go/no-go. Success: the fine-tuned model's overlap-ratio distribution is closer to human than the
+base model's, by a bootstrap CI excluding zero. Failure: no movement, or movement away. If it
+fails, report it."
+
+**The reference, and what it can claim.** FT-1 trains on kyutai/DailyTalkContiguous (CC-BY-SA
+4.0, revision `33e1b50`), the plan's own data: 2,541 dialogues read aloud by two speakers, one per
+channel. It is read speech, recorded line by line and joined, so its timing is constructed, not
+spontaneous. The reference here is therefore held-out DailyTalk itself, and the claim is worded
+accordingly: **toward the timing of the dialogues it was trained on**, not "toward human". A
+spontaneous corpus (CANDOR, Fisher) was considered and set aside for cost and access.
+
+**The measure** (`src/s2slab/turngaps.py`, `fae0e21`; after Heldner & Edlund 2010): each
+channel's inter-pausal units (voiced frames joined across silences under 200 ms), then every time
+the answerer takes the floor from the user, its floor-transfer offset -- a gap if positive, an
+overlap if negative. Two offset distributions are compared by their Wasserstein-1 distance, in ms.
+For the reference, the answerer is the human on the LEFT channel (the side moshi-finetune trains
+Moshi to be) and the user is the RIGHT; for a model, the model hears the right channel through the
+full-duplex driver (`duplex.converse`, no lead-in, 4 s of tail, seeded) and answers it.
+
+Development data, **the first 50 dev-fold dialogues** (numbers ending in 1; `97c3a06`, Modal A10,
+\$0.335):
+
+| 50 dev dialogues | base Moshi | the reference (the human on the left) |
+|---|---:|---:|
+| turn changes | 210 | 197 |
+| offset p10 / p50 / p90 | -500 / 160 / 240 ms | 200 / 420 / 920 ms |
+| overlapping turn changes | 42 | 0 |
+| speech inside the user's turn | 42 | 0 |
+| overlap ratio, median | 0.107 | 0.000 |
+
+Distance, base to reference: **478 ms**, 95% bootstrap interval over dialogues 406 to 564.
+**DailyTalk has no overlap at all** -- every one of the 394 turn changes in both directions on dev
+is a gap -- so the plan's overlap ratio cannot be "closer" except by falling to zero; the
+registered measure is the turn-gap distribution instead, and overlap is reported beside it. The
+measure's own noise: on the left channel, energy-based units and the transcript's word timings
+give distributions 54 ms apart (197 against 196 turn changes, medians 420 and 415 ms).
+
+**The training**, `vast/ft1.sh` with this entry: kyutai-labs/moshi-finetune at `2acc879`, moshi at
+`9837ca3`, its example configuration unchanged -- LoRA rank 128, scaling 2, learning rate 2e-6,
+2,000 steps of batch 16 on 100 s windows, seed 0 -- on every DailyTalk dialogue **except the test
+fold** (`vast/ft1_prep.py manifest`; the training list is a file, so the dataset's full manifest
+is never read). One GPU on Vast.ai, **on-demand** (never taken away mid-run); checkpoints every 100 steps all
+the same, in case the machine fails. moshi-finetune cannot resume, so `ft1_prep.py patch` adds a warm start from the last checkpoint that restores the
+adapter, the step and the learning-rate schedule, but **not** AdamW's moment estimates or the data
+order (a resumed run reshuffles, seed = the resumed step). If any resume happens, it is listed
+under Deviations with its step.
+
+What was known, and by whom: the test dialogues have been neither downloaded nor looked at by
+anyone; base Moshi has answered only the 50 dev dialogues; no training has run.
+
+### Question
+
+On 100 held-out DailyTalk dialogues, does Moshi with FT-1's LoRA take the floor with gaps closer
+to the dialogues' own than base Moshi does?
+
+### Validity requirements
+
+| | Requirement |
+|---|---|
+| **V1 · Frozen** | As committed with this entry: `src/s2slab/turngaps.py`; in `src/s2slab/dailytalk.py` `fold`, `load`, `reference`, `pooled`, `TEST_IDS`, `gain`, `pr010`, `pr010_validity`; `duplex.converse` and `duplex.stereo`; `r5.MoshiDuplex` and `r5.MoshiLoraDuplex`; `modal_app/r5_bench.py`'s image, `_dialogues`, `pr010_remote` and `pr010`; `vast/ft1.sh`, `vast/ft1_prep.py`, `vast/ft1.yaml`. Reporting (`report`, `format_pr010`) may gain lines, tested on made-up rows only. |
+| **V2 · Held out** | The test fold (numbers ending in 0) is excluded from training: the run's `train.jsonl` and its SHA-256 come back with the adapter, and its count must be 2,541 minus 255. The 100 test dialogues (0, 10, ..., 990) are downloaded only after this entry is committed, and `dailytalk.load` refuses them without `confirm="PR-010"`. |
+| **V3 · The adapter** | The one evaluated is the checkpoint at step 2,000. If the run cannot reach it (the GPU lost for good, the budget spent), the last checkpoint is evaluated and that is a deviation. Its SHA-256 is recorded in the run file. |
+| **V4 · One run, one container** | `modal run modal_app/r5_bench.py::pr010 --confirm PR-010`, from a clean tree: base Moshi, then Moshi + LoRA, in one A10 container, on the same 100 dialogues with the same seeds. A crashed run writes no run file; it is reported and repeated once, in full. |
+| **V5 · Evidence** | `runs/ft1/pr010.json` (every dialogue's offsets for both models and the reference, the adapter's SHA-256 and config, the criterion) and the printed report, committed with the results, together with the training evidence that came back with the adapter (the config actually run, the training log, the list and its SHA-256). The adapter itself and the listening files stay out of git. |
+
+### Primary outcome
+
+For the 100 test dialogues, pooled: the Wasserstein-1 distance between each model's offsets and
+the reference's; their difference, base minus LoRA (the **gain**); and its 95% bootstrap interval,
+10,000 resamples of the dialogues, seed 0, both models on each resample (`dailytalk.pr010`).
+
+### Success criterion
+
+**Supported if the gain is above zero and the whole 95% interval is above zero** -- the LoRA's
+turn-taking is closer to the dialogues it was trained on than the base model's. Otherwise not
+supported: no movement, or movement away, reported as such.
+
+### Predictions, recorded but not criteria
+
+- **Supported.** The distance falls from about 480 ms (dev, base) to about 250 ms; the gain is
+  around +200 ms with an interval well clear of zero.
+- **Overlap falls sharply** -- DailyTalk has none: overlapping turn changes from about 1 in 5 to
+  under 1 in 20, and speech inside the user's turn by more than half.
+- **The median gap rises** from about 160 ms toward 300 ms, still short of the reference's 420.
+- The risk named in advance: the example's learning rate (2e-6) is low; the LoRA may move little.
+  A gain inside the interval would say what 2,000 steps at that rate can and cannot do.
+
+### Reported alongside, descriptively
+
+Both models against the reference: turn changes, offset percentiles, overlapping turn changes,
+speech inside the user's turn, overlap ratio; the training's loss curve, steps reached, resumes,
+wall time and cost; a few conversations to listen to (user left, model right).
+
+### Analysis plan
+
+1. Commit this entry with the frozen code above.
+2. Download the 100 test dialogues. Train on Vast.ai (`vast/README.md`); copy the adapter off; put it
+   on Modal's `ft1` volume.
+3. The one run (V4); save the evidence (V5); record the output below, verbatim.
+4. Only after step 3: any further look, labelled exploratory.
+
+### What this cannot show
+
+- **Not "more human".** The reference is read dialogue, stitched line by line; moving toward it
+  is moving toward DailyTalk's timing.
+- **Not a live conversation.** The user channel was recorded to fit the other speaker, so it keeps
+  talking on schedule whatever the model does: an open-loop probe, the same for both models.
+- **Not the content.** Only timing is measured; what the model says is not scored.
+- **One LoRA, one configuration, one seed.**
+
+### Deviations
+
+None yet.
+
+### Results
+
+Pending.

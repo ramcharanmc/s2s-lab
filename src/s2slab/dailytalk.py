@@ -92,3 +92,60 @@ def report(model: dict[int, dict], ref: dict[int, dict], name: str = "model") ->
              f"| {np.median([x['overlap_ratio'] for x in r]):.3f} |", "",
              f"distance between the two offset distributions (Wasserstein-1, pooled): {distance(pm, pr):.0f} ms"]
     return "\n".join(lines)
+
+
+# --------------------------------------------------------------------------- #
+# PR-010 (docs/preregistration.md): does FT-1's LoRA move Moshi toward the reference?
+# --------------------------------------------------------------------------- #
+
+TEST_IDS = tuple(range(0, 1000, 10))      # 100 test-fold dialogues: 0, 10, ..., 990
+BOOTSTRAP = 10_000
+BOOTSTRAP_SEED = 0
+
+
+def gain(ids, base: dict, lora: dict, ref: dict) -> tuple[float, float, float]:
+    """(distance base-reference, distance LoRA-reference, their difference) over `ids`, pooled."""
+    pr = pooled([ref[i] for i in ids])
+    db, dl = distance(pooled([base[i] for i in ids]), pr), distance(pooled([lora[i] for i in ids]), pr)
+    return db, dl, db - dl
+
+
+def pr010(base: dict, lora: dict, ref: dict, ids=TEST_IDS, n: int = BOOTSTRAP, seed: int = BOOTSTRAP_SEED) -> dict:
+    """The registered criterion: the LoRA's distance to the reference is smaller than the base's,
+    and the 95% bootstrap interval of the difference -- dialogues resampled with replacement, both
+    models on the same resample -- lies above zero."""
+    ids = [i for i in ids if i in base and i in lora and i in ref]
+    db, dl, d = gain(ids, base, lora, ref)
+    rng = np.random.default_rng(seed)
+    draws = [gain(list(rng.choice(ids, len(ids))), base, lora, ref)[2] for _ in range(n)]
+    lo, hi = (float(x) for x in np.percentile(draws, [2.5, 97.5]))
+    return {"n_dialogues": len(ids), "distance_base_ms": round(db, 1), "distance_lora_ms": round(dl, 1),
+            "gain_ms": round(d, 1), "ci95_ms": [round(lo, 1), round(hi, 1)], "supported": bool(d > 0 and lo > 0)}
+
+
+def pr010_validity(results: dict) -> list[str]:
+    """What would make a run not the registered one."""
+    problems = []
+    got = sorted(int(i) for i in results.get("reference", {}))
+    if got != list(TEST_IDS):
+        problems.append(f"{len(got)} dialogues, not the registered 100 (0, 10, ..., 990)")
+    commit = str(results.get("commit", ""))
+    if not commit or commit.endswith("-dirty") or commit == "unknown":
+        problems.append(f"commit {commit!r}: not a clean committed tree")
+    if not results.get("adapter_sha256"):
+        problems.append("the adapter's SHA-256 is missing")
+    return problems
+
+
+def format_pr010(results: dict) -> str:
+    c = results["criteria"]
+    lines = [f"{REGISTRATION}, the registered criterion (docs/preregistration.md), {c['n_dialogues']} test dialogues:",
+             f"  distance to the reference: base {c['distance_base_ms']:.0f} ms, LoRA {c['distance_lora_ms']:.0f} ms",
+             f"  gain (base - LoRA): {c['gain_ms']:+.0f} ms, 95% bootstrap interval {c['ci95_ms'][0]:+.0f} to {c['ci95_ms'][1]:+.0f}"]
+    problems = pr010_validity(results)
+    if problems:
+        lines.append(f"{REGISTRATION}: NOT THE REGISTERED RUN -- " + "; ".join(problems))
+    else:
+        lines.append(f"{REGISTRATION}: " + ("SUPPORTED" if c["supported"] else
+                     "NOT SUPPORTED -- the LoRA is not closer to the reference beyond the interval"))
+    return "\n".join(lines)
