@@ -37,6 +37,8 @@ Smoke tests, `--limit` runs and reply WAVs go to `results/`, which is ignored.
 | `r5-personaplex/evalset-modal-a10.json` · `evalset-modal-a10-report.md` | **the R5 row, PersonaPlex**: the same driver, R0's instruction as its role, voice NATF2; set-up time per call | `6723cb4` | Modal NVIDIA **A10G** (the file name says a10) | page 20 §1, §20 |
 | `severity/pr009.json` · `pr009-report.md` | **PR-009, the registered run**: the severity render on the held-out voices and sentences -- every target and measure, each neutral clip's SHA-256, the criteria; the report is the run's printed output. Not supported (S4) | `6c43d5e` | laptop CPU (WSL), Kokoro-82M, \$0 | page 20 §21 |
 | `prosody/pr008-report.md` | the same run's report, regenerated from the run file by the frozen code (the printed output was overwritten; PR-008 Deviations) | `f4da0bc` | Modal NVIDIA L40S | page 20 §19 |
+| `ft1/pr010.json` · `pr010-report.md` | **PR-010, the registered run**: base Moshi, then Moshi + FT-1's LoRA, answering the user channel of the 100 DailyTalk test dialogues, one container; every dialogue's offsets and text, the reference, the adapter's SHA-256 and config, the criterion. Not supported: moved away | `3d36f74` | Modal NVIDIA L40S | page 20 §22 |
+| `ft1/training/` | FT-1's training evidence, as it came off the machine: the config run (both launches, identical), the training log (every step's loss), the script's log, the training list and SHA256SUMS. Not the adapter (740 MB, `data/ft1/`, ignored) | `4df9ef3` | Vast.ai, one H100 80 GB | page 20 §22 |
 
 ## What an eval-set run holds
 
@@ -90,6 +92,20 @@ stored.
 Re-count the answers without any model:
 
     python -c "import json; t = json.load(open('runs/r5-personaplex/evalset-modal-a10.json', encoding='utf-8'))['turns']; print(sum(v['gap_ms'] is not None for v in t.values()), 'of', len(t))"
+
+## What PR-010's run holds
+
+`registration`, `commit`, `ids`, `adapter_sha256`, `adapter_config`, `machine`, `versions`,
+`tail_s`, `gpu_mb_left_after_base`, `criteria`; `reference`, one row per dialogue (the human on
+the left answering the right); and `base` and `lora`, each with `rung`, `load_s`, `peak_vram_mb`
+and `rows`, one per dialogue. A row is `turngaps.summary(user, answerer)`: `n_transitions`,
+`fto_ms` (every floor-transfer offset), `overlapped`, `within`, `overlap_ratio`, `speech_s`
+(user, answerer); a model's row adds `rtf`, `setup_s` and `text`. The definitions are in
+`src/s2slab/turngaps.py` and `src/s2slab/dailytalk.py`; no audio is stored.
+
+Re-score the criterion without any audio or model (10,000 resamples, a few seconds):
+
+    PYTHONPATH=src python -c "import json; from s2slab.dailytalk import pr010; d = json.load(open('runs/ft1/pr010.json', encoding='utf-8')); k = lambda r: {int(i): v for i, v in r.items()}; print(pr010(k(d['base']['rows']), k(d['lora']['rows']), k(d['reference'])))"
 
 ## What a severity run holds
 

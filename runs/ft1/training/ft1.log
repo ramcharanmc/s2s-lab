@@ -1,0 +1,20 @@
+[ft1 13:29:44] WARNING: this machine cannot destroy itself. Destroy it yourself when done: vastai destroy instance <id>
+NVIDIA H100 80GB HBM3, 81559 MiB, 595.71.05
+[ft1 13:32:09] installed moshi-finetune 2acc879fe7c48f885a18f6cc9548bccb2674d87b with moshi 9837ca328d58deef5d7a4fe95a0fb49c902ec0ae
+patched
+[ft1 13:36:55] WARNING: this machine cannot destroy itself. Destroy it yourself when done: vastai destroy instance <id>
+NVIDIA H100 80GB HBM3, 81559 MiB, 595.71.05
+already patched
+[ft1 13:42:39] WARNING: this machine cannot destroy itself. Destroy it yourself when done: vastai destroy instance <id>
+NVIDIA H100 80GB HBM3, 81559 MiB, 595.71.05
+already patched
+[ft1 13:53:46] WARNING: this machine cannot destroy itself. Destroy it yourself when done: vastai destroy instance <id>
+NVIDIA H100 80GB HBM3, 81559 MiB, 595.71.05
+already patched
+[ft1 13:53:46] training list: {"train": 2286, "test_fold_removed": 255, "sha256": "427ffb51d28255139ef339c1fc6f8efee0ea02a8cb775d5785a722dbe662cbbe"}
+config written; fresh start
+[ft1 13:56:48] WARNING: this machine cannot destroy itself. Destroy it yourself when done: vastai destroy instance <id>
+NVIDIA H100 80GB HBM3, 81559 MiB, 595.71.05
+already patched
+[ft1 13:56:48] training list: {"train": 2286, "test_fold_removed": 255, "sha256": "427ffb51d28255139ef339c1fc6f8efee0ea02a8cb775d5785a722dbe662cbbe"}
+config written; fresh start

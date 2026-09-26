@@ -24,7 +24,7 @@ Rules, from the v1 Research plan (§8):
 | PR-007 | On 38 fresh CREMA-D pairs from actors no system here has scored, does giving the $0 tagger the speaker's own neutral clips (a per-caller baseline) let it tell more upset-calm pairs apart than the same tagger without it, without tagging the upset clips neutral? | `02baa74` | **Reported: not supported** (26 of 38 told apart either way; fixed 2, broken 2, one-sided p = 0.69) |
 | PR-008 | When the caller's voice is upset rather than calm, with the same words, does R4 (Qwen2.5-Omni, speaking for itself) answer with a wider pitch range -- beyond chance and beyond what R3's words carry into Kokoro? | `f4da0bc` | **Reported: not supported** (R4 14 wider / 16 narrower of 39; no consistent direction, p = 0.86) |
 | PR-009 | On two Kokoro voices and eight neutral sentences the render was not developed on, does raising a PHQ-9 or YMRS score move pitch, range, rate and pauses the way page 09's mapping says, at every step and within tolerance? | `6c43d5e` | **Reported: not supported** (S4 failed: pitch offset on target in 169 of 192 checks, 88.0%, needed 173; S1 96 of 96, S2 29 of 32, S3 384 of 384, S5 177 of 192 held) |
-| PR-010 | Does a LoRA trained on DailyTalk (kyutai's moshi-finetune, test fold held out) move Moshi's turn gaps closer to DailyTalk's own, on 100 held-out dialogues? | The commit that adds this entry | Open |
+| PR-010 | Does a LoRA trained on DailyTalk (kyutai's moshi-finetune, test fold held out) move Moshi's turn gaps closer to DailyTalk's own, on 100 held-out dialogues? | `4df9ef3` | **Reported: not supported, moved away** (distance to the reference 496 ms base, 1,035 ms LoRA; gain −539 ms, 95% interval −685 to −402; overlap 85 → 2 turn changes, but median gap 160 → 1,220 ms against 420) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -2327,7 +2327,93 @@ wall time and cost; a few conversations to listen to (user left, model right).
   11 h 22 min with no resume. The first launch crashed before step 1 (moshi-finetune reads
   `CUDA_VISIBLE_DEVICES`, which the machine did not set) and was relaunched with the same config;
   both launch configs came back with the adapter and are identical.
+- **2026-09-25, a correction to the first entry, from the repeat's own numbers.** Its diagnosis
+  was wrong. The repeat recorded 16 MiB still allocated after the base pass -- nothing held -- and
+  Moshi + LoRA peaking at 29,962 MiB (29.3 GiB) on its own, against base Moshi's 16,677. Loading
+  and fusing the LoRA, not memory left over, is what outgrew the A10's 22 GiB: no A10 run could
+  have held it. The L40S was the right fix, for a different reason. The first entry is left as
+  written; the comment above `pr010_remote` is corrected to match (a comment only, after the run).
+- **2026-09-25, registry row.** Its "Registered" cell was changed to the registering commit's
+  hash, `4df9ef3`, and its status updated, as for the earlier entries.
 
 ### Results
 
-Pending.
+**Run:** 2026-09-25, about 21:35 to 22:37 CDT; commit `3d36f74` (the deviation's commit), clean
+tree; Modal NVIDIA L40S, torch 2.8.0+cu126, moshi 0.2.13; the one repeat V4 allows:
+`modal run modal_app/r5_bench.py::pr010 --confirm PR-010 2>&1 | tee results/ft1-pr010.txt`. The
+adapter is the step-2,000 checkpoint, SHA-256 `7a48bd58...0dc3`, the same as the SHA256SUMS written
+on the training machine (V3). Run file `runs/ft1/pr010.json` (every dialogue's offsets and text for
+both models, the reference, the adapter's SHA-256 and config, the criterion); the printed output as
+`runs/ft1/pr010-report.md`, from the machine line to the cost line (Modal's progress lines and
+moshi's warning about the repository's missing `config.json` left out); the training evidence in
+`runs/ft1/training/` (V5). 3,658 s inside the function, about \$2.01. Peak GPU memory: base
+16,677 MiB, Moshi + LoRA 29,962 MiB; left after the base pass, 16 MiB.
+
+The criterion, verbatim (recomputed from the run file's rows by the frozen `dailytalk.pr010`: the
+same numbers):
+
+```
+PR-010, the registered criterion (docs/preregistration.md), 100 test dialogues:
+  distance to the reference: base 496 ms, LoRA 1035 ms
+  gain (base - LoRA): -539 ms, 95% bootstrap interval -685 to -402
+PR-010: NOT SUPPORTED -- the LoRA is not closer to the reference beyond the interval
+```
+
+**Verdict: not supported -- and the movement is away.** Moshi + LoRA's gaps are 1,035 ms from the
+reference's, base Moshi's 496: a gain of -539 ms, with the whole 95% interval, -685 to -402, below
+zero. The LoRA cured what base Moshi does wrong -- it all but stopped talking over the user -- and
+went past the target: it now waits about three times as long as the people it was trained on.
+
+| 100 test dialogues | base Moshi | Moshi + LoRA | reference (the human on the left) |
+|---|---:|---:|---:|
+| turn changes | 491 | 355 | 456 |
+| offset p10 / p50 / p90, ms | -400 / 160 / 220 | 508 / 1,220 / 2,752 | 250 / 420 / 830 |
+| offset p25 / p75, ms | 100 / 200 | 740 / 1,870 | 320 / 580 |
+| gaps over 1 s (of those, over 2 s) | 28 (23) | 211 (78) | 20 (0) |
+| overlapping turn changes | 85 | 2 | 0 |
+| speech inside the user's turn | 98 | 4 | 0 |
+| overlap ratio, median over dialogues | 0.122 | 0.030 | 0.000 |
+| the answerer's speech, s | 1,182 | 732 | 1,252 |
+
+The LoRA's overlap ratio is not zero although it began inside the user's speech only 6 times: the
+recorded user keeps to its own schedule and starts over a late answer.
+
+**Predictions, scored**
+
+| Prediction | Outcome |
+|---|---|
+| Supported: the distance falls from about 480 to about 250 ms; gain about +200, interval well clear of zero | **Wrong:** base 496 (dev 478, as expected), LoRA 1,035; gain -539, interval -685 to -402. |
+| Overlap falls sharply: overlapping turn changes from about 1 in 5 to under 1 in 20; speech inside the user's turn by more than half | Right: 85 of 491 (1 in 6) to 2 of 355; 98 to 4. |
+| The median gap rises from about 160 toward 300 ms, still short of 420 | **Wrong:** 160 to 1,220 ms, nearly three times the reference's. |
+| The risk: at 2e-6 the LoRA may move little | **Wrong:** it moved further than the whole distance, past the target. |
+
+**What the registration got wrong.** The predictions pictured a small push along one line, from
+base Moshi toward DailyTalk, with the example's learning rate too weak to push far. The LoRA moved
+further than the whole distance, and in a shape nothing predicted: it says less (2,537 words of
+text stream against base Moshi's 4,723; 732 s of speech against the reference's 1,252), takes the
+floor 101 fewer times than the reference, and in 55 of the 100 dialogues takes fewer turns than the
+human did. The registration went from training straight to the test, with no look at the trained
+adapter on dev; the 50 dev dialogues would have cost about \$0.35. For FT-2 and FT-3: register the
+training, run the adapter on dev, then register the test.
+
+**Reported alongside, descriptively (after the verdict)**
+
+- **The training** (`runs/ft1/training/`): 2,000 steps on one H100 80 GB (Vast.ai, on-demand),
+  11 h 22 min, no resume, peak 39.6 GB. Mean loss 1.674 over steps 1-50, 1.214 over 451-500, 1.153
+  over 951-1,000, 1.137 over the last 100 (the last step, 1.203). About 20 s a step: four times
+  the plan's 3-hour estimate (page 17 §7.1). Training list: 2,286 dialogues, 2,541 minus the 255 of
+  the test fold (V2), SHA-256 `427ffb51...cbbe`. Cost \$24.29 on Vast's bill, four times the
+  plan's \$5.86 for Vast.
+- **What it says changed as well as when.** Base Moshi opens 98 of the 100 conversations with a
+  greeting ("Hello, how is it going?" in 68); Moshi + LoRA opens none. In two dialogues its text
+  stream is empty. Timing is the only thing measured; the content is not scored.
+- **Dialogue by dialogue:** the LoRA's median gap is nearer the human's than base Moshi's in 18 of
+  the 100.
+- **Why it overshot is not tested here.** Candidates, exploratory: what 2,000 steps of read,
+  line-by-line dialogue teach about when to start; the open-loop probe (a user who does not wait
+  cuts a late answer short and removes turn changes -- though the probe is the same for both
+  models); decoding settings kept from base Moshi. The natural first check is the dev set, at
+  checkpoints 500, 1,000 and 1,500 -- which the run did not keep (`num_ckpt_keep: 3`).
+- Six conversations to listen to, user left, model right (`results/ft1/listen/`, not in git):
+  dialogues 0, 10 and 20, each with both models. In dialogue 10 the LoRA's only words are
+  "Goodbye, Mary.".

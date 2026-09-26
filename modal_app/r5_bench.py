@@ -315,7 +315,7 @@ def dialogues(model: str = "r5-moshi", limit: int = 0, listen: int = 3):
 
 
 # An L40S, not the registered A10 (PR-010, Deviations): on the A10 (22 GB) the first run ran out of
-# memory fusing the LoRA into the second model, with about 5 GB still held from the base pass.
+# memory fusing the LoRA into the second model. Moshi + LoRA alone peaks at 29.3 GiB (the repeat).
 @app.function(gpu="L40S", timeout=150 * 60, scaledown_window=60, volumes={"/ft1": ft1_volume})
 def pr010_remote(commit: str, users: dict, listen: int = 0) -> dict:
     """PR-010: base Moshi, then Moshi + FT-1's LoRA, in ONE container, on the same dialogues and seeds.

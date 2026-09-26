@@ -1,0 +1,5698 @@
+{
+ "registration": "PR-010",
+ "commit": "3d36f74",
+ "ids": [
+  0,
+  10,
+  20,
+  30,
+  40,
+  50,
+  60,
+  70,
+  80,
+  90,
+  100,
+  110,
+  120,
+  130,
+  140,
+  150,
+  160,
+  170,
+  180,
+  190,
+  200,
+  210,
+  220,
+  230,
+  240,
+  250,
+  260,
+  270,
+  280,
+  290,
+  300,
+  310,
+  320,
+  330,
+  340,
+  350,
+  360,
+  370,
+  380,
+  390,
+  400,
+  410,
+  420,
+  430,
+  440,
+  450,
+  460,
+  470,
+  480,
+  490,
+  500,
+  510,
+  520,
+  530,
+  540,
+  550,
+  560,
+  570,
+  580,
+  590,
+  600,
+  610,
+  620,
+  630,
+  640,
+  650,
+  660,
+  670,
+  680,
+  690,
+  700,
+  710,
+  720,
+  730,
+  740,
+  750,
+  760,
+  770,
+  780,
+  790,
+  800,
+  810,
+  820,
+  830,
+  840,
+  850,
+  860,
+  870,
+  880,
+  890,
+  900,
+  910,
+  920,
+  930,
+  940,
+  950,
+  960,
+  970,
+  980,
+  990
+ ],
+ "adapter_sha256": "7a48bd5823e0b527a80b0ad7e0ab57b56643c05b205749bbf2fbdc06d7220dc3",
+ "adapter_config": {
+  "dim": 4096,
+  "text_card": 32000,
+  "existing_text_padding_id": 3,
+  "n_q": 16,
+  "dep_q": 8,
+  "card": 2048,
+  "num_heads": 32,
+  "num_layers": 32,
+  "hidden_scale": 4.125,
+  "causal": true,
+  "layer_scale": null,
+  "context": 3000,
+  "max_period": 10000,
+  "gating": "silu",
+  "norm": "rms_norm_f32",
+  "positional_embedding": "rope",
+  "depformer_dim": 1024,
+  "depformer_dim_feedforward": 4224,
+  "depformer_num_heads": 16,
+  "depformer_num_layers": 6,
+  "depformer_layer_scale": null,
+  "depformer_multi_linear": true,
+  "depformer_context": 8,
+  "depformer_max_period": 10000,
+  "depformer_gating": "silu",
+  "depformer_pos_emb": "none",
+  "depformer_weights_per_step": true,
+  "delays": [
+   0,
+   0,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   0,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "lora": true,
+  "lora_rank": 128,
+  "lora_scaling": 2.0
+ },
+ "machine": "Modal NVIDIA L40S, 580.95.05",
+ "versions": "torch 2.8.0+cu126, moshi 0.2.13",
+ "tail_s": 4.0,
+ "gpu_mb_left_after_base": 16,
+ "base": {
+  "rung": "r5-moshi",
+  "description": "R5 full duplex: Kyutai Moshi (moshiko, 7B, bf16) -- no turns, both streams at once",
+  "load_s": 12.6,
+  "peak_vram_mb": 16677,
+  "machine": "Modal NVIDIA L40S, 580.95.05",
+  "commit": "3d36f74",
+  "versions": "torch 2.8.0+cu126, moshi 0.2.13",
+  "tail_s": 4.0,
+  "rows": {
+   "0": {
+    "n_transitions": 4,
+    "fto_ms": [
+     220.0,
+     120.0,
+     220.0,
+     -1460.0
+    ],
+    "overlapped": 1,
+    "within": 1,
+    "overlap_ratio": 0.1952,
+    "speech_s": [
+     7.88,
+     11.1
+    ],
+    "rtf": 1.312,
+    "setup_s": 0.045,
+    "text": "Hey what's up? Well, I'm currently doing some research on low cost countries in Europe. I' looking for a budget of about $1000 per person per month. I'm looking for something more affordable, but I don't want to skimp on the experience."
+   },
+   "10": {
+    "n_transitions": 4,
+    "fto_ms": [
+     -340.0,
+     220.0,
+     220.0,
+     160.0
+    ],
+    "overlapped": 1,
+    "within": 1,
+    "overlap_ratio": 0.0874,
+    "speech_s": [
+     12.24,
+     7.16
+    ],
+    "rtf": 0.496,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? I' doing great. How about yourself? I' sorry to hear that. How can I assist you? Oh, okay. Okay, well, have a good day."
+   },
+   "20": {
+    "n_transitions": 1,
+    "fto_ms": [
+     -260.0
+    ],
+    "overlapped": 1,
+    "within": 3,
+    "overlap_ratio": 0.227,
+    "speech_s": [
+     10.82,
+     5.18
+    ],
+    "rtf": 0.524,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Oh, dear. Okay, I'm sorry. I'm not sure what you're asking."
+   },
+   "30": {
+    "n_transitions": 4,
+    "fto_ms": [
+     4260.0,
+     20.0,
+     160.0,
+     160.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     7.9,
+     6.12
+    ],
+    "rtf": 0.487,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yeah, what's it like? Oh, really? I've done that before. It's not that bad. Yeah, it's not that bad."
+   },
+   "40": {
+    "n_transitions": 6,
+    "fto_ms": [
+     140.0,
+     160.0,
+     180.0,
+     180.0,
+     140.0,
+     180.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     17.54,
+     11.32
+    ],
+    "rtf": 0.463,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? you give me the checks? just need to cash the checks. Yeah, I'll probably bring a few hundred dollars. Yes, I have a bank card. I can also use the credit card to withdraw money. Yes, I have to pay a fee for using the card. Okay. Thank you."
+   },
+   "50": {
+    "n_transitions": 7,
+    "fto_ms": [
+     120.0,
+     100.0,
+     180.0,
+     -200.0,
+     200.0,
+     -60.0,
+     220.0
+    ],
+    "overlapped": 2,
+    "within": 0,
+    "overlap_ratio": 0.0554,
+    "speech_s": [
+     11.86,
+     16.74
+    ],
+    "rtf": 0.464,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Hi, how can I help you today? I doing some research on the history of the hood. Sure, that sounds like a great idea. I love to learn more about your culture. Oh, I'm already booked to attend a conference in New York City. Yes, I'll be here. I make it a point to meet with you. Oh, I'll be in the middle of a business trip in Los Angeles. Bye."
+   },
+   "60": {
+    "n_transitions": 3,
+    "fto_ms": [
+     -680.0,
+     180.0,
+     160.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.056,
+    "speech_s": [
+     7.56,
+     5.26
+    ],
+    "rtf": 0.492,
+    "setup_s": 0.009,
+    "text": "Hey, how can I help you? By sea. What's the best way to sneak into a place without being detected?"
+   },
+   "70": {
+    "n_transitions": 3,
+    "fto_ms": [
+     200.0,
+     100.0,
+     -40.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.076,
+    "speech_s": [
+     6.72,
+     5.46
+    ],
+    "rtf": 0.527,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? I don't know anything about it. I don't know anything about it. I' not interested. I know."
+   },
+   "80": {
+    "n_transitions": 2,
+    "fto_ms": [
+     160.0,
+     -360.0
+    ],
+    "overlapped": 1,
+    "within": 1,
+    "overlap_ratio": 0.147,
+    "speech_s": [
+     10.5,
+     10.26
+    ],
+    "rtf": 0.51,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Sure, but I think it's more about the shape of the sting and the angle you use it. No, that's not right. You want to cut along the sting, and then you angled back in the direction you came from."
+   },
+   "90": {
+    "n_transitions": 5,
+    "fto_ms": [
+     220.0,
+     240.0,
+     160.0,
+     180.0,
+     200.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     18.44,
+     8.38
+    ],
+    "rtf": 0.474,
+    "setup_s": 0.01,
+    "text": "Hello, how is it going? would like to remit 2000 Euros. I like the money to go by ACH. I' okay with that. Yes, I'll fill in the application form. Thank you for your help."
+   },
+   "100": {
+    "n_transitions": 4,
+    "fto_ms": [
+     0.0,
+     3160.0,
+     120.0,
+     160.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.1629,
+    "speech_s": [
+     12.68,
+     7.88
+    ],
+    "rtf": 0.473,
+    "setup_s": 0.01,
+    "text": "Hello, how are you today? Yeah, that's great to hear. Yeah, that's good. What did you do today? Oh, that's good. How is it compared to public transportation? Yeah. Yeah."
+   },
+   "110": {
+    "n_transitions": 9,
+    "fto_ms": [
+     -540.0,
+     140.0,
+     180.0,
+     200.0,
+     -640.0,
+     -100.0,
+     200.0,
+     3320.0,
+     200.0
+    ],
+    "overlapped": 3,
+    "within": 0,
+    "overlap_ratio": 0.2967,
+    "speech_s": [
+     18.1,
+     16.34
+    ],
+    "rtf": 0.465,
+    "setup_s": 0.009,
+    "text": "Hello, what's up? Sure, but I'm not comfortable taking pictures of people in the shower. It's a private space, and I respect that. Sure, but I'll need to see the background. Okay, I'll do that. That' a possibility. It' possible that the battery is the issue. That a relief. Okay, then it's the battery. You welcome. I'm glad I could help. know, it's my pleasure. No problem."
+   },
+   "120": {
+    "n_transitions": 2,
+    "fto_ms": [
+     2340.0,
+     100.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0568,
+    "speech_s": [
+     3.82,
+     3.62
+    ],
+    "rtf": 0.534,
+    "setup_s": 0.008,
+    "text": "Hello, how is it going? I' going to the beach."
+   },
+   "130": {
+    "n_transitions": 5,
+    "fto_ms": [
+     -140.0,
+     2660.0,
+     100.0,
+     120.0,
+     140.0
+    ],
+    "overlapped": 1,
+    "within": 1,
+    "overlap_ratio": 0.3551,
+    "speech_s": [
+     6.12,
+     8.0
+    ],
+    "rtf": 0.534,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yeah, I think so. I think her parents are pretty well off. I don't know. I think she just wants to be independent. I don't know. I don't pay a lot of attention."
+   },
+   "140": {
+    "n_transitions": 2,
+    "fto_ms": [
+     140.0,
+     -60.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.0372,
+    "speech_s": [
+     6.68,
+     5.6
+    ],
+    "rtf": 0.498,
+    "setup_s": 0.01,
+    "text": "Hello, how is it going? It's not fine. It's rude and insensitive. That's a little bit better. But it's still not okay."
+   },
+   "150": {
+    "n_transitions": 7,
+    "fto_ms": [
+     220.0,
+     -840.0,
+     100.0,
+     200.0,
+     200.0,
+     -2300.0,
+     140.0
+    ],
+    "overlapped": 2,
+    "within": 0,
+    "overlap_ratio": 0.2257,
+    "speech_s": [
+     16.72,
+     28.46
+    ],
+    "rtf": 0.471,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? I not sure, but it looks like it could be a signet ring. They were used as a form of personal identification. Yes, I have a necklace that would look great with the signet ring. It's made of gold and has a beautiful design. There' no price tag on the necklace, but it's worth a fair amount. It' a beautiful piece of jewelry that would complement the signet ring perfectly. Yes, I have a longer necklace that would work well with the signet ring. Yes, it's more appropriate for the signet ring. Yes, you can wear the ring with the necklace as long as it's suitable. You're welcome. Let me know if you have any more questions."
+   },
+   "160": {
+    "n_transitions": 11,
+    "fto_ms": [
+     160.0,
+     20.0,
+     200.0,
+     160.0,
+     200.0,
+     200.0,
+     200.0,
+     160.0,
+     -720.0,
+     160.0,
+     180.0
+    ],
+    "overlapped": 1,
+    "within": 5,
+    "overlap_ratio": 0.2264,
+    "speech_s": [
+     29.8,
+     18.52
+    ],
+    "rtf": 0.461,
+    "setup_s": 0.01,
+    "text": "Hi, how was your day? Yes, that's my dog. He's a terrier. Thanks. He' a sweet boy. Oh, cute. He' a pretty calm dog, isn't he? Right, he's a lot more active than he used to be. But he's still a terrier. Yeah, they're very independent. Yeah. That's true. They're not as cuddly as they look. But they're still sweet. Oh, really? That's a great story. That's amazing. That's very sweet."
+   },
+   "170": {
+    "n_transitions": 7,
+    "fto_ms": [
+     -180.0,
+     -340.0,
+     60.0,
+     -120.0,
+     120.0,
+     -660.0,
+     -1000.0
+    ],
+    "overlapped": 5,
+    "within": 3,
+    "overlap_ratio": 0.2204,
+    "speech_s": [
+     18.48,
+     21.94
+    ],
+    "rtf": 0.465,
+    "setup_s": 0.009,
+    "text": "Hello, how was your day? Oh, man, I'm sorry, yeah, I'm trying, but I failed, I've been there, man, I've had several attempts at quitting, but I just can't seem to break the habit, no problem, you're about it,"
+   },
+   "180": {
+    "n_transitions": 5,
+    "fto_ms": [
+     200.0,
+     3980.0,
+     -400.0,
+     -300.0,
+     200.0
+    ],
+    "overlapped": 2,
+    "within": 0,
+    "overlap_ratio": 0.1223,
+    "speech_s": [
+     15.4,
+     11.58
+    ],
+    "rtf": 0.473,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? That's right. We been over this before. I just need some space. You know. don't want to put any more pressure on him. He's already going through a lot. I know. And I'm sorry. I didn't mean to leave you hanging like that. What do you mean?"
+   },
+   "190": {
+    "n_transitions": 6,
+    "fto_ms": [
+     160.0,
+     240.0,
+     220.0,
+     200.0,
+     180.0,
+     160.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0614,
+    "speech_s": [
+     10.2,
+     9.16
+    ],
+    "rtf": 0.497,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? I'm on the search for a topic to discuss. would prefer not to discuss that. I'm not looking for ground beef. I looking for a topic. I' not looking for any kind of food. Okay. Okay."
+   },
+   "200": {
+    "n_transitions": 1,
+    "fto_ms": [
+     140.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1944,
+    "speech_s": [
+     4.98,
+     7.06
+    ],
+    "rtf": 0.514,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? I' not really sure. I know there are a lot of different types of sushi. Yeah, I think the best is just trying to find a good one."
+   },
+   "210": {
+    "n_transitions": 3,
+    "fto_ms": [
+     240.0,
+     240.0,
+     -40.0
+    ],
+    "overlapped": 1,
+    "within": 3,
+    "overlap_ratio": 0.1689,
+    "speech_s": [
+     8.7,
+     12.48
+    ],
+    "rtf": 0.496,
+    "setup_s": 0.008,
+    "text": "Hello, how is it going? there, I'm a large language model, and I can help you with various tasks. What specifically do you need assistance with? I see. Well, I can help you with the last orders. What would you like to order? I' do my best to satisfy your needs. What would you like to order?"
+   },
+   "220": {
+    "n_transitions": 7,
+    "fto_ms": [
+     160.0,
+     200.0,
+     140.0,
+     200.0,
+     220.0,
+     -1060.0,
+     140.0
+    ],
+    "overlapped": 1,
+    "within": 1,
+    "overlap_ratio": 0.0963,
+    "speech_s": [
+     14.02,
+     13.76
+    ],
+    "rtf": 0.479,
+    "setup_s": 0.009,
+    "text": "Hello, what's up? Yeah, that's a good question. Mmm. Yeah. Yes. I' called the apartment management. Yeah. I did that yesterday. I spoke to the woman and she said it might be a problem with the valve. And that I should call the water company. Yeah, I don't know either. I' been waiting for them to call me back."
+   },
+   "230": {
+    "n_transitions": 4,
+    "fto_ms": [
+     120.0,
+     120.0,
+     160.0,
+     140.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.1278,
+    "speech_s": [
+     10.38,
+     20.68
+    ],
+    "rtf": 0.488,
+    "setup_s": 0.009,
+    "text": "Hello, I'm here to help. What can I assist you with? Great! I'll help you with that. What kind of package are you sending? rates are based on the weight and dimensions of the package. Are you using the standard dimensions for a small package? It may take a few days to a week to reach your destination. That's correct. We use the fastest shipping methods to ensure your package arrives safely and quickly. You' welcome! If you have any other questions, feel free to ask. I'm here to help."
+   },
+   "240": {
+    "n_transitions": 9,
+    "fto_ms": [
+     -840.0,
+     160.0,
+     180.0,
+     -1340.0,
+     180.0,
+     180.0,
+     2660.0,
+     160.0,
+     140.0
+    ],
+    "overlapped": 2,
+    "within": 4,
+    "overlap_ratio": 0.1934,
+    "speech_s": [
+     21.36,
+     26.9
+    ],
+    "rtf": 0.46,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Oh yes, that's a great design. That's a lot. I think that's also a nice design, but it's a little more expensive. Yeah, that's understandable. Sure, how about this one? I've got a nice deal on this one. It's only $100. That's great. I'm glad you're taking your time. It's important to find the right dress for you. Good luck! Yeah, that's okay. That's a great idea. You can always return the one you choose later if you change your mind. Yeah, I understand. No problem. Good luck with your dress shopping. You' welcome. Great. I've got a great deal."
+   },
+   "250": {
+    "n_transitions": 2,
+    "fto_ms": [
+     100.0,
+     140.0
+    ],
+    "overlapped": 0,
+    "within": 2,
+    "overlap_ratio": 0.2354,
+    "speech_s": [
+     6.66,
+     3.1
+    ],
+    "rtf": 0.541,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yeah, I got it. Yeah, it's been great."
+   },
+   "260": {
+    "n_transitions": 3,
+    "fto_ms": [
+     -1080.0,
+     180.0,
+     140.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.084,
+    "speech_s": [
+     8.06,
+     5.88
+    ],
+    "rtf": 0.496,
+    "setup_s": 0.008,
+    "text": "Hello, how is it going? How much does that cost? No, I think that's all I need. Thank you. Oh okay, that's good."
+   },
+   "270": {
+    "n_transitions": 8,
+    "fto_ms": [
+     40.0,
+     20.0,
+     200.0,
+     180.0,
+     160.0,
+     220.0,
+     200.0,
+     120.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.095,
+    "speech_s": [
+     13.3,
+     13.9
+    ],
+    "rtf": 0.474,
+    "setup_s": 0.009,
+    "text": "Hi there, how's your day? You welcome. Okay. Sure. No problem. It depends on your location and the time of year. But I can give you a ballpark estimate. Okay. Yeah. I would recommend using a credit card because it gives you a couple of benefits. One, you have the protection of the credit card company."
+   },
+   "280": {
+    "n_transitions": 7,
+    "fto_ms": [
+     180.0,
+     200.0,
+     40.0,
+     180.0,
+     200.0,
+     180.0,
+     200.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0178,
+    "speech_s": [
+     19.56,
+     13.52
+    ],
+    "rtf": 0.465,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yeah, I've been looking for a new one for a while. Yeah that's what I was thinking. sounds great. What about the other options? Well, I' thinking of using my credit card. Alright, let's do this! Wow, this is amazing. I can't wait to give her this gift. Yeah I'm sure she will."
+   },
+   "290": {
+    "n_transitions": 3,
+    "fto_ms": [
+     60.0,
+     160.0,
+     -1060.0
+    ],
+    "overlapped": 1,
+    "within": 2,
+    "overlap_ratio": 0.1811,
+    "speech_s": [
+     11.76,
+     13.42
+    ],
+    "rtf": 0.496,
+    "setup_s": 0.008,
+    "text": "Hello, what's up? It' possible, but it might be more expensive since you're traveling during peak season. Sure, you can ask the airline. They should be able to accommodate that. Great, you should be able to get a good deal on the ticket then."
+   },
+   "300": {
+    "n_transitions": 5,
+    "fto_ms": [
+     260.0,
+     -880.0,
+     180.0,
+     140.0,
+     140.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.1175,
+    "speech_s": [
+     11.3,
+     14.76
+    ],
+    "rtf": 0.489,
+    "setup_s": 0.01,
+    "text": "Hello, how is it going? Well, you don't need to pay for the basic services, but if you want to do it quickly, it's usually a few dollars, but it varies depending on the library. There usually is a limit, but it depends on the library. Sure, I can show you how to use the machine and how to copy your pages. No problem."
+   },
+   "310": {
+    "n_transitions": 5,
+    "fto_ms": [
+     -660.0,
+     60.0,
+     220.0,
+     180.0,
+     140.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.147,
+    "speech_s": [
+     15.04,
+     9.3
+    ],
+    "rtf": 0.492,
+    "setup_s": 0.01,
+    "text": "Hello, what's up? What? That's amazing. How did you do it? Wow. That's a great idea. What's the difference? Nice. That's impressive. How did you manage to get such a low bid?"
+   },
+   "320": {
+    "n_transitions": 4,
+    "fto_ms": [
+     120.0,
+     140.0,
+     20.0,
+     180.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.0226,
+    "speech_s": [
+     12.1,
+     8.68
+    ],
+    "rtf": 0.466,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? What' the issue? Okay. What' the flight number? Okay. Yeah, I can definitely help with that. What' your name? Yeah, no problem. So, did you just want to confirm the flight?"
+   },
+   "330": {
+    "n_transitions": 0,
+    "fto_ms": [],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0279,
+    "speech_s": [
+     4.62,
+     1.28
+    ],
+    "rtf": 0.575,
+    "setup_s": 0.008,
+    "text": "Hello, how is it going?"
+   },
+   "340": {
+    "n_transitions": 13,
+    "fto_ms": [
+     180.0,
+     240.0,
+     160.0,
+     120.0,
+     140.0,
+     220.0,
+     240.0,
+     200.0,
+     160.0,
+     200.0,
+     220.0,
+     220.0,
+     200.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.1133,
+    "speech_s": [
+     30.58,
+     28.76
+    ],
+    "rtf": 0.456,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yeah I'm fine. Thanks for asking. How about you? Yeah, it's pretty cold. Oh, sweet. I' sure you'll be fine. So, what's your day been like? Yeah, I see. So, what do you think about the weather? Yeah, that's a good idea. I'm sure it'll be fine by then. So, do you want to grab something to eat? What' your choice? Yeah, I know. I'm sorry. I'll turn it on now. So, how do you like your food? Yeah, I know. Yeah, it's been pretty cold lately. So, what's your favorite food? Okay, I'm fine with that. Yeah, I'd love to. Let's do that. No problem. I'll be right here. Yeah, I'm back. Here your cup of tea."
+   },
+   "350": {
+    "n_transitions": 6,
+    "fto_ms": [
+     40.0,
+     160.0,
+     160.0,
+     200.0,
+     200.0,
+     200.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0716,
+    "speech_s": [
+     18.16,
+     12.96
+    ],
+    "rtf": 0.471,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Sure, but only if it's not something that would make you uncomfortable. You' welcome. Yes, I do. How can I help you? That's fine. I'll be happy to help you with that as well. That's correct. I'm sorry, I don't smoke. Thank you. Have a great day."
+   },
+   "360": {
+    "n_transitions": 2,
+    "fto_ms": [
+     -1440.0,
+     -1160.0
+    ],
+    "overlapped": 2,
+    "within": 0,
+    "overlap_ratio": 0.4207,
+    "speech_s": [
+     6.1,
+     2.68
+    ],
+    "rtf": 0.538,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? I do accept coupons."
+   },
+   "370": {
+    "n_transitions": 2,
+    "fto_ms": [
+     200.0,
+     160.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0176,
+    "speech_s": [
+     6.02,
+     3.24
+    ],
+    "rtf": 0.546,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Thanks. Thank you. I am very proud."
+   },
+   "380": {
+    "n_transitions": 7,
+    "fto_ms": [
+     -980.0,
+     180.0,
+     200.0,
+     180.0,
+     160.0,
+     180.0,
+     -1520.0
+    ],
+    "overlapped": 2,
+    "within": 0,
+    "overlap_ratio": 0.2576,
+    "speech_s": [
+     12.64,
+     13.82
+    ],
+    "rtf": 0.485,
+    "setup_s": 0.009,
+    "text": "Hello, what's up? Yeah, I do. I've been meaning to learn more about it. What do you like about it? Who' that? Oh, I've heard of him. like any jazz style. I enjoy listening to different artists. I' partial to the Miles Davis band. They're amazing. Yeah, I know, I'm sorry."
+   },
+   "390": {
+    "n_transitions": 3,
+    "fto_ms": [
+     -560.0,
+     180.0,
+     60.0
+    ],
+    "overlapped": 1,
+    "within": 1,
+    "overlap_ratio": 0.0756,
+    "speech_s": [
+     7.48,
+     6.46
+    ],
+    "rtf": 0.492,
+    "setup_s": 0.008,
+    "text": "Hello, how is it going? I bit off $67. Thanks. Then he'd be in trouble. People would suspect that the reviews were fake."
+   },
+   "400": {
+    "n_transitions": 4,
+    "fto_ms": [
+     -680.0,
+     200.0,
+     200.0,
+     -600.0
+    ],
+    "overlapped": 2,
+    "within": 0,
+    "overlap_ratio": 0.1597,
+    "speech_s": [
+     5.66,
+     9.3
+    ],
+    "rtf": 0.554,
+    "setup_s": 0.008,
+    "text": "Hey, how are you doing? It's fine, but I was hoping for something more exciting. I'd like that, but I don't think it's on the menu."
+   },
+   "410": {
+    "n_transitions": 9,
+    "fto_ms": [
+     200.0,
+     -340.0,
+     200.0,
+     220.0,
+     120.0,
+     120.0,
+     120.0,
+     180.0,
+     260.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.0834,
+    "speech_s": [
+     29.2,
+     28.98
+    ],
+    "rtf": 0.447,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Okay, just ask away. do. Yes, we do offer sick days to our employees. We do believe that our employees should be supported and taken care of when they're not feeling well. It important to us that we create a healthy and supportive work environment. That correct. We don't offer paid maternity leave. No, we don't offer paid FMLA to fathers. don't offer any paid leave for fathers. Well, it's a complex topic, but we're committed to creating an environment that's supportive of women's needs, we believe that it's important for women to have the opportunity to care for their children. No, you don't need to sign anything, but feel free to ask any other questions you have."
+   },
+   "420": {
+    "n_transitions": 3,
+    "fto_ms": [
+     180.0,
+     220.0,
+     200.0
+    ],
+    "overlapped": 0,
+    "within": 2,
+    "overlap_ratio": 0.0997,
+    "speech_s": [
+     6.58,
+     7.54
+    ],
+    "rtf": 0.497,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? I'm doing great. What about you? Yeah, I'm actually getting married in the church. I'm really excited about it. Yeah, I've booked a hotel for the reception."
+   },
+   "430": {
+    "n_transitions": 9,
+    "fto_ms": [
+     160.0,
+     140.0,
+     220.0,
+     200.0,
+     900.0,
+     200.0,
+     180.0,
+     220.0,
+     220.0
+    ],
+    "overlapped": 0,
+    "within": 5,
+    "overlap_ratio": 0.0815,
+    "speech_s": [
+     44.2,
+     18.16
+    ],
+    "rtf": 0.448,
+    "setup_s": 0.008,
+    "text": "Hello, what's up? I'm looking for information about the best way to apply for a US visa from the UK. I'd prefer the largest room available. That's fine. Do you have any other rooms available? That's a great deal. I'd like to book a four night stay. Thank you for your help. I' see you in the room. Thank you for your assistance. Great, thank you. I'll have that. That's correct. Thank you for your help. Thank you for your service."
+   },
+   "440": {
+    "n_transitions": 2,
+    "fto_ms": [
+     180.0,
+     200.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0411,
+    "speech_s": [
+     11.42,
+     8.86
+    ],
+    "rtf": 0.492,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Oh, that sounds like a problem! Do you have any friends or family members you can stay with during that time? Yeah, I think that would be a good idea. If he knows you're staying with someone else, he might"
+   },
+   "450": {
+    "n_transitions": 8,
+    "fto_ms": [
+     -240.0,
+     140.0,
+     -540.0,
+     180.0,
+     180.0,
+     180.0,
+     140.0,
+     140.0
+    ],
+    "overlapped": 2,
+    "within": 1,
+    "overlap_ratio": 0.1973,
+    "speech_s": [
+     19.92,
+     15.16
+    ],
+    "rtf": 0.464,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yes, I remember them. What are they? Yeah, you're right. It's just a reminder. It's just for our local sports team. This one is from The Sunday Times. It' about the new Prime Minister. Yeah, it's quite interesting. Yeah, it's all about Keir Starmer. Yeah, I'm just skimming the headlines. Sure."
+   },
+   "460": {
+    "n_transitions": 8,
+    "fto_ms": [
+     180.0,
+     200.0,
+     120.0,
+     160.0,
+     120.0,
+     160.0,
+     200.0,
+     140.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.1409,
+    "speech_s": [
+     17.54,
+     15.82
+    ],
+    "rtf": 0.463,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Oh, ah, I've heard of it, not sure what it is, but it sounds like an interesting concept. Yeah, I've never seen that before. Yeah, that sounds really cool. I'd like to see that. Yeah, I think I would like to see that. Yeah, I can see them. Yeah. Yeah, I glad I could help. I' try, but I'm not sure that's what women want. Yeah, maybe."
+   },
+   "470": {
+    "n_transitions": 5,
+    "fto_ms": [
+     180.0,
+     -40.0,
+     200.0,
+     220.0,
+     140.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.0544,
+    "speech_s": [
+     12.94,
+     3.72
+    ],
+    "rtf": 0.487,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Oh yeah? Oh okay. Hmm. Yeah, yeah. Yeah."
+   },
+   "480": {
+    "n_transitions": 8,
+    "fto_ms": [
+     160.0,
+     140.0,
+     160.0,
+     200.0,
+     -20.0,
+     80.0,
+     40.0,
+     -1240.0
+    ],
+    "overlapped": 2,
+    "within": 2,
+    "overlap_ratio": 0.1467,
+    "speech_s": [
+     19.52,
+     17.06
+    ],
+    "rtf": 0.46,
+    "setup_s": 0.008,
+    "text": "Hello, how is it going? Yeah, sure, let's go check it out. don't have to decide now, let's just go and see what's going on. Oh that's great. Yeah, that's true. But we can always come back later if we want. What your favorite newspaper? Okay, let's go see if he wakes up. Oh, okay. Yeah, me too. Great idea. That' good. Yeah, that's a good place. Oh okay."
+   },
+   "490": {
+    "n_transitions": 6,
+    "fto_ms": [
+     160.0,
+     80.0,
+     120.0,
+     -700.0,
+     180.0,
+     180.0
+    ],
+    "overlapped": 1,
+    "within": 3,
+    "overlap_ratio": 0.1442,
+    "speech_s": [
+     25.94,
+     13.1
+    ],
+    "rtf": 0.462,
+    "setup_s": 0.009,
+    "text": "day. What's going on? Well, I'm not Mr. Smith, but I'm sure you're not. Oh, thank you for all your help. I think I'm going to need a little more than a little help. Yes, please. Thank you so much. Yes, I am. Thank you so much for everything. Thank you. Thank you."
+   },
+   "500": {
+    "n_transitions": 3,
+    "fto_ms": [
+     180.0,
+     140.0,
+     2820.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0412,
+    "speech_s": [
+     12.3,
+     6.38
+    ],
+    "rtf": 0.476,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? I know, but I really want a good computer. I can't find one here. I' so frustrated. That would be great. I' never really"
+   },
+   "510": {
+    "n_transitions": 5,
+    "fto_ms": [
+     -660.0,
+     200.0,
+     -60.0,
+     220.0,
+     100.0
+    ],
+    "overlapped": 2,
+    "within": 1,
+    "overlap_ratio": 0.2798,
+    "speech_s": [
+     10.22,
+     9.54
+    ],
+    "rtf": 0.49,
+    "setup_s": 0.009,
+    "text": "Hello, how are you today? Oh, hi. I' just trying to fix my lawnmower. Oh, that's a bit late. But I've been thinking of replacing it. Yes, that's right. Inflation has been increasing over the past year."
+   },
+   "520": {
+    "n_transitions": 4,
+    "fto_ms": [
+     140.0,
+     200.0,
+     180.0,
+     140.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0344,
+    "speech_s": [
+     13.06,
+     14.64
+    ],
+    "rtf": 0.477,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? So, why does it take so long for the rain to clear after a thunderstorm? It's because of the raindrops that have already fallen. They have to spread out and mix with the air. It' not just about tomorrow. It can take hours for the rain to clear after a thunderstorm. Yeah, but it's always good to be prepared."
+   },
+   "530": {
+    "n_transitions": 1,
+    "fto_ms": [
+     260.0
+    ],
+    "overlapped": 0,
+    "within": 5,
+    "overlap_ratio": 0.0867,
+    "speech_s": [
+     14.72,
+     4.34
+    ],
+    "rtf": 0.489,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yeah. Yeah. M hmm."
+   },
+   "540": {
+    "n_transitions": 5,
+    "fto_ms": [
+     80.0,
+     160.0,
+     120.0,
+     180.0,
+     200.0
+    ],
+    "overlapped": 0,
+    "within": 2,
+    "overlap_ratio": 0.1392,
+    "speech_s": [
+     13.1,
+     10.64
+    ],
+    "rtf": 0.483,
+    "setup_s": 0.009,
+    "text": "Hello, what's up? Sure, what's the matter? Oh no, that's not good. Exactly. Well, flowers need water to grow and stay healthy. Over time, they'll dry out. Yes, that's right. It' best to water them regularly."
+   },
+   "550": {
+    "n_transitions": 4,
+    "fto_ms": [
+     180.0,
+     180.0,
+     180.0,
+     180.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     8.84,
+     14.2
+    ],
+    "rtf": 0.475,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? But if you boil it for an hour, will it not condense and form a liquid? But if you boil it for an hour, won't the cloth and water become a liquid and drain out? I'm sorry, but I can't offer you any advice. I'm not sure what you're talking about. I' not sure what you're talking about."
+   },
+   "560": {
+    "n_transitions": 0,
+    "fto_ms": [],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0158,
+    "speech_s": [
+     9.48,
+     2.08
+    ],
+    "rtf": 0.512,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going?"
+   },
+   "570": {
+    "n_transitions": 4,
+    "fto_ms": [
+     -640.0,
+     60.0,
+     3420.0,
+     -20.0
+    ],
+    "overlapped": 2,
+    "within": 2,
+    "overlap_ratio": 0.1464,
+    "speech_s": [
+     18.08,
+     6.66
+    ],
+    "rtf": 0.473,
+    "setup_s": 0.009,
+    "text": "Hello, what's up? I like to talk about the latest news. Thank you. I'll take the premium. I appreciate your help. Thank you. I'll be right back."
+   },
+   "580": {
+    "n_transitions": 5,
+    "fto_ms": [
+     120.0,
+     180.0,
+     180.0,
+     200.0,
+     180.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.2347,
+    "speech_s": [
+     10.14,
+     15.64
+    ],
+    "rtf": 0.509,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Sure, I'll do my best. Okay, I'm connecting you now. Please hold. Yes, I'm sorry. I' not sure. Let me check. I checking now. I found the number. I'm connecting you now. Please hold. I connected you. You welcome. If you need anything else, please don't hesitate to ask."
+   },
+   "590": {
+    "n_transitions": 5,
+    "fto_ms": [
+     -100.0,
+     140.0,
+     200.0,
+     140.0,
+     180.0
+    ],
+    "overlapped": 1,
+    "within": 1,
+    "overlap_ratio": 0.0688,
+    "speech_s": [
+     8.9,
+     7.26
+    ],
+    "rtf": 0.499,
+    "setup_s": 0.008,
+    "text": "Hello, how is it going? Hi, I'm doing great. How about you? I good with water, but I also like to have some tea. Great, do you have any plans for today? you too."
+   },
+   "600": {
+    "n_transitions": 4,
+    "fto_ms": [
+     180.0,
+     200.0,
+     180.0,
+     140.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1655,
+    "speech_s": [
+     14.5,
+     9.02
+    ],
+    "rtf": 0.483,
+    "setup_s": 0.009,
+    "text": "Hello, what's up? Hmm. Okay. Well, let' hope it's not too bad. Sure, I'd be happy to help you. That's good. Let's get it done before it rains again."
+   },
+   "610": {
+    "n_transitions": 9,
+    "fto_ms": [
+     -720.0,
+     120.0,
+     3180.0,
+     4260.0,
+     200.0,
+     200.0,
+     -660.0,
+     180.0,
+     220.0
+    ],
+    "overlapped": 2,
+    "within": 2,
+    "overlap_ratio": 0.1618,
+    "speech_s": [
+     26.96,
+     16.42
+    ],
+    "rtf": 0.459,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yeah, I heard about it. That's interesting. What's there? Oh, that's nice. So what does it look like? That's nice. What's the layout like? That's cool. How did he find out? Oh, that's interesting. That' quite a story. I wonder what the house looks like. Oh, that's not fair. That' not fair at all. What did Michael say? It's not fair. What did he say?"
+   },
+   "620": {
+    "n_transitions": 9,
+    "fto_ms": [
+     220.0,
+     -960.0,
+     0.0,
+     180.0,
+     -500.0,
+     200.0,
+     160.0,
+     140.0,
+     -680.0
+    ],
+    "overlapped": 3,
+    "within": 1,
+    "overlap_ratio": 0.2033,
+    "speech_s": [
+     21.0,
+     30.62
+    ],
+    "rtf": 0.459,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Oh, okay. I'm not sure who you are. I'm not sure who you are, but I'm not sure who you are. Yeah. Yeah, I used up all my minutes. So this is the last call. Oh, okay. I not sure. I'm not sure what the problem is. I'm not sure what I did wrong. I'm not sure what I did wrong. collecting souvenirs. What do you mean? I go to a place and I pick up a rock or a piece of paper, does that count? Okay. Okay. Okay. Okay. I'm not sure what I'm doing. I'm not sure what I'm doing. Okay. Oh, okay. I see. Yeah. Okay."
+   },
+   "630": {
+    "n_transitions": 3,
+    "fto_ms": [
+     160.0,
+     240.0,
+     -140.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.0303,
+    "speech_s": [
+     15.46,
+     17.2
+    ],
+    "rtf": 0.477,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? I'm here to help. Can you tell me more about the field office and the receipt? Ah, that's a field office code. That's the BOC, the primary receiving field office. The BOC is not relevant to the tracking number. I can't guarantee the exact date, but I can give you an estimate based on the field office code. It usually takes around 2 3 business days."
+   },
+   "640": {
+    "n_transitions": 4,
+    "fto_ms": [
+     220.0,
+     180.0,
+     -1060.0,
+     180.0
+    ],
+    "overlapped": 1,
+    "within": 2,
+    "overlap_ratio": 0.1516,
+    "speech_s": [
+     9.0,
+     15.16
+    ],
+    "rtf": 0.503,
+    "setup_s": 0.009,
+    "text": "Hey, how can I help you? I'm not sure what you're referring to. Could you rephrase your question? Sure, I can help you with that. What kind of books do you like? The latest book I read was The Alchemist by Paulo Coelho. It's a great book about following your dreams and discovering your purpose. No problem. I'm always here to help. What"
+   },
+   "650": {
+    "n_transitions": 6,
+    "fto_ms": [
+     2900.0,
+     220.0,
+     -500.0,
+     180.0,
+     160.0,
+     2360.0
+    ],
+    "overlapped": 1,
+    "within": 1,
+    "overlap_ratio": 0.0826,
+    "speech_s": [
+     21.14,
+     7.42
+    ],
+    "rtf": 0.469,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Well both bonsai and mango trees, you're in the right place. Okay. Oh, wow. Okay. Yeah, I understand. Okay."
+   },
+   "660": {
+    "n_transitions": 4,
+    "fto_ms": [
+     120.0,
+     20.0,
+     220.0,
+     140.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1435,
+    "speech_s": [
+     12.82,
+     6.46
+    ],
+    "rtf": 0.483,
+    "setup_s": 0.008,
+    "text": "Hello, how is it going? Yeah, it feels like I'm swimming with a brick. Thanks. I' go first. I' fine. I just going to make it up in the clubhouse."
+   },
+   "670": {
+    "n_transitions": 4,
+    "fto_ms": [
+     180.0,
+     200.0,
+     180.0,
+     3980.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0711,
+    "speech_s": [
+     8.96,
+     6.7
+    ],
+    "rtf": 0.514,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? \"Wow, you must be really tired!\" \"That's a good idea! \" Maybe you can take a longer break later.\" What's the matter?"
+   },
+   "680": {
+    "n_transitions": 3,
+    "fto_ms": [
+     180.0,
+     100.0,
+     -100.0
+    ],
+    "overlapped": 1,
+    "within": 1,
+    "overlap_ratio": 0.0517,
+    "speech_s": [
+     10.98,
+     7.34
+    ],
+    "rtf": 0.499,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yeah, and then we can stuff it with the other ingredients. Yeah we just eat it all at once. Oh I'm sorry. Yeah, we're about to be late."
+   },
+   "690": {
+    "n_transitions": 2,
+    "fto_ms": [
+     -640.0,
+     260.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.0836,
+    "speech_s": [
+     4.98,
+     3.32
+    ],
+    "rtf": 0.521,
+    "setup_s": 0.009,
+    "text": "Hello, what's up? What's up? You're looking pretty green."
+   },
+   "700": {
+    "n_transitions": 4,
+    "fto_ms": [
+     2060.0,
+     140.0,
+     160.0,
+     180.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0113,
+    "speech_s": [
+     6.64,
+     5.86
+    ],
+    "rtf": 0.495,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Oh, okay, yeah, I'm sorry. I'm sorry. Okay. Okay. So I was just talking about..."
+   },
+   "710": {
+    "n_transitions": 11,
+    "fto_ms": [
+     200.0,
+     100.0,
+     220.0,
+     120.0,
+     140.0,
+     60.0,
+     140.0,
+     140.0,
+     -280.0,
+     100.0,
+     360.0
+    ],
+    "overlapped": 1,
+    "within": 3,
+    "overlap_ratio": 0.1421,
+    "speech_s": [
+     13.82,
+     24.92
+    ],
+    "rtf": 0.464,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Oh, this is a great place. You'll love it. Yeah, it's called Pula. Well, I'm not sure if you've heard of it or not, but I think you'll love it. Oh, I'm not sure. I'm not that good with numbers. But it's... Okay, it's 1.2. Yeah, it's 17 kilometers. Oh, 20. Oh, okay, 20. Yeah, that's it. No, I want you to get more. I want you to get three. Yeah. Oh, my goodness. Oh, I love oranges. Oh, that's perfect. Oh, my goodness. Yeah, I think that's perfect."
+   },
+   "720": {
+    "n_transitions": 5,
+    "fto_ms": [
+     -1020.0,
+     200.0,
+     120.0,
+     1300.0,
+     3440.0
+    ],
+    "overlapped": 1,
+    "within": 3,
+    "overlap_ratio": 0.204,
+    "speech_s": [
+     14.48,
+     13.14
+    ],
+    "rtf": 0.492,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yeah, I know. It's pretty bad. I was riding my bike and I hit a pothole. know. Yeah, I've been thinking about that. The doctor recommended that I don't ride my bike for a few weeks. Okay, sounds like a plan. I'll start by wearing a helmet. you have any other tips?"
+   },
+   "730": {
+    "n_transitions": 7,
+    "fto_ms": [
+     180.0,
+     -20.0,
+     160.0,
+     240.0,
+     120.0,
+     -140.0,
+     160.0
+    ],
+    "overlapped": 2,
+    "within": 0,
+    "overlap_ratio": 0.1475,
+    "speech_s": [
+     22.42,
+     19.58
+    ],
+    "rtf": 0.47,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yeah, I see it. That's the town hall, right? Ah, okay, so it's not that far. It's right near the square. Well, it's not a town hall. Oh, okay, I see. Well, I was just curious because I noticed that it was a different building from the one that I thought it was. Oh okay, so it's not a town hall. Okay, I'll make sure to check that out. Oh, I'll just get the bus. Okay, I'll get the bus."
+   },
+   "740": {
+    "n_transitions": 3,
+    "fto_ms": [
+     2980.0,
+     120.0,
+     -1060.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.224,
+    "speech_s": [
+     11.04,
+     11.8
+    ],
+    "rtf": 0.486,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yeah, it's the most popular sport in Australia. I don't think I've ever seen anyone play it well, but I do know that it's a sport that has a lot of different variations. Yeah, I'm game. Yeah, I'm good."
+   },
+   "750": {
+    "n_transitions": 5,
+    "fto_ms": [
+     120.0,
+     180.0,
+     140.0,
+     160.0,
+     120.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0191,
+    "speech_s": [
+     20.0,
+     16.24
+    ],
+    "rtf": 0.462,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Okay, let's break it down. 21 times 3 is 63. 21 times 4 is 84. Thank you so much. We're thrill to have you as a part of our celebration. Yes, please! I'm so excited to try it. Thank you so much. Thank you. I can't wait to see what you have in store for me. you soon."
+   },
+   "760": {
+    "n_transitions": 4,
+    "fto_ms": [
+     180.0,
+     200.0,
+     -900.0,
+     140.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.2218,
+    "speech_s": [
+     10.0,
+     10.16
+    ],
+    "rtf": 0.5,
+    "setup_s": 0.009,
+    "text": "Hello, what's up? Yes, I do. I'm here to discuss my bill. My name is Moshi. Thank you. How can I help you today? Thank you. Can I ask you how you're enjoying the restaurant? I see. What would you like to order?"
+   },
+   "770": {
+    "n_transitions": 4,
+    "fto_ms": [
+     260.0,
+     200.0,
+     180.0,
+     -240.0
+    ],
+    "overlapped": 1,
+    "within": 1,
+    "overlap_ratio": 0.0751,
+    "speech_s": [
+     16.68,
+     11.94
+    ],
+    "rtf": 0.464,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? I' say that I wouldn't recommend the food at this place because the food was really bad. You' welcome. What would you like to talk about? I'll see what I can do. I know some places with vegetarian options. Okay, I'll see what I can do. What are your favorite dishes?"
+   },
+   "780": {
+    "n_transitions": 3,
+    "fto_ms": [
+     20.0,
+     80.0,
+     160.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.1843,
+    "speech_s": [
+     7.06,
+     11.7
+    ],
+    "rtf": 0.538,
+    "setup_s": 0.009,
+    "text": "Hello, what's up? Okay, can you share your request? I' not sure about the specific length, but I can help you find a custom skirt. Oh, I'm sorry, I'm not sure about the charge. It usually depends on the type of fabric and the complexity of the design."
+   },
+   "790": {
+    "n_transitions": 3,
+    "fto_ms": [
+     2120.0,
+     180.0,
+     140.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0542,
+    "speech_s": [
+     11.3,
+     10.1
+    ],
+    "rtf": 0.493,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? That' right. It' a common sight here during the winter months. It' amazing how nature can turn such a beautiful colour. do you think about the snow? Oh, wow, that's impressive. you imagine living there?"
+   },
+   "800": {
+    "n_transitions": 3,
+    "fto_ms": [
+     1740.0,
+     160.0,
+     200.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.083,
+    "speech_s": [
+     9.62,
+     7.6
+    ],
+    "rtf": 0.509,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Oh, what's that? Oh, what's the highest one? Oh, yeah, sure. Oh, sorry. Yeah, I'm sorry. So, what's he doing right now? Oh, okay."
+   },
+   "810": {
+    "n_transitions": 5,
+    "fto_ms": [
+     220.0,
+     2060.0,
+     -920.0,
+     1760.0,
+     200.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.1215,
+    "speech_s": [
+     17.88,
+     8.7
+    ],
+    "rtf": 0.473,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Okay, that's interesting. Tell me more about it. Okay, what do you do with the skin? Okay, that's interesting. Interesting. So what happens to the peel after you eat it?"
+   },
+   "820": {
+    "n_transitions": 3,
+    "fto_ms": [
+     1840.0,
+     180.0,
+     100.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.1271,
+    "speech_s": [
+     8.2,
+     6.7
+    ],
+    "rtf": 0.503,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? You' welcome, what did you buy? You' welcome, I'm glad you like it. It's nice to hear you like it. What did you get it for?"
+   },
+   "830": {
+    "n_transitions": 6,
+    "fto_ms": [
+     -60.0,
+     80.0,
+     140.0,
+     7220.0,
+     -600.0,
+     220.0
+    ],
+    "overlapped": 2,
+    "within": 2,
+    "overlap_ratio": 0.1984,
+    "speech_s": [
+     8.86,
+     9.02
+    ],
+    "rtf": 0.5,
+    "setup_s": 0.009,
+    "text": "day, how are you doing? No, I'm sorry, I don't have time for a live football match. I'm busy. Okay, I'll catch up later. Okay, I'm excited to watch the match. I'm excited."
+   },
+   "840": {
+    "n_transitions": 3,
+    "fto_ms": [
+     160.0,
+     120.0,
+     1860.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.1202,
+    "speech_s": [
+     6.82,
+     10.14
+    ],
+    "rtf": 0.507,
+    "setup_s": 0.01,
+    "text": "Hello, what's up? Yeah, it's like the bottom of the ocean. Can you go there? Oh, it's pretty hot. Oh, I like all four seasons. It's not too hot, and it's not too cold, but it's like the"
+   },
+   "850": {
+    "n_transitions": 1,
+    "fto_ms": [
+     -220.0
+    ],
+    "overlapped": 1,
+    "within": 1,
+    "overlap_ratio": 0.2087,
+    "speech_s": [
+     5.96,
+     7.36
+    ],
+    "rtf": 0.538,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yes, it's a condiment commonly used in French cuisine, made from a mixture of mustard seed, water, vinegar, and other ingredients."
+   },
+   "860": {
+    "n_transitions": 4,
+    "fto_ms": [
+     20.0,
+     -100.0,
+     140.0,
+     160.0
+    ],
+    "overlapped": 1,
+    "within": 2,
+    "overlap_ratio": 0.1464,
+    "speech_s": [
+     13.08,
+     10.88
+    ],
+    "rtf": 0.472,
+    "setup_s": 0.008,
+    "text": "Hello, what's up? sounds like a great idea! The mountains are beautiful and peaceful, perfect for relaxation. That' a good time of year for a retreat. Well what other locations did you have in mind? No problem! What other ideas do you have?"
+   },
+   "870": {
+    "n_transitions": 2,
+    "fto_ms": [
+     200.0,
+     60.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.0986,
+    "speech_s": [
+     6.92,
+     4.44
+    ],
+    "rtf": 0.514,
+    "setup_s": 0.009,
+    "text": "Hello, what's up? Yeah, I'm here. What's the question? see. So, what did she say?"
+   },
+   "880": {
+    "n_transitions": 12,
+    "fto_ms": [
+     -760.0,
+     2680.0,
+     -180.0,
+     200.0,
+     200.0,
+     80.0,
+     240.0,
+     180.0,
+     160.0,
+     200.0,
+     220.0,
+     120.0
+    ],
+    "overlapped": 2,
+    "within": 2,
+    "overlap_ratio": 0.1758,
+    "speech_s": [
+     31.08,
+     18.02
+    ],
+    "rtf": 0.445,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? It's a little bit of information. There are nine. No, you weren't. No you weren't. were born in 2000. No. No, it doesn't. No, they're not. They' not. They' just not. It's not a big deal. Yeah. Yeah. No, they weren't that important. hope so. One day. Yeah. I hope so. Oh, yeah. I think so. I hope so. I hope so. Yeah. Yeah."
+   },
+   "890": {
+    "n_transitions": 10,
+    "fto_ms": [
+     -140.0,
+     220.0,
+     180.0,
+     200.0,
+     220.0,
+     140.0,
+     100.0,
+     80.0,
+     140.0,
+     120.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.0678,
+    "speech_s": [
+     29.42,
+     23.16
+    ],
+    "rtf": 0.45,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Hi, my name is Moshi. I'm looking for information about moving to the US as a student. Yes, I'm calling from the international student office. I'm interested in learning about the visa requirements for international students. Thank you. Oh, that's okay. Sure, I'll try to call back later. Thank you. 252-455-6911. Thank you. I' try to call back later. I' be available between 12pm and 1pm. Okay, thank you."
+   },
+   "900": {
+    "n_transitions": 3,
+    "fto_ms": [
+     180.0,
+     60.0,
+     220.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.0808,
+    "speech_s": [
+     6.48,
+     8.5
+    ],
+    "rtf": 0.539,
+    "setup_s": 0.009,
+    "text": "Hello, what's up? Sure, I'll drive you. Are you ready to go? Yes, it's an international airport located in the Greater Toronto Area. No problem. I'll make sure to handle it with care."
+   },
+   "910": {
+    "n_transitions": 9,
+    "fto_ms": [
+     200.0,
+     180.0,
+     160.0,
+     60.0,
+     80.0,
+     -1520.0,
+     180.0,
+     120.0,
+     80.0
+    ],
+    "overlapped": 1,
+    "within": 3,
+    "overlap_ratio": 0.1099,
+    "speech_s": [
+     33.6,
+     29.62
+    ],
+    "rtf": 0.447,
+    "setup_s": 0.008,
+    "text": "Hello, how is it going? Yeah, I did. It was a great show. Yeah, it was quite a scene. Yeah, it was a wild night. Yeah, that's right. Yeah, they're living the high life. No, they didn't win anything this year. They've been nominated multiple times, but they never won. It' kind of funny how they've never won an Oscar yet. Yeah, he's definitely good looking. Yeah, I agree. Yeah, he can be a bit unpredictable. Yeah, it's possible. They're both good looking, but maybe they're not the best actors. Yeah, it would be tough to have that kind of scrutiny. But then again, they can use it to their advantage. Yeah, we can just enjoy the show and not have to worry about the spotlight. Yeah,"
+   },
+   "920": {
+    "n_transitions": 5,
+    "fto_ms": [
+     -720.0,
+     200.0,
+     2800.0,
+     140.0,
+     -340.0
+    ],
+    "overlapped": 2,
+    "within": 2,
+    "overlap_ratio": 0.2442,
+    "speech_s": [
+     9.28,
+     6.82
+    ],
+    "rtf": 0.503,
+    "setup_s": 0.022,
+    "text": "Hello, what's up? Good morning. Can I help you with something? Both are equal. $500 or $500. $1,000. So, that's the same as $1,000."
+   },
+   "930": {
+    "n_transitions": 4,
+    "fto_ms": [
+     -480.0,
+     220.0,
+     160.0,
+     180.0
+    ],
+    "overlapped": 1,
+    "within": 2,
+    "overlap_ratio": 0.0978,
+    "speech_s": [
+     15.12,
+     5.76
+    ],
+    "rtf": 0.485,
+    "setup_s": 0.022,
+    "text": "Hello, how is it going? Thank you. It was a great trip. How was yours? Yes, I have my forms with me. Yes, I have packed everything."
+   },
+   "940": {
+    "n_transitions": 7,
+    "fto_ms": [
+     120.0,
+     -1060.0,
+     820.0,
+     180.0,
+     160.0,
+     140.0,
+     160.0
+    ],
+    "overlapped": 1,
+    "within": 2,
+    "overlap_ratio": 0.1279,
+    "speech_s": [
+     20.5,
+     19.02
+    ],
+    "rtf": 0.449,
+    "setup_s": 0.01,
+    "text": "Hello, how is it going? Sure, I'll help you. Okay, and the hotel is called? Okay, I'll look it up for you. Yeah, I'll make sure you get a room with a view of the lake. Okay, I'll look it up for you. It' 150 US dollars per night. Okay, I'll find something else for you. Okay, I'll look it up for you. Okay, I'll book it for you. I just need your credit card information. Okay, I'll book it."
+   },
+   "950": {
+    "n_transitions": 3,
+    "fto_ms": [
+     140.0,
+     140.0,
+     140.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     7.06,
+     5.22
+    ],
+    "rtf": 0.496,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Sure, I'll get the fish. Okay, then, I will get the fish. Alright then, I'll get the fish."
+   },
+   "960": {
+    "n_transitions": 7,
+    "fto_ms": [
+     -320.0,
+     40.0,
+     200.0,
+     240.0,
+     160.0,
+     200.0,
+     -1440.0
+    ],
+    "overlapped": 2,
+    "within": 1,
+    "overlap_ratio": 0.2434,
+    "speech_s": [
+     20.36,
+     28.78
+    ],
+    "rtf": 0.469,
+    "setup_s": 0.009,
+    "text": "Hello, what's up? Yes what can I help you with? I'm here to assist you. I am unable to provide assistance in such requests. I am not here to discuss personal tax information without proper authorization. I'm not here to provide such information. am not here to provide information on how much money you owe to the tax office. I am not here to provide you with specific tax information. I am not here to assist you with immigration matters. I am here to provide you with information on the available assistance and resources. I am here to provide you with assistance. Thank you for your compliment. I am here to assist you with any questions you may have."
+   },
+   "970": {
+    "n_transitions": 4,
+    "fto_ms": [
+     -500.0,
+     140.0,
+     140.0,
+     80.0
+    ],
+    "overlapped": 1,
+    "within": 2,
+    "overlap_ratio": 0.1727,
+    "speech_s": [
+     8.48,
+     7.82
+    ],
+    "rtf": 0.5,
+    "setup_s": 0.009,
+    "text": "Hello, how is it going? Yeah, I've been here for a while. I moved down to the city a few years ago. Yeah, it's been pretty good. about you? Yeah, that'd be great."
+   },
+   "980": {
+    "n_transitions": 8,
+    "fto_ms": [
+     -140.0,
+     3280.0,
+     220.0,
+     220.0,
+     200.0,
+     200.0,
+     220.0,
+     180.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.1773,
+    "speech_s": [
+     20.6,
+     12.74
+    ],
+    "rtf": 0.461,
+    "setup_s": 0.009,
+    "text": "Hello, what's up? That's not a good idea. That's an important transportation for many people. I'm just here to tell you that it's not a good thing to insult people. I' here to help you and others. You' welcome. Goodbye. I will. Goodbye. Goodbye. Thank you for being here."
+   },
+   "990": {
+    "n_transitions": 6,
+    "fto_ms": [
+     240.0,
+     120.0,
+     -720.0,
+     160.0,
+     220.0,
+     40.0
+    ],
+    "overlapped": 1,
+    "within": 1,
+    "overlap_ratio": 0.146,
+    "speech_s": [
+     8.36,
+     16.6
+    ],
+    "rtf": 0.517,
+    "setup_s": 0.016,
+    "text": "Hello, what's up? can I help you? I appreciate the offer, but I'm not comfortable with that request. If you want, we could just dance together. I understand your intentions, but I feel uncomfortable with the way you're expressing yourself. you want, we can just dance together. I understand, but I'm not comfortable with the way you're expressing yourself. If you want, we can just dance together."
+   }
+  }
+ },
+ "lora": {
+  "rung": "r5-moshi-lora",
+  "description": "R5 full duplex: Moshi (moshiko) with FT-1's LoRA -- DailyTalk, PR-010's test fold never trained on",
+  "load_s": 10.7,
+  "peak_vram_mb": 29962,
+  "machine": "Modal NVIDIA L40S, 580.95.05",
+  "commit": "3d36f74",
+  "versions": "torch 2.8.0+cu126, moshi 0.2.13",
+  "tail_s": 4.0,
+  "rows": {
+   "0": {
+    "n_transitions": 6,
+    "fto_ms": [
+     440.0,
+     380.0,
+     2280.0,
+     780.0,
+     800.0,
+     360.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1356,
+    "speech_s": [
+     7.88,
+     13.72
+    ],
+    "rtf": 0.504,
+    "setup_s": 0.012,
+    "text": "I'm planning a trip to Thailand. I'm planning to spend about 1000 yen. I'm not sure. I want to try something new. To learn something new about the Chinese people. Thanks. I didn't know that. I didn't have a budget before."
+   },
+   "10": {
+    "n_transitions": 1,
+    "fto_ms": [
+     2480.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     12.24,
+     0.88
+    ],
+    "rtf": 0.496,
+    "setup_s": 0.009,
+    "text": "Goodbye, Mary."
+   },
+   "20": {
+    "n_transitions": 2,
+    "fto_ms": [
+     1040.0,
+     2480.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.2134,
+    "speech_s": [
+     10.82,
+     6.58
+    ],
+    "rtf": 0.527,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. It's a pity, I think you're being a bit too ungrateful. Sea food, you mean?"
+   },
+   "30": {
+    "n_transitions": 3,
+    "fto_ms": [
+     1200.0,
+     1420.0,
+     1480.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0691,
+    "speech_s": [
+     7.9,
+     7.88
+    ],
+    "rtf": 0.485,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Do you get enough rest? You're right. We never think about the next day. Let's just take a shower and get some food."
+   },
+   "40": {
+    "n_transitions": 2,
+    "fto_ms": [
+     2220.0,
+     2480.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0473,
+    "speech_s": [
+     17.54,
+     4.62
+    ],
+    "rtf": 0.455,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Can I help you? Yes, I do. What else should I do?"
+   },
+   "50": {
+    "n_transitions": 5,
+    "fto_ms": [
+     520.0,
+     2200.0,
+     2460.0,
+     1600.0,
+     4520.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0155,
+    "speech_s": [
+     11.86,
+     13.08
+    ],
+    "rtf": 0.457,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. I'm busy doing research. That's what we do when we are sick. Aren't you busy on Friday? I'm afraid that I can't, Mary. I'm really busy on Tuesday. I'm sorry, Mary. I'm really busy on Wednesday. What do you have"
+   },
+   "60": {
+    "n_transitions": 3,
+    "fto_ms": [
+     460.0,
+     980.0,
+     3920.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     7.56,
+     3.92
+    ],
+    "rtf": 0.488,
+    "setup_s": 0.009,
+    "text": "Yeah, I'd be like to use the restroom. By air. I' be happy to take it."
+   },
+   "70": {
+    "n_transitions": 3,
+    "fto_ms": [
+     840.0,
+     1040.0,
+     2700.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     6.72,
+     4.26
+    ],
+    "rtf": 0.507,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Can I bring you some food? Yeah, I am. What's wrong with it?"
+   },
+   "80": {
+    "n_transitions": 2,
+    "fto_ms": [
+     860.0,
+     5540.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0028,
+    "speech_s": [
+     10.5,
+     3.98
+    ],
+    "rtf": 0.507,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Which way? I'm sorry, but you have gone in"
+   },
+   "90": {
+    "n_transitions": 5,
+    "fto_ms": [
+     1660.0,
+     1500.0,
+     2420.0,
+     1700.0,
+     2360.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1054,
+    "speech_s": [
+     18.44,
+     8.0
+    ],
+    "rtf": 0.469,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. 178 I understand. I'd like to take a little extra time. Here you are. Thank you very much. You're very helpful."
+   },
+   "100": {
+    "n_transitions": 3,
+    "fto_ms": [
+     760.0,
+     2100.0,
+     1200.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0482,
+    "speech_s": [
+     12.68,
+     7.32
+    ],
+    "rtf": 0.463,
+    "setup_s": 0.009,
+    "text": "Oh, your hair color is different. Oh, it's one of these haircuts. You're right, maybe I should do the same."
+   },
+   "110": {
+    "n_transitions": 5,
+    "fto_ms": [
+     360.0,
+     360.0,
+     2040.0,
+     2000.0,
+     4480.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1347,
+    "speech_s": [
+     18.1,
+     8.02
+    ],
+    "rtf": 0.463,
+    "setup_s": 0.009,
+    "text": "Yes, I'm one John Doe. It's going to be in two minutes. Okay, press the black button again. Thank you. I'll be waiting for your copies. I'll be waiting."
+   },
+   "120": {
+    "n_transitions": 2,
+    "fto_ms": [
+     780.0,
+     1080.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     3.82,
+     5.08
+    ],
+    "rtf": 0.517,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. I'm going to the doctor to have a check up. Just the most necessary things."
+   },
+   "130": {
+    "n_transitions": 4,
+    "fto_ms": [
+     800.0,
+     780.0,
+     960.0,
+     740.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1045,
+    "speech_s": [
+     6.12,
+     6.78
+    ],
+    "rtf": 0.526,
+    "setup_s": 0.009,
+    "text": "She's a pretty girl. No, she goes to good college. She wants to be a professor. Physics, chemistry, and math."
+   },
+   "140": {
+    "n_transitions": 1,
+    "fto_ms": [
+     6300.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1253,
+    "speech_s": [
+     6.68,
+     2.66
+    ],
+    "rtf": 0.5,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. You're having a sale."
+   },
+   "150": {
+    "n_transitions": 2,
+    "fto_ms": [
+     560.0,
+     660.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.019,
+    "speech_s": [
+     16.72,
+     3.66
+    ],
+    "rtf": 0.466,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Sure, what's wrong? What's wrong with it? I It"
+   },
+   "160": {
+    "n_transitions": 4,
+    "fto_ms": [
+     380.0,
+     1400.0,
+     1320.0,
+     1760.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.0244,
+    "speech_s": [
+     29.8,
+     7.08
+    ],
+    "rtf": 0.453,
+    "setup_s": 0.009,
+    "text": "Oh, yes, this is Max. What's your name? I never knew that. I'm with you there. Oh, I agree with you. Cats are the best"
+   },
+   "170": {
+    "n_transitions": 3,
+    "fto_ms": [
+     740.0,
+     1120.0,
+     720.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0255,
+    "speech_s": [
+     18.48,
+     4.04
+    ],
+    "rtf": 0.46,
+    "setup_s": 0.009,
+    "text": "Nothing much. I still have a couple. No. Why?"
+   },
+   "180": {
+    "n_transitions": 4,
+    "fto_ms": [
+     1420.0,
+     1360.0,
+     2500.0,
+     2780.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0302,
+    "speech_s": [
+     15.4,
+     9.2
+    ],
+    "rtf": 0.468,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. What's the problem? How about that? That's because I had to be at the office until 9pm. I told you, I had to be at the office."
+   },
+   "190": {
+    "n_transitions": 4,
+    "fto_ms": [
+     360.0,
+     500.0,
+     280.0,
+     2660.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1582,
+    "speech_s": [
+     10.2,
+     11.76
+    ],
+    "rtf": 0.5,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. How about a tree tea? I'll have the pound pound and half, and don' forget the coffee. I like the thin, flat, thin, sliced. Please, I'd like to get it at the same time."
+   },
+   "200": {
+    "n_transitions": 2,
+    "fto_ms": [
+     1920.0,
+     3320.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0801,
+    "speech_s": [
+     4.98,
+     5.0
+    ],
+    "rtf": 0.519,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. I recommend taking a little rest. It's the best thing for you."
+   },
+   "210": {
+    "n_transitions": 2,
+    "fto_ms": [
+     4540.0,
+     4280.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     8.7,
+     2.26
+    ],
+    "rtf": 0.499,
+    "setup_s": 0.009,
+    "text": "Sorry, we already had lunch. Can we"
+   },
+   "220": {
+    "n_transitions": 3,
+    "fto_ms": [
+     4700.0,
+     2840.0,
+     2120.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.005,
+    "speech_s": [
+     14.02,
+     2.2
+    ],
+    "rtf": 0.483,
+    "setup_s": 0.01,
+    "text": "Um, just now. I'm so mad."
+   },
+   "230": {
+    "n_transitions": 6,
+    "fto_ms": [
+     400.0,
+     360.0,
+     1300.0,
+     880.0,
+     1400.0,
+     1480.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0945,
+    "speech_s": [
+     10.38,
+     10.94
+    ],
+    "rtf": 0.478,
+    "setup_s": 0.009,
+    "text": "Certainly, what do you need? Uh, do you know how much it weighs? Hmm, it's too much. Just walk over to my desk. It should be delivered tomorrow morning. Here you are. You're welcome. Have a good one, ma'am."
+   },
+   "240": {
+    "n_transitions": 4,
+    "fto_ms": [
+     660.0,
+     1200.0,
+     1640.0,
+     980.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0173,
+    "speech_s": [
+     21.36,
+     9.18
+    ],
+    "rtf": 0.455,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. It's only 90 dollars. The price is 60 dollars. Well, we can give you a good deal if you buy this dress. This is a first class store."
+   },
+   "250": {
+    "n_transitions": 0,
+    "fto_ms": [],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     6.66,
+     0
+    ],
+    "rtf": 0.539,
+    "setup_s": 0.01,
+    "text": ""
+   },
+   "260": {
+    "n_transitions": 3,
+    "fto_ms": [
+     1780.0,
+     2020.0,
+     3580.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     8.06,
+     4.46
+    ],
+    "rtf": 0.49,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. What about some fresh flowers? Thanks. Oh, I didn'"
+   },
+   "270": {
+    "n_transitions": 5,
+    "fto_ms": [
+     1420.0,
+     680.0,
+     1660.0,
+     2760.0,
+     780.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1388,
+    "speech_s": [
+     13.3,
+     16.08
+    ],
+    "rtf": 0.482,
+    "setup_s": 0.009,
+    "text": "I'm sorry, I can't let you in the room now. I'm afraid it's full. We have a rule against smoking in the hotel. It would be $200 for a 90-minute time. You can pay with cash. Here is an envelope for your request."
+   },
+   "280": {
+    "n_transitions": 5,
+    "fto_ms": [
+     1320.0,
+     1020.0,
+     620.0,
+     980.0,
+     1700.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.05,
+    "speech_s": [
+     19.56,
+     10.24
+    ],
+    "rtf": 0.46,
+    "setup_s": 0.008,
+    "text": "You look a bit tired today. That's a very good deal. That's quite a reduction in price. I'll give you a gift card, but there's something wrong with the laptop. What kind of warranty does it come with? Thank you very much."
+   },
+   "290": {
+    "n_transitions": 3,
+    "fto_ms": [
+     600.0,
+     780.0,
+     700.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0076,
+    "speech_s": [
+     11.76,
+     9.52
+    ],
+    "rtf": 0.486,
+    "setup_s": 0.009,
+    "text": "What kind of ticket are you looking for? What's your name? Okay, which airline do you want to fly? You've got a tough choice. Some airlines are much cheaper, but run faster."
+   },
+   "300": {
+    "n_transitions": 4,
+    "fto_ms": [
+     1500.0,
+     1540.0,
+     1400.0,
+     3660.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1758,
+    "speech_s": [
+     11.3,
+     11.04
+    ],
+    "rtf": 0.481,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. You can't. The file on paper is still under the pen. The reasonable number for a public library is three. You have to follow the instructions on the paper. You're welcome."
+   },
+   "310": {
+    "n_transitions": 1,
+    "fto_ms": [
+     2800.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     15.04,
+     1.76
+    ],
+    "rtf": 0.488,
+    "setup_s": 0.01,
+    "text": "I'd like to buy a camera too."
+   },
+   "320": {
+    "n_transitions": 5,
+    "fto_ms": [
+     620.0,
+     800.0,
+     1460.0,
+     780.0,
+     1820.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     12.1,
+     9.82
+    ],
+    "rtf": 0.465,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Is there anything wrong? 4-20? Your flight is still on time. Are you sure your flight is on time? I really don't know, but I'll look it up for you. I'm sorry, but I still don't know."
+   },
+   "330": {
+    "n_transitions": 2,
+    "fto_ms": [
+     1080.0,
+     440.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.056,
+    "speech_s": [
+     4.62,
+     3.3
+    ],
+    "rtf": 0.566,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. No, I have both. Sure."
+   },
+   "340": {
+    "n_transitions": 3,
+    "fto_ms": [
+     820.0,
+     840.0,
+     5040.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0442,
+    "speech_s": [
+     30.58,
+     7.7
+    ],
+    "rtf": 0.447,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. A little tired, but I feel that I should be more tired. You're too kind. I'm not that cold. Okay."
+   },
+   "350": {
+    "n_transitions": 3,
+    "fto_ms": [
+     1460.0,
+     2640.0,
+     860.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0304,
+    "speech_s": [
+     18.16,
+     5.56
+    ],
+    "rtf": 0.472,
+    "setup_s": 0.008,
+    "text": "You look a bit tired today. Here it is. Visa is fine. Just Perfect. What's your room number, please?"
+   },
+   "360": {
+    "n_transitions": 3,
+    "fto_ms": [
+     600.0,
+     460.0,
+     1560.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0281,
+    "speech_s": [
+     6.1,
+     4.16
+    ],
+    "rtf": 0.539,
+    "setup_s": 0.01,
+    "text": "$7.50 each. Yes, we do. There are too many. They're not valuable."
+   },
+   "370": {
+    "n_transitions": 2,
+    "fto_ms": [
+     1700.0,
+     1620.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1694,
+    "speech_s": [
+     6.02,
+     3.92
+    ],
+    "rtf": 0.53,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. You're always so perky. How did you do it?"
+   },
+   "380": {
+    "n_transitions": 4,
+    "fto_ms": [
+     1080.0,
+     700.0,
+     1460.0,
+     1580.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.242,
+    "speech_s": [
+     12.64,
+     9.74
+    ],
+    "rtf": 0.483,
+    "setup_s": 0.009,
+    "text": "No, I don't like jazz very much. Well, I'm glad you like him. I like rock music, you know. Well, I've always been a fan of Led Zeppelin."
+   },
+   "390": {
+    "n_transitions": 3,
+    "fto_ms": [
+     1140.0,
+     7880.0,
+     2180.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0233,
+    "speech_s": [
+     7.48,
+     3.06
+    ],
+    "rtf": 0.487,
+    "setup_s": 0.009,
+    "text": "I bit 500 yen. You're joking. That's a lot of work."
+   },
+   "400": {
+    "n_transitions": 2,
+    "fto_ms": [
+     1440.0,
+     2920.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1547,
+    "speech_s": [
+     5.66,
+     3.0
+    ],
+    "rtf": 0.529,
+    "setup_s": 0.009,
+    "text": "Um, yes, sorry, we ran out of that."
+   },
+   "410": {
+    "n_transitions": 8,
+    "fto_ms": [
+     600.0,
+     700.0,
+     800.0,
+     380.0,
+     3300.0,
+     1020.0,
+     1880.0,
+     900.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0636,
+    "speech_s": [
+     29.2,
+     17.62
+    ],
+    "rtf": 0.444,
+    "setup_s": 0.008,
+    "text": "You look a bit tired today. Sure, what is it? Yes, we do. What if there's no funds left? Yes. Yes, it is. What's next? I'm not a father, so I not particularly interested. We offer up to six months. We don' think that's necessary. We think that women who are fathers should get the same amount of time. Here you go."
+   },
+   "420": {
+    "n_transitions": 4,
+    "fto_ms": [
+     720.0,
+     380.0,
+     820.0,
+     2640.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     6.58,
+     12.42
+    ],
+    "rtf": 0.494,
+    "setup_s": 0.009,
+    "text": "The plants are doing well, we've got them outdoors, yes, we've been talking to the pastor about the date and time. We're planning to, but we're not sure exactly where to have it. We've been thinking about it for so long,"
+   },
+   "430": {
+    "n_transitions": 10,
+    "fto_ms": [
+     400.0,
+     580.0,
+     520.0,
+     1040.0,
+     560.0,
+     600.0,
+     960.0,
+     1500.0,
+     520.0,
+     1980.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     44.2,
+     11.32
+    ],
+    "rtf": 0.447,
+    "setup_s": 0.009,
+    "text": "I want to buy a digital camera. Um, the 80mm room? Can I have a look? Hmm, okay, how many nights? Thank you. How do I pay? Okay, is there a cancellation policy? Thank you. Thank you. Goodbye."
+   },
+   "440": {
+    "n_transitions": 4,
+    "fto_ms": [
+     620.0,
+     880.0,
+     680.0,
+     700.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0042,
+    "speech_s": [
+     11.42,
+     7.9
+    ],
+    "rtf": 0.485,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Why? You mean, miss win, lose, or tie? Let's change the subject. Do you think my face is in good shape?"
+   },
+   "450": {
+    "n_transitions": 6,
+    "fto_ms": [
+     2040.0,
+     1700.0,
+     1140.0,
+     1000.0,
+     780.0,
+     480.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.0202,
+    "speech_s": [
+     19.92,
+     13.38
+    ],
+    "rtf": 0.458,
+    "setup_s": 0.008,
+    "text": "No, I'm sorry. I'm reading about how to lose weight and get in good health. I'm not sure. I'm not very fit. I need to lose weight. It was about a sport called mini-ten. It's quite popular in England, I think. Okay, but it's interesting."
+   },
+   "460": {
+    "n_transitions": 3,
+    "fto_ms": [
+     1860.0,
+     1720.0,
+     1800.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0109,
+    "speech_s": [
+     17.54,
+     6.56
+    ],
+    "rtf": 0.458,
+    "setup_s": 0.008,
+    "text": "You look a bit tired today. Oh, man, you've got to be kidding me. Yeah, you're a hero. What a beautiful sight."
+   },
+   "470": {
+    "n_transitions": 3,
+    "fto_ms": [
+     -1240.0,
+     3420.0,
+     1800.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.0684,
+    "speech_s": [
+     12.94,
+     6.42
+    ],
+    "rtf": 0.488,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. How long have you been going? Why do you go there? That's a lot. How do you plan to get things done today?"
+   },
+   "480": {
+    "n_transitions": 4,
+    "fto_ms": [
+     1140.0,
+     760.0,
+     1140.0,
+     1640.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0427,
+    "speech_s": [
+     19.52,
+     11.72
+    ],
+    "rtf": 0.46,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Yes, I think we can. I think we'll drive. Maybe we can listen to some music. Okay, if you don't like music, we'll just walk. That's no sleep."
+   },
+   "490": {
+    "n_transitions": 5,
+    "fto_ms": [
+     1340.0,
+     1960.0,
+     440.0,
+     1580.0,
+     1660.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.165,
+    "speech_s": [
+     25.94,
+     8.52
+    ],
+    "rtf": 0.464,
+    "setup_s": 0.009,
+    "text": "Yes, I'd like to check my suitcase, I am. I've got to be at the airport tomorrow evening. Thanks, I'll be right back. I can't continue on like this."
+   },
+   "500": {
+    "n_transitions": 3,
+    "fto_ms": [
+     960.0,
+     1340.0,
+     1080.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     12.3,
+     8.08
+    ],
+    "rtf": 0.48,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. You know what? I can help you. Well, I'm an English teacher, and I have been to many auctions. Really? I'd like to know."
+   },
+   "510": {
+    "n_transitions": 3,
+    "fto_ms": [
+     700.0,
+     600.0,
+     1900.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     10.22,
+     6.44
+    ],
+    "rtf": 0.498,
+    "setup_s": 0.009,
+    "text": "Everywhere I look, there's a bank robbery. But it's not a good thing. But it's difficult to meet the changing times."
+   },
+   "520": {
+    "n_transitions": 3,
+    "fto_ms": [
+     560.0,
+     4280.0,
+     2960.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0652,
+    "speech_s": [
+     13.06,
+     6.54
+    ],
+    "rtf": 0.481,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. What are you going to do now? You should get some rest. It's great to have good weather for a while."
+   },
+   "530": {
+    "n_transitions": 2,
+    "fto_ms": [
+     1240.0,
+     460.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     14.72,
+     6.34
+    ],
+    "rtf": 0.485,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Have you been working too hard on that computer? Yes, I've heard it said a million times."
+   },
+   "540": {
+    "n_transitions": 3,
+    "fto_ms": [
+     720.0,
+     2160.0,
+     2400.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0083,
+    "speech_s": [
+     13.1,
+     3.84
+    ],
+    "rtf": 0.489,
+    "setup_s": 0.009,
+    "text": "I'd be happy to! You're too kind! What No, they'll be fine as long"
+   },
+   "550": {
+    "n_transitions": 4,
+    "fto_ms": [
+     560.0,
+     2400.0,
+     1840.0,
+     1260.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     8.84,
+     10.6
+    ],
+    "rtf": 0.47,
+    "setup_s": 0.01,
+    "text": "You look a bit tired today. I've heard that a good warm bath in a hot tub can help. You've never been in a hot tub before? You can have a good warm bath. It's the best way to get rid of the flu you have."
+   },
+   "560": {
+    "n_transitions": 1,
+    "fto_ms": [
+     960.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0091,
+    "speech_s": [
+     9.48,
+     3.88
+    ],
+    "rtf": 0.501,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. That's no problem. When did you check in?"
+   },
+   "570": {
+    "n_transitions": 7,
+    "fto_ms": [
+     440.0,
+     640.0,
+     2060.0,
+     1120.0,
+     1240.0,
+     700.0,
+     1160.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0656,
+    "speech_s": [
+     18.08,
+     12.12
+    ],
+    "rtf": 0.466,
+    "setup_s": 0.009,
+    "text": "Yes, I'm looking for a camera. I have a Canon 10D. I don' think I'm interested in that car. I'm afraid I'll have to call it quits. I'm afraid that I'll never get back here. That's a lot of money. You're welcome."
+   },
+   "580": {
+    "n_transitions": 2,
+    "fto_ms": [
+     1880.0,
+     1180.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1031,
+    "speech_s": [
+     10.14,
+     3.34
+    ],
+    "rtf": 0.499,
+    "setup_s": 0.008,
+    "text": "Yes, Mrs. Dotson, how long have I been talking? Hmm,"
+   },
+   "590": {
+    "n_transitions": 5,
+    "fto_ms": [
+     400.0,
+     600.0,
+     800.0,
+     2040.0,
+     3300.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0941,
+    "speech_s": [
+     8.9,
+     5.52
+    ],
+    "rtf": 0.491,
+    "setup_s": 0.008,
+    "text": "Um, I'd like to try this sandwich for first here. Medium, please. No, that's all. Here's my credit card. You, too."
+   },
+   "600": {
+    "n_transitions": 2,
+    "fto_ms": [
+     1100.0,
+     6440.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0173,
+    "speech_s": [
+     14.5,
+     3.1
+    ],
+    "rtf": 0.477,
+    "setup_s": 0.008,
+    "text": "What's the matter? Can't you wait a little longer? Of course, no"
+   },
+   "610": {
+    "n_transitions": 5,
+    "fto_ms": [
+     640.0,
+     820.0,
+     3240.0,
+     1060.0,
+     1460.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0293,
+    "speech_s": [
+     26.96,
+     9.54
+    ],
+    "rtf": 0.453,
+    "setup_s": 0.009,
+    "text": "Yeah, I've heard about it, but I don' really want to live in a posh area. Oh, are you happy living there? Do you live in the third floor or something? Really? How would you travel to work then?"
+   },
+   "620": {
+    "n_transitions": 5,
+    "fto_ms": [
+     2120.0,
+     1480.0,
+     1660.0,
+     1220.0,
+     1240.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0258,
+    "speech_s": [
+     21.0,
+     14.02
+    ],
+    "rtf": 0.454,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. I'm just trying to take a hike every morning. You look like a ghost. I think you're just too worn out. I'm collecting souvenirs. I want to get a piece of everything. No, but I've seen some interesting things. That's for me to figure out. Thank you."
+   },
+   "630": {
+    "n_transitions": 2,
+    "fto_ms": [
+     1240.0,
+     1460.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     15.46,
+     7.52
+    ],
+    "rtf": 0.474,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Um, just a moment. I'm pretending to find out for you. Here's the track. It's on the way. I'll tell you when it comes."
+   },
+   "640": {
+    "n_transitions": 1,
+    "fto_ms": [
+     380.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     9.0,
+     1.42
+    ],
+    "rtf": 0.515,
+    "setup_s": 0.009,
+    "text": ""
+   },
+   "650": {
+    "n_transitions": 6,
+    "fto_ms": [
+     1340.0,
+     1620.0,
+     1660.0,
+     1380.0,
+     1380.0,
+     1480.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0589,
+    "speech_s": [
+     21.14,
+     10.88
+    ],
+    "rtf": 0.462,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Really? How is it going? Oh, that's too bad. I've had one taste. I'll wait until I'm in the produce section. Maybe they eat a lot of sweet fruits."
+   },
+   "660": {
+    "n_transitions": 3,
+    "fto_ms": [
+     1460.0,
+     1380.0,
+     1020.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0455,
+    "speech_s": [
+     12.82,
+     8.78
+    ],
+    "rtf": 0.476,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Are you sure you're used to this game? Oh, I think I'm going to have to go back to the club. I'm sure you'll miss this hole."
+   },
+   "670": {
+    "n_transitions": 1,
+    "fto_ms": [
+     2520.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     8.96,
+     3.7
+    ],
+    "rtf": 0.512,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Then you should take your sandwich to"
+   },
+   "680": {
+    "n_transitions": 2,
+    "fto_ms": [
+     1620.0,
+     1800.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0955,
+    "speech_s": [
+     10.98,
+     7.38
+    ],
+    "rtf": 0.491,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Alright, but I want to eat a healthy meal today. I've had enough of these raw fishes."
+   },
+   "690": {
+    "n_transitions": 4,
+    "fto_ms": [
+     540.0,
+     900.0,
+     1780.0,
+     6040.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     4.98,
+     3.82
+    ],
+    "rtf": 0.514,
+    "setup_s": 0.009,
+    "text": "you really don't look it. How have you been feeling? I'm so sorry to hear"
+   },
+   "700": {
+    "n_transitions": 1,
+    "fto_ms": [
+     1300.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     6.64,
+     3.36
+    ],
+    "rtf": 0.491,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Okay, what's the matter with him?"
+   },
+   "710": {
+    "n_transitions": 8,
+    "fto_ms": [
+     720.0,
+     780.0,
+     620.0,
+     800.0,
+     1220.0,
+     1880.0,
+     1140.0,
+     1380.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0165,
+    "speech_s": [
+     13.82,
+     13.24
+    ],
+    "rtf": 0.464,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Nothing. I just thought you might need a little rest. I'd like a cup of coffee. A 1.5 liter cup, A one and a half. No. A gallon? Yes. I think that will be enough. Can you please put it in the icebox?"
+   },
+   "720": {
+    "n_transitions": 1,
+    "fto_ms": [
+     820.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0558,
+    "speech_s": [
+     14.48,
+     2.92
+    ],
+    "rtf": 0.49,
+    "setup_s": 0.009,
+    "text": "Okay, but I have a deep conditioner at home."
+   },
+   "730": {
+    "n_transitions": 4,
+    "fto_ms": [
+     520.0,
+     3380.0,
+     1160.0,
+     780.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0007,
+    "speech_s": [
+     22.42,
+     5.96
+    ],
+    "rtf": 0.46,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Yes, I see it. Really? I've been there before. A cab is going to be too expensive."
+   },
+   "740": {
+    "n_transitions": 5,
+    "fto_ms": [
+     720.0,
+     1620.0,
+     2440.0,
+     660.0,
+     2500.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1202,
+    "speech_s": [
+     11.04,
+     11.32
+    ],
+    "rtf": 0.477,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Really? It's pretty hard. Is it your first time? It's true that most people can play it at this point. It's hard not to do sports when I live in the city. I'm just too weak. I've"
+   },
+   "750": {
+    "n_transitions": 4,
+    "fto_ms": [
+     740.0,
+     1520.0,
+     520.0,
+     1820.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0248,
+    "speech_s": [
+     20.0,
+     10.58
+    ],
+    "rtf": 0.459,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. How were your exams? Thank you. I'd like to bring you a new batch of flowers. Yes, please. I'd like to thank you again for this gift. Thank you."
+   },
+   "760": {
+    "n_transitions": 4,
+    "fto_ms": [
+     -780.0,
+     1220.0,
+     2500.0,
+     2720.0
+    ],
+    "overlapped": 1,
+    "within": 0,
+    "overlap_ratio": 0.2454,
+    "speech_s": [
+     10.0,
+     6.34
+    ],
+    "rtf": 0.496,
+    "setup_s": 0.009,
+    "text": "Can I help you? I'm looking for the fish and scallops. Yes, I'd like to table for two, please. Yes, I think so. Thank you."
+   },
+   "770": {
+    "n_transitions": 5,
+    "fto_ms": [
+     980.0,
+     6660.0,
+     880.0,
+     1060.0,
+     2740.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.102,
+    "speech_s": [
+     16.68,
+     14.22
+    ],
+    "rtf": 0.459,
+    "setup_s": 0.01,
+    "text": "You look a bit tired today. Maybe a change of scenery would do you good. I'll pop in a message for your boss. I' sorry, but the restaurant you're in is a Chinese restaurant. Okay, I found it for you. It's a fresh and delicious vegetable dish. Come on, you won't regret it."
+   },
+   "780": {
+    "n_transitions": 3,
+    "fto_ms": [
+     680.0,
+     740.0,
+     660.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1487,
+    "speech_s": [
+     7.06,
+     5.76
+    ],
+    "rtf": 0.529,
+    "setup_s": 0.009,
+    "text": "How do you want to size it? I'm afraid that won't be possible. It'll take about two weeks. About 500 yen."
+   },
+   "790": {
+    "n_transitions": 3,
+    "fto_ms": [
+     600.0,
+     2660.0,
+     1300.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1159,
+    "speech_s": [
+     11.3,
+     7.18
+    ],
+    "rtf": 0.488,
+    "setup_s": 0.008,
+    "text": "You look a bit tired today. What have you done today? It's a shame that we have to clear the snow to make way for us. I've got nothing to do today."
+   },
+   "800": {
+    "n_transitions": 3,
+    "fto_ms": [
+     860.0,
+     1320.0,
+     1960.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0415,
+    "speech_s": [
+     9.62,
+     6.44
+    ],
+    "rtf": 0.508,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. Yes, but I can't help you this time. No, sorry. Sorry, I'm busy at the moment."
+   },
+   "810": {
+    "n_transitions": 6,
+    "fto_ms": [
+     960.0,
+     1620.0,
+     1440.0,
+     1200.0,
+     800.0,
+     760.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.164,
+    "speech_s": [
+     17.88,
+     13.2
+    ],
+    "rtf": 0.477,
+    "setup_s": 0.008,
+    "text": "You look a bit tired today. Oh, that's the reason. You must be tired. Are you all right? It's no problem. I see. You have to do that. I see. What else is there to do? What are the fruits?"
+   },
+   "820": {
+    "n_transitions": 1,
+    "fto_ms": [
+     2740.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     8.2,
+     4.48
+    ],
+    "rtf": 0.499,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. You want to wear it to the ceremony and party."
+   },
+   "830": {
+    "n_transitions": 5,
+    "fto_ms": [
+     960.0,
+     1340.0,
+     940.0,
+     1340.0,
+     2620.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0154,
+    "speech_s": [
+     8.86,
+     5.68
+    ],
+    "rtf": 0.489,
+    "setup_s": 0.009,
+    "text": "I'm afraid I can't go. I promised to stay at the library. What a nice one."
+   },
+   "840": {
+    "n_transitions": 3,
+    "fto_ms": [
+     500.0,
+     660.0,
+     400.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1149,
+    "speech_s": [
+     6.82,
+     8.12
+    ],
+    "rtf": 0.505,
+    "setup_s": 0.009,
+    "text": "Yes, I think not. It's mostly cold and we do get lot of days of snow. Um, I'd say it's like this time of"
+   },
+   "850": {
+    "n_transitions": 3,
+    "fto_ms": [
+     320.0,
+     440.0,
+     1160.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     5.96,
+     6.04
+    ],
+    "rtf": 0.544,
+    "setup_s": 0.009,
+    "text": "You look a bit tired today. What's the matter? I remember now. You have it to give your visit. You don't have to get well."
+   },
+   "860": {
+    "n_transitions": 2,
+    "fto_ms": [
+     1980.0,
+     960.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     13.08,
+     4.72
+    ],
+    "rtf": 0.464,
+    "setup_s": 0.009,
+    "text": "What is it about this month that you like so well? Well, what about the end of the year?"
+   },
+   "870": {
+    "n_transitions": 3,
+    "fto_ms": [
+     600.0,
+     1100.0,
+     5120.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0205,
+    "speech_s": [
+     6.92,
+     6.02
+    ],
+    "rtf": 0.507,
+    "setup_s": 0.009,
+    "text": "It's beyond comprehension. I should have known it. You're right. Let's go somewhere where"
+   },
+   "880": {
+    "n_transitions": 7,
+    "fto_ms": [
+     1920.0,
+     1060.0,
+     2920.0,
+     4640.0,
+     1700.0,
+     400.0,
+     5200.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0497,
+    "speech_s": [
+     31.08,
+     17.9
+    ],
+    "rtf": 0.443,
+    "setup_s": 0.01,
+    "text": "You look a bit tired today. You've been putting in a lot of hours lately. No, but I mean, if you're not tired, you should take some time off. You're not far wrong. But you're human, aren't you? You're so melancholy. It's a bit of a dream, but it's not as far-off as you might think. I'd like to say, maybe. Um, that's true. I'm sorry."
+   },
+   "890": {
+    "n_transitions": 1,
+    "fto_ms": [
+     4500.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0503,
+    "speech_s": [
+     29.42,
+     1.9
+    ],
+    "rtf": 0.452,
+    "setup_s": 0.012,
+    "text": "I'd like to speak with Miss Tom."
+   },
+   "900": {
+    "n_transitions": 2,
+    "fto_ms": [
+     460.0,
+     1440.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0399,
+    "speech_s": [
+     6.48,
+     3.94
+    ],
+    "rtf": 0.542,
+    "setup_s": 0.01,
+    "text": "Are you a passenger? This is a taxi. That's the location of the airport."
+   },
+   "910": {
+    "n_transitions": 7,
+    "fto_ms": [
+     620.0,
+     820.0,
+     360.0,
+     1820.0,
+     2820.0,
+     1000.0,
+     2780.0
+    ],
+    "overlapped": 0,
+    "within": 1,
+    "overlap_ratio": 0.0414,
+    "speech_s": [
+     33.6,
+     13.68
+    ],
+    "rtf": 0.445,
+    "setup_s": 0.008,
+    "text": "Um, no, I was so busy. Mmm, what a pity. I'm sure they have a great time. No, they didn't. It's a shame. Yeah, I see what you mean. It's interesting that you say that. Hmm, you're probably right. Although,"
+   },
+   "920": {
+    "n_transitions": 4,
+    "fto_ms": [
+     420.0,
+     520.0,
+     940.0,
+     2120.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0059,
+    "speech_s": [
+     9.28,
+     7.68
+    ],
+    "rtf": 0.498,
+    "setup_s": 0.01,
+    "text": "Yes, I'd like to buy some apples. By credit. How bad is charge? I don't want to carry all these bags."
+   },
+   "930": {
+    "n_transitions": 1,
+    "fto_ms": [
+     1220.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     15.12,
+     1.58
+    ],
+    "rtf": 0.486,
+    "setup_s": 0.009,
+    "text": "Yes, we are all ready."
+   },
+   "940": {
+    "n_transitions": 4,
+    "fto_ms": [
+     1480.0,
+     1240.0,
+     1100.0,
+     1840.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0307,
+    "speech_s": [
+     20.5,
+     10.34
+    ],
+    "rtf": 0.448,
+    "setup_s": 0.008,
+    "text": "You look a bit tired today. What's your favorite resort? Can I take your name? $22 in broad. I'm sorry, but we're sorry. There's no free breakfast included in the resort."
+   },
+   "950": {
+    "n_transitions": 3,
+    "fto_ms": [
+     1600.0,
+     2760.0,
+     2560.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.1463,
+    "speech_s": [
+     7.06,
+     6.42
+    ],
+    "rtf": 0.494,
+    "setup_s": 0.008,
+    "text": "You look a bit tired today. Come on, eat something! Fine, but I' not interested in the meat. Fine, I'm not interested"
+   },
+   "960": {
+    "n_transitions": 5,
+    "fto_ms": [
+     620.0,
+     1300.0,
+     1620.0,
+     2240.0,
+     2400.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0639,
+    "speech_s": [
+     20.36,
+     9.28
+    ],
+    "rtf": 0.464,
+    "setup_s": 0.009,
+    "text": "Do you have any eyeglasses? I want sunglasses. I have no money with me. What's the trade value of these items? Could you show me where to buy some department store clothes?"
+   },
+   "970": {
+    "n_transitions": 5,
+    "fto_ms": [
+     860.0,
+     1280.0,
+     560.0,
+     460.0,
+     420.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0764,
+    "speech_s": [
+     8.48,
+     9.28
+    ],
+    "rtf": 0.49,
+    "setup_s": 0.009,
+    "text": "It's over two years. No, I'm still working at the bank. I was in South Africa for almost two years. Yes, I'd like to get a foreign partner. Sure."
+   },
+   "980": {
+    "n_transitions": 7,
+    "fto_ms": [
+     460.0,
+     520.0,
+     1020.0,
+     1280.0,
+     2080.0,
+     1000.0,
+     2400.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0224,
+    "speech_s": [
+     20.6,
+     10.42
+    ],
+    "rtf": 0.462,
+    "setup_s": 0.01,
+    "text": "It's a real pleasure to have you with us. Um, I'm sure you'll make it. It's too charming for a person. You're very welcome. Of course! Goodbye, Mary! I'll do my best. Goodbye, Mary."
+   },
+   "990": {
+    "n_transitions": 5,
+    "fto_ms": [
+     780.0,
+     640.0,
+     960.0,
+     2620.0,
+     860.0
+    ],
+    "overlapped": 0,
+    "within": 0,
+    "overlap_ratio": 0.0,
+    "speech_s": [
+     8.36,
+     5.96
+    ],
+    "rtf": 0.497,
+    "setup_s": 0.009,
+    "text": "Sure, I'll make it my pleasure. You don't have to do that. All right, okay. Didn' you say you couldn't dance?"
+   }
+  }
+ },
+ "reference": {
+  "0": {
+   "n_transitions": 6,
+   "fto_ms": [
+    360.0,
+    400.0,
+    360.0,
+    260.0,
+    380.0,
+    280.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    7.88,
+    11.12
+   ]
+  },
+  "10": {
+   "n_transitions": 6,
+   "fto_ms": [
+    460.0,
+    280.0,
+    200.0,
+    520.0,
+    320.0,
+    540.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    12.24,
+    5.3
+   ]
+  },
+  "20": {
+   "n_transitions": 2,
+   "fto_ms": [
+    220.0,
+    680.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    10.36,
+    4.52
+   ]
+  },
+  "30": {
+   "n_transitions": 4,
+   "fto_ms": [
+    640.0,
+    520.0,
+    620.0,
+    600.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    7.9,
+    11.56
+   ]
+  },
+  "40": {
+   "n_transitions": 6,
+   "fto_ms": [
+    500.0,
+    560.0,
+    560.0,
+    420.0,
+    1040.0,
+    440.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    17.54,
+    25.52
+   ]
+  },
+  "50": {
+   "n_transitions": 6,
+   "fto_ms": [
+    220.0,
+    840.0,
+    400.0,
+    320.0,
+    700.0,
+    180.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    11.86,
+    25.32
+   ]
+  },
+  "60": {
+   "n_transitions": 4,
+   "fto_ms": [
+    320.0,
+    260.0,
+    400.0,
+    460.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    7.54,
+    13.72
+   ]
+  },
+  "70": {
+   "n_transitions": 3,
+   "fto_ms": [
+    520.0,
+    480.0,
+    420.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    6.72,
+    6.6
+   ]
+  },
+  "80": {
+   "n_transitions": 2,
+   "fto_ms": [
+    180.0,
+    180.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    10.5,
+    6.22
+   ]
+  },
+  "90": {
+   "n_transitions": 6,
+   "fto_ms": [
+    900.0,
+    820.0,
+    480.0,
+    320.0,
+    440.0,
+    600.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    18.42,
+    13.24
+   ]
+  },
+  "100": {
+   "n_transitions": 4,
+   "fto_ms": [
+    820.0,
+    420.0,
+    360.0,
+    1020.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    12.68,
+    14.98
+   ]
+  },
+  "110": {
+   "n_transitions": 7,
+   "fto_ms": [
+    340.0,
+    360.0,
+    280.0,
+    360.0,
+    260.0,
+    420.0,
+    360.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    18.08,
+    16.28
+   ]
+  },
+  "120": {
+   "n_transitions": 2,
+   "fto_ms": [
+    80.0,
+    100.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    3.78,
+    9.96
+   ]
+  },
+  "130": {
+   "n_transitions": 4,
+   "fto_ms": [
+    200.0,
+    260.0,
+    240.0,
+    300.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    6.1,
+    7.7
+   ]
+  },
+  "140": {
+   "n_transitions": 3,
+   "fto_ms": [
+    340.0,
+    460.0,
+    340.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    6.68,
+    11.3
+   ]
+  },
+  "150": {
+   "n_transitions": 8,
+   "fto_ms": [
+    340.0,
+    180.0,
+    400.0,
+    300.0,
+    220.0,
+    280.0,
+    280.0,
+    280.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    16.72,
+    18.34
+   ]
+  },
+  "160": {
+   "n_transitions": 7,
+   "fto_ms": [
+    220.0,
+    340.0,
+    280.0,
+    280.0,
+    300.0,
+    240.0,
+    240.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    29.6,
+    17.16
+   ]
+  },
+  "170": {
+   "n_transitions": 7,
+   "fto_ms": [
+    320.0,
+    440.0,
+    340.0,
+    440.0,
+    440.0,
+    640.0,
+    760.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    18.46,
+    18.72
+   ]
+  },
+  "180": {
+   "n_transitions": 4,
+   "fto_ms": [
+    880.0,
+    460.0,
+    960.0,
+    780.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    15.38,
+    10.8
+   ]
+  },
+  "190": {
+   "n_transitions": 5,
+   "fto_ms": [
+    440.0,
+    380.0,
+    300.0,
+    220.0,
+    580.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    10.2,
+    7.4
+   ]
+  },
+  "200": {
+   "n_transitions": 2,
+   "fto_ms": [
+    600.0,
+    500.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    4.96,
+    7.94
+   ]
+  },
+  "210": {
+   "n_transitions": 2,
+   "fto_ms": [
+    480.0,
+    880.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    8.7,
+    8.76
+   ]
+  },
+  "220": {
+   "n_transitions": 4,
+   "fto_ms": [
+    460.0,
+    280.0,
+    1120.0,
+    1000.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    14.02,
+    9.98
+   ]
+  },
+  "230": {
+   "n_transitions": 6,
+   "fto_ms": [
+    620.0,
+    380.0,
+    680.0,
+    580.0,
+    320.0,
+    480.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    10.36,
+    15.3
+   ]
+  },
+  "240": {
+   "n_transitions": 6,
+   "fto_ms": [
+    360.0,
+    300.0,
+    980.0,
+    900.0,
+    520.0,
+    240.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    21.32,
+    22.64
+   ]
+  },
+  "250": {
+   "n_transitions": 2,
+   "fto_ms": [
+    300.0,
+    560.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    6.52,
+    4.02
+   ]
+  },
+  "260": {
+   "n_transitions": 3,
+   "fto_ms": [
+    340.0,
+    260.0,
+    440.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    8.06,
+    12.16
+   ]
+  },
+  "270": {
+   "n_transitions": 6,
+   "fto_ms": [
+    460.0,
+    180.0,
+    340.0,
+    920.0,
+    620.0,
+    620.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    13.3,
+    12.18
+   ]
+  },
+  "280": {
+   "n_transitions": 6,
+   "fto_ms": [
+    460.0,
+    420.0,
+    460.0,
+    400.0,
+    220.0,
+    280.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    19.48,
+    17.66
+   ]
+  },
+  "290": {
+   "n_transitions": 4,
+   "fto_ms": [
+    420.0,
+    580.0,
+    420.0,
+    400.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    11.76,
+    10.88
+   ]
+  },
+  "300": {
+   "n_transitions": 5,
+   "fto_ms": [
+    500.0,
+    500.0,
+    1180.0,
+    420.0,
+    420.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    11.28,
+    10.66
+   ]
+  },
+  "310": {
+   "n_transitions": 4,
+   "fto_ms": [
+    480.0,
+    620.0,
+    460.0,
+    420.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    15.04,
+    8.48
+   ]
+  },
+  "320": {
+   "n_transitions": 4,
+   "fto_ms": [
+    1120.0,
+    600.0,
+    420.0,
+    360.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    12.1,
+    15.96
+   ]
+  },
+  "330": {
+   "n_transitions": 2,
+   "fto_ms": [
+    460.0,
+    200.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    4.62,
+    3.78
+   ]
+  },
+  "340": {
+   "n_transitions": 8,
+   "fto_ms": [
+    280.0,
+    360.0,
+    300.0,
+    280.0,
+    360.0,
+    420.0,
+    420.0,
+    300.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    30.58,
+    26.12
+   ]
+  },
+  "350": {
+   "n_transitions": 4,
+   "fto_ms": [
+    800.0,
+    640.0,
+    620.0,
+    660.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    18.16,
+    11.04
+   ]
+  },
+  "360": {
+   "n_transitions": 3,
+   "fto_ms": [
+    100.0,
+    180.0,
+    540.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    6.06,
+    5.64
+   ]
+  },
+  "370": {
+   "n_transitions": 3,
+   "fto_ms": [
+    260.0,
+    300.0,
+    260.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    6.02,
+    5.56
+   ]
+  },
+  "380": {
+   "n_transitions": 4,
+   "fto_ms": [
+    280.0,
+    1040.0,
+    580.0,
+    920.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    12.62,
+    7.84
+   ]
+  },
+  "390": {
+   "n_transitions": 3,
+   "fto_ms": [
+    820.0,
+    1120.0,
+    940.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    7.46,
+    13.42
+   ]
+  },
+  "400": {
+   "n_transitions": 4,
+   "fto_ms": [
+    420.0,
+    300.0,
+    560.0,
+    240.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    5.64,
+    5.26
+   ]
+  },
+  "410": {
+   "n_transitions": 9,
+   "fto_ms": [
+    320.0,
+    340.0,
+    240.0,
+    240.0,
+    260.0,
+    520.0,
+    200.0,
+    360.0,
+    780.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    29.2,
+    34.42
+   ]
+  },
+  "420": {
+   "n_transitions": 3,
+   "fto_ms": [
+    280.0,
+    860.0,
+    960.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    6.58,
+    9.64
+   ]
+  },
+  "430": {
+   "n_transitions": 10,
+   "fto_ms": [
+    340.0,
+    540.0,
+    260.0,
+    420.0,
+    380.0,
+    320.0,
+    440.0,
+    700.0,
+    680.0,
+    340.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    44.2,
+    16.18
+   ]
+  },
+  "440": {
+   "n_transitions": 3,
+   "fto_ms": [
+    560.0,
+    440.0,
+    520.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    11.42,
+    9.36
+   ]
+  },
+  "450": {
+   "n_transitions": 6,
+   "fto_ms": [
+    400.0,
+    340.0,
+    480.0,
+    240.0,
+    700.0,
+    660.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    19.92,
+    16.64
+   ]
+  },
+  "460": {
+   "n_transitions": 5,
+   "fto_ms": [
+    600.0,
+    1200.0,
+    1080.0,
+    360.0,
+    680.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    17.54,
+    17.78
+   ]
+  },
+  "470": {
+   "n_transitions": 2,
+   "fto_ms": [
+    340.0,
+    1160.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    12.94,
+    6.8
+   ]
+  },
+  "480": {
+   "n_transitions": 6,
+   "fto_ms": [
+    480.0,
+    220.0,
+    540.0,
+    300.0,
+    900.0,
+    560.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    19.52,
+    17.82
+   ]
+  },
+  "490": {
+   "n_transitions": 7,
+   "fto_ms": [
+    240.0,
+    260.0,
+    180.0,
+    180.0,
+    300.0,
+    240.0,
+    200.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    25.94,
+    11.52
+   ]
+  },
+  "500": {
+   "n_transitions": 2,
+   "fto_ms": [
+    440.0,
+    620.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    12.3,
+    12.72
+   ]
+  },
+  "510": {
+   "n_transitions": 3,
+   "fto_ms": [
+    900.0,
+    380.0,
+    640.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    10.22,
+    9.94
+   ]
+  },
+  "520": {
+   "n_transitions": 4,
+   "fto_ms": [
+    260.0,
+    260.0,
+    620.0,
+    380.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    13.06,
+    14.14
+   ]
+  },
+  "530": {
+   "n_transitions": 2,
+   "fto_ms": [
+    400.0,
+    460.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    14.72,
+    6.8
+   ]
+  },
+  "540": {
+   "n_transitions": 4,
+   "fto_ms": [
+    620.0,
+    480.0,
+    760.0,
+    340.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    13.08,
+    10.2
+   ]
+  },
+  "550": {
+   "n_transitions": 4,
+   "fto_ms": [
+    920.0,
+    1480.0,
+    580.0,
+    600.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    8.84,
+    15.76
+   ]
+  },
+  "560": {
+   "n_transitions": 2,
+   "fto_ms": [
+    960.0,
+    700.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    9.48,
+    7.76
+   ]
+  },
+  "570": {
+   "n_transitions": 6,
+   "fto_ms": [
+    320.0,
+    540.0,
+    880.0,
+    560.0,
+    360.0,
+    380.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    18.08,
+    12.94
+   ]
+  },
+  "580": {
+   "n_transitions": 4,
+   "fto_ms": [
+    560.0,
+    440.0,
+    440.0,
+    400.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    10.14,
+    6.52
+   ]
+  },
+  "590": {
+   "n_transitions": 5,
+   "fto_ms": [
+    420.0,
+    420.0,
+    380.0,
+    600.0,
+    320.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    8.86,
+    7.18
+   ]
+  },
+  "600": {
+   "n_transitions": 4,
+   "fto_ms": [
+    760.0,
+    580.0,
+    440.0,
+    1240.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    14.5,
+    8.88
+   ]
+  },
+  "610": {
+   "n_transitions": 7,
+   "fto_ms": [
+    260.0,
+    320.0,
+    340.0,
+    240.0,
+    300.0,
+    240.0,
+    280.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    26.94,
+    19.7
+   ]
+  },
+  "620": {
+   "n_transitions": 5,
+   "fto_ms": [
+    300.0,
+    680.0,
+    400.0,
+    380.0,
+    380.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    20.98,
+    20.8
+   ]
+  },
+  "630": {
+   "n_transitions": 3,
+   "fto_ms": [
+    180.0,
+    520.0,
+    960.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    15.46,
+    12.84
+   ]
+  },
+  "640": {
+   "n_transitions": 4,
+   "fto_ms": [
+    520.0,
+    440.0,
+    760.0,
+    380.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    9.0,
+    8.06
+   ]
+  },
+  "650": {
+   "n_transitions": 6,
+   "fto_ms": [
+    740.0,
+    660.0,
+    480.0,
+    500.0,
+    440.0,
+    420.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    21.14,
+    11.08
+   ]
+  },
+  "660": {
+   "n_transitions": 2,
+   "fto_ms": [
+    1360.0,
+    720.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    12.8,
+    10.3
+   ]
+  },
+  "670": {
+   "n_transitions": 2,
+   "fto_ms": [
+    180.0,
+    540.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    8.96,
+    5.02
+   ]
+  },
+  "680": {
+   "n_transitions": 2,
+   "fto_ms": [
+    300.0,
+    280.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    10.8,
+    9.98
+   ]
+  },
+  "690": {
+   "n_transitions": 4,
+   "fto_ms": [
+    280.0,
+    340.0,
+    920.0,
+    460.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    4.98,
+    6.76
+   ]
+  },
+  "700": {
+   "n_transitions": 3,
+   "fto_ms": [
+    620.0,
+    480.0,
+    1080.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    6.62,
+    8.72
+   ]
+  },
+  "710": {
+   "n_transitions": 9,
+   "fto_ms": [
+    200.0,
+    320.0,
+    280.0,
+    640.0,
+    320.0,
+    420.0,
+    320.0,
+    460.0,
+    400.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    13.78,
+    19.02
+   ]
+  },
+  "720": {
+   "n_transitions": 3,
+   "fto_ms": [
+    500.0,
+    380.0,
+    700.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    14.48,
+    7.32
+   ]
+  },
+  "730": {
+   "n_transitions": 6,
+   "fto_ms": [
+    380.0,
+    380.0,
+    400.0,
+    600.0,
+    540.0,
+    620.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    22.42,
+    11.9
+   ]
+  },
+  "740": {
+   "n_transitions": 5,
+   "fto_ms": [
+    460.0,
+    440.0,
+    520.0,
+    480.0,
+    680.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    11.0,
+    11.66
+   ]
+  },
+  "750": {
+   "n_transitions": 6,
+   "fto_ms": [
+    560.0,
+    500.0,
+    480.0,
+    540.0,
+    380.0,
+    560.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    20.0,
+    18.84
+   ]
+  },
+  "760": {
+   "n_transitions": 5,
+   "fto_ms": [
+    620.0,
+    300.0,
+    300.0,
+    400.0,
+    520.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    10.0,
+    5.9
+   ]
+  },
+  "770": {
+   "n_transitions": 6,
+   "fto_ms": [
+    380.0,
+    400.0,
+    400.0,
+    700.0,
+    580.0,
+    520.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    16.66,
+    21.1
+   ]
+  },
+  "780": {
+   "n_transitions": 4,
+   "fto_ms": [
+    280.0,
+    380.0,
+    440.0,
+    580.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    7.06,
+    3.54
+   ]
+  },
+  "790": {
+   "n_transitions": 2,
+   "fto_ms": [
+    580.0,
+    580.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    11.1,
+    8.54
+   ]
+  },
+  "800": {
+   "n_transitions": 2,
+   "fto_ms": [
+    1020.0,
+    1180.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    9.62,
+    5.3
+   ]
+  },
+  "810": {
+   "n_transitions": 6,
+   "fto_ms": [
+    640.0,
+    600.0,
+    260.0,
+    820.0,
+    420.0,
+    520.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    17.86,
+    9.62
+   ]
+  },
+  "820": {
+   "n_transitions": 2,
+   "fto_ms": [
+    320.0,
+    1120.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    8.2,
+    8.7
+   ]
+  },
+  "830": {
+   "n_transitions": 4,
+   "fto_ms": [
+    420.0,
+    360.0,
+    460.0,
+    660.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    8.86,
+    9.6
+   ]
+  },
+  "840": {
+   "n_transitions": 4,
+   "fto_ms": [
+    380.0,
+    380.0,
+    240.0,
+    240.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    6.82,
+    11.22
+   ]
+  },
+  "850": {
+   "n_transitions": 2,
+   "fto_ms": [
+    280.0,
+    120.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    5.8,
+    6.28
+   ]
+  },
+  "860": {
+   "n_transitions": 5,
+   "fto_ms": [
+    660.0,
+    760.0,
+    980.0,
+    540.0,
+    360.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    13.06,
+    18.48
+   ]
+  },
+  "870": {
+   "n_transitions": 3,
+   "fto_ms": [
+    420.0,
+    760.0,
+    1160.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    6.9,
+    6.18
+   ]
+  },
+  "880": {
+   "n_transitions": 8,
+   "fto_ms": [
+    380.0,
+    300.0,
+    380.0,
+    360.0,
+    420.0,
+    320.0,
+    260.0,
+    420.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    31.08,
+    43.32
+   ]
+  },
+  "890": {
+   "n_transitions": 10,
+   "fto_ms": [
+    320.0,
+    500.0,
+    580.0,
+    440.0,
+    440.0,
+    480.0,
+    520.0,
+    220.0,
+    860.0,
+    780.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    29.4,
+    29.32
+   ]
+  },
+  "900": {
+   "n_transitions": 2,
+   "fto_ms": [
+    300.0,
+    820.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    6.48,
+    4.36
+   ]
+  },
+  "910": {
+   "n_transitions": 8,
+   "fto_ms": [
+    260.0,
+    300.0,
+    400.0,
+    260.0,
+    200.0,
+    320.0,
+    240.0,
+    240.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    33.58,
+    36.02
+   ]
+  },
+  "920": {
+   "n_transitions": 3,
+   "fto_ms": [
+    260.0,
+    360.0,
+    380.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    9.28,
+    6.18
+   ]
+  },
+  "930": {
+   "n_transitions": 6,
+   "fto_ms": [
+    380.0,
+    320.0,
+    360.0,
+    400.0,
+    640.0,
+    440.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    15.12,
+    5.92
+   ]
+  },
+  "940": {
+   "n_transitions": 9,
+   "fto_ms": [
+    500.0,
+    420.0,
+    560.0,
+    280.0,
+    560.0,
+    340.0,
+    240.0,
+    1260.0,
+    1240.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    20.5,
+    28.98
+   ]
+  },
+  "950": {
+   "n_transitions": 3,
+   "fto_ms": [
+    960.0,
+    980.0,
+    920.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    7.06,
+    9.0
+   ]
+  },
+  "960": {
+   "n_transitions": 7,
+   "fto_ms": [
+    380.0,
+    300.0,
+    420.0,
+    380.0,
+    340.0,
+    460.0,
+    460.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    20.36,
+    16.04
+   ]
+  },
+  "970": {
+   "n_transitions": 5,
+   "fto_ms": [
+    400.0,
+    680.0,
+    620.0,
+    260.0,
+    300.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    8.48,
+    9.58
+   ]
+  },
+  "980": {
+   "n_transitions": 6,
+   "fto_ms": [
+    320.0,
+    860.0,
+    460.0,
+    320.0,
+    340.0,
+    380.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    20.6,
+    13.62
+   ]
+  },
+  "990": {
+   "n_transitions": 5,
+   "fto_ms": [
+    420.0,
+    540.0,
+    400.0,
+    580.0,
+    360.0
+   ],
+   "overlapped": 0,
+   "within": 0,
+   "overlap_ratio": 0.0,
+   "speech_s": [
+    8.34,
+    9.46
+   ]
+  }
+ },
+ "criteria": {
+  "n_dialogues": 100,
+  "distance_base_ms": 496.0,
+  "distance_lora_ms": 1035.2,
+  "gain_ms": -539.2,
+  "ci95_ms": [
+   -685.0,
+   -401.8
+  ],
+  "supported": false
+ }
+}

@@ -2,7 +2,8 @@
 
 One row per paid run, pasted from the run's own cost line (v1 plan §5.1). The
 estimate is wall time at the GPU's list rate; Modal's dashboard is the bill.
-Rates checked 2026-08-19: T4 \$0.59/h, A10 \$1.10/h.
+Rates checked 2026-08-19: T4 \$0.59/h, A10 \$1.10/h, L40S \$1.95/h. Vast.ai rows: the
+rented offer's rate (H100 on-demand, \$1.97/h) times the machine's life; Vast's billing page is the bill.
 
 **Rules:** add the row in the same commit as the run's results, or the next
 one. A failed run is still a row, since it was still billed.
@@ -38,6 +39,10 @@ one. A failed run is still a row, since it was still billed.
 | 2026-09-24 | `6723cb4` | `modal run modal_app/r5_bench.py --model r5-personaplex --evalset` | A10G | 4479 s | 4490 s | \$1.372 | **the R5 row, PersonaPlex**: 192 of 200 answered, gap p50 460 / p90 758 ms; set-up 5.95 s a call; RTF 0.80; 18.1 GB (`runs/r5-personaplex/`). Estimated at the A10 rate |
 | 2026-09-24 | `97c3a06` | `modal run modal_app/r5_bench.py::dialogues --limit 50` | A10 | 1071 s | 1097 s | \$0.335 | FT-1 dev: base Moshi answering the user channel of 50 DailyTalk dev dialogues: gap median 160 ms against the reference's 420, 42 overlapping turn changes against 0; distance 478 ms. Dev data, not evidence |
 
+| 2026-09-25 | `4df9ef3` | `bash /workspace/ft1.sh` (Vast.ai, `vast/README.md`) | Vast H100 80 GB | 11 h 22 min training | ≈ 12.3 h machine | \$24.29 (billed) | **FT-1's training**: Moshi LoRA on 2,286 DailyTalk dialogues, 2,000 steps, no resume; loss 1.674 → 1.137. About 1 h of the machine went on set-up (the dataset download hit Hugging Face's rate limit twice) and the copy-off; the machine was destroyed by hand. Vast's bill, not an estimate |
+| 2026-09-25 | `4df9ef3` | `modal run modal_app/r5_bench.py::pr010 --confirm PR-010` | A10 | — | — | ≈ \$0.6 (failed) | PR-010's first registered run: base Moshi finished, then out of GPU memory loading Moshi + LoRA; no run file (PR-010 Deviations). Estimate: about 2,100 s, twice the dev run's 50 dialogues |
+| 2026-09-25 | `3d36f74` | `modal run modal_app/r5_bench.py::pr010 --confirm PR-010` | L40S | 3658 s | 3712 s | \$2.011 | **the PR-010 run**: distance to the reference 496 ms base, 1,035 ms LoRA; gain -539 ms, 95% interval -685 to -402: not supported, moved away (`runs/ft1/`) |
+
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
 
@@ -45,5 +50,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$6.025 + four failed runs | \$36.93 |
-| Vast.ai | \$0 | \$5.86 |
+| Modal | \$8.036 + five failed runs | \$36.93 |
+| Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |
