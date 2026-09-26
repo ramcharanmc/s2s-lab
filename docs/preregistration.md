@@ -2311,7 +2311,22 @@ wall time and cost; a few conversations to listen to (user left, model right).
 
 ### Deviations
 
-None yet.
+- **2026-09-25, the first registered run crashed; the one repeat runs on an L40S.** The run
+  (`modal run modal_app/r5_bench.py::pr010 --confirm PR-010`, commit `4df9ef3`, Modal A10) finished
+  base Moshi on the 100 test dialogues, then ran out of GPU memory while loading Moshi + LoRA: fusing
+  the LoRA into the weights found 21.5 GiB of the A10's 22 GiB already allocated, where one model with
+  its LoRA needs about 16.2 GiB (base Moshi's own peak in R5, 16,621 MiB) -- so about 5 GiB from the base pass
+  was still held. The function raised before returning, so no run file was written and no measure
+  of either model was seen; only the error was printed. V4 allows one repeat, in full. The only
+  change for it (`pr010_remote`, V1's frozen code, changed and disclosed here): it runs on an **L40S**
+  (48 GB) instead of the A10, and records the memory the base pass leaves allocated. Both models
+  still run in one container, on the same dialogues and seeds, so the comparison stays paired; the
+  stream-time measures do not depend on the card's speed. The crash cost about \$0.6 of A10 time
+  (in the ledger with the results).
+- **Training, for the record** (it is not a deviation): the run reached step 2,000 on one H100 in
+  11 h 22 min with no resume. The first launch crashed before step 1 (moshi-finetune reads
+  `CUDA_VISIBLE_DEVICES`, which the machine did not set) and was relaunched with the same config;
+  both launch configs came back with the adapter and are identical.
 
 ### Results
 

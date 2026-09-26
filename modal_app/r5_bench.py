@@ -8,7 +8,7 @@ R5 on Modal: full-duplex models on an A10, driven by s2slab.duplex.
     modal run modal_app/r5_bench.py::dialogues --limit 50            FT-1 dev: Moshi answering the user
                                                                      channel of DailyTalk dev dialogues
     modal run modal_app/r5_bench.py::pr010 --confirm PR-010          FT-1's registered test: base Moshi,
-                                                                     then Moshi + LoRA, one container
+                                                                     then Moshi + LoRA, one L40S container
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
@@ -45,6 +45,7 @@ import modal
 REPO = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 A10_DOLLARS_PER_HOUR = 1.10     # Modal's A10 rate, checked 2026-08-19 (v2 §5)
+L40S_DOLLARS_PER_HOUR = 1.95    # Modal's L40S rate, checked 2026-08-19 (v2 §5)
 MODELS = {"kyutai/moshiko-pytorch-bf16": None}
 LISTEN = 3
 
@@ -313,9 +314,12 @@ def dialogues(model: str = "r5-moshi", limit: int = 0, listen: int = 3):
           f"about ${wall / 3600 * A10_DOLLARS_PER_HOUR:.3f} at the A10 rate. Modal's dashboard has the exact bill.")
 
 
-@app.function(gpu="A10G", timeout=150 * 60, scaledown_window=60, volumes={"/ft1": ft1_volume})
+# An L40S, not the registered A10 (PR-010, Deviations): on the A10 (22 GB) the first run ran out of
+# memory fusing the LoRA into the second model, with about 5 GB still held from the base pass.
+@app.function(gpu="L40S", timeout=150 * 60, scaledown_window=60, volumes={"/ft1": ft1_volume})
 def pr010_remote(commit: str, users: dict, listen: int = 0) -> dict:
-    """PR-010: base Moshi, then Moshi + FT-1's LoRA, in ONE container, on the same dialogues and seeds."""
+    """PR-010: base Moshi, then Moshi + FT-1's LoRA, in ONE container, on the same dialogues and seeds.
+    Records the GPU memory the base pass leaves allocated, so the first run's crash can be understood."""
     import gc
     import hashlib
     import json as _json
@@ -327,9 +331,11 @@ def pr010_remote(commit: str, users: dict, listen: int = 0) -> dict:
     base = _dialogues("r5-moshi", commit, users, listen)
     gc.collect()
     torch.cuda.empty_cache()
+    left_mb = round(torch.cuda.memory_allocated() / 2 ** 20)
     lora = _dialogues("r5-moshi-lora", commit, users, listen)
     return {"base": base, "lora": lora, "adapter_sha256": hashlib.sha256(adapter.read_bytes()).hexdigest(),
-            "adapter_config": _json.loads(pathlib.Path("/ft1/config.json").read_text())}
+            "adapter_config": _json.loads(pathlib.Path("/ft1/config.json").read_text()),
+            "gpu_mb_left_after_base": left_mb}
 
 
 @app.local_entrypoint()
@@ -366,6 +372,7 @@ def pr010(confirm: str = "", listen: int = 3):
     results = {"registration": dailytalk.REGISTRATION, "commit": commit, "ids": list(dailytalk.TEST_IDS),
                "adapter_sha256": out["adapter_sha256"], "adapter_config": out["adapter_config"],
                "machine": base["machine"], "versions": base["versions"], "tail_s": base["tail_s"],
+               "gpu_mb_left_after_base": out["gpu_mb_left_after_base"],
                "base": base, "lora": lora, "reference": ref}
     results["criteria"] = dailytalk.pr010(base["rows"], lora["rows"], ref)
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -376,13 +383,14 @@ def pr010(confirm: str = "", listen: int = 3):
             d.mkdir(parents=True, exist_ok=True)
             (d / f"test-{n}-{tag}.wav").write_bytes(data)
     print(f"{base['machine']} · commit {commit} · adapter sha256 {out['adapter_sha256'][:12]}")
-    print(f"peak GPU memory: base {base['peak_vram_mb']:,} MB, LoRA {lora['peak_vram_mb']:,} MB\n")
+    print(f"peak GPU memory: base {base['peak_vram_mb']:,} MB, LoRA {lora['peak_vram_mb']:,} MB; "
+          f"left allocated after the base pass: {out['gpu_mb_left_after_base']:,} MB\n")
     print("## base Moshi\n\n" + dailytalk.report(base["rows"], ref, "base Moshi"))
     print("\n## Moshi + FT-1's LoRA\n\n" + dailytalk.report(lora["rows"], ref, "Moshi + LoRA"))
     print("\n" + dailytalk.format_pr010(results))
     print(f"\nsaved -> {path.relative_to(REPO)}; listen: results/ft1/listen/")
     print(f"{out['base']['seconds'] + out['lora']['seconds']:.0f} s inside the function, {wall:.0f} s end to end: "
-          f"about ${wall / 3600 * A10_DOLLARS_PER_HOUR:.3f} at the A10 rate. Modal's dashboard has the exact bill.")
+          f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
 
 
 def functions(model_id: str):
