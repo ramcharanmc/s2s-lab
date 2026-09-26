@@ -6,6 +6,8 @@ FT-1's helpers on the Vast.ai machine -- standard library only, so they run befo
     python3 ft1_prep.py config   TEMPLATE OUT RUN_DIR TRAIN_JSONL
                                                         the training config; resumes from the latest checkpoint
     python3 ft1_prep.py last     RUN_DIR                "<step> <folder>" of the newest complete checkpoint
+    python3 ft1_prep.py download DATA_DIR REVISION      DailyTalk at REVISION; waits out Hugging Face's 429s
+                                                        (needs huggingface_hub, which moshi-finetune installs)
 
 The config names train.jsonl as a FILE: given the folder, moshi-finetune would read every *.jsonl
 in it, including DailyTalk's own manifest, test fold and all.
@@ -116,6 +118,36 @@ def config(template: str, run_dir: pathlib.Path, train_jsonl: pathlib.Path) -> t
     return text, step
 
 
+DATASET = "kyutai/DailyTalkContiguous"
+
+
+def rate_limited(error: Exception) -> bool:
+    status = getattr(getattr(error, "response", None), "status_code", None)
+    return status == 429 or "429" in str(error)
+
+
+def download(root: pathlib.Path, revision: str, attempts: int = 12, wait_s: float = 300,
+             snapshot=None, sleep=None) -> int:
+    """The whole dataset at `revision`, four files at a time. Hugging Face allows 1,000 requests per
+    5 minutes with a token (fewer without); on a 429 this waits one window and goes on -- files
+    already down are not fetched again. Returns the attempts it took."""
+    if snapshot is None:
+        from huggingface_hub import snapshot_download as snapshot
+    if sleep is None:
+        import time
+        sleep = time.sleep
+    for attempt in range(1, attempts + 1):
+        try:
+            snapshot(DATASET, repo_type="dataset", revision=revision, local_dir=str(root), max_workers=4)
+            return attempt
+        except Exception as error:                        # huggingface_hub's error class moved between versions
+            if not rate_limited(error) or attempt == attempts:
+                raise
+            print(f"rate-limited (429), attempt {attempt} of {attempts}: waiting {wait_s:.0f} s", flush=True)
+            sleep(wait_s)
+    raise AssertionError("unreachable")
+
+
 if __name__ == "__main__":
     cmd, rest = sys.argv[1], sys.argv[2:]
     if cmd == "patch":
@@ -131,5 +163,8 @@ if __name__ == "__main__":
         text, step = config(pathlib.Path(rest[0]).read_text(encoding="utf-8"), pathlib.Path(rest[2]), pathlib.Path(rest[3]))
         pathlib.Path(rest[1]).write_text(text, encoding="utf-8")
         print(f"config written; {'resuming from step ' + str(step) if step else 'fresh start'}")
+    elif cmd == "download":
+        print(f"downloaded {DATASET} @ {rest[1][:7]} in {download(pathlib.Path(rest[0]), rest[1])} attempt(s)")
     else:
-        raise SystemExit("usage: ft1_prep.py patch REPO | manifest DATA_DIR | config TEMPLATE OUT RUN_DIR TRAIN_JSONL | last RUN_DIR")
+        raise SystemExit("usage: ft1_prep.py patch REPO | manifest DATA_DIR | config TEMPLATE OUT RUN_DIR TRAIN_JSONL"
+                         " | last RUN_DIR | download DATA_DIR REVISION")

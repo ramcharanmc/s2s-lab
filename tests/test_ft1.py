@@ -1,6 +1,7 @@
 """
 Tests for FT-1's kit and PR-010's criterion: vast/ft1_prep.py (the resume patch, the training list
-without the test fold, the config), vast/ft1.sh (syntax and pins), dailytalk.pr010 on made-up rows,
+without the test fold, the config, the download's waits), vast/ft1.sh (syntax, pins, what FT-1's
+run needed), dailytalk.pr010 on made-up rows,
 and the LoRA Moshi adapter's shape. No GPU, no download, no network.
 """
 
@@ -92,6 +93,56 @@ def test_the_example_settings_are_kyutais_and_the_script_pins_what_it_runs():
     assert f"DATA_REV={dailytalk.REVISION}" in sh and "data/dailytalk/train.jsonl" in sh
     if shutil.which("bash"):
         assert subprocess.run(["bash", "-n", str(VAST / "ft1.sh")]).returncode == 0     # parses
+
+
+def test_the_script_carries_what_ft1s_run_needed():
+    sh = (VAST / "ft1.sh").read_text()
+    assert 'export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"' in sh
+    assert sh.index("export CUDA_VISIBLE_DEVICES=") < sh.index("torchrun --nproc-per-node")
+    assert "echo y | vastai" in sh and "ft1_prep.py\" download" in sh
+    assert int(sh.split("MAX_HOURS=${MAX_HOURS:-")[1].split("}")[0]) >= 13        # FT-1 took 12.3 h of machine
+
+
+@pytest.mark.skipif(not shutil.which("bash"), reason="needs bash")
+def test_vasts_instance_variables_are_read_from_the_containers_own_environment(tmp_path):
+    sh = (VAST / "ft1.sh").read_text()
+    start = sh.index("from_pid1() {")
+    fn = sh[start:sh.index("\n}\n", start) + 2]
+    environ = tmp_path / "environ"
+    environ.write_bytes(b"PATH=/usr/bin\0CONTAINER_ID=52595121\0CONTAINER_API_KEY=k=with=equals\0")
+    script = f"{fn}\nfrom_pid1 CONTAINER_ID; from_pid1 CONTAINER_API_KEY; from_pid1 MISSING; echo end"
+    out = subprocess.run(["bash", "-c", script], capture_output=True, text=True,
+                         env={"PID1_ENVIRON": environ.as_posix(), "PATH": "/usr/bin:/bin"})
+    assert out.stdout.split("\n") == ["52595121", "k=with=equals", "end", ""]
+
+
+class _RateLimited(Exception):
+    def __init__(self):
+        super().__init__("429 Client Error: Too Many Requests")
+        self.response = type("R", (), {"status_code": 429})()
+
+
+def test_the_download_waits_out_the_rate_limit_and_nothing_else(prep, tmp_path):
+    calls, waits = [], []
+
+    def snapshot(repo, **kw):
+        calls.append((repo, kw["revision"], kw["max_workers"]))
+        if len(calls) < 3:
+            raise _RateLimited()
+
+    assert prep.download(tmp_path, "33e1b50", snapshot=snapshot, sleep=waits.append, wait_s=300) == 3
+    assert calls == [("kyutai/DailyTalkContiguous", "33e1b50", 4)] * 3 and waits == [300, 300]
+
+    def broken(repo, **kw):
+        raise ValueError("404: no such revision")
+    with pytest.raises(ValueError):
+        prep.download(tmp_path, "bad", snapshot=broken, sleep=waits.append)
+    assert waits == [300, 300]                                                    # no wait on other errors
+
+    def always(repo, **kw):
+        raise _RateLimited()
+    with pytest.raises(_RateLimited):
+        prep.download(tmp_path, "33e1b50", snapshot=always, sleep=lambda s: None, attempts=3)
 
 
 def test_pr010_is_supported_only_when_the_whole_interval_is_above_zero():

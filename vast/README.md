@@ -6,7 +6,8 @@ Everything that runs on the rented machine is here: `ft1.sh` (the whole run, saf
 config: moshi-finetune's example with paths filled and checkpoints every 100 steps).
 
 Rules from page 17 §5.1: **destroy, never just stop** (a stopped machine still bills storage);
-checkpoint often; no keys of yours go on the machine. The machine is on-demand (decided
+checkpoint often; no keys of yours go on the machine (the one exception, and your call: a
+read-only Hugging Face token for the download, step 4). The machine is on-demand (decided
 2026-09-25), so no run is taken away mid-way.
 
 ## The steps, in order
@@ -28,19 +29,36 @@ checkpoint often; no keys of yours go on the machine. The machine is on-demand (
 
     vastai create instance OFFER_ID --image pytorch/pytorch:2.6.0-cuda12.4-cudnn9-devel --disk 120 --ssh --direct
 
-**4. Copy the kit over and start it** (the SSH address comes from `vastai ssh-url INSTANCE_ID`):
+**4. Copy the kit over and start it.** Use the machine's direct address: the proxy that
+`vastai ssh-url` prints (ssh4.vast.ai) timed out on FT-1. The direct one, once the status is
+`running`:
+
+    vastai show instance INSTANCE_ID --raw | python3 -c "import json, sys; d = json.load(sys.stdin); print(d['public_ipaddr'], d['ports']['22/tcp'][0]['HostPort'])"
+
+prints `HOST PORT`. Then:
 
     scp -P PORT vast/ft1.sh vast/ft1_prep.py vast/ft1.yaml root@HOST:/workspace/
     ssh -p PORT root@HOST
-    tmux new -s ft1
+
+The login shell is already inside tmux (Vast starts one; `tmux new` would nest it). Optionally,
+to beat the download's rate limit, give the shell a **read-only** Hugging Face token without it
+reaching the screen or the history -- a key of yours on a rented machine, so your call, and revoke
+it afterwards:
+
+    read -rs HF_TOKEN && export HF_TOKEN
+
+Then:
+
     bash /workspace/ft1.sh
 
-Detach with Ctrl-b d. Watch with `tmux attach -t ft1`, or `tail -f /workspace/ft1/train.log`.
-If the machine fails, start it again (`vastai start instance INSTANCE_ID`) and run step 4's
-last two lines again: the script resumes from the newest checkpoint (a deviation in PR-010).
+Detach with Ctrl-b d; after a new `ssh`, `tmux attach`. Or watch `tail -f /workspace/ft1/train.log`.
+The log's first line says whether the machine can destroy itself (step 5). If the machine fails,
+start it again (`vastai start instance INSTANCE_ID`) and run the script again: it resumes from the
+newest checkpoint (a deviation for any registration that depends on the run).
 
 **5. Copy the adapter off** as soon as the log says "done" (the machine destroys itself 45 minutes
-later, and in any case 10 hours after the script first started):
+later, and in any case 15 hours after the script started -- FT-1 needed 12.3). If the log said it
+cannot destroy itself, destroy it yourself; either way, check with `vastai show instances`:
 
     mkdir -p data/ft1
     scp -P PORT 'root@HOST:/workspace/ft1/out/*' data/ft1/
