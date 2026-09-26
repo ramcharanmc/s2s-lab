@@ -1,0 +1,50 @@
+[project]
+name = "s2slab-ft"
+version = "0.1.0"
+description = "s2s-lab's fine-tunes (FT-2 Whisper LoRA, FT-3 TTS) on the Lightning-Hydra template"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "s2slab",                      # ../src: the eval set's readers and wer.py, so numbers match the ladder's
+    "torch>=2.6",
+    "pytorch-lightning>=2.5",
+    "torchmetrics>=1.6",
+    "hydra-core>=1.3",
+    "hydra-colorlog>=1.2",
+    "rich>=13",
+    "transformers>=4.51",
+    "peft>=0.15",
+    "safetensors>=0.5",
+    "huggingface-hub>=0.30",
+    "pyarrow>=17",                 # the dataset's parquet files, read directly (no `datasets`: its
+    "soundfile>=0.13",             # newer versions decode audio through torchcodec/ffmpeg)
+    "numpy>=2",
+    "scipy>=1.13",
+    "ctranslate2>=4.5",            # export: the merged model in faster-whisper's format
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.uv.sources]
+s2slab = { path = "..", editable = true }
+# The laptop env gets CPU torch (tests and config checks only). Modal builds its own CUDA image.
+torch = [{ index = "pytorch-cpu", marker = "sys_platform == 'linux'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--strict-markers", "-p", "no:cacheprovider"]
+markers = ["hub: fetches a few MB of tokenizer files from the Hugging Face Hub on the first run"]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]

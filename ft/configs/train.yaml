@@ -1,0 +1,26 @@
+# @package _global_
+
+# The template's main config. Composition order = override order.
+defaults:
+  - _self_
+  - data: disfluencyspeech
+  - model: whisper_lora
+  - callbacks: default
+  - logger: csv
+  - trainer: default
+  - paths: default
+  - extras: default
+  - hydra: default
+  - experiment: null        # configs/experiment/*.yaml: the runs that are reported
+  - optional local: default
+  - debug: null
+
+task_name: "train"
+tags: ["dev"]
+
+train: True
+test: False                 # never inside ft/: the registered test is s2s-lab's bench (PR-011)
+
+ckpt_path: null             # a Lightning checkpoint to resume from (adapter weights + optimizer)
+adapter_dir: null           # or an adapter directory to warm-start the LoRA from
+seed: 0

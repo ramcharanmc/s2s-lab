@@ -1,0 +1,11 @@
+# root = ft/ (the working directory of `uv run src/train.py`)
+root_dir: .
+
+# downloads go under s2s-lab's data/, which git ignores
+data_dir: ${paths.root_dir}/../data/ft
+
+log_dir: ${paths.root_dir}/logs/
+
+# created by hydra per run: configs/hydra/default.yaml
+output_dir: ${hydra:runtime.output_dir}
+work_dir: ${hydra:runtime.cwd}

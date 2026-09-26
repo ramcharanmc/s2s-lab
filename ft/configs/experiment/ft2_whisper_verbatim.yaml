@@ -1,0 +1,30 @@
+# @package _global_
+
+# FT-2: whisper-small.en + LoRA, trained to transcribe DisfluencySpeech verbatim (transcript_a).
+#   uv run src/train.py experiment=ft2_whisper_verbatim                  # GPU (Modal; see modal_app/)
+#   uv run src/train.py experiment=ft2_whisper_verbatim debug=fast       # one batch on the laptop
+# 4,500 clips at batch 16 = 282 steps an epoch; 900 steps is about 3.2 epochs. Validation on 64
+# clips every 150 steps, each one saving its adapter.
+
+defaults:
+  - override /data: disfluencyspeech
+  - override /model: whisper_lora
+  - override /callbacks: default
+  - override /trainer: gpu
+  - override /logger: csv
+
+tags: ["ft2", "whisper-small.en", "lora", "verbatim"]
+seed: 0
+
+trainer:
+  max_steps: 900
+  max_epochs: -1
+  val_check_interval: 150
+  check_val_every_n_epoch: null
+  gradient_clip_val: 1.0
+  log_every_n_steps: 10
+  num_sanity_val_steps: 1
+
+data:
+  batch_size: 16
+  val_limit: 64

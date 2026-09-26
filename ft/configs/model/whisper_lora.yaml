@@ -1,0 +1,18 @@
+_target_: src.models.whisper_lora_module.WhisperLoRAModule
+
+model_name: openai/whisper-small.en    # R1's GPU recognizer (s2slab.r0.GPUCascade), 244M parameters
+lora_r: 32                             # PEFT's own Whisper recipe
+lora_alpha: 64
+lora_dropout: 0.05
+target_modules: [q_proj, v_proj]
+
+optimizer:
+  _target_: torch.optim.AdamW
+  _partial_: true
+  lr: 2.0e-4
+  weight_decay: 0.01
+warmup_steps: 50                       # then linear decay to 0 at the last step
+
+max_new_tokens: 200
+model_config_overrides: null           # tests only: a random, tiny Whisper of this shape
+compile: false

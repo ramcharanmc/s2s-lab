@@ -1,0 +1,12 @@
+# @package _global_
+
+# One training batch and one validation batch, on whatever accelerator the trainer config says.
+#   uv run src/train.py experiment=ft2_whisper_verbatim trainer=cpu debug=fast
+trainer:
+  fast_dev_run: True
+
+extras:
+  print_config: False
+  enforce_tags: False
+
+logger: null

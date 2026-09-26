@@ -1,0 +1,21 @@
+# @package _global_
+
+# The dev look: an adapter (or the base model) over the WHOLE validation split. See src/eval.py.
+defaults:
+  - data: disfluencyspeech
+  - model: whisper_lora
+  - logger: csv
+  - trainer: default
+  - paths: default
+  - extras: default
+  - hydra: default
+  - _self_                  # last, so that `data.val_limit: null` below wins over the data group
+
+task_name: "eval"
+tags: ["dev"]
+
+adapter_dir: null           # null = the base model, the comparator
+seed: 0
+
+data:
+  val_limit: null

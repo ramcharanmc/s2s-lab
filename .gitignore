@@ -7,3 +7,8 @@ results/
 *.bak
 probes/prosody/source/
 data/
+
+# ft/ (the fine-tunes): its env, runs and anything it downloads
+ft/.venv/
+ft/logs/
+ft/data/
