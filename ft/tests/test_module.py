@@ -111,6 +111,11 @@ def test_transcribe_returns_one_string_per_clip(module, datamodule):
     assert len(hyps) == batch["input_features"].shape[0] and all(isinstance(h, str) for h in hyps)
 
 
+def test_the_fillers_are_the_same_set_the_registered_test_counts():
+    from s2slab import ft2
+    assert transcripts.FILLERS == ft2.FILLERS
+
+
 def test_the_validation_numbers_are_s2slabs_wer_plus_the_filler_recall():
     pairs = [("uh, the, the cat sat.", "the cat sat"),                  # raw: 2 of 5 words deleted; normalized: "uh" gone
              ("Um, I think so.", "um i think so"),                      # raw 0; normalized 0 (both drop um)

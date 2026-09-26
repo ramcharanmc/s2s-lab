@@ -36,4 +36,8 @@ def test_one_batch_end_to_end(cfg_train: DictConfig, tmp_path):
     adapters = list((tmp_path).rglob("adapters/step-*"))
     assert adapters, "every validation saves its adapter"
     assert (adapters[0] / "adapter_model.safetensors").exists()
-    assert list(tmp_path.rglob("val-step-*.jsonl"))
+    jsonl = list(tmp_path.rglob("val-step-*.jsonl"))
+    assert jsonl
+    import json
+    first = json.loads(jsonl[0].read_text(encoding="utf-8").splitlines()[0])["metrics"]
+    assert {"loss", "wer_raw", "wer_normalized", "filler_recall", "n_clips"} <= set(first) and first["loss"] > 0

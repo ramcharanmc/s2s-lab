@@ -225,10 +225,31 @@ def test_the_ft2_caps_are_dollars_and_the_trainer_stops_inside_them(ft2_train):
     assert ft2_train.max_time(4909) == "00:01:16:49" and ft2_train.max_time(100) == "00:00:01:00"
     assert ft2_train.DEV_CAP_DOLLARS < ft2_train.EVAL_CAP_DOLLARS < ft2_train.CAP_DOLLARS <= 1.5
     assert "trainer.max_steps=30" in ft2_train.DEV_OVERRIDES and "data.val_limit=8" in ft2_train.DEV_OVERRIDES
-    for fn in (ft2_train.train_remote, ft2_train.evaluate_remote, ft2_train.export_remote, ft2_train.fetch_data):
+    for fn in (ft2_train.train_remote, ft2_train.evaluate_remote, ft2_train.export_remote, ft2_train.fetch_data,
+               ft2_train.bench_remote):
         assert hasattr(fn, "remote")
-    for ep in (ft2_train.dev, ft2_train.train, ft2_train.evaluate, ft2_train.export):
+    for ep in (ft2_train.dev, ft2_train.train, ft2_train.evaluate, ft2_train.export, ft2_train.bench):
         assert hasattr(ep, "info")
+
+
+def test_the_ft2_bench_holds_the_comparator_and_lets_the_lora_meet_the_eval_set_once(ft2_train, r0_bench, tmp_path):
+    from s2slab import ft2
+    assert ft2_train.BASE_ASR == ft2.BASE_MODEL
+    assert r0_bench.whisper_repo(ft2_train.BASE_ASR) in ft2_train.MODELS      # offline: the weights must be baked in
+    assert ft2_train.FASTER_WHISPER == "faster-whisper==1.2.1"
+    recorded = tmp_path / "pr011.json"
+    ft2_train.bench_guard("", 8, "", "abc1234", recorded)                    # base alone, any way you like
+    ft2_train.bench_guard("", 0, "", "abc1234-dirty", recorded)
+    with pytest.raises(SystemExit, match="PR-011"):
+        ft2_train.bench_guard("", 0, "export-x", "abc1234", recorded)         # the LoRA needs the confirm
+    with pytest.raises(SystemExit, match="limit"):
+        ft2_train.bench_guard("PR-011", 8, "export-x", "abc1234", recorded)
+    with pytest.raises(SystemExit, match="clean"):
+        ft2_train.bench_guard("PR-011", 0, "export-x", "abc1234-dirty", recorded)
+    ft2_train.bench_guard("PR-011", 0, "export-x", "abc1234", recorded)     # the registered run
+    recorded.write_text("{}")
+    with pytest.raises(SystemExit, match="deviation"):
+        ft2_train.bench_guard("PR-011", 0, "export-x", "abc1234", recorded)
 
 
 def test_ft2_validations_are_read_from_what_the_module_writes(ft2_train, tmp_path):
@@ -236,9 +257,10 @@ def test_ft2_validations_are_read_from_what_the_module_writes(ft2_train, tmp_pat
     (run / "sub").mkdir(parents=True)
     for step in (150, 300):
         metrics = {"wer_raw": 0.1 * step / 150, "wer_normalized": 0.05, "filler_recall": 0.5,
-                   "fillers_in_refs": 10, "n_clips": 8, "n_words": 100}
+                   "fillers_in_refs": 10, "n_clips": 8, "n_words": 100, "loss": 0.3}
         (run / "sub" / f"val-step-{step:06d}.jsonl").write_text(
             json.dumps({"metrics": metrics}) + "\n" + json.dumps({"ref": "a", "hyp": "a"}) + "\n", encoding="utf-8")
     rows = ft2_train._validations(run, root=str(tmp_path))
     assert [r["step"] for r in rows] == [150, 300] and rows[1]["wer_raw"] == pytest.approx(0.2)
+    assert rows[0]["loss"] == 0.3
     assert rows[0]["file"] == "runs/x/sub/val-step-000150.jsonl"

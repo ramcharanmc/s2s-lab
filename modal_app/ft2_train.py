@@ -8,6 +8,10 @@ FT-2 on Modal: the Whisper LoRA trained on an A10, with the ft/ project run exac
                                                                        all 250 validation clips
     modal run modal_app/ft2_train.py::evaluate --adapter RUN/adapters/step-000900      the LoRA, same clips
     modal run modal_app/ft2_train.py::export --adapter RUN/adapters/step-000900        merged + CTranslate2, CPU
+    modal run modal_app/ft2_train.py::bench --limit 8                  the T4 bench, base small.en only: a smoke test
+    modal run modal_app/ft2_train.py::bench --export EXPORT --confirm PR-011
+                                                                       THE REGISTERED RUN: small.en, then the
+                                                                       exported model, all 200 clips, one T4
 
 What happens where:
   laptop  sends ft/src, ft/configs and src/s2slab; afterwards saves the run's summary under
@@ -25,6 +29,12 @@ What happens where:
   A10     `python src/train.py experiment=ft2_whisper_verbatim ...` as a subprocess, cwd /root/ft:
           the same command, configs and code as the laptop, so a run here is reproducible there.
           The paths are the only overrides added (data on the volume, the run directory).
+  T4      the bench: s2slab.r0.WhisperASR -- the class every ASR rung uses, float16, greedy, no
+          context carried between clips -- transcribes the frozen eval set with small.en (Systran's
+          conversion, R2's slow tier) and then with the exported model, one container; the laptop
+          scores both with s2slab.wer and applies PR-011 (s2slab.ft2). The exported model never
+          meets the eval set before the registered run: `--export` requires `--confirm PR-011`, a
+          clean tree and no --limit; the smoke test runs the base model alone.
 
 The cap. Every function's timeout comes from a dollar figure at the A10 rate (CAP_DOLLARS for a
 training run, DEV_CAP_DOLLARS for the smoke run), and the trainer gets `max_time` a little inside
@@ -47,11 +57,16 @@ import modal
 REPO = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 A10_DOLLARS_PER_HOUR = 1.10     # Modal's A10 rate, checked 2026-08-19 (v2 §5)
+T4_DOLLARS_PER_HOUR = 0.59      # Modal's T4 rate, checked 2026-08-19 (v2 §5)
+BENCH_CAP_DOLLARS = 0.30        # two recognizers over 200 clips on a T4: about 2 minutes
 CAP_DOLLARS = 1.50              # one training run; 900 steps should cost about a quarter of this
 DEV_CAP_DOLLARS = 0.30          # the 30-step smoke run
 EVAL_CAP_DOLLARS = 0.50         # 250 clips generated twice over at most
 EXPERIMENT = "ft2_whisper_verbatim"
-MODELS = {"openai/whisper-small.en": None}          # baked into the image; ft/configs/model/whisper_lora.yaml's model
+MODELS = {"openai/whisper-small.en": None,          # baked into the image; ft/configs/model/whisper_lora.yaml's model
+          "Systran/faster-whisper-small.en": None}  # the bench's comparator, as r0_bench's image holds it
+BASE_ASR = "small.en"                               # what faster-whisper resolves to the Systran repo; == s2slab.ft2.BASE_MODEL
+FASTER_WHISPER = "faster-whisper==1.2.1"            # requirements/r0.txt's pin: the same engine as the rungs
 # The versions ft/uv.lock resolved for Python 3.12 (a test reads the lock and checks). torch is
 # the CUDA build of the same version.
 TORCH = "torch==2.14.0"
@@ -86,13 +101,14 @@ def download_weights() -> None:
 image = (
     modal.Image.from_registry("nvidia/cuda:12.6.3-cudnn-runtime-ubuntu22.04", add_python="3.12")
     .pip_install(TORCH, index_url="https://download.pytorch.org/whl/cu126")
-    .pip_install(*PINS)
+    .pip_install(*PINS, FASTER_WHISPER)
     .run_function(download_weights)
     .apt_install("gcc")                                     # torch's Triton helpers, as in every GPU image here
     .env({"HF_HUB_OFFLINE": "1", "PYTHONPATH": f"{FT}:/root", "TOKENIZERS_PARALLELISM": "false"})
     .add_local_dir(REPO / "src" / "s2slab", "/root/s2slab", ignore=["**/__pycache__"])
     .add_local_dir(REPO / "ft" / "src", f"{FT}/src", ignore=["**/__pycache__"])
     .add_local_dir(REPO / "ft" / "configs", f"{FT}/configs")
+    .add_local_dir(REPO / "evalset", "/root/evalset")            # the manifest and the 200 frozen WAVs (44 MB)
 )
 
 app = modal.App("s2s-lab-ft2", image=image)
@@ -174,8 +190,8 @@ def evaluate_remote(name: str, adapter: str | None) -> dict:
         raise RuntimeError(f"no adapter at {VOLUME}/{adapter}")
     t0 = time.time()
     _run([sys.executable, "src/eval.py", f"adapter_dir={VOLUME}/{adapter}" if adapter else "adapter_dir=null",
-          f"paths.data_dir={VOLUME}/data", f"paths.log_dir={VOLUME}/evals", f"hydra.run.dir={out_dir}"],
-         out_dir / "console.log")
+          "trainer=gpu", f"paths.data_dir={VOLUME}/data", f"paths.log_dir={VOLUME}/evals",
+          f"hydra.run.dir={out_dir}"], out_dir / "console.log")
     volume.commit()
     metrics = json.loads((out_dir / "metrics.json").read_text(encoding="utf-8"))
     return {"name": name, "adapter": adapter, "machine": _machine(), "seconds": time.time() - t0, **metrics,
@@ -196,6 +212,46 @@ def export_remote(name: str, adapter: str, quantization: str) -> dict:
     files = {str(p.relative_to(out_dir)): p.stat().st_size for p in sorted(out_dir.rglob("*")) if p.is_file()}
     return {"name": name, "adapter": adapter, "seconds": time.time() - t0, "files": files,
             "ct2_model_sha256": hashlib.sha256((out_dir / "ct2" / "model.bin").read_bytes()).hexdigest()}
+
+
+@app.function(gpu="T4", timeout=seconds_for(BENCH_CAP_DOLLARS, T4_DOLLARS_PER_HOUR), scaledown_window=60,
+              volumes={VOLUME: volume})
+def bench_remote(export_name: str | None, limit: int) -> dict:
+    """small.en, then (if given) the exported model, over the frozen eval set, on one T4.
+    Transcripts and per-clip recognizer times only; scoring happens on the laptop."""
+    import hashlib
+    import os
+    os.chdir("/root")                                   # evalset.EVAL_ROOT is relative to here
+    from s2slab.evalset import load, verify
+    from s2slab.r0 import WhisperASR
+    problems = verify()
+    if problems:
+        raise RuntimeError("the eval set on Modal is not the frozen set:\n  " + "\n  ".join(problems[:10]))
+    items = load()[: limit or None]
+    models = {BASE_ASR: BASE_ASR}
+    export_sha = None
+    if export_name:
+        ct2 = pathlib.Path(VOLUME) / "export" / export_name / "ct2"
+        if not (ct2 / "model.bin").exists():
+            raise RuntimeError(f"no exported model at {ct2}")
+        models["ft2"] = str(ct2)
+        export_sha = hashlib.sha256((ct2 / "model.bin").read_bytes()).hexdigest()
+    t0 = time.time()
+    out = {}
+    for name, path in models.items():
+        asr = WhisperASR(path, device="cuda", compute_type="float16")
+        t_load = time.perf_counter()
+        asr.load()
+        load_s = time.perf_counter() - t_load
+        turns = {}
+        for item in items:
+            t1 = time.perf_counter()
+            text = asr.transcribe(item.audio)
+            turns[item.id] = {"cohort": item.cohort, "text": text, "asr_ms": round(1000 * (time.perf_counter() - t1), 1)}
+        out[name] = {"path": path, "load_s": round(load_s, 1), "turns": turns}
+        del asr
+    return {"machine": _machine(), "models": out, "export_name": export_name, "export_sha256": export_sha,
+            "n_clips": len(items), "seconds": time.time() - t0}
 
 
 # --------------------------------------------------------------------------- #
@@ -225,7 +281,7 @@ def _cost_line(inside: float, wall: float) -> str:
 def _print_validations(rows: list[dict]) -> None:
     print(f"{'step':>6} {'loss':>7} {'WER raw':>8} {'WER norm':>9} {'fillers kept':>13} {'clips':>6}")
     for r in rows:
-        print(f"{r['step']:>6} {r.get('val/loss', float('nan')):>7.3f} {100 * r['wer_raw']:>7.1f}% {100 * r['wer_normalized']:>8.1f}% "
+        print(f"{r['step']:>6} {r.get('loss', float('nan')):>7.3f} {100 * r['wer_raw']:>7.1f}% {100 * r['wer_normalized']:>8.1f}% "
               f"{100 * r['filler_recall']:>12.1f}% {int(r['n_clips']):>6}")
 
 
@@ -276,6 +332,55 @@ def evaluate(adapter: str = ""):
     _print_validations(out["validations"])
     print(f"saved -> {path.relative_to(REPO)}")
     print(_cost_line(out["seconds"], wall))
+
+
+def bench_guard(confirm: str, limit: int, export_name: str, commit: str, recorded: pathlib.Path) -> None:
+    """Why a bench run may not proceed. The exported model meets the eval set once, in the registered run."""
+    from s2slab.ft2 import REGISTRATION
+    if not export_name:
+        return                                          # base small.en alone: no registration at stake
+    if confirm != REGISTRATION:
+        raise SystemExit(f"the exported model runs on the eval set only as the registered test: --confirm {REGISTRATION}")
+    if limit:
+        raise SystemExit("the registered run is all 200 clips: no --limit with --export")
+    if commit.endswith("-dirty") or not commit:
+        raise SystemExit(f"the registered run needs a clean committed tree, not {commit!r}")
+    if recorded.exists():
+        raise SystemExit(f"{recorded} exists: the registered run is recorded once; a repeat is a deviation, "
+                         "reported in docs/preregistration.md before it runs")
+
+
+@app.local_entrypoint()
+def bench(confirm: str = "", limit: int = 0, export: str = ""):
+    """The T4 bench. Without --export: small.en alone (a smoke test with --limit, or its own full run).
+    With --export EXPORT and --confirm PR-011: the registered run, small.en then the exported model."""
+    from s2slab import ft2, wer
+    commit = _commit()
+    recorded = REPO / "runs" / "ft2" / "pr011.json"
+    bench_guard(confirm, limit, export, commit, recorded)
+    t0 = time.time()
+    out = bench_remote.remote(export or None, limit)
+    wall = time.time() - t0
+    hyps = {name: {i: t["text"] for i, t in m["turns"].items()} for name, m in out["models"].items()}
+    results = {"registration": ft2.REGISTRATION if export else None, "commit": commit, "base_model": BASE_ASR,
+               "export_name": export or None, "export_sha256": out["export_sha256"], "machine": out["machine"],
+               "n_clips": out["n_clips"], "models": out["models"], "wall_s": wall, "seconds": out["seconds"]}
+    print(f"\n{out['machine']} · commit {commit} · {out['n_clips']} clips")
+    for name in hyps:
+        print(wer.format_table(wer.score(hyps[name], REPO / "evalset"), title=f"{name} ({out['models'][name]['path']})"))
+        ms = sorted(t["asr_ms"] for t in out["models"][name]["turns"].values())
+        print(f"recognizer time p50 {ms[len(ms) // 2]:.0f} ms, load {out['models'][name]['load_s']} s\n")
+    if export:
+        results["criteria"] = ft2.pr011(hyps[BASE_ASR], hyps["ft2"], REPO / "evalset")
+        print(ft2.format_pr011(results))
+        path = recorded
+    else:
+        path = REPO / "results" / "ft2" / f"bench-{BASE_ASR}-{'limit' + str(limit) if limit else 'all'}-{_stamp()}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")
+    print(f"saved -> {path.relative_to(REPO)}")
+    print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * T4_DOLLARS_PER_HOUR:.3f} at the T4 rate. Modal's dashboard has the exact bill.")
 
 
 @app.local_entrypoint()

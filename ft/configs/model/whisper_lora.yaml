@@ -1,6 +1,6 @@
 _target_: src.models.whisper_lora_module.WhisperLoRAModule
 
-model_name: openai/whisper-small.en    # R1's GPU recognizer (s2slab.r0.GPUCascade), 244M parameters
+model_name: openai/whisper-small.en    # R2's slow tier and r0-gpu-bigger's recognizer; 244M parameters
 lora_r: 32                             # PEFT's own Whisper recipe
 lora_alpha: 64
 lora_dropout: 0.05

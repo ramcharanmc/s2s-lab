@@ -30,9 +30,9 @@ the first run; no model weights, no dataset.
 
 ## FT-2 — Whisper LoRA, verbatim transcription of disfluent speech
 
-**Question.** R1's recognizer (`whisper-small.en`) cleans speech up: on the eval set's disfluent
-cohort it scores 12.1% raw against 9.7% normalized, and the gap is the fillers and repetitions it
-drops. Does a LoRA trained on verbatim transcripts make it write down what was said, without
+**Question.** `whisper-small.en` -- R2's slow tier (`r2-gpu`), and the recognizer of `r0-gpu-bigger`
+-- cleans speech up: on the eval set's disfluent cohort it scores 9.9% raw against 7.6% normalized
+(PR-004's run), and the gap is the fillers and repetitions it drops. Does a LoRA trained on verbatim transcripts make it write down what was said, without
 hurting the other cohorts?
 
 **Data.** [amaai-lab/DisfluencySpeech](https://huggingface.co/datasets/amaai-lab/DisfluencySpeech)

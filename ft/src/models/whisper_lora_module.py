@@ -101,6 +101,7 @@ class WhisperLoRAModule(LightningModule):
         metrics = summarize((r["ref"], r["hyp"]) for r in rows)
         for name, value in metrics.items():
             self.log(f"val/{name}", value, prog_bar=name in ("wer_raw", "filler_recall"), sync_dist=True)
+        metrics["loss"] = float(self.val_loss.compute())     # logged already (validation_step); kept with the rows
         if self.trainer.is_global_zero and not self.trainer.sanity_checking:
             out = self.output_dir
             out.mkdir(parents=True, exist_ok=True)
