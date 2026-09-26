@@ -215,6 +215,9 @@ def test_the_ft2_image_holds_the_model_the_experiment_trains(ft2_train):
     model_cfg = yaml.safe_load((ROOT / "ft" / "configs" / "model" / "whisper_lora.yaml").read_text(encoding="utf-8"))
     assert model_cfg["model_name"] in ft2_train.MODELS
     assert (ROOT / "ft" / "configs" / "experiment" / f"{ft2_train.EXPERIMENT}.yaml").exists()
+    # Hydra refuses an override of a key the config does not declare: the first dev run died on this.
+    trainer_cfg = yaml.safe_load((ROOT / "ft" / "configs" / "trainer" / "default.yaml").read_text(encoding="utf-8"))
+    assert "max_time" in trainer_cfg
 
 
 def test_the_ft2_caps_are_dollars_and_the_trainer_stops_inside_them(ft2_train):
