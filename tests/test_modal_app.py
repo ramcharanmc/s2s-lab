@@ -8,6 +8,7 @@ imported and inspected here. Skipped when the modal package is not installed.
 from __future__ import annotations
 
 import importlib.util
+import json
 import pathlib
 
 import pytest
@@ -180,3 +181,61 @@ def test_the_personaplex_image_pins_the_adapters_weights_and_runs_on_functions_o
 def test_the_ft1_dialogues_run_is_moshi_on_the_a10_and_reads_only_the_dev_fold(r5_bench):
     assert hasattr(r5_bench.dialogues_remote, "remote") and hasattr(r5_bench.dialogues, "info")
     assert r5_bench.DIALOGUE_TAIL_S == 4.0
+
+
+
+@pytest.fixture(scope="module")
+def ft2_train():
+    pytest.importorskip("modal")
+    spec = importlib.util.spec_from_file_location("ft2_train", ROOT / "modal_app" / "ft2_train.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_ft2_image_pins_what_the_laptop_env_resolved(ft2_train):
+    """ft/uv.lock is the laptop env; the GPU image installs the same versions (Python 3.12's, where
+    the lock resolves two), with CUDA torch of the same version."""
+    import re
+    lock = (ROOT / "ft" / "uv.lock").read_text(encoding="utf-8")
+    versions = {}
+    for m in re.finditer(r'\[\[package\]\]\nname = "([^"]+)"\nversion = "([^"]+)"\nsource = \{[^}]*\}\n'
+                         r'(resolution-markers = \[[^\]]*\])?', lock):
+        markers = m.group(3) or ""
+        if "python_full_version < '3.12'" in markers and "python_full_version >= '3.12'" not in markers:
+            continue
+        versions.setdefault(m.group(1), set()).add(m.group(2).replace("+cpu", ""))
+    for pin in ft2_train.PINS + [ft2_train.TORCH]:
+        name, version = pin.split("==")
+        assert version in versions.get(name, set()), f"{pin} is not what ft/uv.lock resolved: {versions.get(name)}"
+
+
+def test_the_ft2_image_holds_the_model_the_experiment_trains(ft2_train):
+    import yaml
+    model_cfg = yaml.safe_load((ROOT / "ft" / "configs" / "model" / "whisper_lora.yaml").read_text(encoding="utf-8"))
+    assert model_cfg["model_name"] in ft2_train.MODELS
+    assert (ROOT / "ft" / "configs" / "experiment" / f"{ft2_train.EXPERIMENT}.yaml").exists()
+
+
+def test_the_ft2_caps_are_dollars_and_the_trainer_stops_inside_them(ft2_train):
+    assert ft2_train.seconds_for(1.10) == 3600 and ft2_train.seconds_for(ft2_train.CAP_DOLLARS) == 4909
+    assert ft2_train.max_time(4909) == "00:01:16:49" and ft2_train.max_time(100) == "00:00:01:00"
+    assert ft2_train.DEV_CAP_DOLLARS < ft2_train.EVAL_CAP_DOLLARS < ft2_train.CAP_DOLLARS <= 1.5
+    assert "trainer.max_steps=30" in ft2_train.DEV_OVERRIDES and "data.val_limit=8" in ft2_train.DEV_OVERRIDES
+    for fn in (ft2_train.train_remote, ft2_train.evaluate_remote, ft2_train.export_remote, ft2_train.fetch_data):
+        assert hasattr(fn, "remote")
+    for ep in (ft2_train.dev, ft2_train.train, ft2_train.evaluate, ft2_train.export):
+        assert hasattr(ep, "info")
+
+
+def test_ft2_validations_are_read_from_what_the_module_writes(ft2_train, tmp_path):
+    run = tmp_path / "runs" / "x"
+    (run / "sub").mkdir(parents=True)
+    for step in (150, 300):
+        metrics = {"wer_raw": 0.1 * step / 150, "wer_normalized": 0.05, "filler_recall": 0.5,
+                   "fillers_in_refs": 10, "n_clips": 8, "n_words": 100}
+        (run / "sub" / f"val-step-{step:06d}.jsonl").write_text(
+            json.dumps({"metrics": metrics}) + "\n" + json.dumps({"ref": "a", "hyp": "a"}) + "\n", encoding="utf-8")
+    rows = ft2_train._validations(run, root=str(tmp_path))
+    assert [r["step"] for r in rows] == [150, 300] and rows[1]["wer_raw"] == pytest.approx(0.2)
+    assert rows[0]["file"] == "runs/x/sub/val-step-000150.jsonl"

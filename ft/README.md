@@ -54,8 +54,37 @@ decay, batch 16, 900 steps (≈3.2 epochs), validation on 64 clips every 150 ste
 The export merges the adapter into the base and converts to CTranslate2, the format
 faster-whisper loads; s2s-lab's bench then runs it beside the unmodified `small.en`.
 
-**Where it runs.** The GPU run goes to Modal (`modal_app/`, next commit): each run is well under
-an hour, and Vast's set-up overhead was most of an hour on FT-1.
+**Where it runs: Modal, not Vast.ai -- the decision (2026-09-26).** The plan's week 7 says
+"FT-1 / FT-2 / FT-3 on Vast spot", and its platform rule (page 17 §5) says: GPU busy for more than
+an hour -> Vast; bursty -> Modal. FT-1 was 11 hours of training and went to Vast. FT-2 is about
+900 steps of whisper-small with a LoRA, some 15-20 minutes of GPU, and by the plan's own rule
+that is Modal's case. What decided it:
+
+1. *Vast's overhead is fixed, and it swamps a short job.* FT-1's machine ran 12.3 h for 11.4 h of
+   training; the rest was renting, ssh, installing, the dataset download (rate-limited twice) and
+   the copy-off, plus the two things that broke (`CUDA_VISIBLE_DEVICES`, the ssh proxy). For a
+   20-minute job that overhead is two to three times the training, in money and in attention.
+2. *Cost is a wash; reproducibility is not.* Modal A10 at \$1.10/h for about 0.3 h is about
+   \$0.35 (plus a one-off CPU image build); a Vast 4090 at about \$0.35/h for 0.3 h of training
+   and 0.75 h of set-up is much the same. But the Modal image is pinned in code and a test holds it
+   to `ft/uv.lock`, the dataset sits on a volume fetched once on a CPU, every run is one command
+   with a hard dollar cap, and there is no machine to destroy and no key of ours on a rented box.
+3. *Budgets.* Vast stands at \$24.29 against the plan's \$5.86; Modal at \$8.04 against \$36.93.
+   The small jobs go where the headroom is.
+
+The case for Vast is the portfolio story -- week 7 was to show the training platform -- and the
+`vast/` kit's fixes from FT-1 (self-destroy read from PID 1, the 15 h cap) are untested on a real
+machine. Both wait for a job that needs Vast: this project runs anywhere `uv sync` does, so FT-2
+on a rented 4090 would be `uv sync`, `uv run src/train.py experiment=ft2_whisper_verbatim`, copy
+`logs/` off. On Modal the same `src/train.py` command runs as a subprocess, on the volume `ft2`,
+with a dollar cap on every function:
+
+    modal run modal_app/ft2_train.py::dev                                   # 30 steps on the real data, ~$0.10
+    modal run modal_app/ft2_train.py::train                                 # the experiment, ~$0.40
+    modal run modal_app/ft2_train.py::evaluate                              # dev look: base, all 250 val clips
+    modal run modal_app/ft2_train.py::evaluate --adapter runs/<run>/adapters/step-000900
+    modal run modal_app/ft2_train.py::export --adapter runs/<run>/adapters/step-000900
+    modal volume get ft2 runs/<run> results/ft2/                            # the run's files, back here
 
 ## FT-3 — a TTS with native pitch and duration control
 
