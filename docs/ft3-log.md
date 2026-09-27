@@ -3,7 +3,8 @@
 What happened, in order: every run, every failure, its cause, the code that changed, and the commit.
 Times are UTC (the machine's commits are CDT, UTC-5). Costs marked "about" are computed from wall time
 at Modal's A10 rate ($1.10/h); the dashboard has the bill. The ledger is `docs/cost-ledger.md`; the
-registration will be PR-012 in `docs/preregistration.md`.
+registration is PR-012 in `docs/preregistration.md`. The same log for FT-1 is `docs/ft1-log.md`,
+for FT-2 `docs/ft2-log.md`.
 
 Logs of each run are under `results/` (not in git); the run files under `results/ft3/`.
 
