@@ -94,8 +94,29 @@ with a dollar cap on every function:
 
 ## FT-3 — a TTS with native pitch and duration control
 
-Planned: NVIDIA FastPitch + HiFi-GAN (Apache-2.0 code, CC-BY-4.0 checkpoint), fine-tuned to a
-Hi-Fi TTS speaker (CC BY 4.0), as the synthesis backend P2c's severity render asks for. Not started.
+The severity render (`s2slab.severity`, P2c) edits Kokoro's speech in Praat after the fact; PR-009
+found its pitch offset leaning upward. FT-3 gives the same four targets to a TTS that takes pitch
+and duration as **inputs**: NVIDIA FastPitch + HiFi-GAN (NeMo; Apache-2.0 code, the LJSpeech
+checkpoints CC-BY-4.0), fine-tuned to a Hi-Fi TTS speaker (CC BY 4.0) as the plan's FT-3 asks.
+
+**How the targets become inputs** (`src/ft3/control.py`, pure functions; `src/ft3/synth.py`, the
+model): FastPitch predicts a duration in frames and a pitch value (normalized: (Hz − mean) / std)
+per text token, and its `forward()` takes both back as inputs. Speech tokens' durations are
+divided by the rate and their pitch scaled about the speaker's mean and shifted by offset / std;
+a *pause* — a run of punctuation and space tokens predicted to last 150 ms or more, the Praat
+render's own rule — has its durations multiplied by the pause scale. The pauses' positions in the
+output come from the frame counts, so `severity.achieved` measures a FastPitch render exactly as it
+measured the Praat one. The neutral reference goes through the same forward pass with the
+model's own predictions.
+
+**Environment.** NeMo cannot share `ft/`'s env (it pins `hydra-core` ≤ 1.3.2, `omegaconf` ≤ 2.3 and
+the `lightning` package), so it has its own, from `requirements-ft3.txt` (the commands are in
+that file); CPU is enough for synthesis, and the control tests run in `ft/`'s env without NeMo.
+
+    PYTHONPATH=ft:src ~/.venvs/s2slab-ft3/bin/python -m src.ft3.synth "The train leaves at nine. I bought a ticket." --condition depression --score 15
+
+writes the neutral and the controlled render under `results/ft3/dev/` and prints the four measures
+against their targets. The dev sweep, the fine-tune on Modal and PR-012 follow.
 
 ## Licences
 
