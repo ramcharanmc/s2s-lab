@@ -6,6 +6,10 @@ intelligibility by a recognizer's WER on the synthesized audio.
 
     PYTHONPATH=src python -m s2slab.quantladder dev [--listen]
         -> results/m26/dev.json and the table below it; laptop CPU, no GPU
+    PYTHONPATH=src python -m s2slab.quantladder dry
+        -> PR-013's code on the dev set, no lock: results/m26/pr013-dry.json
+    PYTHONPATH=src python -m s2slab.quantladder test --confirm PR-013
+        -> the registered run, once: runs/m26/pr013.json (docs/preregistration.md)
 
 The rungs. `torch` is the kokoro package the ladder's rungs R0 to R3 speak with. The three ONNX
 files are onnx-community/Kokoro-82M-v1.0-ONNX's own, pinned by revision and SHA-256; nothing here
@@ -306,11 +310,232 @@ def dev(listen: bool = False, out="results/m26", hear=None, root=ROOT) -> dict:
     return results
 
 
+# --------------------------------------------------------------------------- #
+# PR-013: the held-out test (docs/preregistration.md)
+#
+#     PYTHONPATH=src python -m s2slab.quantladder dry                       # the run's own code on the dev set
+#     PYTHONPATH=src python -m s2slab.quantladder test --confirm PR-013     # once
+#
+# Two claims, two verdicts. A: at the 8-bit rung the pitch has left its guardrail while the words
+# have not. B: fp16 on a CPU is a usable rung. Held-out voices and sentences; the run refuses
+# without the confirmation, on a tree with uncommitted changes, over its own evidence, and on a
+# model file that is not the pinned one -- all before anything loads.
+# --------------------------------------------------------------------------- #
+
+REGISTRATION = "PR-013"
+RUN_PATH = "runs/m26/pr013.json"
+AUDIO_DIR = "results/m26/pr013"                # the renders (ignored by git)
+TEST_VOICES = ("af_sarah", "am_adam")          # PR-009's held-out pair; not used on this milestone's dev set
+TEST_SENTENCES = {  # neutral content, a sentence break and a comma each; written with the registration
+    "v01": "The bakery opens at seven. I bought two loaves, and I carried them home in a bag.",
+    "v02": "My cousin called on Friday. She had moved house, and she wanted to give me the address.",
+    "v03": "The ferry was full this morning. We stood on the deck, and we watched the harbour pass.",
+    "v04": "I swept the porch after breakfast. The leaves had piled up, so it took a little while.",
+    "v05": "The clock in the hall stopped. I wound it again, and it kept time for the rest of the day.",
+    "v06": "We found the map in a drawer. It was old and creased, but the roads were still clear.",
+    "v07": "The plumber came on Wednesday. He replaced the tap, and the kitchen sink stopped dripping.",
+    "v08": "I left the umbrella by the door. It was still wet, so I opened it to let it dry.",
+    "v09": "Our street was closed for repairs. The buses took another route, and I walked the last part.",
+    "v10": "The museum was quiet on Monday. We saw the new gallery, and then we had coffee upstairs.",
+    "v11": "I ironed the shirts last night. There were six of them, and I hung them in the wardrobe.",
+    "v12": "The dog waited by the gate. I filled its bowl, and it drank before we went out.",
+    "v13": "We booked the tickets in March. The flight leaves at noon, so we will take the early train.",
+    "v14": "The lamp on the desk flickered. I changed the bulb, and the light was steady again.",
+    "v15": "My neighbour borrowed the ladder. He cleaned his gutters, and he returned it the same evening.",
+    "v16": "The bread was still warm. I cut two slices, and I put the rest in the tin.",
+    "v17": "I counted the chairs in the room. There were twelve, so we brought two more from the hall.",
+    "v18": "The river was high after the rain. We crossed by the bridge, and we kept to the path.",
+    "v19": "She sent the parcel on Tuesday. It arrived two days later, and nothing inside was broken.",
+    "v20": "The heating came on at six. The house was warm by seven, so I opened a window.",
+    "v21": "I washed the car on Saturday. It rained that evening, but the windows stayed clean.",
+    "v22": "The teacher handed back the papers. Mine had three corrections, and I fixed them at home.",
+    "v23": "We painted the bedroom blue. It took two coats, and the smell was gone by Thursday.",
+    "v24": "The market sets up before dawn. I went at eight, and most of the fruit was already sold.",
+}
+QUANTIZED, HALF = "onnx-q8", "onnx-fp16"
+A1_MAX_SHARE = 0.90                 # A1: the 8-bit pitch offset within 3 Hz on FEWER than this share (PR-009's S4 bar, failed)
+A3_MAX_WER_POINTS = 2.0             # A3: the upper end of the normalized WER difference's interval, in points
+B2_OFFSET_SHARE, B2_RANGE_SHARE = 0.90, 0.80    # B2: PR-009's S4 and S5 bars, on fp16's renders that are audio
+N_BOOT, BOOT_SEED = 10_000, 0
+
+
+def _first(results: dict, rung: str) -> dict:
+    """{(voice, sentence): row} of a rung's first render."""
+    return {(r["voice"], r["sentence"]): r for r in results["rows"] if r["rung"] == rung and r["repeat"] == 0}
+
+
+def _interval(values) -> tuple[float, float]:
+    lo, hi = np.percentile(np.asarray(values, dtype=float), [2.5, 97.5])
+    return float(lo), float(hi)
+
+
+def criteria(results: dict) -> dict:
+    """PR-013's five criteria from a saved run. Resampling is over renders (a voice and a sentence),
+    N_BOOT times, seeded; the noise floor is the run's own."""
+    q8, half, ref = _first(results, QUANTIZED), _first(results, HALF), _first(results, results["reference"])
+    measured = [k for k in q8 if q8[k]["measures"] and q8[k]["measures"]["f0_offset_hz"] == q8[k]["measures"]["f0_offset_hz"]]
+    offsets = np.array([q8[k]["measures"]["f0_offset_hz"] for k in measured])
+    within = int(sum(severity.within("f0_offset_hz", 0.0, v) for v in offsets))
+    p95 = floor(results)["f0_offset_hz"]["p95"]
+    if len(offsets) and p95 is not None:
+        idx = np.random.default_rng(BOOT_SEED).integers(0, len(offsets), size=(N_BOOT, len(offsets)))
+        lo, hi = _interval(offsets[idx].mean(axis=1))
+        a1 = {"within": within, "of": len(offsets), "share": within / len(offsets), "pass": within / len(offsets) < A1_MAX_SHARE}
+        a2 = {"mean": float(offsets.mean()), "lo": lo, "hi": hi, "floor_p95": p95, "pass": bool(hi < -p95 or lo > p95)}
+    else:                                       # nothing to measure: a criterion that cannot be computed is not met
+        a1 = {"within": 0, "of": len(offsets), "share": None, "pass": False}
+        a2 = {"mean": None, "lo": None, "hi": None, "floor_p95": p95, "pass": False}
+
+    heard = [k for k in q8 if "wer" in q8[k] and "wer" in ref[k]]
+    e = np.array([[q8[k]["wer"]["normalized"]["errors"], ref[k]["wer"]["normalized"]["errors"]] for k in heard], dtype=float)
+    w = np.array([ref[k]["wer"]["normalized"]["words"] for k in heard], dtype=float)
+    if len(heard) and w.sum():
+        points = lambda rows: 100.0 * (e[rows, 0].sum(axis=-1) - e[rows, 1].sum(axis=-1)) / w[rows].sum(axis=-1)
+        widx = np.random.default_rng(BOOT_SEED).integers(0, len(heard), size=(N_BOOT, len(heard)))
+        wlo, whi = _interval(points(widx))
+        a3 = {"points": float(points(np.arange(len(heard)))), "lo": wlo, "hi": whi, "renders": len(heard),
+              "quantized": {"errors": int(e[:, 0].sum()), "words": int(w.sum())},
+              "reference": {"errors": int(e[:, 1].sum()), "words": int(w.sum())}, "pass": bool(whi <= A3_MAX_WER_POINTS)}
+    else:
+        a3 = {"points": None, "lo": None, "hi": None, "renders": 0, "quantized": {"errors": 0, "words": 0},
+              "reference": {"errors": 0, "words": 0}, "pass": False}
+
+    finite = [k for k in half if half[k]["finite"] and half[k]["measures"]]
+    b1 = {"audio": sum(r["finite"] for r in half.values()), "of": len(half), "pass": all(r["finite"] for r in half.values())}
+    off = sum(severity.within("f0_offset_hz", 0.0, half[k]["measures"]["f0_offset_hz"]) for k in finite)
+    rge = sum(severity.within("f0_dev_scale", 1.0, half[k]["measures"]["f0_dev_scale"]) for k in finite)
+    b2 = {"offset_within": int(off), "range_within": int(rge), "of": len(finite),
+          "pass": bool(finite) and off >= B2_OFFSET_SHARE * len(finite) and rge >= B2_RANGE_SHARE * len(finite)}
+    out = {"A1": a1, "A2": a2, "A3": a3, "B1": b1, "B2": b2}
+    out["claim_a"] = a1["pass"] and a2["pass"] and a3["pass"]
+    out["claim_b"] = b1["pass"] and b2["pass"]
+    return out
+
+
+def validity(results: dict) -> list[str]:
+    """What would make a run not the registered one."""
+    problems = []
+    if tuple(results.get("voices", ())) != TEST_VOICES or results.get("sentences") != TEST_SENTENCES:
+        problems.append("not the held-out voices and sentences")
+    renders = len(TEST_VOICES) * len(TEST_SENTENCES)
+    want = renders * (len(RUNGS) + TORCH_REPEATS)
+    if len(results["rows"]) != want or len(results["floor_rows"]) != renders * (TORCH_REPEATS - 1):
+        problems.append(f"{len(results['rows'])} rows and {len(results['floor_rows'])} floor rows, not {want} and {renders * (TORCH_REPEATS - 1)}")
+    if {r: x.get("sha256") for r, x in results.get("rungs", {}).items()} != {r: d for r, (_, d) in RUNGS.items()}:
+        problems.append("not the pinned model files")
+    if str(results.get("commit", "")).endswith("-dirty") or results.get("commit") in (None, "", "unknown"):
+        problems.append(f"commit {results.get('commit')!r}: not a clean committed tree")
+    return problems
+
+
+def format_criteria(results: dict) -> str:
+    """The two verdict blocks, as the registration words them."""
+    c = criteria(results)
+    mark = lambda k: "PASS" if c[k]["pass"] else "FAIL"
+    a1, a2, a3, b1, b2 = (c[k] for k in ("A1", "A2", "A3", "B1", "B2"))
+    if a1["share"] is None or a3["points"] is None:
+        return (f"{REGISTRATION}: the 8-bit copy has {a1['of']} renders with a pitch and {a3['renders']} that were heard: "
+                f"Claim A cannot be computed and is NOT SUPPORTED; fp16 returned audio for {b1['audio']} of {b1['of']}")
+    lines = [f"{REGISTRATION}, the registered criteria (docs/preregistration.md):",
+             "  Claim A: at the 8-bit rung the pitch has left its guardrail while the words have not",
+             f"  A1  8-bit pitch offset within 3 Hz on fewer than 90% of renders: {a1['within']} of {a1['of']} "
+             f"({100 * a1['share']:.1f}%)   {mark('A1')}",
+             f"  A2  its mean offset's 95% interval excludes zero and lies beyond the noise floor ({a2['floor_p95']:.2f} Hz): "
+             f"{a2['mean']:+.2f} Hz, {a2['lo']:+.2f} to {a2['hi']:+.2f}   {mark('A2')}",
+             f"  A3  normalized WER, 8-bit minus fp32, interval's upper end at most +{A3_MAX_WER_POINTS:.1f} points: "
+             f"{a3['points']:+.2f} points, {a3['lo']:+.2f} to {a3['hi']:+.2f} "
+             f"({a3['quantized']['errors']} against {a3['reference']['errors']} errors in {a3['reference']['words']} words)   {mark('A3')}",
+             "  Claim B: fp16 on a CPU is a usable rung",
+             f"  B1  fp16 returns audio for every render: {b1['audio']} of {b1['of']}   {mark('B1')}",
+             f"  B2  its renders that are audio: pitch offset within 3 Hz on at least 90%, range within 10% on at least 80%: "
+             f"{b2['offset_within']} and {b2['range_within']} of {b2['of']}   {mark('B2')}"]
+    problems = validity(results)
+    if problems:
+        lines.append(f"{REGISTRATION}: NOT THE REGISTERED RUN -- " + "; ".join(problems))
+    else:
+        failed = lambda keys: ", ".join(k for k in keys if not c[k]["pass"])
+        lines.append(f"{REGISTRATION}, Claim A: " + ("SUPPORTED" if c["claim_a"] else f"NOT SUPPORTED -- failed {failed(('A1', 'A2', 'A3'))}"))
+        lines.append(f"{REGISTRATION}, Claim B: " + ("SUPPORTED" if c["claim_b"] else f"NOT SUPPORTED -- failed {failed(('B1', 'B2'))}"))
+    return "\n".join(lines)
+
+
+def _speakers(root=ROOT):
+    for rung in RUNGS:                                                  # every file checked before anything loads
+        rung_file(rung, root)
+    torch_tts = TorchKokoro()
+    torch_tts.load()
+    onnx = {rung: OnnxKokoro(rung, root) for rung in RUNGS}
+    for speaker in onnx.values():
+        speaker.load()
+    return torch_tts, onnx
+
+
+def registered_run(confirm: str, run_path=RUN_PATH, audio_dir=AUDIO_DIR, speakers=None, hear=None, commit_fn=None) -> dict:
+    """The one PR-013 run. Every refusal comes before a model loads. speakers() -> (torch_tts,
+    onnx), hear(audio) -> text and commit_fn() -> str can be given, for the tests."""
+    import datetime
+
+    from .sidechannel import refuse_to_overwrite
+    from .sweep import _git_commit
+    if confirm != REGISTRATION:
+        raise PermissionError(f"the held-out voices and sentences are locked: run with --confirm {REGISTRATION}, "
+                              "once, after the registration is committed")
+    run_path = pathlib.Path(run_path)
+    refuse_to_overwrite(run_path)
+    commit = (commit_fn or _git_commit)()
+    if commit.endswith("-dirty") or commit in ("", "unknown"):
+        raise PermissionError(f"commit {commit!r}: the registered run starts from a clean committed tree")
+    torch_tts, onnx = (speakers or _speakers)()
+    hear = hear or whisper_hearer()
+    audio = pathlib.Path(audio_dir)
+    audio.mkdir(parents=True, exist_ok=True)
+    t0 = time.time()
+    results = run(TEST_SENTENCES, TEST_VOICES, torch_tts, onnx, hear=hear, listen=audio)
+    results.update(registration=REGISTRATION, commit=commit, set="test", seconds=round(time.time() - t0),
+                   ran=datetime.datetime.now().isoformat(timespec="seconds"))
+    results["floor"] = floor(results)
+    results["summary"] = summarize(results)
+    results["criteria"] = criteria(results)
+    run_path.parent.mkdir(parents=True, exist_ok=True)
+    run_path.write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")
+    return results
+
+
+def dry_run(out="results/m26/pr013-dry.json", speakers=None, hear=None) -> dict:
+    """The registered run's code path on the DEV voices and sentences. Overwrites its own output;
+    it is not evidence."""
+    from .sweep import _git_commit
+    torch_tts, onnx = (speakers or _speakers)()
+    t0 = time.time()
+    results = run(DEV_SENTENCES, DEV_VOICES, torch_tts, onnx, hear=hear or whisper_hearer())
+    results.update(registration=f"{REGISTRATION} dry run, dev set", commit=_git_commit(), set="dev", seconds=round(time.time() - t0))
+    results["floor"] = floor(results)
+    results["summary"] = summarize(results)
+    results["criteria"] = criteria(results)
+    out = pathlib.Path(out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(results, indent=1) + "\n", encoding="utf-8")
+    return results
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
     if args[:1] == ["dev"] and not set(args[1:]) - {"--listen"}:
         results = dev(listen="--listen" in args)
         print(report(results))
         print(f"\nsaved -> results/m26/dev.json; {results['seconds']} s on the CPU")
+    elif args == ["dry"]:
+        results = dry_run()
+        print(report(results))
+        print("\nDRY RUN on the dev set -- expect 'NOT THE REGISTERED RUN' below\n")
+        print(format_criteria(results))
+        print(f"\nsaved -> results/m26/pr013-dry.json; {results['seconds']} s on the CPU")
+    elif len(args) == 3 and args[:2] == ["test", "--confirm"]:
+        results = registered_run(args[2])
+        print(report(results))
+        print("\n" + format_criteria(results))
+        print(f"\nsaved -> {RUN_PATH}; renders: {AUDIO_DIR}/; {results['seconds']} s on the CPU")
     else:
-        sys.exit("usage: python -m s2slab.quantladder dev [--listen]")
+        sys.exit("usage: python -m s2slab.quantladder dev [--listen]\n"
+                 "       python -m s2slab.quantladder dry\n"
+                 f"       python -m s2slab.quantladder test --confirm {REGISTRATION}")

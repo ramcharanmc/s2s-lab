@@ -27,6 +27,7 @@ Rules, from the v1 Research plan (§8):
 | PR-010 | Does a LoRA trained on DailyTalk (kyutai's moshi-finetune, test fold held out) move Moshi's turn gaps closer to DailyTalk's own, on 100 held-out dialogues? | `4df9ef3` | **Reported: not supported, moved away** (distance to the reference 496 ms base, 1,035 ms LoRA; gain −539 ms, 95% interval −685 to −402; overlap 85 → 2 turn changes, but median gap 160 → 1,220 ms against 420) |
 | PR-011 | Does a LoRA trained on verbatim transcripts make `whisper-small.en` write down disfluent speech as spoken -- fillers and all -- on the eval set's disfluent cohort, without hurting the other cohorts? | `65c833c` | **Reported: supported** (S1 raw WER on the disfluent cohort 9.9% → 2.3%, −7.6 points, interval −9.6 to −5.7; S2 29 of 29 fillers kept; S3 the other 150 clips −2.3 points normalized where +1.0 was allowed -- most of it EdAcc's verbatim references, not new accent robustness) |
 | PR-012 | On eight sentences neither voice has spoken, do renders made by giving page 09's severity targets to FastPitch as its own inputs meet PR-009's five criteria, over the base LJSpeech voice and a 5-minute fine-tune together? | `89edd05` | **Reported: not supported** (all five criteria failed, as predicted: S1 92 of 96, S2 14 of 32, S3 357 of 384, S4 109 of 192, 56.8%, S5 115 of 192, 59.9%; rate on target in 192 of 192; the base voice 67 and 78 of 96 on S4 and S5, the 5-minute fine-tune 42 and 37) |
+| PR-013 | On two voices and 24 sentences no copy has spoken: when Kokoro-82M is quantized to 8 bits, has its pitch left PR-009's guardrail by more than the package's own noise while its words have stayed (Claim A), and is the fp16 copy a usable rung on a CPU (Claim B)? | this commit | **Registered, not run** (predicted: Claim A supported, Claim B not) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -2907,3 +2908,143 @@ By condition, checks within tolerance of 48:
   pause is 0.00, in depression it grows by more than the target at every step. Not looked into.
 - **Beside PR-009:** the Praat edit of Kokoro's audio met S1, S2, S3 and S5 and missed S4 by four
   checks; FastPitch's own inputs met none. Other voices, other sentences: beside, not against.
+
+---
+
+## PR-013 — When Kokoro is quantized to 8 bits, does its pitch leave the guardrail while its words stay?
+
+**Registered:** 2026-09-27, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+v2 plan, week 8 (Notion page 17 §8): "Quantization ladder with a prosody guardrail". v1's P3
+(page 16 §8) states the claim: "F0 RMSE degrades at a quantization rung where WER is still flat";
+and what failing means: "If prosody and intelligibility degrade together, [the] assertion was
+wrong -- say so." A check of the words alone would then pass a model whose voice has changed.
+
+**The model and its copies.** Kokoro-82M, the synthesizer of rungs R0 to R3. Nothing here
+quantizes anything: the copies are `onnx-community/Kokoro-82M-v1.0-ONNX`'s own (Apache-2.0),
+revision `1939ad2a…5f2231`, held by SHA-256 in `quantladder.RUNGS`: fp32 (325.5 MB), fp16
+(163.2 MB) and 8-bit (`model_quantized.onnx`, 92.4 MB), run by ONNX Runtime 1.23.2 on the laptop's
+CPU; and beside them the `kokoro` package 0.9.4 in torch, which is what the rungs speak with. The
+same phoneme ids and the same voice vector go into every copy (the ONNX repo's vocabulary and
+voice files equal the package's: checked). The publisher's page says the model "is resilient to
+quantization", with samples to listen to and no measurement.
+
+**The measures** (`src/s2slab/quantladder.py`, `1133033`). Each render against ONNX fp32's render
+of the same sentence and voice, with PR-009's own measures (`severity.achieved`: median F0 and its
+middle-half spread by Praat, rate and pauses) and PR-009's tolerance: 3 Hz for the pitch offset,
+10% for the others. Intelligibility: `base.en` (the rungs' recognizer) hears each render, scored
+against the text, raw and normalized.
+
+**Two things the pilot changed.** (1) ONNX Runtime on a CPU repeats itself exactly, so the noise
+floor cannot come from rendering a copy twice. The torch package does not repeat itself: the
+floor is **torch against torch**, five renders of every sentence, each against the first.
+(2) A copy can return audio that is not a number. Such a render is counted, kept out of every
+measure, and not scored as speech.
+
+**Development** (the author's run at `1133033`, 2 dev voices x PR-009's 12 sentences, 546 s; the
+three ONNX copies' audio was sample for sample the audio of an earlier run of the same code):
+
+| 24 renders a copy | audio | pitch offset within 3 Hz | range within 10% | rate | pauses | WER raw / normalized | real-time factor |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| ONNX fp32, the reference | 24 | — | — | — | — | 2.1 / 1.1% | 0.30 |
+| ONNX fp16 | **23** | 23 of 23 | 23 of 23 | 23 of 23 | 23 of 23 | 2.2 / 1.1% | 0.32 |
+| ONNX 8-bit | 24 | **9** | **17** | 24 | 23 | 2.6 / 1.6% | **1.31** |
+| torch package | 24 | 24 | 23 | 24 | 22 | 2.1 / 1.1% | 0.37 |
+
+The 8-bit copy's mean pitch offset is -3.34 Hz (95% interval over renders -4.02 to -2.71), lower
+than fp32 on 23 of 24 renders, for both voices (-3.79 and -2.88 Hz); its range 7% narrower on
+average. Its normalized WER is +0.53 points above fp32's (6 errors against 4 in 380 words;
+interval 0.00 to +1.61). The noise floor's 95th percentile: 1.07 Hz, 3.8% of range, 0.5% of rate,
+1.4% of pauses. The floor is itself a sample: over four runs of the dev set its 95th percentile
+for the pitch offset was 0.78, 0.99, 1.07 and 1.34 Hz. fp16 returned no audio for one render (`af_heart`, d1: every sample not a number,
+and in the pilot six times of six); why was not looked into. The 8-bit copy is 28% of fp32's size
+and four times slower on this CPU, slower than speech.
+
+What was known, and by whom: no copy has spoken any of the 24 sentences below, which were written
+with this entry, and the two test voices have not been used on this milestone. The eval set's
+clean references, first proposed as the test text, were set aside before any render: they are
+upper case without punctuation. No listening result is part of this entry.
+
+### Question
+
+On two voices and 24 sentences no copy has spoken: at the 8-bit rung, has the pitch left PR-009's
+guardrail, by more than the package's own run-to-run noise, while the words have stayed (Claim A)?
+And is fp16 on a CPU a usable rung (Claim B)?
+
+### Validity requirements
+
+| | Requirement |
+|---|---|
+| **V1 · Frozen** | As committed with this entry, in `src/s2slab/quantladder.py`: `RUNGS`, `REVISION`, `TORCH_REPEATS`, `TorchKokoro`, `OnnxKokoro`, `compare`, `score_heard`, `whisper_hearer`, `run`, `floor`, and every name in the PR-013 section (`TEST_VOICES`, `TEST_SENTENCES`, the thresholds, `criteria`, `validity`, `registered_run`). In `severity.py` and `wer.py`, unchanged since PR-009 and the ladder's rows: the measures, `within`, the normalizers. `report`, `summarize` and `format_criteria` may gain lines, tested on made-up runs only. |
+| **V2 · Held out** | `af_sarah`, `am_adam` and the 24 `TEST_SENTENCES` reach a copy for the first time in the registered run. `registered_run` is the only path to them. The tests use fake speakers. |
+| **V3 · The copies** | The three ONNX files by SHA-256, checked before anything loads: fp32 `8fbea51e…21a34cb`, fp16 `ba4527a8…c35c334a`, 8-bit `fbae9257…028a1478`. |
+| **V4 · One run, whole set** | All 48 renders a copy, torch five times each: `PYTHONPATH=src python -m s2slab.quantladder test --confirm PR-013`, laptop CPU, from a clean tree; the run refuses a dirty one. A crashed run writes no run file; it is reported here and repeated once, in full. |
+| **V5 · Evidence** | `runs/m26/pr013.json` (every render's measures, transcript and SHA-256, the floor, the criteria) and the printed report as `runs/m26/pr013-report.md`, committed with the results, with the dev run and the dry run. The audio and the model files stay out of git. |
+
+### Primary outcome
+
+`quantladder.criteria` on the run's rows, as coded at this commit. Intervals are 95%, by
+resampling renders (a voice and a sentence) 10,000 times, seed 0; the noise floor is the run's own.
+
+### Success criteria
+
+**Claim A, supported only if all three hold:**
+- **A1** the 8-bit copy's pitch offset is within 3 Hz on fewer than 90% of its renders (PR-009's
+  S4 bar, not met).
+- **A2** the 95% interval of its mean pitch offset excludes zero and lies wholly beyond the noise
+  floor's 95th percentile, on either side.
+- **A3** normalized WER, 8-bit minus fp32, in points: the interval's upper end is at most +2.0.
+
+**Claim B, supported only if both hold:**
+- **B1** fp16 returns audio for all 48 renders.
+- **B2** of its renders that are audio, the pitch offset is within 3 Hz on at least 90% and the
+  range within 10% on at least 80% (PR-009's S4 and S5 bars).
+
+### Predictions, recorded but not criteria
+
+- **Claim A supported.** A1: 30 to 55% of the 8-bit renders within 3 Hz. A2: a mean offset between
+  -2.5 and -4.0 Hz. A3: a WER difference between 0 and +1.0 points, the interval's upper end under
+  +2.0. **A3 is the criterion most likely to fail**: on dev the interval's lower end was exactly
+  zero, so the 8-bit copy's words are never better, and "flat" rests on the size of the bar.
+- **Claim B not supported**, on B1: fp16 returns no audio for 1 to 4 of the 48 renders. Every one
+  of its renders that is audio is within tolerance on every measure.
+- The 8-bit copy's range is within 10% on 60 to 85% of its renders.
+- The 8-bit copy is slower than real time on this CPU, and the slowest of the four.
+- The torch package against ONNX fp32 sits inside the noise floor: its mean offset's interval
+  includes zero.
+
+### Reported alongside, descriptively
+
+Every copy's counts for the four measures, WER, size and real-time factor; the noise floor; the
+8-bit copy's offset by voice and its direction render by render; the renders that are not audio,
+by sentence and voice, with their phoneme counts; what the recognizer heard where the 8-bit copy
+and fp32 differ.
+
+### Analysis plan
+
+1. Commit this entry with the frozen code above.
+2. The one run (V4); save the evidence (V5); record the output below, verbatim.
+3. Only after step 2: any further look, labelled exploratory.
+
+### What this cannot show
+
+- **Not quantization in general.** One model, one publisher's recipe for each copy. Another
+  recipe, or quantization-aware training, could behave differently.
+- **Not a GPU.** ONNX Runtime on one laptop CPU. fp16 is a GPU's format; its failure here says
+  nothing about a GPU, and its speed here says little.
+- **Not whether a listener would notice.** No listening test; 3 Hz is PR-009's tolerance, not a
+  threshold of hearing.
+- **Not F0 RMSE.** v1 names it; the measure here is the median's shift and the spread's ratio,
+  because two renders differ in length and a frame-by-frame error would need an alignment.
+- **Not naturalness, and not clinical validity.**
+
+### Deviations
+
+None yet.
+
+### Results
+
+Not run yet.

@@ -10,7 +10,10 @@ Kept as events happen, from the milestone's first day. Times are CDT. The earlie
 | 2 | 09-27 15:11 | checks before any download | no install needed; the inputs match | — | — |
 | 3 | 09-27 15:24 | three model files, four voices downloaded | all arrived, 581 MB | — | — |
 | 4 | 09-27, afternoon | the pilot, scratch | fp16 returned no audio for one sentence of two | — | — |
-| 5 | 09-27, afternoon | the dev run, scratch, 24 renders a rung | the 8-bit copy speaks lower and flatter | `src/s2slab/quantladder.py`, tests | this commit |
+| 5 | 09-27, afternoon | the dev run, scratch, 24 renders a rung | the 8-bit copy speaks lower and flatter | `src/s2slab/quantladder.py`, tests | 1133033 |
+| 6 | 09-27, evening | the dev run, the author's, at 1133033 | the ONNX copies' audio identical to the scratch run's | — | — |
+| 7 | 09-27, evening | — | the test text changed before any render | — | — |
+| 8 | 09-27, evening | the dry run, scratch | PR-013 registered | `quantladder.py` (the PR-013 section), tests, the entry | this commit |
 
 ## 1. The design
 
@@ -113,8 +116,46 @@ Within = PR-009's tolerance (3 Hz for the offset, 10% for the others).
 
 This is the pattern v1's P3 predicts, on dev data. The registration comes next.
 
-## Open, for the registration
+## 6. The author's dev run
 
-- How a rung that returns no audio counts.
-- Whether the GPU run is added, now that fp16 fails on a CPU.
-- The bars: the noise floor's size sets how small a change can be called a change.
+Commit 1133033, 546 s. All 72 ONNX renders have the SHA-256 of the scratch run's, the render that
+is not audio included: ONNX Runtime on this CPU repeats itself across runs, not only within one.
+The torch row and the floor differ a little from the scratch run's, as the package does.
+
+| The author's run | value |
+|---|---|
+| 8-bit, pitch offset within 3 Hz | 9 of 24 |
+| 8-bit, mean pitch offset | -3.34 Hz, interval -4.02 to -2.71; lower than fp32 on 23 of 24 |
+| 8-bit, by voice | `af_heart` -3.79 Hz, `am_michael` -2.88 Hz |
+| 8-bit, normalized WER against fp32's | +0.53 points, interval 0.00 to +1.61 |
+| noise floor, 95th percentile | 1.07 Hz; 3.8% of range; 0.5% of rate; 1.4% of pauses |
+
+## 7. The test text changed
+
+The design named the eval set's clean references as the test text. Checked before any render: all
+50 are upper case without punctuation, as LibriSpeech's transcripts are. Read by a TTS they have
+no sentence break, so no pause to measure. **Changed to 24 new sentences**, written with the
+registration in the shape of the dev ones.
+
+## 8. PR-013 registered
+
+Decided with the author on 2026-09-27:
+
+| Decision | Chosen |
+|---|---|
+| A render that is not audio | its own criterion (B1), in a second claim about fp16 |
+| The pitch bar | PR-009's 3 Hz, and the mean shift must lie beyond the run's own noise floor |
+| The WER bar | the interval's upper end at most +2.0 points; +1.0 was the stricter choice, and dev would not have met it |
+| The GPU run | not in PR-013 |
+
+Two claims, two verdicts: A, the 8-bit copy's pitch has left its guardrail while its words have
+not; B, fp16 on a CPU is a usable rung. Predicted: A supported, B not. The entry is in
+`docs/preregistration.md`.
+
+**Run before the hand-over:** the tests, and `python -m s2slab.quantladder dry`, the registered
+run's code on the dev set, in a scratch copy of the tree, 547 s. It gave the dev run's counts
+(A1 9 of 24, A3 +0.53 points, B1 23 of 24). None of the 24 sentences was rendered.
+
+**Seen in the dry runs:** the noise floor moves from run to run. Its 95th percentile for the pitch
+offset was 0.78, 0.99, 1.07 and 1.34 Hz over four runs of the dev set. A2 uses the floor of its own
+run; the 8-bit copy's interval ended at -2.7 Hz, twice the largest of them.
