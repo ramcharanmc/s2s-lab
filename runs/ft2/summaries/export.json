@@ -1,0 +1,21 @@
+{
+ "name": "export-runs_train-f37d0df-20260926-235222_csv_version_0_adapters_step-000900-float16",
+ "adapter": "runs/train-f37d0df-20260926-235222/csv/version_0/adapters/step-000900",
+ "seconds": 43.980650186538696,
+ "files": {
+  "ct2/config.json": 1577,
+  "ct2/model.bin": 483545441,
+  "ct2/preprocessor_config.json": 315,
+  "ct2/tokenizer.json": 3855707,
+  "ct2/vocabulary.json": 825480,
+  "hf/config.json": 2128,
+  "hf/generation_config.json": 1892,
+  "hf/model.safetensors": 966992008,
+  "hf/preprocessor_config.json": 315,
+  "hf/tokenizer.json": 3855707,
+  "hf/tokenizer_config.json": 2091
+ },
+ "ct2_model_sha256": "b31833fe4ed0e1cb429d33a52d81e9974fe32838e32e9a85f19e666af2a51cff",
+ "commit": "f37d0df",
+ "wall_s": 48.21159839630127
+}

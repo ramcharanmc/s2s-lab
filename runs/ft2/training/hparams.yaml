@@ -1,0 +1,79 @@
+model:
+  _target_: src.models.whisper_lora_module.WhisperLoRAModule
+  model_name: openai/whisper-small.en
+  lora_r: 32
+  lora_alpha: 64
+  lora_dropout: 0.05
+  target_modules:
+  - q_proj
+  - v_proj
+  optimizer:
+    _target_: torch.optim.AdamW
+    _partial_: true
+    lr: 0.0002
+    weight_decay: 0.01
+  warmup_steps: 50
+  max_new_tokens: 200
+  model_config_overrides: null
+  compile: false
+model/params/total: 245273088
+model/params/trainable: 3538944
+model/params/non_trainable: 241734144
+data:
+  _target_: src.data.disfluencyspeech_datamodule.DisfluencySpeechDataModule
+  data_dir: ${paths.data_dir}/disfluencyspeech
+  model_name: ${model.model_name}
+  text_column: transcript_a
+  batch_size: 16
+  val_limit: 64
+  max_clip_s: 30.0
+  num_workers: 4
+  pin_memory: true
+  persistent_workers: true
+trainer:
+  _target_: pytorch_lightning.trainer.Trainer
+  default_root_dir: ${paths.output_dir}
+  min_epochs: 1
+  max_epochs: -1
+  accelerator: gpu
+  devices: 1
+  check_val_every_n_epoch: null
+  deterministic: false
+  max_time: 00:01:16:49
+  precision: bf16-mixed
+  max_steps: 900
+  val_check_interval: 150
+  gradient_clip_val: 1.0
+  log_every_n_steps: 10
+  num_sanity_val_steps: 1
+callbacks:
+  model_checkpoint:
+    _target_: pytorch_lightning.callbacks.ModelCheckpoint
+    dirpath: ${paths.output_dir}/checkpoints
+    filename: step_{step:06d}
+    monitor: val/wer_raw
+    verbose: false
+    save_last: true
+    save_top_k: -1
+    mode: min
+    auto_insert_metric_name: false
+    save_weights_only: true
+    every_n_train_steps: null
+    train_time_interval: null
+    every_n_epochs: null
+    save_on_train_epoch_end: null
+  model_summary:
+    _target_: pytorch_lightning.callbacks.RichModelSummary
+    max_depth: 1
+  rich_progress_bar:
+    _target_: pytorch_lightning.callbacks.RichProgressBar
+extras:
+  ignore_warnings: false
+  enforce_tags: true
+  print_config: true
+task_name: train
+tags:
+- ft2
+- f37d0df
+ckpt_path: null
+seed: 0

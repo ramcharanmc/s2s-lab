@@ -39,6 +39,8 @@ Smoke tests, `--limit` runs and reply WAVs go to `results/`, which is ignored.
 | `prosody/pr008-report.md` | the same run's report, regenerated from the run file by the frozen code (the printed output was overwritten; PR-008 Deviations) | `f4da0bc` | Modal NVIDIA L40S | page 20 §19 |
 | `ft1/pr010.json` · `pr010-report.md` | **PR-010, the registered run**: base Moshi, then Moshi + FT-1's LoRA, answering the user channel of the 100 DailyTalk test dialogues, one container; every dialogue's offsets and text, the reference, the adapter's SHA-256 and config, the criterion. Not supported: moved away | `3d36f74` | Modal NVIDIA L40S | page 20 §22 |
 | `ft1/training/` | FT-1's training evidence, as it came off the machine: the config run (both launches, identical), the training log (every step's loss), the script's log, the training list and SHA256SUMS. Not the adapter (740 MB, `data/ft1/`, ignored) | `4df9ef3` | Vast.ai, one H100 80 GB | page 20 §22 |
+| `ft2/pr011.json` · `pr011-report.md` | **PR-011, the registered run**: small.en, then small.en with FT-2's LoRA merged in, transcribing the frozen 200-clip eval set in one container -- every transcript, every clip's recognizer time, the criteria, the exported model's SHA-256. Supported | `65c833c` | Modal Tesla T4 | page 20 §23 |
+| `ft2/training/` · `ft2/dev-look/` · `ft2/summaries/` | FT-2's training evidence from the volume `ft2`: the six validations' transcripts and metrics, `metrics.csv`, the hyperparameters and hydra config; the two dev looks over the 250 validation clips (base, the LoRA); the training, export and smoke-test summaries. Not the adapter or the merged model (`ft2` volume) | `f37d0df` | Modal NVIDIA A10 | page 20 §23 |
 
 ## What an eval-set run holds
 
@@ -106,6 +108,17 @@ and `rows`, one per dialogue. A row is `turngaps.summary(user, answerer)`: `n_tr
 Re-score the criterion without any audio or model (10,000 resamples, a few seconds):
 
     PYTHONPATH=src python -c "import json; from s2slab.dailytalk import pr010; d = json.load(open('runs/ft1/pr010.json', encoding='utf-8')); k = lambda r: {int(i): v for i, v in r.items()}; print(pr010(k(d['base']['rows']), k(d['lora']['rows']), k(d['reference'])))"
+
+## What PR-011's run holds
+
+`registration`, `commit`, `base_model`, `export_name`, `export_sha256`, `machine`, `n_clips`,
+`criteria` (S1, S2, S3 with their intervals and passes), and `models`: for `small.en` and `ft2`,
+the model's `path`, `load_s` and `turns`, one per clip -- `cohort`, `text` (the transcript) and
+`asr_ms`. The references are the eval set's (`evalset/manifest.json`); no audio is stored.
+
+Re-score the criteria without any audio or model:
+
+    PYTHONPATH=src python -c "import json; from s2slab import ft2; d = json.load(open('runs/ft2/pr011.json', encoding='utf-8')); h = {m: {i: t['text'] for i, t in d['models'][m]['turns'].items()} for m in d['models']}; d['criteria'] = ft2.pr011(h['small.en'], h['ft2']); print(ft2.format_pr011(d))"
 
 ## What a severity run holds
 

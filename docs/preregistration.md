@@ -25,7 +25,7 @@ Rules, from the v1 Research plan (§8):
 | PR-008 | When the caller's voice is upset rather than calm, with the same words, does R4 (Qwen2.5-Omni, speaking for itself) answer with a wider pitch range -- beyond chance and beyond what R3's words carry into Kokoro? | `f4da0bc` | **Reported: not supported** (R4 14 wider / 16 narrower of 39; no consistent direction, p = 0.86) |
 | PR-009 | On two Kokoro voices and eight neutral sentences the render was not developed on, does raising a PHQ-9 or YMRS score move pitch, range, rate and pauses the way page 09's mapping says, at every step and within tolerance? | `6c43d5e` | **Reported: not supported** (S4 failed: pitch offset on target in 169 of 192 checks, 88.0%, needed 173; S1 96 of 96, S2 29 of 32, S3 384 of 384, S5 177 of 192 held) |
 | PR-010 | Does a LoRA trained on DailyTalk (kyutai's moshi-finetune, test fold held out) move Moshi's turn gaps closer to DailyTalk's own, on 100 held-out dialogues? | `4df9ef3` | **Reported: not supported, moved away** (distance to the reference 496 ms base, 1,035 ms LoRA; gain −539 ms, 95% interval −685 to −402; overlap 85 → 2 turn changes, but median gap 160 → 1,220 ms against 420) |
-| PR-011 | Does a LoRA trained on verbatim transcripts make `whisper-small.en` write down disfluent speech as spoken -- fillers and all -- on the eval set's disfluent cohort, without hurting the other cohorts? | The commit that adds this entry | Open |
+| PR-011 | Does a LoRA trained on verbatim transcripts make `whisper-small.en` write down disfluent speech as spoken -- fillers and all -- on the eval set's disfluent cohort, without hurting the other cohorts? | `65c833c` | **Reported: supported** (S1 raw WER on the disfluent cohort 9.9% → 2.3%, −7.6 points, interval −9.6 to −5.7; S2 29 of 29 fillers kept; S3 the other 150 clips −2.3 points normalized where +1.0 was allowed -- most of it EdAcc's verbatim references, not new accent robustness) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -2562,8 +2562,104 @@ few disfluent clips.
 
 ### Deviations
 
-None yet.
+- **2026-09-26, the filler count.** The entry says the disfluent references hold 28 fillers and
+  sets S2's bar as "26 of 28"; the frozen code counts **29** (the entry's count came from a crude
+  split on spaces and commas, made while writing; `ft2.fillers` uses the raw normalizer), so the
+  bar as coded was 27 of 29. The LoRA kept 29 of 29; the verdict does not depend on it.
+- **2026-09-26, the premise of S3.** The entry calls the other 150 clips "other speakers, fluent
+  speech". EdAcc's 50 accented clips are other speakers, but their references are verbatim
+  conversational speech -- 28 fillers and 16 immediate word repetitions across the 50 -- so S3
+  was not only a guardrail against harm on fluent speech: on the accented cohort it also
+  measured the verbatim target directly. The criterion stands as registered (it asked whether
+  normalized WER rose by more than a point, and it fell); the reading of the gain is in Results,
+  and the clean + slow cohorts alone (read speech, no fillers) are reported as the fluent guardrail
+  the entry meant, labelled exploratory.
+- **2026-09-26, registry row and dates.** Its "Registered" cell was changed to the registering commit's
+  hash, `65c833c`, and its status updated, as for the earlier entries. The entry's "Registered:
+  2026-09-27" is the UTC date; the commit and the run were the evening of 2026-09-26, CDT, the
+  clock the ledger and the other entries use.
 
 ### Results
 
-Pending.
+**Run:** 2026-09-26, 22:03 CDT, commit `65c833c` (the registering commit), clean tree, Modal Tesla T4 (driver
+610.57.04), one container: `small.en` then the exported model over all 200 clips, the first and
+only run: `modal run modal_app/ft2_train.py::bench --export export-runs_train-f37d0df-20260926-235222_csv_version_0_adapters_step-000900-float16 --confirm PR-011 2>&1 | tee results/ft2-pr011.txt`.
+The exported model's `ct2/model.bin` SHA-256 on the container, `b31833fe4ed0...a51cff`, equals the
+registered one (V3). Run file `runs/ft2/pr011.json` (both models' transcripts and per-clip times,
+the criteria, the SHA-256); the printed output as `runs/ft2/pr011-report.md`; the training
+evidence under `runs/ft2/training/` (the six validations' transcripts, `metrics.csv`, the
+hyperparameters and the hydra config), the two dev looks under `runs/ft2/dev-look/`, and the
+training, export and smoke-test summaries under `runs/ft2/summaries/` (V5). 67 s inside the
+function, \$0.012.
+
+The criteria, verbatim:
+
+```
+PR-011, the registered criteria (docs/preregistration.md), 200 eval-set clips:
+  S1  raw WER on the 50 disfluent clips: base 9.9%, LoRA 2.3%; -7.6 points, 95% interval -9.6 to -5.7   PASS
+  S2  fillers kept on those clips: LoRA 29 of 29 (100.0%; base 1), bar 90%   PASS
+  S3  normalized WER on the 150 other clips: base 10.4%, LoRA 8.0%; -2.3 points, interval -3.8 to -0.9, allowed up to +1.0   PASS
+PR-011: SUPPORTED
+```
+
+**Verdict: supported.** All three held, S3 with room to spare in the direction nobody predicted.
+
+| 50 clips a cohort, raw / normalized WER | `small.en` | + FT-2's LoRA | errors, base → LoRA (normalized S / D / I) |
+|---|---:|---:|---|
+| disfluent (the training speaker) | 9.9 / 7.6% | **2.3 / 2.4%** | 21 / 57 / 3 → 15 / 5 / 6 |
+| accented (EdAcc) | 26.7 / 23.5% | **18.3 / 17.6%** | 68 / 125 / 18 → 76 / 60 / 22 |
+| clean (LibriSpeech) | 3.5 / 3.3% | 3.0 / 2.8% | 22 / 2 / 4 → 20 / 2 / 2 |
+| slow (the 0.75× proxy) | 3.7 / 3.5% | 3.2 / 3.1% | 25 / 1 / 4 → 22 / 2 / 2 |
+| **all 200** | 11.1 / 9.6% | **6.6 / 6.4%** | |
+
+Base `small.en` reproduced PR-004's numbers (its run through the rung, five days earlier, another
+T4): disfluent, clean and slow to the decimal, accented within 0.4 points. Recognizer time p50
+143.6 against 144.7 ms, p90 188 against 190: the merged adapter costs nothing at inference.
+
+**What the gains are.** On the training speaker the base model's errors were **deletions**: 57
+of its 81 normalized errors, the fillers and repetitions it left out ("And they have a policy for
+testing" for "And, uh, they have a policy for, uh, testing"). The LoRA writes them down: 5
+deletions left, and raw and normalized WER meet at 2.3 / 2.4%. On EdAcc the same thing
+happened: 125 of the base's 211 normalized errors were deletions, because EdAcc's references keep
+the "uh"s, the "mhm"s and the "I, I think"s of conversation, and `small.en` does not; the LoRA
+halved them (125 → 60) at the price of eight more substitutions. So most of the 5.9-point
+accented gain is the verbatim target reaching a second corpus with verbatim references, **not**
+new robustness to accents -- 29 accented clips got better, 9 worse, 12 did not change. On the two
+read-speech cohorts, which have no fillers to keep, the LoRA changed little: clean + slow
+together, exploratory, 3.4 → 2.9% normalized, −0.47 points, interval −1.34 to +0.29 -- no harm,
+and no gain that the interval will vouch for. That interval is the fluent guardrail the entry
+meant to register.
+
+**Predictions, scored**
+
+| Prediction | Outcome |
+|---|---|
+| Supported | Right. |
+| S1: base about 10% raw, the LoRA about 3%, a drop of 6 to 8 points | Right: 9.9 → 2.3%, −7.6. |
+| S2: 26 to 28 of 28 | Right in substance, wrong count: 29 of 29. |
+| S3 most likely to fail, holding narrowly at +0.2 to +0.6 | **Wrong**, the good way: −2.3 points, interval −3.8 to −0.9. The reason is in the Deviations: EdAcc's references are verbatim, which the entry did not know. |
+| A failure of S3 would come from the accented cohort | Not tested (S3 held); the accented cohort was where the change was, downward. |
+| Raw WER on the other cohorts rises more than normalized (fillers written where none were spoken) | **Wrong.** Raw fell more than normalized on accented (−8.4 against −5.9), because the references had the fillers; on clean and slow the LoRA wrote no filler at all (0 in 100 clips, 0 in the references). |
+| Recognizer time unchanged | Right: 144 against 145 ms p50. |
+
+**What the registration got wrong.** Not the direction this time, and not a dev set read as the
+population: the registration did not check what the guardrail cohorts' references contain. One
+line of the eval set's README ("EdAcc ... conversational") and a count of fillers in
+`evalset/manifest.json` -- the same count made for the disfluent cohort -- would have shown that
+S3 mixed two things. The criterion still did its job (it would have caught harm), but the entry's
+"other speakers, fluent speech" was half true, and the S3 prediction was built on the wrong half.
+
+**Reported alongside, descriptively (after the verdict)**
+
+- **The training** (`runs/ft2/training/`): 900 steps, 545 s on an A10, \$0.168, bf16, batch 16;
+  1.44% of the parameters trained. Validation on 64 clips: raw WER 2.4% at step 150, 2.1 / 2.2 /
+  2.1 / 2.1 / 2.0% at 300 to 900; the model had learned the target by the first validation.
+- **The dev looks** (`runs/ft2/dev-look/`, 250 validation clips of the training speaker): base
+  10.9 / 7.8%, 8 of 176 fillers kept; the LoRA 2.1 / 2.1%, 174 of 176.
+- **Where the LoRA is worse on the training speaker:** substitutions of near-homophones it now
+  hears verbatim -- "lunch time but not to access" for "lunch time, but not to excess"
+  (`disfluent-11`); 17 raw substitutions against the base's 22, so fewer, but of a different kind.
+- **The plan's FT-2 line** was an RTX 4090 on Vast, 5 h, \$0.70; this was an A10 on Modal,
+  9 minutes of training, \$0.17, and about \$0.25 for the whole milestone's GPU time including
+  the smoke runs, the dev looks and the test (`docs/cost-ledger.md`). The reasons are in
+  `ft/README.md`.

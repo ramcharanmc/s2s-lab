@@ -1,0 +1,2069 @@
+{
+ "registration": "PR-011",
+ "commit": "65c833c",
+ "base_model": "small.en",
+ "export_name": "export-runs_train-f37d0df-20260926-235222_csv_version_0_adapters_step-000900-float16",
+ "export_sha256": "b31833fe4ed0e1cb429d33a52d81e9974fe32838e32e9a85f19e666af2a51cff",
+ "machine": "Modal Tesla T4, 610.57.04",
+ "n_clips": 200,
+ "models": {
+  "small.en": {
+   "path": "small.en",
+   "load_s": 1.9,
+   "turns": {
+    "clean-00": {
+     "cohort": "clean",
+     "text": "The Christmas holidays came, and she and Anne returned to the parsonage, and to that happy home circle in which alone their natures expanded. Amongst all other people they shriveled up more or less.",
+     "asr_ms": 1043.3
+    },
+    "clean-01": {
+     "cohort": "clean",
+     "text": "There, in the cedar hollow then, lived Olive Lord, an angry, resentful little creature weighed down by a fierce sense of injury.",
+     "asr_ms": 169.8
+    },
+    "clean-02": {
+     "cohort": "clean",
+     "text": "There was good reason to stop and think, even for the world's most emotionless man.",
+     "asr_ms": 121.0
+    },
+    "clean-03": {
+     "cohort": "clean",
+     "text": "They seem to be we are lost, but I am not sure.",
+     "asr_ms": 149.7
+    },
+    "clean-04": {
+     "cohort": "clean",
+     "text": "It was specially suited for a trial plan also. In the early days, when a yield of six or eight lamps to the horsepower was considered subject for congratulation,",
+     "asr_ms": 166.1
+    },
+    "clean-05": {
+     "cohort": "clean",
+     "text": "Re-located footnote. Governor Robinson being on his way east, the steamboat on which he was traveling stopped at Lexington, Missouri.",
+     "asr_ms": 176.7
+    },
+    "clean-06": {
+     "cohort": "clean",
+     "text": "There is the slang of the affected lady as well as of the press users.",
+     "asr_ms": 110.7
+    },
+    "clean-07": {
+     "cohort": "clean",
+     "text": "It has cost me twice sixty dollars in annoyance.",
+     "asr_ms": 108.8
+    },
+    "clean-08": {
+     "cohort": "clean",
+     "text": "I love thee with the passion put to use, In my old greaves and with my childhood's faith.",
+     "asr_ms": 157.8
+    },
+    "clean-09": {
+     "cohort": "clean",
+     "text": "They were both remembering what the woman had said when she took the money. God give you a happy love.",
+     "asr_ms": 134.5
+    },
+    "clean-10": {
+     "cohort": "clean",
+     "text": "The vicious character of sin is brought out by the words who gave himself for our sins.",
+     "asr_ms": 145.0
+    },
+    "clean-11": {
+     "cohort": "clean",
+     "text": "We wish to talk with him, answered Kenneth. Talk!",
+     "asr_ms": 139.0
+    },
+    "clean-12": {
+     "cohort": "clean",
+     "text": "Mrs. Griffin, however, expressed the need for a little more light.",
+     "asr_ms": 122.0
+    },
+    "clean-13": {
+     "cohort": "clean",
+     "text": "To embarrass this damaging exposure, Judge Lecombe issued a writ against the ex-governor on a frivolous charge of contempt.",
+     "asr_ms": 151.2
+    },
+    "clean-14": {
+     "cohort": "clean",
+     "text": "It is black in misfortune. It is blacker still in crime. These two blacknesses amalgamated composed slang.",
+     "asr_ms": 148.4
+    },
+    "clean-15": {
+     "cohort": "clean",
+     "text": "On Saturday mornings when the sodality met in the chapel to recite the little office, his place was a cushioned kneeling desk at the right of the altar from which he led his wing of boys through the responses.",
+     "asr_ms": 211.7
+    },
+    "clean-16": {
+     "cohort": "clean",
+     "text": "The first of these touches conveyed that the written statement took up the tale at a point after it had, in a manner, begun.",
+     "asr_ms": 158.0
+    },
+    "clean-17": {
+     "cohort": "clean",
+     "text": "They worry me terribly, and besides, I'd like to see what this lovely furniture looks like without such quantities of dust all over it. Good scheme, Sim!",
+     "asr_ms": 203.3
+    },
+    "clean-18": {
+     "cohort": "clean",
+     "text": "We are quite satisfied now, Captain Battleaxe, said my wife.",
+     "asr_ms": 144.1
+    },
+    "clean-19": {
+     "cohort": "clean",
+     "text": "I am now tall, and my branches spread like the others that were carried off last year. Oh... Oh.",
+     "asr_ms": 245.4
+    },
+    "clean-20": {
+     "cohort": "clean",
+     "text": "Lamb wouldn't care a great deal about many of them, I fancy.",
+     "asr_ms": 144.5
+    },
+    "clean-21": {
+     "cohort": "clean",
+     "text": "Sometimes he would wander on foot upon the sandy shore, and sometimes he would enjoy a ride along the summit of the cliff, altogether being in no hurry at all to bring his task to an end.",
+     "asr_ms": 193.3
+    },
+    "clean-22": {
+     "cohort": "clean",
+     "text": "There came upon me a sudden shock when I heard these words, which exceeded anything which I had yet felt.",
+     "asr_ms": 164.2
+    },
+    "clean-23": {
+     "cohort": "clean",
+     "text": "We moderns, however, see the absurdity of it.",
+     "asr_ms": 117.1
+    },
+    "clean-24": {
+     "cohort": "clean",
+     "text": "And mine is Will Stutley. Shall we be comrades?",
+     "asr_ms": 148.0
+    },
+    "clean-25": {
+     "cohort": "clean",
+     "text": "Oh, that made him so angry.",
+     "asr_ms": 112.3
+    },
+    "clean-26": {
+     "cohort": "clean",
+     "text": "We are to hear Christ who has been appointed by the Father as our divine teacher.",
+     "asr_ms": 116.0
+    },
+    "clean-27": {
+     "cohort": "clean",
+     "text": "I thank all who have loved me in their hearts, with thanks and love from mine.",
+     "asr_ms": 146.6
+    },
+    "clean-28": {
+     "cohort": "clean",
+     "text": "Burn, fire, burn, flicker, flicker, flame.",
+     "asr_ms": 105.1
+    },
+    "clean-29": {
+     "cohort": "clean",
+     "text": "A more dreary and more disunited family party I never sat at the table with.",
+     "asr_ms": 135.7
+    },
+    "clean-30": {
+     "cohort": "clean",
+     "text": "Therefore, don't talk to me about views and prospects.",
+     "asr_ms": 103.2
+    },
+    "clean-31": {
+     "cohort": "clean",
+     "text": "But, in truth, Pearl was the one as well as the other, and only in consequence of that identity had Hester contrived so perfectly to represent the scarlet letter in her appearance.",
+     "asr_ms": 200.9
+    },
+    "clean-32": {
+     "cohort": "clean",
+     "text": "\ufffdFriends!\ufffd said Montfiche faintly to the wrestlers. \ufffdBear us escort so far as the sheriff\ufffds house.\ufffd",
+     "asr_ms": 149.8
+    },
+    "clean-33": {
+     "cohort": "clean",
+     "text": "It is the only amends I ask of you for the wrong you have done me.",
+     "asr_ms": 117.1
+    },
+    "clean-34": {
+     "cohort": "clean",
+     "text": "What is the farm, Olaf? Not yet, I answered. Viking is better for summer.",
+     "asr_ms": 172.9
+    },
+    "clean-35": {
+     "cohort": "clean",
+     "text": "Oh Mademoiselle, why have I not a devoted sister or a true friend such as yourself?",
+     "asr_ms": 133.8
+    },
+    "clean-36": {
+     "cohort": "clean",
+     "text": "Then, turning to Jane, she asked in a somewhat altered tone, has she been a good girl, Jane?",
+     "asr_ms": 170.7
+    },
+    "clean-37": {
+     "cohort": "clean",
+     "text": "Graham, roughly 1 28th of an ounce.",
+     "asr_ms": 143.8
+    },
+    "clean-38": {
+     "cohort": "clean",
+     "text": "Dear me, what a chatterbox you're getting to be young,\" remarked the magician, who was pleased with the compliment.",
+     "asr_ms": 152.8
+    },
+    "clean-39": {
+     "cohort": "clean",
+     "text": "Oh, let him come along,\" she urged. I do love to see him about that old house.",
+     "asr_ms": 138.7
+    },
+    "clean-40": {
+     "cohort": "clean",
+     "text": "It was a pain to see them, and a sword-like pain to see the signs of adolescence that made repellent their pitiable nakedness.",
+     "asr_ms": 169.6
+    },
+    "clean-41": {
+     "cohort": "clean",
+     "text": "On huge silver platters were pyramids of tarts and cakes, and red wine sparkled in glittering decanters.",
+     "asr_ms": 169.0
+    },
+    "clean-42": {
+     "cohort": "clean",
+     "text": "Dorkus, in her strange way, was moved.",
+     "asr_ms": 112.6
+    },
+    "clean-43": {
+     "cohort": "clean",
+     "text": "At this, the bundle opened suddenly, and out popped Franzie.",
+     "asr_ms": 124.4
+    },
+    "clean-44": {
+     "cohort": "clean",
+     "text": "The young girls had, indeed, made themselves small, indeed invisible.",
+     "asr_ms": 108.2
+    },
+    "clean-45": {
+     "cohort": "clean",
+     "text": "One could hardly hope for any upon so dry a day.",
+     "asr_ms": 143.6
+    },
+    "clean-46": {
+     "cohort": "clean",
+     "text": "The behaviorist who attempts to make psychology a record of behavior has to trust his memory in making the record.",
+     "asr_ms": 128.8
+    },
+    "clean-47": {
+     "cohort": "clean",
+     "text": "And besides, supposedly does learn medicine.",
+     "asr_ms": 93.8
+    },
+    "clean-48": {
+     "cohort": "clean",
+     "text": "She spoke with a sudden energy which partook of fear and passion, and flushed her thin cheek and made her languid eyes flash.",
+     "asr_ms": 180.5
+    },
+    "clean-49": {
+     "cohort": "clean",
+     "text": "The grateful applause of the clergy has consecrated the memory of a prince who indulged their passions and promoted their interest.",
+     "asr_ms": 140.3
+    },
+    "accented-00": {
+     "cohort": "accented",
+     "text": "No, no, no, it's just, so I'm stopping the recording.",
+     "asr_ms": 128.1
+    },
+    "accented-01": {
+     "cohort": "accented",
+     "text": "Yeah, yeah, yeah, yeah. It was a fight. Yes, maybe I have seen it.",
+     "asr_ms": 154.8
+    },
+    "accented-02": {
+     "cohort": "accented",
+     "text": "Okay. Well, I think we have already like reported for 16 minutes and that's been enough. Yeah.",
+     "asr_ms": 161.1
+    },
+    "accented-03": {
+     "cohort": "accented",
+     "text": "It has a little more about coordination. That's why you, it's like talking to me to play that game and.",
+     "asr_ms": 148.6
+    },
+    "accented-04": {
+     "cohort": "accented",
+     "text": "Hi, you look tired today. Did you had a big day?",
+     "asr_ms": 122.6
+    },
+    "accented-05": {
+     "cohort": "accented",
+     "text": "We also climb trees and stuff and make up things.",
+     "asr_ms": 128.3
+    },
+    "accented-06": {
+     "cohort": "accented",
+     "text": "Yeah. Or maybe should I ask a different question?",
+     "asr_ms": 98.8
+    },
+    "accented-07": {
+     "cohort": "accented",
+     "text": "All right, great. All right, so.",
+     "asr_ms": 129.6
+    },
+    "accented-08": {
+     "cohort": "accented",
+     "text": "But when I interact with other candidates, I don't hear the access. It's only like when I hear the one on a platform or on a recording.",
+     "asr_ms": 183.7
+    },
+    "accented-09": {
+     "cohort": "accented",
+     "text": "So aside other countries that now want to go, because I really want to travel the world. I hope God will run through it.",
+     "asr_ms": 268.2
+    },
+    "accented-10": {
+     "cohort": "accented",
+     "text": "and it's true to try answering the first question. Then when you were a kid, what kind of games did you play? And is your one you remember well?",
+     "asr_ms": 175.7
+    },
+    "accented-11": {
+     "cohort": "accented",
+     "text": "The idea was to be more and more obstacles, it's more and more difficult.",
+     "asr_ms": 150.5
+    },
+    "accented-12": {
+     "cohort": "accented",
+     "text": "Hi, my participant number is FC 35B2.",
+     "asr_ms": 107.0
+    },
+    "accented-13": {
+     "cohort": "accented",
+     "text": "But from what you said, I think that Japanese force is a little bit more expensive. Do you agree?",
+     "asr_ms": 155.1
+    },
+    "accented-14": {
+     "cohort": "accented",
+     "text": "I see the remaining meeting time, but maybe the recording time is finished.",
+     "asr_ms": 138.7
+    },
+    "accented-15": {
+     "cohort": "accented",
+     "text": "But their English is different. I mean.",
+     "asr_ms": 111.4
+    },
+    "accented-16": {
+     "cohort": "accented",
+     "text": "Otherwise, I won't even have a place to stay. So that thinking of that makes me feel a bit afraid even now.",
+     "asr_ms": 182.3
+    },
+    "accented-17": {
+     "cohort": "accented",
+     "text": "Edinburgh is crazy with its ambulances. Their sirens are always so loud and haven't seen any other city's ambulances be like this.",
+     "asr_ms": 174.6
+    },
+    "accented-18": {
+     "cohort": "accented",
+     "text": "It's just most them into who they are at this point of time. Like, it's good. It's good.",
+     "asr_ms": 159.2
+    },
+    "accented-19": {
+     "cohort": "accented",
+     "text": "But that's great, that's great, that's great. Nice hearing from you.",
+     "asr_ms": 124.1
+    },
+    "accented-20": {
+     "cohort": "accented",
+     "text": "Only recently, do you eat spicy food now?",
+     "asr_ms": 124.3
+    },
+    "accented-21": {
+     "cohort": "accented",
+     "text": "I literally just read the first like two or three chapters of American Athena online, cause I wasn't waiting until I could like get my hands on the book. I'm like.",
+     "asr_ms": 207.3
+    },
+    "accented-22": {
+     "cohort": "accented",
+     "text": "And in fact, I remember maybe it was three months ago. It was three months ago. They told me that he's supposed to be in Ireland.",
+     "asr_ms": 182.0
+    },
+    "accented-23": {
+     "cohort": "accented",
+     "text": "No, an exchange, yeah, it's not an exactly exchange.",
+     "asr_ms": 105.1
+    },
+    "accented-24": {
+     "cohort": "accented",
+     "text": "I never knew it could have been double T or could have been a single T. I never actually thought about it.",
+     "asr_ms": 152.9
+    },
+    "accented-25": {
+     "cohort": "accented",
+     "text": "Right, right. Well, good luck with that.",
+     "asr_ms": 181.9
+    },
+    "accented-26": {
+     "cohort": "accented",
+     "text": "Yeah, but I believe we'll spend like few hundreds for the...",
+     "asr_ms": 123.6
+    },
+    "accented-27": {
+     "cohort": "accented",
+     "text": "Hi, I'm British, but it's C9P1.",
+     "asr_ms": 146.1
+    },
+    "accented-28": {
+     "cohort": "accented",
+     "text": "Yeah, I know. I was like one of the one of the million people hasn't actually seen an episode of Ben 10.",
+     "asr_ms": 153.3
+    },
+    "accented-29": {
+     "cohort": "accented",
+     "text": "And there was some that I saw tired.",
+     "asr_ms": 123.6
+    },
+    "accented-30": {
+     "cohort": "accented",
+     "text": "Yes. So how are things? How is the family? How is life in general?",
+     "asr_ms": 120.1
+    },
+    "accented-31": {
+     "cohort": "accented",
+     "text": "We thank God as always life is good life is great and we have a lot to be thankful for.",
+     "asr_ms": 129.2
+    },
+    "accented-32": {
+     "cohort": "accented",
+     "text": "the person who listens to me said, oh, okay, this person is involved in, even if he doesn't understand what the project is about, he understands that I go because I'm involved in a court.",
+     "asr_ms": 208.4
+    },
+    "accented-33": {
+     "cohort": "accented",
+     "text": "Okay, it's an exchange, you know?",
+     "asr_ms": 95.3
+    },
+    "accented-34": {
+     "cohort": "accented",
+     "text": "I can't tell you what you want. I bought, I think about seven keys to this.",
+     "asr_ms": 157.2
+    },
+    "accented-35": {
+     "cohort": "accented",
+     "text": "And countries like England are never going to have that because we have to have every car insured for the specific person.",
+     "asr_ms": 159.8
+    },
+    "accented-36": {
+     "cohort": "accented",
+     "text": "Hi, my participant number is FC-32B1.",
+     "asr_ms": 106.2
+    },
+    "accented-37": {
+     "cohort": "accented",
+     "text": "A long time ago, I found these interesting looking mushrooms.",
+     "asr_ms": 103.7
+    },
+    "accented-38": {
+     "cohort": "accented",
+     "text": "I'm hoping that I am ready.",
+     "asr_ms": 116.4
+    },
+    "accented-39": {
+     "cohort": "accented",
+     "text": "no idea where to start without the recipe.",
+     "asr_ms": 115.7
+    },
+    "accented-40": {
+     "cohort": "accented",
+     "text": "But since it's been almost two years or three, I haven't traveled. I do look forward to my holidays.",
+     "asr_ms": 161.2
+    },
+    "accented-41": {
+     "cohort": "accented",
+     "text": "I think the sequel series, Percy Jackson, here's the Memphis.",
+     "asr_ms": 141.2
+    },
+    "accented-42": {
+     "cohort": "accented",
+     "text": "I never watch it at first man you're both",
+     "asr_ms": 423.9
+    },
+    "accented-43": {
+     "cohort": "accented",
+     "text": "it already for like I know eight years or something like",
+     "asr_ms": 98.4
+    },
+    "accented-44": {
+     "cohort": "accented",
+     "text": "Yeah, yeah, yeah, so honestly, so anyways, anyways, it's been so much fun talking to you.",
+     "asr_ms": 147.0
+    },
+    "accented-45": {
+     "cohort": "accented",
+     "text": "So it's very tired because you talk with the people, the hungry people, and you know it's difficult.",
+     "asr_ms": 137.6
+    },
+    "accented-46": {
+     "cohort": "accented",
+     "text": "It's, oh yes, it's on Netflix. You can take a look at it on Netflix.",
+     "asr_ms": 131.8
+    },
+    "accented-47": {
+     "cohort": "accented",
+     "text": "But it's expensive, so I only go to Japanese food restaurant in some special case like my birthday party.",
+     "asr_ms": 144.7
+    },
+    "accented-48": {
+     "cohort": "accented",
+     "text": "Looking back, how on earth could you ever beat that?",
+     "asr_ms": 120.0
+    },
+    "accented-49": {
+     "cohort": "accented",
+     "text": "Okay. Hi, my participant number is FC 35-P1.",
+     "asr_ms": 147.9
+    },
+    "disfluent-00": {
+     "cohort": "disfluent",
+     "text": "Well, I don't do it as much as I should. I try to walk.",
+     "asr_ms": 125.0
+    },
+    "disfluent-01": {
+     "cohort": "disfluent",
+     "text": "Not all. I, you know, I don't know if you've ever been to Washington DC.",
+     "asr_ms": 122.9
+    },
+    "disfluent-02": {
+     "cohort": "disfluent",
+     "text": "Now I've always done those kinds of things because I just didn't like messes and...",
+     "asr_ms": 132.6
+    },
+    "disfluent-03": {
+     "cohort": "disfluent",
+     "text": "I have enjoyed aerobics in the past and I enjoy that because I like the group association, you know, like exercising with other people.",
+     "asr_ms": 167.4
+    },
+    "disfluent-04": {
+     "cohort": "disfluent",
+     "text": "But she enjoys it, she likes keeping track of all that stuff and so that's sort of related to her field a little bit.",
+     "asr_ms": 168.6
+    },
+    "disfluent-05": {
+     "cohort": "disfluent",
+     "text": "Yeah, well first of all, I have to ask you how old you are.",
+     "asr_ms": 124.8
+    },
+    "disfluent-06": {
+     "cohort": "disfluent",
+     "text": "And so I guess you just have to take the two problems and see which is worse.",
+     "asr_ms": 130.9
+    },
+    "disfluent-07": {
+     "cohort": "disfluent",
+     "text": "I've heard that Sam's has a really good lasagna. In fact, I think I had it at a party once.",
+     "asr_ms": 143.5
+    },
+    "disfluent-08": {
+     "cohort": "disfluent",
+     "text": "And I had Sandy Loem howden. I had a dump truck come and dump it.",
+     "asr_ms": 125.5
+    },
+    "disfluent-09": {
+     "cohort": "disfluent",
+     "text": "And they have a policy for testing. If they make you an offer, then they'll test you right before you start.",
+     "asr_ms": 159.6
+    },
+    "disfluent-10": {
+     "cohort": "disfluent",
+     "text": "Oh, I'm with you. I have to check TNews every day. It's my noontime dose of facts.",
+     "asr_ms": 138.8
+    },
+    "disfluent-11": {
+     "cohort": "disfluent",
+     "text": "You know, I've gone out and had a beer at lunchtime, but not to excess in any case.",
+     "asr_ms": 154.5
+    },
+    "disfluent-12": {
+     "cohort": "disfluent",
+     "text": "And someone's got to do it and be able to do it right. And that's the whole thing.",
+     "asr_ms": 136.1
+    },
+    "disfluent-13": {
+     "cohort": "disfluent",
+     "text": "that I was able to do when I could go in and go down and actually pick them off the bottom.",
+     "asr_ms": 131.5
+    },
+    "disfluent-14": {
+     "cohort": "disfluent",
+     "text": "Is it hard to keep track of it or does it work out pretty well?",
+     "asr_ms": 109.6
+    },
+    "disfluent-15": {
+     "cohort": "disfluent",
+     "text": "And he'll go pick them up because he just can't stand that. He, that's great.",
+     "asr_ms": 131.5
+    },
+    "disfluent-16": {
+     "cohort": "disfluent",
+     "text": "and go ahead and get the punishment face out of the way because it doesn't do the criminal or the victim's family anybody",
+     "asr_ms": 151.0
+    },
+    "disfluent-17": {
+     "cohort": "disfluent",
+     "text": "Yeah, they had to choose between the better of the two bad situations. And I don't know what I would have done in the situation.",
+     "asr_ms": 186.1
+    },
+    "disfluent-18": {
+     "cohort": "disfluent",
+     "text": "Yeah, see, that is kind of what happened with ours. That is why we have not had one in a long time.",
+     "asr_ms": 180.2
+    },
+    "disfluent-19": {
+     "cohort": "disfluent",
+     "text": "If it's a limited edition usually, no matter what it is, if it's a limited edition, it's usually worth something later on.",
+     "asr_ms": 170.1
+    },
+    "disfluent-20": {
+     "cohort": "disfluent",
+     "text": "Well, you know why they actually held them off? None of the Yankees wanted to listen to their kind of looted grammar.",
+     "asr_ms": 160.4
+    },
+    "disfluent-21": {
+     "cohort": "disfluent",
+     "text": "You know, it's right there on which this is on a highway too, but it's set back enough to there's a difference.",
+     "asr_ms": 188.9
+    },
+    "disfluent-22": {
+     "cohort": "disfluent",
+     "text": "I mean, I'm not saying at all that Hussein wasn't quite willing to enter that fight.",
+     "asr_ms": 141.0
+    },
+    "disfluent-23": {
+     "cohort": "disfluent",
+     "text": "Because too often the acute hospitals, we are sending them out much faster than what they're really able to.",
+     "asr_ms": 157.6
+    },
+    "disfluent-24": {
+     "cohort": "disfluent",
+     "text": "Yeah, I think it's getting better, not worse. Well, I should probably get back to my job.",
+     "asr_ms": 158.4
+    },
+    "disfluent-25": {
+     "cohort": "disfluent",
+     "text": "For instance, that, and I could, you know, I could envision a society where that would happen and make an interesting story or whatever.",
+     "asr_ms": 209.6
+    },
+    "disfluent-26": {
+     "cohort": "disfluent",
+     "text": "Well, I think I would start with getting rid of about two thirds of the administrators.",
+     "asr_ms": 139.9
+    },
+    "disfluent-27": {
+     "cohort": "disfluent",
+     "text": "And this year it's been so hot and sunny. It's really quite amazing.",
+     "asr_ms": 140.6
+    },
+    "disfluent-28": {
+     "cohort": "disfluent",
+     "text": "So, so it and there and you know, I feel guilty because I'm driving a",
+     "asr_ms": 151.0
+    },
+    "disfluent-29": {
+     "cohort": "disfluent",
+     "text": "So it's real easy access from south of Baltimore, like the airport, or more importantly, for the arioles from Washington DC.",
+     "asr_ms": 188.3
+    },
+    "disfluent-30": {
+     "cohort": "disfluent",
+     "text": "But yeah, I like to watch rock n' roll videos and any kind of videos.",
+     "asr_ms": 135.2
+    },
+    "disfluent-31": {
+     "cohort": "disfluent",
+     "text": "I also handle most of the calls from our users and other programmers who need to find out something connected",
+     "asr_ms": 125.6
+    },
+    "disfluent-32": {
+     "cohort": "disfluent",
+     "text": "And the baby just screams. I mean, the baby is like 17 months and she just screams.",
+     "asr_ms": 133.3
+    },
+    "disfluent-33": {
+     "cohort": "disfluent",
+     "text": "Uh-huh. And I was losing jobs just from doing a poor job, you know.",
+     "asr_ms": 119.8
+    },
+    "disfluent-34": {
+     "cohort": "disfluent",
+     "text": "Are we paying too much in taxes? And are we getting what we pay for? What's your opinion?",
+     "asr_ms": 142.4
+    },
+    "disfluent-35": {
+     "cohort": "disfluent",
+     "text": "Yeah, we all went to high school together and we're still in contact with each other.",
+     "asr_ms": 124.3
+    },
+    "disfluent-36": {
+     "cohort": "disfluent",
+     "text": "And that's it, you just mix it all together and pop it in the oven just to, you know, heat it through.",
+     "asr_ms": 155.1
+    },
+    "disfluent-37": {
+     "cohort": "disfluent",
+     "text": "or you know, to find a job where they can learn how to support themselves. I mean, I guess we're getting kind of off the subject here, but...",
+     "asr_ms": 172.9
+    },
+    "disfluent-38": {
+     "cohort": "disfluent",
+     "text": "Well, that's part of it. Yeah, part of it is, like you said, I don't have time.",
+     "asr_ms": 160.8
+    },
+    "disfluent-39": {
+     "cohort": "disfluent",
+     "text": "But you cut, you know, the kids having to give up his quote play time to pay his debt for what he did wrong.",
+     "asr_ms": 140.2
+    },
+    "disfluent-40": {
+     "cohort": "disfluent",
+     "text": "Yeah, I think it was by her now that you mentioned it, because someone had given it to me and I thought, well, this would be great. And it was.",
+     "asr_ms": 172.2
+    },
+    "disfluent-41": {
+     "cohort": "disfluent",
+     "text": "Oh, I used to have box turtles, well, years ago, when I was growing up. I really like them.",
+     "asr_ms": 155.3
+    },
+    "disfluent-42": {
+     "cohort": "disfluent",
+     "text": "This is pretty unseasonal, but at least we, you know, it feels good. It gets, everybody doesn't have cabin fever today. It's nice to get out and about.",
+     "asr_ms": 200.5
+    },
+    "disfluent-43": {
+     "cohort": "disfluent",
+     "text": "So that's really strange. I was wondering why we had somebody from Maryland though. I was saying, God, do we have a TI in Maryland or?",
+     "asr_ms": 176.2
+    },
+    "disfluent-44": {
+     "cohort": "disfluent",
+     "text": "Well, my sister is the seamstress of the two of us, but she doesn't china paint, so we both have our expertise side.",
+     "asr_ms": 167.1
+    },
+    "disfluent-45": {
+     "cohort": "disfluent",
+     "text": "Actually one thing we have done quite a bit through the holidays just because it's a real easy is just baked potato dinners",
+     "asr_ms": 153.4
+    },
+    "disfluent-46": {
+     "cohort": "disfluent",
+     "text": "Well, that makes sense, it really does. I mean, oh, we went to Panama too.",
+     "asr_ms": 162.1
+    },
+    "disfluent-47": {
+     "cohort": "disfluent",
+     "text": "And then the blonde-hated girl that used to be on New Heart.",
+     "asr_ms": 112.0
+    },
+    "disfluent-48": {
+     "cohort": "disfluent",
+     "text": "But you know, they're not very old so they couldn't do a whole lot yet.",
+     "asr_ms": 132.9
+    },
+    "disfluent-49": {
+     "cohort": "disfluent",
+     "text": "I mean, I like all rangers of movies, but I like that where they run tense.",
+     "asr_ms": 122.4
+    },
+    "slow-00": {
+     "cohort": "slow",
+     "text": "The Christmas holidays came, and she and Anne returned to the parsonage and to that happy home circle in which alone their natures expanded. Amongst all other people they shriveled that more or less.",
+     "asr_ms": 264.8
+    },
+    "slow-01": {
+     "cohort": "slow",
+     "text": "There, in the cedar hollow, then, lived Olive Lord, an angry, resentful little creature weighed down by a fierce sense of injury.",
+     "asr_ms": 159.3
+    },
+    "slow-02": {
+     "cohort": "slow",
+     "text": "There was good reason to stop and think, even for the world's most emotionless man.",
+     "asr_ms": 121.1
+    },
+    "slow-03": {
+     "cohort": "slow",
+     "text": "They seem to be we are lost, but I am not sure.",
+     "asr_ms": 122.6
+    },
+    "slow-04": {
+     "cohort": "slow",
+     "text": "It was spatially suited for a trial plan also. In the early days, when a yield of six or eight lamps to the horsepower was considered subject for congratulation,",
+     "asr_ms": 183.4
+    },
+    "slow-05": {
+     "cohort": "slow",
+     "text": "1. Relocated footnote Governor Robinson being on his way east, the steamboat on which he was traveling, stopped at Lexington, Missouri.",
+     "asr_ms": 181.4
+    },
+    "slow-06": {
+     "cohort": "slow",
+     "text": "There is the slang of the affected lady as well as of the press users.",
+     "asr_ms": 120.6
+    },
+    "slow-07": {
+     "cohort": "slow",
+     "text": "It has cost me twice sixty dollars in annoyance.",
+     "asr_ms": 100.8
+    },
+    "slow-08": {
+     "cohort": "slow",
+     "text": "I love thee with the passion put to use in my old griefs and with my childhood's faith.",
+     "asr_ms": 147.0
+    },
+    "slow-09": {
+     "cohort": "slow",
+     "text": "They were both remembering what the woman had said when she took the money. God give you a happy love.",
+     "asr_ms": 150.7
+    },
+    "slow-10": {
+     "cohort": "slow",
+     "text": "The vicious character of sin is brought out by the words who gave himself for our sins.",
+     "asr_ms": 117.0
+    },
+    "slow-11": {
+     "cohort": "slow",
+     "text": "We wish to talk with him, answered Kenneth. Talk!",
+     "asr_ms": 108.6
+    },
+    "slow-12": {
+     "cohort": "slow",
+     "text": "Mrs. Griffin, however, expressed the need for a little more light.",
+     "asr_ms": 138.1
+    },
+    "slow-13": {
+     "cohort": "slow",
+     "text": "To embarrass this damaging exposure, Judge Lacombe issued a writ against the ex-governor on a frivolous charge of contempt.",
+     "asr_ms": 142.1
+    },
+    "slow-14": {
+     "cohort": "slow",
+     "text": "It is black in misfortune. It is blacker still in crime. These two blacknesses amalgamated composed slang.",
+     "asr_ms": 165.1
+    },
+    "slow-15": {
+     "cohort": "slow",
+     "text": "On Saturday mornings, when the sodality met in the chapel to recite the little office, his place was a cushioned kneeling desk at the right of the altar from which he led his wing of boys through the responses.",
+     "asr_ms": 275.4
+    },
+    "slow-16": {
+     "cohort": "slow",
+     "text": "The first of these touches conveyed that the written statement took up the tail at a point after it had, in a manner, begun.",
+     "asr_ms": 158.0
+    },
+    "slow-17": {
+     "cohort": "slow",
+     "text": "They worry me terribly and besides, I'd like to see what this lovely furniture looks like without such quantities of dust all over it. Good scheme, Sim!",
+     "asr_ms": 178.8
+    },
+    "slow-18": {
+     "cohort": "slow",
+     "text": "We are quite satisfied now, Captain Battleaxe, said my wife.",
+     "asr_ms": 120.4
+    },
+    "slow-19": {
+     "cohort": "slow",
+     "text": "I am now tall and my branches spread like the others that were carried off last year. Oh...",
+     "asr_ms": 142.9
+    },
+    "slow-20": {
+     "cohort": "slow",
+     "text": "Lamb wouldn't care a great deal about many of them, I fancy.",
+     "asr_ms": 139.3
+    },
+    "slow-21": {
+     "cohort": "slow",
+     "text": "Sometimes he would wander on foot upon the sandy shore, and sometimes he would enjoy a ride along the summit of the cliff, altogether being in no hurry at all to bring his task to an end.",
+     "asr_ms": 220.0
+    },
+    "slow-22": {
+     "cohort": "slow",
+     "text": "There came upon me a sudden shock when I heard these words, which exceeded anything which I had yet felt.",
+     "asr_ms": 137.0
+    },
+    "slow-23": {
+     "cohort": "slow",
+     "text": "We moderns, however, see the absurdity of it.",
+     "asr_ms": 99.9
+    },
+    "slow-24": {
+     "cohort": "slow",
+     "text": "And mine is Will Stutley. Shall we become, Rads?",
+     "asr_ms": 114.5
+    },
+    "slow-25": {
+     "cohort": "slow",
+     "text": "Oh, that made him so angry.",
+     "asr_ms": 98.9
+    },
+    "slow-26": {
+     "cohort": "slow",
+     "text": "We are to hear Christ who has been appointed by the Father as our divine teacher.",
+     "asr_ms": 113.4
+    },
+    "slow-27": {
+     "cohort": "slow",
+     "text": "I thank all who have loved me in their hearts, with thanks and love from mine.",
+     "asr_ms": 145.9
+    },
+    "slow-28": {
+     "cohort": "slow",
+     "text": "burn fire burn slicker flicker flame",
+     "asr_ms": 103.8
+    },
+    "slow-29": {
+     "cohort": "slow",
+     "text": "A more dreary and more disunited family party I never sat at the table with.",
+     "asr_ms": 126.5
+    },
+    "slow-30": {
+     "cohort": "slow",
+     "text": "Therefore, don't talk to me about views and prospects.",
+     "asr_ms": 101.8
+    },
+    "slow-31": {
+     "cohort": "slow",
+     "text": "But in truth Pearl was the one as well as the other, and only in consequence of that identity had Hester contrived so perfectly to represent the scarlet letter in her appearance.",
+     "asr_ms": 189.8
+    },
+    "slow-32": {
+     "cohort": "slow",
+     "text": "Friends! said Montfiche faintly to the wrestlers. Bear us escort so far as the sheriff's house.",
+     "asr_ms": 138.0
+    },
+    "slow-33": {
+     "cohort": "slow",
+     "text": "It is the only amends I ask of you for the wrong you have done me.",
+     "asr_ms": 141.0
+    },
+    "slow-34": {
+     "cohort": "slow",
+     "text": "What is the farm, Olaf? Not yet, I answered. Viking is better for summer.",
+     "asr_ms": 139.2
+    },
+    "slow-35": {
+     "cohort": "slow",
+     "text": "Oh Mademoiselle, why have I not a devoted sister or a true friend such as yourself?",
+     "asr_ms": 132.8
+    },
+    "slow-36": {
+     "cohort": "slow",
+     "text": "Then, turning to Jane, she asked in a somewhat altered tone, Has she been a good girl, Jane?",
+     "asr_ms": 245.3
+    },
+    "slow-37": {
+     "cohort": "slow",
+     "text": "Graham, roughly 1 28th of an ounce.",
+     "asr_ms": 105.2
+    },
+    "slow-38": {
+     "cohort": "slow",
+     "text": "Dear me, what a chatterbox you're getting to be, Ankh!\" remarked the magician, who was pleased with the compliment.",
+     "asr_ms": 149.6
+    },
+    "slow-39": {
+     "cohort": "slow",
+     "text": "Oh, let him come along,\" she urged. I do love to see him about that old house.",
+     "asr_ms": 197.7
+    },
+    "slow-40": {
+     "cohort": "slow",
+     "text": "It was a pain to see them, and a sword-like pain to see the signs of adolescence that made repellent their pitiable nakedness.",
+     "asr_ms": 181.7
+    },
+    "slow-41": {
+     "cohort": "slow",
+     "text": "On huge silver platters were pyramids of tarts and cakes, and red wine sparkled in glittering decanters.",
+     "asr_ms": 159.8
+    },
+    "slow-42": {
+     "cohort": "slow",
+     "text": "Dorkus, in her strange way, was moved.",
+     "asr_ms": 104.3
+    },
+    "slow-43": {
+     "cohort": "slow",
+     "text": "At this the bundle opened suddenly and out popped Fronzie.",
+     "asr_ms": 130.8
+    },
+    "slow-44": {
+     "cohort": "slow",
+     "text": "The young girls had, indeed, made themselves small, indeed invisible.",
+     "asr_ms": 134.2
+    },
+    "slow-45": {
+     "cohort": "slow",
+     "text": "One could hardly hope for any upon so dry a day.",
+     "asr_ms": 106.6
+    },
+    "slow-46": {
+     "cohort": "slow",
+     "text": "The behaviorist who attempts to make psychology a record of behavior has to trust his memory in making the record.",
+     "asr_ms": 161.7
+    },
+    "slow-47": {
+     "cohort": "slow",
+     "text": "And besides, suppose D does learn medicine.",
+     "asr_ms": 105.8
+    },
+    "slow-48": {
+     "cohort": "slow",
+     "text": "She spoke with a sudden energy which partook of fear and passion, and flushed her thin cheek and made her languid eyes flash.",
+     "asr_ms": 157.2
+    },
+    "slow-49": {
+     "cohort": "slow",
+     "text": "The grateful applause of the clergy has consecrated the memory of a prince who indulged their passions and promoted their interest.",
+     "asr_ms": 170.5
+    }
+   }
+  },
+  "ft2": {
+   "path": "/ft2/export/export-runs_train-f37d0df-20260926-235222_csv_version_0_adapters_step-000900-float16/ct2",
+   "load_s": 1.9,
+   "turns": {
+    "clean-00": {
+     "cohort": "clean",
+     "text": "The Christmas holidays came, and she and Anne returned to the parsonage, and to that happy home circle, in which alone their natures expanded. Amongst all other people they shriveled up more or less.",
+     "asr_ms": 234.8
+    },
+    "clean-01": {
+     "cohort": "clean",
+     "text": "There, in the cedar hollow then, lived Olive Lord, an angry resentful little creature weighed down by a fierce sense of injury.",
+     "asr_ms": 153.8
+    },
+    "clean-02": {
+     "cohort": "clean",
+     "text": "There was good reason to stop and think, even for the world's most emotionless man.",
+     "asr_ms": 119.9
+    },
+    "clean-03": {
+     "cohort": "clean",
+     "text": "They seem to be, we are lost, but I am not sure.",
+     "asr_ms": 128.1
+    },
+    "clean-04": {
+     "cohort": "clean",
+     "text": "It was spatially suited for a trial plan also. In the early days, when a yield of six or eight lamps to the horsepower was considered subject for congratulation.",
+     "asr_ms": 170.7
+    },
+    "clean-05": {
+     "cohort": "clean",
+     "text": "Relocated footnote. Governor Robinson, being on his way east, the steamboat on which he was traveling stopped at Lexington, Missouri",
+     "asr_ms": 150.3
+    },
+    "clean-06": {
+     "cohort": "clean",
+     "text": "There is the slang of the affected lady as well as of the press uses.",
+     "asr_ms": 112.7
+    },
+    "clean-07": {
+     "cohort": "clean",
+     "text": "It has cost me twice sixty dollars in annoyance.",
+     "asr_ms": 118.1
+    },
+    "clean-08": {
+     "cohort": "clean",
+     "text": "I love thee with the passion put to use in my old greens and with my childhood's faith.",
+     "asr_ms": 123.4
+    },
+    "clean-09": {
+     "cohort": "clean",
+     "text": "They were both remembering what the woman had said when she took the money. God give you a happy love.",
+     "asr_ms": 127.5
+    },
+    "clean-10": {
+     "cohort": "clean",
+     "text": "The vicious character of sin is brought out by the words, who gave himself for our sins.",
+     "asr_ms": 121.9
+    },
+    "clean-11": {
+     "cohort": "clean",
+     "text": "We wish to talk with him, answered Kenneth. Talk.",
+     "asr_ms": 137.0
+    },
+    "clean-12": {
+     "cohort": "clean",
+     "text": "Mrs. Griffin, however, expressed the need for a little more light.",
+     "asr_ms": 107.0
+    },
+    "clean-13": {
+     "cohort": "clean",
+     "text": "To embarrass this damaging exposure, Judge Lacombe issued a writ against the ex-Governor on a frivolous charge of contempt.",
+     "asr_ms": 196.8
+    },
+    "clean-14": {
+     "cohort": "clean",
+     "text": "It is black in misfortune. It is blacker still in crime. These two blacknesses amalgamated compose slang.",
+     "asr_ms": 177.2
+    },
+    "clean-15": {
+     "cohort": "clean",
+     "text": "On Saturday mornings, when the sodality met in the chapel, to recite the little office, his place was a cushioned kneeling desk at the right of the altar from which he led his wing of boys through the responses.",
+     "asr_ms": 215.8
+    },
+    "clean-16": {
+     "cohort": "clean",
+     "text": "The first of these touches conveyed that the written statement took up the tail, at a point after it had, in a manner, begun.",
+     "asr_ms": 155.5
+    },
+    "clean-17": {
+     "cohort": "clean",
+     "text": "They worry me terribly and besides, I'd like to see what this lovely furniture looks like without such quantities of dust all over it. Good scheme, sin.",
+     "asr_ms": 184.4
+    },
+    "clean-18": {
+     "cohort": "clean",
+     "text": "We are quite satisfied now, Captain Battleaxe, said my wife.",
+     "asr_ms": 106.0
+    },
+    "clean-19": {
+     "cohort": "clean",
+     "text": "I am now tall, and my branches spread like the others that were carried off last year.",
+     "asr_ms": 130.8
+    },
+    "clean-20": {
+     "cohort": "clean",
+     "text": "Lamb wouldn't care a great deal about many of them, I fancy.",
+     "asr_ms": 111.0
+    },
+    "clean-21": {
+     "cohort": "clean",
+     "text": "Sometimes he would wander on foot upon the sandy shore, and sometimes he would enjoy a ride along the summit of the cliff, all together being in no hurry at all to bring his task to an end.",
+     "asr_ms": 192.2
+    },
+    "clean-22": {
+     "cohort": "clean",
+     "text": "There came upon me a sudden shock when I heard these words. Which exceeded anything which I had yet felt.",
+     "asr_ms": 139.4
+    },
+    "clean-23": {
+     "cohort": "clean",
+     "text": "We moderns, however, see the absurdity of it.",
+     "asr_ms": 101.0
+    },
+    "clean-24": {
+     "cohort": "clean",
+     "text": "And mine is Will Stutley. Shall we be comrades?",
+     "asr_ms": 133.4
+    },
+    "clean-25": {
+     "cohort": "clean",
+     "text": "Oh, that made him so angry.",
+     "asr_ms": 100.9
+    },
+    "clean-26": {
+     "cohort": "clean",
+     "text": "We are to hear Christ who has been appointed by the Father as our divine teacher.",
+     "asr_ms": 137.1
+    },
+    "clean-27": {
+     "cohort": "clean",
+     "text": "I thank all who have loved me in their hearts, with thanks and love, from mine.",
+     "asr_ms": 130.2
+    },
+    "clean-28": {
+     "cohort": "clean",
+     "text": "burn fire burn flicker flicker flame.",
+     "asr_ms": 103.4
+    },
+    "clean-29": {
+     "cohort": "clean",
+     "text": "A more dreary and more disunited family party I never sat at the table with.",
+     "asr_ms": 131.8
+    },
+    "clean-30": {
+     "cohort": "clean",
+     "text": "Therefore, don't talk to me about views and prospects.",
+     "asr_ms": 101.0
+    },
+    "clean-31": {
+     "cohort": "clean",
+     "text": "But, in truth, Pearl was the one as well as the other, and only in consequence of that identity had Hester contrived so perfectly to represent the scarlet letter in her appearance.",
+     "asr_ms": 190.2
+    },
+    "clean-32": {
+     "cohort": "clean",
+     "text": "Friends, said Montfiche faintly to the wrestlers. Bear us escort so far as the sheriff's house.",
+     "asr_ms": 148.1
+    },
+    "clean-33": {
+     "cohort": "clean",
+     "text": "It is the only amends I ask of you for the wrong you have done me.",
+     "asr_ms": 119.2
+    },
+    "clean-34": {
+     "cohort": "clean",
+     "text": "What is the farm, Olaf? Not yet, I answered. Viking is better for summer.",
+     "asr_ms": 152.4
+    },
+    "clean-35": {
+     "cohort": "clean",
+     "text": "Oh Mademoiselle, why have I not a devoted sister or a true friend such as yourself?",
+     "asr_ms": 139.9
+    },
+    "clean-36": {
+     "cohort": "clean",
+     "text": "Then, turning to Jane, she asked, in a somewhat altered tone, Has she been a good girl, Jane?",
+     "asr_ms": 160.6
+    },
+    "clean-37": {
+     "cohort": "clean",
+     "text": "Gram, roughly one twenty-eighth of an ounce.",
+     "asr_ms": 103.0
+    },
+    "clean-38": {
+     "cohort": "clean",
+     "text": "Dear me, what a chatterbox you're getting to be onk, remarked the magician, who was pleased with the compliment.",
+     "asr_ms": 139.6
+    },
+    "clean-39": {
+     "cohort": "clean",
+     "text": "Oh, let him come along, she urged. I do love to see him about that old house.",
+     "asr_ms": 146.1
+    },
+    "clean-40": {
+     "cohort": "clean",
+     "text": "It was a pain to see them and a sword-like pain to see the signs of adolescence that made repellent their pitiable nakedness.",
+     "asr_ms": 168.1
+    },
+    "clean-41": {
+     "cohort": "clean",
+     "text": "On huge silver platters were pyramids of tarts and cakes and red wine sparkled in glittering decanters.",
+     "asr_ms": 161.6
+    },
+    "clean-42": {
+     "cohort": "clean",
+     "text": "Dorkus, in her strange way, was moved.",
+     "asr_ms": 112.4
+    },
+    "clean-43": {
+     "cohort": "clean",
+     "text": "At this, the bundle opened suddenly and out popped Fronzie.",
+     "asr_ms": 122.4
+    },
+    "clean-44": {
+     "cohort": "clean",
+     "text": "The young girls had, indeed, made themselves small, indeed invisible.",
+     "asr_ms": 106.1
+    },
+    "clean-45": {
+     "cohort": "clean",
+     "text": "One could hardly hope for any upon so dry a day.",
+     "asr_ms": 114.6
+    },
+    "clean-46": {
+     "cohort": "clean",
+     "text": "The behaviorist, who attempts to make psychology a record of behavior, has to trust his memory in making the record.",
+     "asr_ms": 139.4
+    },
+    "clean-47": {
+     "cohort": "clean",
+     "text": "And besides, suppose he does learn medicine.",
+     "asr_ms": 99.3
+    },
+    "clean-48": {
+     "cohort": "clean",
+     "text": "She spoke with a sudden energy, which partook of fear and passion, and flushed her thin cheek and made her languid eyes flash.",
+     "asr_ms": 151.8
+    },
+    "clean-49": {
+     "cohort": "clean",
+     "text": "The grateful applause of the clergy has consecrated the memory of a prince who indulged their passions and promoted their interest.",
+     "asr_ms": 144.9
+    },
+    "accented-00": {
+     "cohort": "accented",
+     "text": "No, no, no, it's just, it's, so I'm stopping the recording.",
+     "asr_ms": 123.8
+    },
+    "accented-01": {
+     "cohort": "accented",
+     "text": "I, I, I, it was a, yes, maybe I have seen it.",
+     "asr_ms": 142.0
+    },
+    "accented-02": {
+     "cohort": "accented",
+     "text": "Okay. Well, I think we have already, like, recorded for sixteen minutes and that'll be enough. Yeah.",
+     "asr_ms": 149.1
+    },
+    "accented-03": {
+     "cohort": "accented",
+     "text": "It has a little more about coordination, that's why, that's why you, uh, it's like talking to me to play that game and, uh,",
+     "asr_ms": 173.3
+    },
+    "accented-04": {
+     "cohort": "accented",
+     "text": "Hi. You look tired today. Did you had a big day?",
+     "asr_ms": 147.0
+    },
+    "accented-05": {
+     "cohort": "accented",
+     "text": "We'd also climb trees and stuff and make up things.",
+     "asr_ms": 128.1
+    },
+    "accented-06": {
+     "cohort": "accented",
+     "text": "Yeah. Or maybe should I ask a different question or what?",
+     "asr_ms": 144.7
+    },
+    "accented-07": {
+     "cohort": "accented",
+     "text": "All right, great. Um, all right, so.",
+     "asr_ms": 119.0
+    },
+    "accented-08": {
+     "cohort": "accented",
+     "text": "Yes, but when I interact with other candidates, I don't hear the access, it's only like when I hear the, on a platform or on a recording. Yeah.",
+     "asr_ms": 209.8
+    },
+    "accented-09": {
+     "cohort": "accented",
+     "text": "So, aside other countries that now want to go, cause I really want to travel the world. I hope God will run through-",
+     "asr_ms": 171.1
+    },
+    "accented-10": {
+     "cohort": "accented",
+     "text": "Um, stupid try-, answering the first question then, um, when you were a kid what kind of games did you use to play? And is there one you remember well?",
+     "asr_ms": 191.0
+    },
+    "accented-11": {
+     "cohort": "accented",
+     "text": "The idea was to be more and more obstacles is more and more recall.",
+     "asr_ms": 108.9
+    },
+    "accented-12": {
+     "cohort": "accented",
+     "text": "Hi, my participant number is F C three five P two.",
+     "asr_ms": 106.8
+    },
+    "accented-13": {
+     "cohort": "accented",
+     "text": "But to, from what you said, I think, I, I think that, uh, Japanese force is, how to say, is a little bit, a little bit more expensive. Do you agree?",
+     "asr_ms": 198.2
+    },
+    "accented-14": {
+     "cohort": "accented",
+     "text": "Uh, I see the remaining, uh, meeting time, but maybe the recording time is finished.",
+     "asr_ms": 138.2
+    },
+    "accented-15": {
+     "cohort": "accented",
+     "text": "But, but their English is different, I mean.",
+     "asr_ms": 98.3
+    },
+    "accented-16": {
+     "cohort": "accented",
+     "text": "otherwise, I, I won't even have a place to stay, so that's, that, that, thinking of that makes me feel a bit afraid even now, so.",
+     "asr_ms": 171.2
+    },
+    "accented-17": {
+     "cohort": "accented",
+     "text": "I don't risk crazy with its ambulances, they are, their sirens are always so loud and, it's, haven't seen any other cities' ambulances be like this.",
+     "asr_ms": 222.2
+    },
+    "accented-18": {
+     "cohort": "accented",
+     "text": "I, it's just mold stem into who they are at this point of time. Like, brah. It's good, it's good, shoot.",
+     "asr_ms": 176.5
+    },
+    "accented-19": {
+     "cohort": "accented",
+     "text": "But that's great, that's great, that's great. Nice hearing from you.",
+     "asr_ms": 146.9
+    },
+    "accented-20": {
+     "cohort": "accented",
+     "text": "Like only recently, like do you, do you eat spicy food now?",
+     "asr_ms": 140.6
+    },
+    "accented-21": {
+     "cohort": "accented",
+     "text": "I literally just read the first like two or three chapters of American Athena online, cause I wasn't waiting until I could like get my hands on the book.",
+     "asr_ms": 200.2
+    },
+    "accented-22": {
+     "cohort": "accented",
+     "text": "And in fact, and in fact, I remember maybe, it was three months ago, it was three months ago. They told me that he's supposed to be in Ireland.",
+     "asr_ms": 189.8
+    },
+    "accented-23": {
+     "cohort": "accented",
+     "text": "No, an exchange, yeah, is not an exactly exchange. No.",
+     "asr_ms": 136.5
+    },
+    "accented-24": {
+     "cohort": "accented",
+     "text": "I never knew it could have been W T or could have been a single T. I never actually thought about it.",
+     "asr_ms": 142.7
+    },
+    "accented-25": {
+     "cohort": "accented",
+     "text": "Right, right. Well, good luck with that. But",
+     "asr_ms": 125.4
+    },
+    "accented-26": {
+     "cohort": "accented",
+     "text": "Yeah, but, uh, I believe we'll spend, uh, like few hundreds for the,",
+     "asr_ms": 122.7
+    },
+    "accented-27": {
+     "cohort": "accented",
+     "text": "Okay. Hi, I'm British Bentsy, nine P one.",
+     "asr_ms": 131.4
+    },
+    "accented-28": {
+     "cohort": "accented",
+     "text": "Yeah, I, I know, I was like one of the, one of the mailing people hasn't actually seen an episode of Ben 10.",
+     "asr_ms": 163.5
+    },
+    "accented-29": {
+     "cohort": "accented",
+     "text": "There is one that I, is, um, tired.",
+     "asr_ms": 105.0
+    },
+    "accented-30": {
+     "cohort": "accented",
+     "text": "Yes. Yes. So how are things, how is the family, how is, how is life in general?",
+     "asr_ms": 157.9
+    },
+    "accented-31": {
+     "cohort": "accented",
+     "text": "We thank God as always life is good, life is great and we have a lot to be thankful for.",
+     "asr_ms": 137.2
+    },
+    "accented-32": {
+     "cohort": "accented",
+     "text": "The person who listens, the person who li-, who listens to me said, ah, okay, this person is involved in, even if I doesn't understand what is the project is about, you understand that I go because I'm involved in a court.",
+     "asr_ms": 243.4
+    },
+    "accented-33": {
+     "cohort": "accented",
+     "text": "Okay, is that exchange, you know?",
+     "asr_ms": 96.9
+    },
+    "accented-34": {
+     "cohort": "accented",
+     "text": "I can tell you what you want. A ball, I think about seven keys, see there.",
+     "asr_ms": 162.4
+    },
+    "accented-35": {
+     "cohort": "accented",
+     "text": "And like countries like, uh, England they're never, never gonna have that because we have to have every car insured, uh, for the specific person, like.",
+     "asr_ms": 162.4
+    },
+    "accented-36": {
+     "cohort": "accented",
+     "text": "Hi, my participant number is F C three two P one.",
+     "asr_ms": 131.4
+    },
+    "accented-37": {
+     "cohort": "accented",
+     "text": "Um, a long time ago I found these interesting looking mushrooms.",
+     "asr_ms": 103.0
+    },
+    "accented-38": {
+     "cohort": "accented",
+     "text": "Oh, I'm hope, about that, but I, I, I have read it.",
+     "asr_ms": 121.0
+    },
+    "accented-39": {
+     "cohort": "accented",
+     "text": "no idea where to start without the recipe.",
+     "asr_ms": 132.3
+    },
+    "accented-40": {
+     "cohort": "accented",
+     "text": "But since it's been almost two years or three I haven't traveled, I do look forward to my, my, my holidays.",
+     "asr_ms": 144.7
+    },
+    "accented-41": {
+     "cohort": "accented",
+     "text": "That's true. I don't believe, these are sequel series, Percy Jackson, uh, here's Olympus.",
+     "asr_ms": 162.9
+    },
+    "accented-42": {
+     "cohort": "accented",
+     "text": "Don't you watch it after I first made your book.",
+     "asr_ms": 3586.9
+    },
+    "accented-43": {
+     "cohort": "accented",
+     "text": "it already for like, I know eight years or something like.",
+     "asr_ms": 123.5
+    },
+    "accented-44": {
+     "cohort": "accented",
+     "text": "Yeah, yeah, yeah, so when I was sleeping. So, um, anyways, anyways, it's been so much fun talking to you.",
+     "asr_ms": 178.7
+    },
+    "accented-45": {
+     "cohort": "accented",
+     "text": "So, uh, it's, it's very, uh, tired, uh, because you, you talk with the people, long-term people and you know it's difficult.",
+     "asr_ms": 252.5
+    },
+    "accented-46": {
+     "cohort": "accented",
+     "text": "It's, oh, yes, it's on Netflix. Yeah, can, take a look at it on Netflix.",
+     "asr_ms": 145.4
+    },
+    "accented-47": {
+     "cohort": "accented",
+     "text": "But is there is expensive, so I only go to Japanese food restaurant in some special case like my birthday party or my,",
+     "asr_ms": 159.3
+    },
+    "accented-48": {
+     "cohort": "accented",
+     "text": "Looking back, how on earth could you ever beat that?",
+     "asr_ms": 102.2
+    },
+    "accented-49": {
+     "cohort": "accented",
+     "text": "Okay. Hi, my participant number is F C thirty-five dash P one.",
+     "asr_ms": 134.2
+    },
+    "disfluent-00": {
+     "cohort": "disfluent",
+     "text": "Well, uh, I, I don't do it as much as I should. I try to walk.",
+     "asr_ms": 131.6
+    },
+    "disfluent-01": {
+     "cohort": "disfluent",
+     "text": "Not at all. I, you know, I don't know if you've ever been to Washington D C.",
+     "asr_ms": 138.9
+    },
+    "disfluent-02": {
+     "cohort": "disfluent",
+     "text": "Now I've always done those kinds of things because I just didn't like messes and,",
+     "asr_ms": 121.4
+    },
+    "disfluent-03": {
+     "cohort": "disfluent",
+     "text": "I have enjoyed aerobics in the past and I enjoy that because I like the group association, you know, like exercising with other people.",
+     "asr_ms": 154.5
+    },
+    "disfluent-04": {
+     "cohort": "disfluent",
+     "text": "But, but she enjoys it. She likes keeping track of all that stuff and, uh, so that's sort of related to her field a little bit.",
+     "asr_ms": 170.7
+    },
+    "disfluent-05": {
+     "cohort": "disfluent",
+     "text": "Yeah, well, first of all, I, I ha-, have to ask you how, how old you are.",
+     "asr_ms": 132.3
+    },
+    "disfluent-06": {
+     "cohort": "disfluent",
+     "text": "And, uh, so I guess you just have to take the two problems and see which is worse.",
+     "asr_ms": 138.8
+    },
+    "disfluent-07": {
+     "cohort": "disfluent",
+     "text": "I've heard that Sam's has a really good lasagna. In fact, I think I had it at a, at a party once.",
+     "asr_ms": 168.8
+    },
+    "disfluent-08": {
+     "cohort": "disfluent",
+     "text": "And, uh, I had Sandy Loem holding. I had a dump truck come and dump it.",
+     "asr_ms": 136.8
+    },
+    "disfluent-09": {
+     "cohort": "disfluent",
+     "text": "And, uh, they have a policy for, uh, testing. If you, if they make you an offer, then they'll test you right before you start.",
+     "asr_ms": 167.7
+    },
+    "disfluent-10": {
+     "cohort": "disfluent",
+     "text": "Oh, I'm with you. I have to check T News every, every day. It's my noon time dose of facts.",
+     "asr_ms": 167.6
+    },
+    "disfluent-11": {
+     "cohort": "disfluent",
+     "text": "You know, I've, I've gone out and had a, had a beer at lunch time but not to access in any case.",
+     "asr_ms": 157.7
+    },
+    "disfluent-12": {
+     "cohort": "disfluent",
+     "text": "And, and someone's got to do it and be able to do it right and that's, that's the whole thing.",
+     "asr_ms": 140.1
+    },
+    "disfluent-13": {
+     "cohort": "disfluent",
+     "text": "And, uh, that I was able to do, when I could go in and go down and actually pick them off the bottom.",
+     "asr_ms": 161.8
+    },
+    "disfluent-14": {
+     "cohort": "disfluent",
+     "text": "Is it, is it hard to keep track of it or does it work out pretty well?",
+     "asr_ms": 129.5
+    },
+    "disfluent-15": {
+     "cohort": "disfluent",
+     "text": "And he'll go pick them up because he just can't stand that. He, he, that's great.",
+     "asr_ms": 150.4
+    },
+    "disfluent-16": {
+     "cohort": "disfluent",
+     "text": "And, and go ahead and get the punishment face out of the way because it doesn't do the criminal or the victim's family, anybody.",
+     "asr_ms": 148.0
+    },
+    "disfluent-17": {
+     "cohort": "disfluent",
+     "text": "Yeah, they, uh, yeah, they had to choose between the better of the two, two bad situations and, uh, I don't know what I would have done in that situation.",
+     "asr_ms": 185.8
+    },
+    "disfluent-18": {
+     "cohort": "disfluent",
+     "text": "Yeah, see, that is kind of what happened with ours. That is why we have not had one in a long time.",
+     "asr_ms": 137.8
+    },
+    "disfluent-19": {
+     "cohort": "disfluent",
+     "text": "If it's a limited edition usually, no matter what it is, if it's a limited edition it's usually worth something later on.",
+     "asr_ms": 152.5
+    },
+    "disfluent-20": {
+     "cohort": "disfluent",
+     "text": "Well, you know, why they actually held them off. None of the Yankees wanted to listen to their kind of looted grammar.",
+     "asr_ms": 139.0
+    },
+    "disfluent-21": {
+     "cohort": "disfluent",
+     "text": "You know, it's right there on, which, this is on a highway too. But it's set back enough to, there's difference.",
+     "asr_ms": 161.8
+    },
+    "disfluent-22": {
+     "cohort": "disfluent",
+     "text": "I mean, I'm not, not saying at all that Hussein wasn't quite willing to g- enter that fight.",
+     "asr_ms": 141.3
+    },
+    "disfluent-23": {
+     "cohort": "disfluent",
+     "text": "Because too often the acute hospitals will, are sending them out much faster than what they're, really able to.",
+     "asr_ms": 148.7
+    },
+    "disfluent-24": {
+     "cohort": "disfluent",
+     "text": "Yeah, I think it's getting better, not worse. Well, I should probably get back to my job.",
+     "asr_ms": 154.5
+    },
+    "disfluent-25": {
+     "cohort": "disfluent",
+     "text": "For instance, that, and I could, you know, I could envision a society where that would happen and make an interesting, uh, uh, story or whatever.",
+     "asr_ms": 177.0
+    },
+    "disfluent-26": {
+     "cohort": "disfluent",
+     "text": "Well, I think I would start with a, about, with getting rid of about two thirds of the administrators.",
+     "asr_ms": 166.0
+    },
+    "disfluent-27": {
+     "cohort": "disfluent",
+     "text": "And, uh, this year it's been so hot and, uh, sunny. It's, it's really quite, uh, quite amazing.",
+     "asr_ms": 162.0
+    },
+    "disfluent-28": {
+     "cohort": "disfluent",
+     "text": "So, so it, and there, and, you know, I feel guilty cause I'm driving a,",
+     "asr_ms": 156.6
+    },
+    "disfluent-29": {
+     "cohort": "disfluent",
+     "text": "So it's, um, real easy access from, from south of Baltimore like, um, like the airport, or more importantly for the Oreoles from Washington D C.",
+     "asr_ms": 198.7
+    },
+    "disfluent-30": {
+     "cohort": "disfluent",
+     "text": "But, uh, yeah, I like to watch rock and roll videos and any kind of videos.",
+     "asr_ms": 125.6
+    },
+    "disfluent-31": {
+     "cohort": "disfluent",
+     "text": "Um, I also, uh, handle most of the calls from our users and other programmers who need to find out something connected.",
+     "asr_ms": 147.0
+    },
+    "disfluent-32": {
+     "cohort": "disfluent",
+     "text": "And, uh, the baby just screams. I mean, the baby is like seventeen months and she just screams.",
+     "asr_ms": 154.0
+    },
+    "disfluent-33": {
+     "cohort": "disfluent",
+     "text": "Uh-huh. And I was losing jobs just from doing a poor job, you know.",
+     "asr_ms": 121.5
+    },
+    "disfluent-34": {
+     "cohort": "disfluent",
+     "text": "Are, are we paying too much in taxes and are we getting what we pay for, what's your opinion?",
+     "asr_ms": 140.5
+    },
+    "disfluent-35": {
+     "cohort": "disfluent",
+     "text": "Yeah, we all went to high school together and, uh, and we're still in contact with each other.",
+     "asr_ms": 138.2
+    },
+    "disfluent-36": {
+     "cohort": "disfluent",
+     "text": "And that's it. You just mix it all together and pop it in the oven just to, you know, heat it through.",
+     "asr_ms": 147.2
+    },
+    "disfluent-37": {
+     "cohort": "disfluent",
+     "text": "Or, you know, to find a job where they can learn how to support themselves. I mean, I guess we're getting kind of off the subject here but.",
+     "asr_ms": 177.0
+    },
+    "disfluent-38": {
+     "cohort": "disfluent",
+     "text": "Well, that's part of it. Yeah, part of it is, like you said, I don't have time.",
+     "asr_ms": 149.2
+    },
+    "disfluent-39": {
+     "cohort": "disfluent",
+     "text": "But you cut, you know, the, the kids having to give up his quote play time to pay his debt for what he did wrong.",
+     "asr_ms": 167.3
+    },
+    "disfluent-40": {
+     "cohort": "disfluent",
+     "text": "Yeah, I think it was by her now that you mention it because someone had given it to me, and I thought, well, this will be great. And it was.",
+     "asr_ms": 185.1
+    },
+    "disfluent-41": {
+     "cohort": "disfluent",
+     "text": "Oh, I used to have box turtles, um, well years ago, when I was growing up, I, I really like them.",
+     "asr_ms": 158.5
+    },
+    "disfluent-42": {
+     "cohort": "disfluent",
+     "text": "This is pretty un-, unseasonal, but, uh, at least we, you know, it, it, it feels good. It gets, uh, everybody doesn't have cabin fever today. It's nice to get out and about.",
+     "asr_ms": 229.3
+    },
+    "disfluent-43": {
+     "cohort": "disfluent",
+     "text": "So that, that's really strange. I, I was wondering why we had somebody from Maryland though. I was saying, God, do we have a T I in Maryland or.",
+     "asr_ms": 191.4
+    },
+    "disfluent-44": {
+     "cohort": "disfluent",
+     "text": "Well, my sister is the seamstress of the two of us and, but she doesn't China paint, so we both have our expertise side.",
+     "asr_ms": 157.2
+    },
+    "disfluent-45": {
+     "cohort": "disfluent",
+     "text": "Uh, actually one thing we have done quite a bit through the holidays, just because it's a real easy, is just baked potato dinners.",
+     "asr_ms": 178.5
+    },
+    "disfluent-46": {
+     "cohort": "disfluent",
+     "text": "Well, that, that makes sense, it really does. I mean, oh, we went to Panama too.",
+     "asr_ms": 146.8
+    },
+    "disfluent-47": {
+     "cohort": "disfluent",
+     "text": "And then, and then, uh, uh, the blonde headed girl that used to be on New Heart.",
+     "asr_ms": 140.9
+    },
+    "disfluent-48": {
+     "cohort": "disfluent",
+     "text": "Uh, but, you know, they're not very old so they couldn't do a whole lot yet.",
+     "asr_ms": 128.7
+    },
+    "disfluent-49": {
+     "cohort": "disfluent",
+     "text": "I'm not, I mean, I, I like all ranges of movies but I like that where they run tens.",
+     "asr_ms": 148.1
+    },
+    "slow-00": {
+     "cohort": "slow",
+     "text": "The Christmas holidays came, and she and Anne returned to the parsonage, and to that happy home circle, in which alone their natures expanded. Amongst all other people they shriveled out more or less.",
+     "asr_ms": 206.9
+    },
+    "slow-01": {
+     "cohort": "slow",
+     "text": "There, in the cedar hollow then, lived Olive Lord, an angry resentful little creature weighed down by a fierce sense of injury.",
+     "asr_ms": 160.2
+    },
+    "slow-02": {
+     "cohort": "slow",
+     "text": "There was good reason to stop and think, even for the world's most emotionless man.",
+     "asr_ms": 127.6
+    },
+    "slow-03": {
+     "cohort": "slow",
+     "text": "They seem to be, we are lost, but I am not sure.",
+     "asr_ms": 116.4
+    },
+    "slow-04": {
+     "cohort": "slow",
+     "text": "It was spatially suited for a trial plan also. In the early days, when a yield of six or eight lamps to the horsepower was considered subject for congratulation.",
+     "asr_ms": 192.6
+    },
+    "slow-05": {
+     "cohort": "slow",
+     "text": "RELOCATED FOOTNOTE Governor Robinson being on his way east, the steamboat on which he was traveling stopped at Lexington, Missouri.",
+     "asr_ms": 162.8
+    },
+    "slow-06": {
+     "cohort": "slow",
+     "text": "There is the slang of the affected lady as well as of the press uses.",
+     "asr_ms": 112.9
+    },
+    "slow-07": {
+     "cohort": "slow",
+     "text": "It has cost me twice sixty dollars in annoyance.",
+     "asr_ms": 94.4
+    },
+    "slow-08": {
+     "cohort": "slow",
+     "text": "I love thee with the passion put to use in my old greens, and with my childhood's faith.",
+     "asr_ms": 157.1
+    },
+    "slow-09": {
+     "cohort": "slow",
+     "text": "They were both remembering what the woman had said when she took the money. God give you a happy love.",
+     "asr_ms": 140.7
+    },
+    "slow-10": {
+     "cohort": "slow",
+     "text": "The vicious character of sin is brought out by the words, who gave himself for our sins.",
+     "asr_ms": 126.1
+    },
+    "slow-11": {
+     "cohort": "slow",
+     "text": "We wish to talk with him, answered Kenneth. Talk.",
+     "asr_ms": 100.3
+    },
+    "slow-12": {
+     "cohort": "slow",
+     "text": "Mrs. Griffin, however, expressed the need for a little more light.",
+     "asr_ms": 109.3
+    },
+    "slow-13": {
+     "cohort": "slow",
+     "text": "To embarrass this damaging exposure, Judge Lecombe issued a writ against the ex-governor on a frivolous charge of contempt.",
+     "asr_ms": 174.2
+    },
+    "slow-14": {
+     "cohort": "slow",
+     "text": "It is black in misfortune. It is blacker still in crime. These two blacknesses amalgamated compose slang.",
+     "asr_ms": 154.5
+    },
+    "slow-15": {
+     "cohort": "slow",
+     "text": "On Saturday mornings, when the sodality met in the chapel, to recite the little office, his place was a cushioned kneeling desk at the right of the altar from which he led his wing of boys through the responses.",
+     "asr_ms": 203.1
+    },
+    "slow-16": {
+     "cohort": "slow",
+     "text": "The first of these touches conveyed that the written statement took up the tail, at a point after it had, in a manner, begun.",
+     "asr_ms": 161.0
+    },
+    "slow-17": {
+     "cohort": "slow",
+     "text": "They worry me terribly and besides, I'd like to see what this lovely furniture looks like without such quantities of dust all over it. Good scheme, Sim.",
+     "asr_ms": 179.6
+    },
+    "slow-18": {
+     "cohort": "slow",
+     "text": "We are quite satisfied now, Captain Battleaxe, said my wife.",
+     "asr_ms": 128.4
+    },
+    "slow-19": {
+     "cohort": "slow",
+     "text": "I am now tall and my branches spread like the others that were carried off last year. Oh.",
+     "asr_ms": 142.7
+    },
+    "slow-20": {
+     "cohort": "slow",
+     "text": "Lamb wouldn't care a great deal about many of them, I fancy.",
+     "asr_ms": 117.9
+    },
+    "slow-21": {
+     "cohort": "slow",
+     "text": "Sometimes he would wander on foot upon the sandy shore and sometimes he would enjoy a ride along the summit of the cliff, all together being in no hurry at all to bring his task to an end.",
+     "asr_ms": 185.3
+    },
+    "slow-22": {
+     "cohort": "slow",
+     "text": "There came upon me a sudden shock when I heard these words, which exceeded anything which I had yet felt.",
+     "asr_ms": 148.2
+    },
+    "slow-23": {
+     "cohort": "slow",
+     "text": "We moderns, however, see the absurdity of it.",
+     "asr_ms": 111.2
+    },
+    "slow-24": {
+     "cohort": "slow",
+     "text": "And mine is Will Stutley. Shall we be comrades?",
+     "asr_ms": 110.6
+    },
+    "slow-25": {
+     "cohort": "slow",
+     "text": "Oh, that made him so angry.",
+     "asr_ms": 106.9
+    },
+    "slow-26": {
+     "cohort": "slow",
+     "text": "We are to hear Christ who has been appointed by the Father as our divine teacher.",
+     "asr_ms": 115.6
+    },
+    "slow-27": {
+     "cohort": "slow",
+     "text": "I thank all who have loved me in their hearts, with thanks and love, from mine.",
+     "asr_ms": 132.9
+    },
+    "slow-28": {
+     "cohort": "slow",
+     "text": "burn fire, burn, flicker, flicker flame.",
+     "asr_ms": 107.3
+    },
+    "slow-29": {
+     "cohort": "slow",
+     "text": "A more dreary and more disunited family party I never sat at the table with.",
+     "asr_ms": 122.0
+    },
+    "slow-30": {
+     "cohort": "slow",
+     "text": "Therefore, don't talk to me about views and prospects.",
+     "asr_ms": 116.9
+    },
+    "slow-31": {
+     "cohort": "slow",
+     "text": "But, in truth, Pearl was the one as well as the other, and only in consequence of that identity had Hester contrived so perfectly to represent the scarlet letter in her appearance.",
+     "asr_ms": 206.4
+    },
+    "slow-32": {
+     "cohort": "slow",
+     "text": "Friends, said Montfiche faintly to the wrestlers. Bear us escort so far this sheriff's house.",
+     "asr_ms": 148.2
+    },
+    "slow-33": {
+     "cohort": "slow",
+     "text": "It is the only amends I ask of you for the wrong you have done me.",
+     "asr_ms": 119.1
+    },
+    "slow-34": {
+     "cohort": "slow",
+     "text": "What is the farm, Olaf? Not yet, I answered. Viking is better for summer.",
+     "asr_ms": 150.4
+    },
+    "slow-35": {
+     "cohort": "slow",
+     "text": "Oh Mademoiselle, why have I not a devoted sister or a true friend such as yourself?",
+     "asr_ms": 143.1
+    },
+    "slow-36": {
+     "cohort": "slow",
+     "text": "Then, turning to Jane, she asked, in a somewhat altered tone, Has she been a good girl, Jane?",
+     "asr_ms": 148.9
+    },
+    "slow-37": {
+     "cohort": "slow",
+     "text": "GRAM, roughly one twenty-eighth of an ounce.",
+     "asr_ms": 111.4
+    },
+    "slow-38": {
+     "cohort": "slow",
+     "text": "Dear me, what a chatterbox you're getting to be onk, remarked the magician who was pleased with the compliment.",
+     "asr_ms": 151.4
+    },
+    "slow-39": {
+     "cohort": "slow",
+     "text": "Oh, let him come along, she urged. I do love to see him about that old house.",
+     "asr_ms": 138.6
+    },
+    "slow-40": {
+     "cohort": "slow",
+     "text": "It was a pain to see them and a sword-like pain to see the signs of adolescence that made repellent their pitiable nakedness.",
+     "asr_ms": 157.2
+    },
+    "slow-41": {
+     "cohort": "slow",
+     "text": "On huge silver platters were pyramids of tarts and cakes and red wine sparkled in glittering decanters.",
+     "asr_ms": 172.3
+    },
+    "slow-42": {
+     "cohort": "slow",
+     "text": "Dorkus, in her strange way, was moved.",
+     "asr_ms": 120.6
+    },
+    "slow-43": {
+     "cohort": "slow",
+     "text": "At this, the bundle opened suddenly and out popped Fronzy.",
+     "asr_ms": 144.6
+    },
+    "slow-44": {
+     "cohort": "slow",
+     "text": "The young girls had indeed made themselves small, indeed invisible.",
+     "asr_ms": 107.4
+    },
+    "slow-45": {
+     "cohort": "slow",
+     "text": "One could hardly hope for any upon so dry a day.",
+     "asr_ms": 104.1
+    },
+    "slow-46": {
+     "cohort": "slow",
+     "text": "The behaviorist, who attempts to make psychology a record of behavior, has to trust his memory in making the record.",
+     "asr_ms": 157.5
+    },
+    "slow-47": {
+     "cohort": "slow",
+     "text": "And besides, suppose he does learn medicine.",
+     "asr_ms": 95.3
+    },
+    "slow-48": {
+     "cohort": "slow",
+     "text": "She spoke with a sudden energy which partook of fear and passion and flushed her thin cheek and made her languid eyes flash.",
+     "asr_ms": 157.1
+    },
+    "slow-49": {
+     "cohort": "slow",
+     "text": "The grateful applause of the clergy has consecrated the memory of a prince who indulged their passions and promoted their interest.",
+     "asr_ms": 159.8
+    }
+   }
+  }
+ },
+ "wall_s": 76.24786639213562,
+ "seconds": 67.13783740997314,
+ "criteria": {
+  "n_clips": 200,
+  "n_target": 50,
+  "n_guard": 150,
+  "s1": {
+   "base_raw_wer": 0.09913378248315688,
+   "lora_raw_wer": 0.023099133782483156,
+   "diff_pp": -7.603464870067373,
+   "ci95_pp": [
+    -9.5703125,
+    -5.7
+   ],
+   "pass": true
+  },
+  "s2": {
+   "fillers_in_refs": 29,
+   "base_kept": 1,
+   "lora_kept": 29,
+   "base_recall": 0.034482758620689655,
+   "lora_recall": 1.0,
+   "bar": 0.9,
+   "pass": true
+  },
+  "s3": {
+   "base_norm_wer": 0.10358105506353485,
+   "lora_norm_wer": 0.08009241432422025,
+   "diff_pp": -2.34886407393146,
+   "ci95_pp": [
+    -3.844806379391359,
+    -0.941828307899737
+   ],
+   "bar_pp": 1.0,
+   "pass": true
+  },
+  "target_norm": {
+   "base": 0.07627118644067797,
+   "lora": 0.02448210922787194
+  },
+  "bootstrap": {
+   "n": 10000,
+   "seed": 0
+  },
+  "supported": true
+ }
+}

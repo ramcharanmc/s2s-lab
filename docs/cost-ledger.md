@@ -43,6 +43,16 @@ one. A failed run is still a row, since it was still billed.
 | 2026-09-25 | `4df9ef3` | `modal run modal_app/r5_bench.py::pr010 --confirm PR-010` | A10 | — | — | ≈ \$0.6 (failed) | PR-010's first registered run: base Moshi finished, then out of GPU memory loading Moshi + LoRA; no run file (PR-010 Deviations). Estimate: about 2,100 s, twice the dev run's 50 dialogues |
 | 2026-09-25 | `3d36f74` | `modal run modal_app/r5_bench.py::pr010 --confirm PR-010` | L40S | 3658 s | 3712 s | \$2.011 | **the PR-010 run**: distance to the reference 496 ms base, 1,035 ms LoRA; gain -539 ms, 95% interval -685 to -402: not supported, moved away (`runs/ft1/`) |
 
+| 2026-09-26 | `0b89a54` | `modal run modal_app/ft2_train.py::dev` | A10 | — | — | ≈ \$0.01 (failed) | FT-2's first smoke run: Hydra refused the `trainer.max_time` override (the key was not declared); fixed in `df227b0`. Image built and the dataset fetched to the volume `ft2`, both on CPU |
+| 2026-09-26 | `df227b0` | `modal run modal_app/ft2_train.py::dev` | A10 | 45 s | 48 s | \$0.015 | FT-2 smoke run: 30 steps of the real experiment on the real data, 8 validation clips: raw WER 7.9% → 4.2%, fillers kept 40% → 100%. Dev data, not evidence |
+| 2026-09-26 | `f37d0df` | `modal run modal_app/ft2_train.py::train` | A10 | 545 s | 549 s | \$0.168 | **FT-2's training**: whisper-small.en + LoRA (1.44% of the parameters), 900 steps, verbatim DisfluencySpeech; validation on 64 clips 2.4% → 2.0% raw WER, fillers kept 100% throughout; six adapters kept (`runs/ft2/training/`) |
+| 2026-09-26 | `f37d0df` | `modal run modal_app/ft2_train.py::evaluate` | A10 | 43 s | 47 s | \$0.014 | FT-2 dev look, base small.en on all 250 validation clips: raw 10.9%, normalized 7.8%, 8 of 176 fillers kept (`runs/ft2/dev-look/base/`) |
+| 2026-09-26 | `f37d0df` | `modal run modal_app/ft2_train.py::evaluate --adapter runs/.../adapters/step-000900` | A10 | — | — | ≈ \$0.005 (failed) | the adapter path was wrong (the module saved under the logger's `csv/version_0/`, fixed in `65c833c`); stopped before loading anything |
+| 2026-09-26 | `f37d0df` | `modal run modal_app/ft2_train.py::evaluate --adapter runs/.../csv/version_0/adapters/step-000900` | A10 | 42 s | 45 s | \$0.014 | FT-2 dev look, the LoRA on the same 250 clips: raw 2.1%, normalized 2.1%, 174 of 176 fillers kept (`runs/ft2/dev-look/lora-step-000900/`) |
+| 2026-09-26 | `f37d0df` | `modal run modal_app/ft2_train.py::export --adapter runs/.../csv/version_0/adapters/step-000900` | CPU | 44 s | 48 s | ≈ \$0.01 (CPU rate) | the adapter merged into small.en and converted to CTranslate2 float16, on the volume; `ct2/model.bin` SHA-256 `b31833fe...` |
+| 2026-09-26 | `f37d0df` | `modal run modal_app/ft2_train.py::bench --limit 8` | T4 | 4 s | 12 s | \$0.002 | FT-2 bench smoke test, base small.en alone on 8 clean clips: raw 5.1%. Not evidence |
+| 2026-09-26 | `65c833c` | `modal run modal_app/ft2_train.py::bench --export export-runs_train-f37d0df-...-step-000900-float16 --confirm PR-011` | T4 | 67 s | 76 s | \$0.012 | **the PR-011 run**: small.en then the exported model, 200 clips, one container: disfluent raw 9.9% → 2.3%, fillers 29 of 29, the other 150 clips −2.3 points normalized; **supported** (`runs/ft2/`) |
+
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
 
@@ -50,5 +60,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$8.036 + five failed runs | \$36.93 |
+| Modal | \$8.261 + seven failed runs and one CPU export | \$36.93 |
 | Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |

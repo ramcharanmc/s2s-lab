@@ -1,0 +1,12 @@
+{
+  "adapter_dir": "/ft2/runs/train-f37d0df-20260926-235222/csv/version_0/adapters/step-000900",
+  "model": "openai/whisper-small.en",
+  "data": "DisfluencySpeech @b7da294, target transcript_a: train 4500 clips, val 250; dropped {'train': {'too_long': 0, 'no_text': 0, 'too_many_tokens': 0}, 'validation': {'too_long': 0, 'no_text': 0, 'too_many_tokens': 0}}",
+  "val/loss": 0.1744818240404129,
+  "val/wer_raw": 0.021484375,
+  "val/wer_normalized": 0.02071366459131241,
+  "val/filler_recall": 0.9886363744735718,
+  "val/fillers_in_refs": 176.0,
+  "val/n_clips": 250.0,
+  "val/n_words": 5632.0
+}

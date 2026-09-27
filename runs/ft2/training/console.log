@@ -1,0 +1,188 @@
+[[36m2026-09-26 23:52:38,160[0m][[34msrc.utils.utils[0m][[32mINFO[0m] - [rank: 0] Enforcing tags! <cfg.extras.enforce_tags=True>[0m
+[[36m2026-09-26 23:52:38,170[0m][[34msrc.utils.utils[0m][[32mINFO[0m] - [rank: 0] Printing config tree with Rich! <cfg.extras.print_config=True>[0m
+CONFIG
+├── data
+│   └── _target_: src.data.disfluencyspeech_datamodule.DisfluencySpeechDataModul
+│       data_dir: /ft2/data/disfluencyspeech                                    
+│       model_name: openai/whisper-small.en                                     
+│       text_column: transcript_a                                               
+│       batch_size: 16                                                          
+│       val_limit: 64                                                           
+│       max_clip_s: 30.0                                                        
+│       num_workers: 4                                                          
+│       pin_memory: true                                                        
+│       persistent_workers: true                                                
+│                                                                               
+├── model
+│   └── _target_: src.models.whisper_lora_module.WhisperLoRAModule              
+│       model_name: openai/whisper-small.en                                     
+│       lora_r: 32                                                              
+│       lora_alpha: 64                                                          
+│       lora_dropout: 0.05                                                      
+│       target_modules:                                                         
+│       - q_proj                                                                
+│       - v_proj                                                                
+│       optimizer:                                                              
+│         _target_: torch.optim.AdamW                                           
+│         _partial_: true                                                       
+│         lr: 0.0002                                                            
+│         weight_decay: 0.01                                                    
+│       warmup_steps: 50                                                        
+│       max_new_tokens: 200                                                     
+│       model_config_overrides: null                                            
+│       compile: false                                                          
+│                                                                               
+├── callbacks
+│   └── model_checkpoint:                                                       
+│         _target_: pytorch_lightning.callbacks.ModelCheckpoint                 
+│         dirpath: /ft2/runs/train-f37d0df-20260926-235222/checkpoints          
+│         filename: step_{step:06d}                                             
+│         monitor: val/wer_raw                                                  
+│         verbose: false                                                        
+│         save_last: true                                                       
+│         save_top_k: -1                                                        
+│         mode: min                                                             
+│         auto_insert_metric_name: false                                        
+│         save_weights_only: true                                               
+│         every_n_train_steps: null                                             
+│         train_time_interval: null                                             
+│         every_n_epochs: null                                                  
+│         save_on_train_epoch_end: null                                         
+│       model_summary:                                                          
+│         _target_: pytorch_lightning.callbacks.RichModelSummary                
+│         max_depth: 1                                                          
+│       rich_progress_bar:                                                      
+│         _target_: pytorch_lightning.callbacks.RichProgressBar                 
+│                                                                               
+├── logger
+│   └── csv:                                                                    
+│         _target_: pytorch_lightning.loggers.csv_logs.CSVLogger                
+│         save_dir: /ft2/runs/train-f37d0df-20260926-235222                     
+│         name: csv/                                                            
+│         prefix: ''                                                            
+│                                                                               
+├── trainer
+│   └── _target_: pytorch_lightning.trainer.Trainer                             
+│       default_root_dir: /ft2/runs/train-f37d0df-20260926-235222               
+│       min_epochs: 1                                                           
+│       max_epochs: -1                                                          
+│       accelerator: gpu                                                        
+│       devices: 1                                                              
+│       check_val_every_n_epoch: null                                           
+│       deterministic: false                                                    
+│       max_time: 00:01:16:49                                                   
+│       precision: bf16-mixed                                                   
+│       max_steps: 900                                                          
+│       val_check_interval: 150                                                 
+│       gradient_clip_val: 1.0                                                  
+│       log_every_n_steps: 10                                                   
+│       num_sanity_val_steps: 1                                                 
+│                                                                               
+├── paths
+│   └── root_dir: .                                                             
+│       data_dir: /ft2/data                                                     
+│       log_dir: /ft2/runs                                                      
+│       output_dir: /ft2/runs/train-f37d0df-20260926-235222                     
+│       work_dir: /root/ft                                                      
+│                                                                               
+├── extras
+│   └── ignore_warnings: false                                                  
+│       enforce_tags: true                                                      
+│       print_config: true                                                      
+│                                                                               
+├── task_name
+│   └── train                                                                   
+├── tags
+│   └── ['ft2', 'f37d0df']                                                      
+├── train
+│   └── True                                                                    
+├── test
+│   └── False                                                                   
+├── ckpt_path
+│   └── None                                                                    
+├── adapter_dir
+│   └── None                                                                    
+└── seed
+    └── 0                                                                       
+[[36m2026-09-26 23:52:38,212[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Instantiating datamodule <src.data.disfluencyspeech_datamodule.DisfluencySpeechDataModule>[0m
+[[36m2026-09-26 23:52:38,456[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Instantiating model <src.models.whisper_lora_module.WhisperLoRAModule>[0m
+
+Loading weights:   0%|          | 0/479 [00:00<?, ?it/s]
+Loading weights:  20%|██        | 97/479 [00:00<00:00, 937.21it/s]
+Loading weights:  43%|████▎     | 205/479 [00:00<00:00, 978.11it/s]
+Loading weights:  63%|██████▎   | 303/479 [00:00<00:00, 964.43it/s]
+Loading weights: 100%|██████████| 479/479 [00:00<00:00, 1498.25it/s]
+[[36m2026-09-26 23:52:39,746[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Instantiating callbacks...[0m
+[[36m2026-09-26 23:52:39,746[0m][[34msrc.utils.instantiators[0m][[32mINFO[0m] - [rank: 0] Instantiating callback <pytorch_lightning.callbacks.ModelCheckpoint>[0m
+[[36m2026-09-26 23:52:39,750[0m][[34msrc.utils.instantiators[0m][[32mINFO[0m] - [rank: 0] Instantiating callback <pytorch_lightning.callbacks.RichModelSummary>[0m
+[[36m2026-09-26 23:52:39,751[0m][[34msrc.utils.instantiators[0m][[32mINFO[0m] - [rank: 0] Instantiating callback <pytorch_lightning.callbacks.RichProgressBar>[0m
+[[36m2026-09-26 23:52:39,752[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Instantiating loggers...[0m
+[[36m2026-09-26 23:52:39,753[0m][[34msrc.utils.instantiators[0m][[32mINFO[0m] - [rank: 0] Instantiating logger <pytorch_lightning.loggers.csv_logs.CSVLogger>[0m
+[[36m2026-09-26 23:52:39,754[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Instantiating trainer <pytorch_lightning.trainer.Trainer>[0m
+Using bfloat16 Automatic Mixed Precision (AMP)
+Trainer already configured with model summary callbacks: [<class 'pytorch_lightning.callbacks.rich_model_summary.RichModelSummary'>]. Skipping setting a default `ModelSummary` callback.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+[[36m2026-09-26 23:52:39,790[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Logging hyperparameters![0m
+[[36m2026-09-26 23:52:39,808[0m][[34m__main__[0m][[32mINFO[0m] - [rank: 0] Starting training![0m
+You are using a CUDA device ('NVIDIA A10') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/usr/local/lib/python3.12/site-packages/pytorch_lightning/utilities/model_summary/model_summary.py:242: Precision bf16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+┏━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name       ┃ Type       ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ net        │ PeftModel  │  245 M │ train │     0 │
+│ 1 │ train_loss │ MeanMetric │      0 │ train │     0 │
+│ 2 │ val_loss   │ MeanMetric │      0 │ train │     0 │
+└───┴────────────┴────────────┴────────┴───────┴───────┘
+Trainable params: 3.5 M                                                         
+Non-trainable params: 241 M                                                     
+Total params: 245 M                                                             
+Total estimated model params size (MB): 981.092                                 
+Modules in train mode: 724                                                      
+Modules in eval mode: 350                                                       
+Total FLOPs: 0                                                                  
+/usr/local/lib/python3.12/site-packages/pytorch_lightning/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+LoRA: 3,538,944 trainable of 245,273,088 parameters (1.44%)
+DisfluencySpeech @b7da294, target transcript_a: train 4500 clips, val 64 (of the split, val_limit=64); dropped {'train': {'too_long': 0, 'no_text': 0, 'too_many_tokens': 0}, 'validation': {'too_long': 0, 'no_text': 0, 'too_many_tokens': 0}}
+[transformers] Passing `generation_config` together with generation-related arguments=({'begin_suppress_tokens', 'suppress_tokens'}) is deprecated and will be removed in future versions. Please pass either a `generation_config` object OR all generation parameters explicitly, but not both.
+[transformers] The attention mask is not set with a batched input, and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer WhisperTokenizer. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
+/usr/local/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py:538: Found 350 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+/usr/local/lib/python3.12/site-packages/peft/utils/save_and_load.py:300: UserWarning: Could not find a config file in openai/whisper-small.en - will assume that the vocabulary was not modified.
+  warnings.warn(
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+[transformers] Both `max_new_tokens` (=200) and `max_length`(=448) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
+`Trainer.fit` stopped: `max_steps=900` reached.
+Epoch 3/-2 ━━━━━━━━━━━━━━━━━ 54/54 0:00:29 • 0:00:00 1.84it/s v_num: 0.000      
+                                                              train/loss: 0.107 
+                                                              val/loss: 0.164   
+                                                              val/wer_raw: 0.020
+                                                              val/filler_recall:
+                                                              1.000             
+[[36m2026-09-27 00:01:26,825[0m][[34msrc.utils.utils[0m][[32mINFO[0m] - [rank: 0] Output dir: /ft2/runs/train-f37d0df-20260926-235222[0m
+[[36m2026-09-27 00:01:26,826[0m][[34msrc.utils.utils[0m][[32mINFO[0m] - [rank: 0] Metric name is None! Skipping metric value retrieval...[0m

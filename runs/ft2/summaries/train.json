@@ -1,0 +1,97 @@
+{
+ "name": "train-f37d0df-20260926-235222",
+ "run_dir": "/ft2/runs/train-f37d0df-20260926-235222",
+ "machine": "Modal NVIDIA A10, 580.95.05",
+ "seconds": 545.0543158054352,
+ "validations": [
+  {
+   "step": 150,
+   "wer_raw": 0.02377717391304348,
+   "wer_normalized": 0.0247234873129473,
+   "filler_recall": 1.0,
+   "fillers_in_refs": 29.0,
+   "n_clips": 64.0,
+   "n_words": 1472.0,
+   "loss": 0.17672142386436462,
+   "file": "runs/train-f37d0df-20260926-235222/csv/version_0/val-step-000150.jsonl"
+  },
+  {
+   "step": 300,
+   "wer_raw": 0.021059782608695652,
+   "wer_normalized": 0.02147039687703318,
+   "filler_recall": 1.0,
+   "fillers_in_refs": 29.0,
+   "n_clips": 64.0,
+   "n_words": 1472.0,
+   "loss": 0.17105111479759216,
+   "file": "runs/train-f37d0df-20260926-235222/csv/version_0/val-step-000300.jsonl"
+  },
+  {
+   "step": 450,
+   "wer_raw": 0.021739130434782608,
+   "wer_normalized": 0.02342225113858165,
+   "filler_recall": 1.0,
+   "fillers_in_refs": 29.0,
+   "n_clips": 64.0,
+   "n_words": 1472.0,
+   "loss": 0.16656148433685303,
+   "file": "runs/train-f37d0df-20260926-235222/csv/version_0/val-step-000450.jsonl"
+  },
+  {
+   "step": 600,
+   "wer_raw": 0.021059782608695652,
+   "wer_normalized": 0.02147039687703318,
+   "filler_recall": 1.0,
+   "fillers_in_refs": 29.0,
+   "n_clips": 64.0,
+   "n_words": 1472.0,
+   "loss": 0.1632547825574875,
+   "file": "runs/train-f37d0df-20260926-235222/csv/version_0/val-step-000600.jsonl"
+  },
+  {
+   "step": 750,
+   "wer_raw": 0.021059782608695652,
+   "wer_normalized": 0.02147039687703318,
+   "filler_recall": 1.0,
+   "fillers_in_refs": 29.0,
+   "n_clips": 64.0,
+   "n_words": 1472.0,
+   "loss": 0.16283486783504486,
+   "file": "runs/train-f37d0df-20260926-235222/csv/version_0/val-step-000750.jsonl"
+  },
+  {
+   "step": 900,
+   "wer_raw": 0.020380434782608696,
+   "wer_normalized": 0.02081977878985036,
+   "filler_recall": 1.0,
+   "fillers_in_refs": 29.0,
+   "n_clips": 64.0,
+   "n_words": 1472.0,
+   "loss": 0.16372784972190857,
+   "file": "runs/train-f37d0df-20260926-235222/csv/version_0/val-step-000900.jsonl"
+  }
+ ],
+ "adapters": [
+  "runs/train-f37d0df-20260926-235222/csv/version_0/adapters/step-000150",
+  "runs/train-f37d0df-20260926-235222/csv/version_0/adapters/step-000300",
+  "runs/train-f37d0df-20260926-235222/csv/version_0/adapters/step-000450",
+  "runs/train-f37d0df-20260926-235222/csv/version_0/adapters/step-000600",
+  "runs/train-f37d0df-20260926-235222/csv/version_0/adapters/step-000750",
+  "runs/train-f37d0df-20260926-235222/csv/version_0/adapters/step-000900"
+ ],
+ "commit": "f37d0df",
+ "kind": "train",
+ "overrides": [],
+ "wall_s": 549.1524126529694,
+ "data": {
+  "revision": "b7da294fe3a70dd96df6640893f2a5dfc2c87638",
+  "files": {
+   "data/train-00000-of-00003.parquet": 438310456,
+   "data/train-00001-of-00003.parquet": 448788413,
+   "data/train-00002-of-00003.parquet": 450679315,
+   "data/validation-00000-of-00001.parquet": 74193762
+  },
+  "mb": 1412,
+  "seconds": 0
+ }
+}

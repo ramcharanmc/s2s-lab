@@ -41,6 +41,12 @@ re-performing Switchboard utterances: the eval set's disfluent cohort is 50 clip
 split, so a result on that cohort is **same-speaker adaptation**, and is reported as such. The
 test split is never read here (`src/data/disfluencyspeech_datamodule.py`).
 
+**Result (PR-011, 2026-09-26, `runs/ft2/`): supported.** On the eval set's disfluent cohort raw WER
+fell from 9.9% to 2.3% and the LoRA kept 29 of 29 fillers (base: 1); on the other 150 clips
+normalized WER fell 2.3 points where a rise of 1.0 was allowed -- most of it on EdAcc, whose
+references are verbatim too. Same-speaker adaptation on the disfluent cohort, as registered;
+`docs/preregistration.md` has the entry, the predictions scored and what the registration missed.
+
 **Recipe.** `configs/experiment/ft2_whisper_verbatim.yaml`: PEFT LoRA r=32, α=64 on q and v
 (PEFT's own Whisper recipe, ~1.5% of the parameters), AdamW 2e-4 with 50 warm-up steps and linear
 decay, batch 16, 900 steps (≈3.2 epochs), validation on 64 clips every 150 steps.

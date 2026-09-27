@@ -1,0 +1,59 @@
+{
+ "registration": null,
+ "commit": "f37d0df",
+ "base_model": "small.en",
+ "export_name": null,
+ "export_sha256": null,
+ "machine": "Modal Tesla T4, 610.57.04",
+ "n_clips": 8,
+ "models": {
+  "small.en": {
+   "path": "small.en",
+   "load_s": 2.0,
+   "turns": {
+    "clean-00": {
+     "cohort": "clean",
+     "text": "The Christmas holidays came, and she and Anne returned to the parsonage, and to that happy home circle in which alone their natures expanded. Amongst all other people they shriveled up more or less.",
+     "asr_ms": 1017.3
+    },
+    "clean-01": {
+     "cohort": "clean",
+     "text": "There, in the cedar hollow then, lived Olive Lord, an angry, resentful little creature weighed down by a fierce sense of injury.",
+     "asr_ms": 155.8
+    },
+    "clean-02": {
+     "cohort": "clean",
+     "text": "There was good reason to stop and think, even for the world's most emotionless man.",
+     "asr_ms": 119.7
+    },
+    "clean-03": {
+     "cohort": "clean",
+     "text": "They seem to be we are lost, but I am not sure.",
+     "asr_ms": 104.6
+    },
+    "clean-04": {
+     "cohort": "clean",
+     "text": "It was specially suited for a trial plan also. In the early days, when a yield of six or eight lamps to the horsepower was considered subject for congratulation,",
+     "asr_ms": 165.4
+    },
+    "clean-05": {
+     "cohort": "clean",
+     "text": "Re-located footnote. Governor Robinson being on his way east, the steamboat on which he was traveling stopped at Lexington, Missouri.",
+     "asr_ms": 166.1
+    },
+    "clean-06": {
+     "cohort": "clean",
+     "text": "There is the slang of the affected lady as well as of the press users.",
+     "asr_ms": 114.0
+    },
+    "clean-07": {
+     "cohort": "clean",
+     "text": "It has cost me twice sixty dollars in annoyance.",
+     "asr_ms": 98.5
+    }
+   }
+  }
+ },
+ "wall_s": 11.732017040252686,
+ "seconds": 4.000515460968018
+}

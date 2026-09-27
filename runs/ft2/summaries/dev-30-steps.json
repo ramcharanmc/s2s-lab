@@ -1,0 +1,53 @@
+{
+ "name": "dev-df227b0-20260926-232923",
+ "run_dir": "/ft2/runs/dev-df227b0-20260926-232923",
+ "machine": "Modal NVIDIA A10, 580.95.05",
+ "seconds": 44.5369074344635,
+ "validations": [
+  {
+   "step": 15,
+   "wer_raw": 0.07878787878787878,
+   "wer_normalized": 0.03550295857988166,
+   "filler_recall": 0.4,
+   "fillers_in_refs": 5.0,
+   "n_clips": 8.0,
+   "n_words": 165.0,
+   "file": "runs/dev-df227b0-20260926-232923/csv/version_0/val-step-000015.jsonl"
+  },
+  {
+   "step": 30,
+   "wer_raw": 0.04242424242424243,
+   "wer_normalized": 0.023668639053254437,
+   "filler_recall": 1.0,
+   "fillers_in_refs": 5.0,
+   "n_clips": 8.0,
+   "n_words": 165.0,
+   "file": "runs/dev-df227b0-20260926-232923/csv/version_0/val-step-000030.jsonl"
+  }
+ ],
+ "adapters": [
+  "runs/dev-df227b0-20260926-232923/csv/version_0/adapters/step-000015",
+  "runs/dev-df227b0-20260926-232923/csv/version_0/adapters/step-000030"
+ ],
+ "commit": "df227b0",
+ "kind": "dev",
+ "overrides": [
+  "trainer.max_steps=30",
+  "trainer.val_check_interval=15",
+  "data.val_limit=8",
+  "trainer.log_every_n_steps=5",
+  "trainer.num_sanity_val_steps=0"
+ ],
+ "wall_s": 48.05260729789734,
+ "data": {
+  "revision": "b7da294fe3a70dd96df6640893f2a5dfc2c87638",
+  "files": {
+   "data/train-00000-of-00003.parquet": 438310456,
+   "data/train-00001-of-00003.parquet": 448788413,
+   "data/train-00002-of-00003.parquet": 450679315,
+   "data/validation-00000-of-00001.parquet": 74193762
+  },
+  "mb": 1412,
+  "seconds": 0
+ }
+}

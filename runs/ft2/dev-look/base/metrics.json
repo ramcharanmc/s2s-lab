@@ -1,0 +1,12 @@
+{
+  "adapter_dir": null,
+  "model": "openai/whisper-small.en",
+  "data": "DisfluencySpeech @b7da294, target transcript_a: train 4500 clips, val 250; dropped {'train': {'too_long': 0, 'no_text': 0, 'too_many_tokens': 0}, 'validation': {'too_long': 0, 'no_text': 0, 'too_many_tokens': 0}}",
+  "val/loss": 0.7277272939682007,
+  "val/wer_raw": 0.10884232819080353,
+  "val/wer_normalized": 0.07815491408109665,
+  "val/filler_recall": 0.04545454680919647,
+  "val/fillers_in_refs": 176.0,
+  "val/n_clips": 250.0,
+  "val/n_words": 5632.0
+}
