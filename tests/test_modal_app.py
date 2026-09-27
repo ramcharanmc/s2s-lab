@@ -314,6 +314,23 @@ def test_the_ft3_last_checkpoint_is_found_below_exp_managers_dated_directory(ft3
     assert set(ft3_train.NEMO_NAMES) == set(ft3_train.MODEL_CLASSES) == {"FastPitch", "HifiGan"}
 
 
+def test_the_ft3_machine_line_survives_a_container_without_nvidia_smi(ft3_train, monkeypatch):
+    """::package runs on a CPU: its first run saved the model and then died building this line."""
+    def missing(*args, **kwargs):
+        raise FileNotFoundError(2, "No such file or directory", "nvidia-smi")
+    monkeypatch.setattr(ft3_train.subprocess, "run", missing)
+    assert ft3_train._machine() == "Modal (no GPU)"
+
+
+def test_the_ft3_vocoder_stage_counts_the_clips_hifigan_would_prune_and_uses_the_laptop_tested_mels(ft3_train):
+    splits = {"train": [{"duration": 0.5}, {"duration": 0.75}, {"duration": 4.0}], "val": [{"duration": 2.99}, {"duration": 3.0}]}
+    assert ft3_train.short_clips(splits) == {"train": 1, "val": 1}
+    conf = (ROOT / "ft" / "src" / "ft3" / "mels.py").read_text(encoding="utf-8")
+    source = (ROOT / "modal_app" / "ft3_train.py").read_text(encoding="utf-8")
+    assert "mels.write(spec_model" in source and "BetaBinomialInterpolator" not in source     # one mel loop, in ft/src/ft3
+    assert "def prior_frames" in conf
+
+
 def test_the_ft3_data_stage_extracts_pitch_with_the_trainings_range(ft3_train):
     """The training loads the pitch files the data stage caches: one range, one directory, in both."""
     assert (ft3_train.PITCH_FMIN, ft3_train.PITCH_FMAX) == (30, 512)                # the tutorial's

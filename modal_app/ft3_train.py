@@ -127,8 +127,11 @@ def _run(cmd: list[str], cwd: str, log_path: pathlib.Path | None = None) -> str:
 
 
 def _machine() -> str:
-    out = subprocess.run(["nvidia-smi", "--query-gpu=name,driver_version", "--format=csv,noheader"],
-                         capture_output=True, text=True).stdout.strip()
+    try:
+        out = subprocess.run(["nvidia-smi", "--query-gpu=name,driver_version", "--format=csv,noheader"],
+                             capture_output=True, text=True).stdout.strip()
+    except FileNotFoundError:                   # a CPU container has no nvidia-smi: ::package died on it, after saving
+        out = ""
     return f"Modal {out}" if out else "Modal (no GPU)"
 
 
@@ -194,6 +197,14 @@ def data_remote() -> dict:
     STATS.write_text(json.dumps(stats, indent=1))
     volume.commit()
     return stats
+
+
+HIFIGAN_MIN_S = {"train": 0.75, "val": 3.0}     # hifigan.yaml's train_min_duration and val_min_duration: shorter clips are pruned
+
+
+def short_clips(splits: dict) -> dict:
+    """How many of each split's clips hifigan.yaml would prune."""
+    return {s: sum(r["duration"] < HIFIGAN_MIN_S[s] for r in records) for s, records in splits.items()}
 
 
 def _last_ckpt(exp_dir: pathlib.Path, model_dir: str) -> pathlib.Path:
@@ -264,40 +275,23 @@ def train_remote(name: str, commit: str) -> dict:
 def vocoder_remote(name: str, commit: str) -> dict:
     """The tutorial's HiFi-GAN step: mels of every training and validation clip from the fine-tuned
     FastPitch with ground-truth alignment, then hifigan_finetune.py from tts_en_hifigan."""
-    import numpy as np
-    import soundfile as sf
     import torch
     from nemo.collections.tts.models import FastPitchModel
-    from nemo.collections.tts.parts.utils.tts_dataset_utils import BetaBinomialInterpolator
+    from src.ft3 import mels
+    splits = {s: [json.loads(l) for l in (DATA / f"{s}.json").read_text().splitlines() if l.strip()] for s in ("train", "val")}
+    short = short_clips(splits)
+    if short["val"] == len(splits["val"]) or short["train"] == len(splits["train"]):
+        raise RuntimeError(f"hifigan.yaml would prune a whole split before training: {short} of "
+                           f"{ {s: len(r) for s, r in splits.items()} } clips are under its minimum durations {HIFIGAN_MIN_S}")
     run_dir = _fresh(pathlib.Path(VOLUME) / "runs" / name)
     t0 = time.time()
     spec_model = FastPitchModel.restore_from(f"{VOLUME}/models/fastpitch_9017.nemo").cuda().eval()
-    interp = BetaBinomialInterpolator()
     manifests = {}
-    for split in ("train", "val"):
-        records = [json.loads(l) for l in (DATA / f"{split}.json").read_text().splitlines() if l.strip()]
-        mel_dir = run_dir / f"mels_{split}"
-        mel_dir.mkdir()
-        for i, r in enumerate(records):
-            audio, sr = sf.read(r["audio_filepath"], dtype="float32")
-            if audio.ndim == 2:
-                audio = audio.mean(axis=1)
-            if sr != int(spec_model.cfg.sample_rate):
-                import librosa
-                audio = librosa.resample(audio, orig_sr=sr, target_sr=int(spec_model.cfg.sample_rate))
-            wav = torch.from_numpy(audio).unsqueeze(0).cuda()
-            wav_len = torch.tensor([wav.shape[1]], dtype=torch.long).cuda()
-            with torch.no_grad():
-                text = spec_model.parse(r["text"])
-                text_len = torch.tensor([text.shape[-1]], dtype=torch.long).cuda()
-                spect, spect_len = spec_model.preprocessor(input_signal=wav, length=wav_len)
-                prior = torch.from_numpy(interp(spect_len.item(), text_len.item())).unsqueeze(0).cuda()
-                mel = spec_model.forward(text=text, input_lens=text_len, spec=spect, mel_lens=spect_len, attn_prior=prior)[0]
-            path = mel_dir / f"mel_{i}.npy"
-            np.save(path, mel[0].cpu().numpy())
-            r["mel_filepath"] = str(path)
+    for split, records in splits.items():
+        records = mels.write(spec_model, records, run_dir / f"mels_{split}")
         manifests[split] = run_dir / f"hifigan_{split}.json"
         manifests[split].write_text("".join(json.dumps(r) + "\n" for r in records))
+    volume.commit()                                                          # the mels, before the training starts
     del spec_model
     torch.cuda.empty_cache()
     cmd = [sys.executable, f"{SRC}/examples/tts/hifigan_finetune.py", "--config-name=hifigan.yaml",
@@ -308,7 +302,7 @@ def vocoder_remote(name: str, commit: str) -> dict:
     ckpt = _package(run_dir, "HifiGan", NEMO_NAMES["HifiGan"])
     volume.commit()
     return {"name": name, "commit": commit, "machine": _machine(), "seconds": time.time() - t0, "checkpoint": str(ckpt),
-            "nemo": "models/hifigan_9017.nemo", "overrides": HIFIGAN_OVERRIDES}
+            "nemo": "models/hifigan_9017.nemo", "overrides": HIFIGAN_OVERRIDES, "pruned_by_duration": short}
 
 
 # --------------------------------------------------------------------------- #

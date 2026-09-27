@@ -73,6 +73,16 @@ def test_pitch_is_scaled_about_the_mean_and_shifted_in_std_units_on_speech_only(
         assert control.control_pitch(np.array([med], np.float32), np.array([False]), tt, 50.0, centre=med)[0] == pytest.approx(med - 0.5)
 
 
+def test_the_alignment_prior_is_built_for_the_spectrograms_shape():
+    """NeMo 3.0.0's preprocessor: 90 frames for a stated length of 89 (the first Modal vocoder run)."""
+    from src.ft3 import mels
+    assert mels.prior_frames(90, 89) == 90
+    assert mels.prior_frames(436, 436) == 436
+    for frames, stated in ((89, 90), (92, 89)):
+        with pytest.raises(ValueError):
+            mels.prior_frames(frames, stated)
+
+
 def test_the_token_median_is_duration_weighted_and_ignores_pauses():
     pitch = np.array([0.0, -1.0, 0.2, 0.9, 0.0], dtype=np.float32)
     durs = np.array([3, 1, 10, 1, 3])
