@@ -298,3 +298,15 @@ def test_the_ft3_stages_are_the_tutorials_recipe_with_caps(ft3_train):
     for ep in (ft3_train.data, ft3_train.train, ft3_train.vocoder):
         assert hasattr(ep, "info")
     assert ft3_train.SPEAKER == "9017" and ft3_train.DATA_URL.endswith("9017_5_mins.tar.gz")
+
+
+def test_the_ft3_data_stage_extracts_pitch_with_the_trainings_range(ft3_train):
+    """The training loads the pitch files the data stage caches: one range, one directory, in both."""
+    assert (ft3_train.PITCH_FMIN, ft3_train.PITCH_FMAX) == (30, 512)                # the tutorial's
+    cmd = ft3_train.extract_cmd()
+    assert "dataset.pitch_fmin=30" in cmd and "dataset.pitch_fmax=512" in cmd
+    assert "model.pitch_fmin=30" in ft3_train.FASTPITCH_OVERRIDES and "model.pitch_fmax=512" in ft3_train.FASTPITCH_OVERRIDES
+    assert f"sup_data_path={ft3_train.SUP}" in cmd and ft3_train.SUP.name == "sup_data_f30_512"
+    assert ft3_train.STATS.name == "stats_f30_512.json"                             # the first extract's stats.json is not read
+    source = (ROOT / "modal_app" / "ft3_train.py").read_text(encoding="utf-8")
+    assert "DATA / 'sup_data'" not in source and 'DATA / "stats.json"' not in source

@@ -51,10 +51,19 @@ DATA_URL = "https://multilangaudiosamples.s3.us-east-2.amazonaws.com/9017_5_mins
 SPEAKER = "9017"
 SRC = "/root/speech"                          # the clone
 VOLUME = "/ft3"
+# The tutorial's pitch range for this speaker (librosa.pyin's fmin and fmax). The training LOADS the pitch
+# files the data stage caches, so the data stage must extract with this range too: the first extract
+# used the config's default, 65-2093 Hz, and came back with a maximum of 2022 Hz and a spread of 90.9 Hz
+# against the tutorial's 64.0 -- octave errors, which the training would have read from the cache whatever
+# model.pitch_fmax said. That extract stays on the volume (sup_data/, stats.json); nothing reads it.
+PITCH_FMIN, PITCH_FMAX = 30, 512
+PITCH_TAG = f"f{PITCH_FMIN}_{PITCH_FMAX}"
+FIRST_EXTRACT = {"pitch_fmin": 65.40639132514966, "pitch_fmax": 2093.004522404789, "pitch_mean": 158.11416625976562,
+                 "pitch_std": 90.88006591796875, "pitch_max": 2021.7091064453125}
 # The tutorial's fine-tune settings, verbatim (FastPitch_Finetuning.ipynb at the pinned tag)
 FASTPITCH_OVERRIDES = ["+trainer.max_steps=1000", "~trainer.max_epochs", "trainer.check_val_every_n_epoch=25",
                        "model.train_ds.dataloader_params.batch_size=24", "model.validation_ds.dataloader_params.batch_size=24",
-                       "model.n_speakers=1", "model.pitch_fmin=30", "model.pitch_fmax=512", "model.optim.lr=2e-4",
+                       "model.n_speakers=1", f"model.pitch_fmin={PITCH_FMIN}", f"model.pitch_fmax={PITCH_FMAX}", "model.optim.lr=2e-4",
                        "~model.optim.sched", "model.optim.name=adam", "trainer.devices=1", "trainer.strategy=auto",
                        "+model.text_tokenizer.add_blank_at=true"]
 HIFIGAN_OVERRIDES = ["model.train_ds.dataloader_params.batch_size=32", "model.max_steps=1000", "model.optim.lr=0.00001",
@@ -133,6 +142,16 @@ def _fresh(path: pathlib.Path) -> pathlib.Path:
 DATA = pathlib.Path(VOLUME) / "data" / SPEAKER
 DICT = f"{SRC}/scripts/tts_dataset_files/cmudict-0.7b_nv22.10"
 HETERONYMS = f"{SRC}/scripts/tts_dataset_files/heteronyms-052722"
+SUP = DATA / f"sup_data_{PITCH_TAG}"          # the cached pitch files, one directory per pitch range
+STATS = DATA / f"stats_{PITCH_TAG}.json"
+
+
+def extract_cmd() -> list[str]:
+    """extract_sup_data.py on the training manifest, with the training's pitch range."""
+    return [sys.executable, f"{SRC}/scripts/dataset_processing/tts/extract_sup_data.py",
+            f"manifest_filepath={DATA / 'train.json'}", f"sup_data_path={SUP}",
+            f"phoneme_dict_path={DICT}", f"heteronyms_path={HETERONYMS}",
+            f"dataset.pitch_fmin={PITCH_FMIN}", f"dataset.pitch_fmax={PITCH_FMAX}"]
 
 
 @app.function(timeout=40 * 60, volumes={VOLUME: volume}, cpu=4, memory=8192)
@@ -143,8 +162,10 @@ def data_remote() -> dict:
     os.environ.pop("HF_HUB_OFFLINE", None)
     import tarfile
     import urllib.request
-    if (DATA / "stats.json").exists():
-        return json.loads((DATA / "stats.json").read_text())
+    if STATS.exists():
+        return json.loads(STATS.read_text())
+    if SUP.exists():
+        raise RuntimeError(f"{SUP} exists without {STATS.name}: a half-finished extract, its cache is not reused")
     DATA.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
     tgz = DATA / "9017_5_mins.tar.gz"
@@ -159,18 +180,18 @@ def data_remote() -> dict:
     train, val = records[:-2], records[-2:]                                 # the tutorial's split: the last two lines
     (DATA / "train.json").write_text("".join(json.dumps(r) + "\n" for r in train))
     (DATA / "val.json").write_text("".join(json.dumps(r) + "\n" for r in val))
-    sup = DATA / "sup_data"
-    out = _run([sys.executable, f"{SRC}/scripts/dataset_processing/tts/extract_sup_data.py",
-                f"manifest_filepath={DATA / 'train.json'}", f"sup_data_path={sup}",
-                f"phoneme_dict_path={DICT}", f"heteronyms_path={HETERONYMS}"], cwd=SRC, log_path=DATA / "extract_sup_data.log")
+    out = _run(extract_cmd(), cwd=SRC, log_path=DATA / f"extract_sup_data_{PITCH_TAG}.log")
     m = re.search(r"PITCH_MEAN=([\d.]+), PITCH_STD=([\d.]+)", out)
-    if not m:
-        raise RuntimeError("extract_sup_data.py did not print PITCH_MEAN/PITCH_STD")
+    lim = re.search(r"PITCH_MIN=([\d.]+), PITCH_MAX=([\d.]+)", out)
+    if not m or not lim:
+        raise RuntimeError("extract_sup_data.py did not print PITCH_MEAN/PITCH_STD and PITCH_MIN/PITCH_MAX")
     stats = {"speaker": SPEAKER, "clips_train": len(train), "clips_val": len(val),
              "seconds_train": round(sum(r["duration"] for r in train), 1), "pitch_mean": float(m.group(1)),
-             "pitch_std": float(m.group(2)), "tutorial_stats": {"pitch_mean": 152.3, "pitch_std": 64.0},
+             "pitch_std": float(m.group(2)), "pitch_min": float(lim.group(1)), "pitch_max": float(lim.group(2)),
+             "pitch_fmin": PITCH_FMIN, "pitch_fmax": PITCH_FMAX, "sup_data": SUP.name,
+             "tutorial_stats": {"pitch_mean": 152.3, "pitch_std": 64.0}, "first_extract": FIRST_EXTRACT,
              "source": DATA_URL, "seconds": round(time.time() - t0)}
-    (DATA / "stats.json").write_text(json.dumps(stats, indent=1))
+    STATS.write_text(json.dumps(stats, indent=1))
     volume.commit()
     return stats
 
@@ -185,12 +206,12 @@ def _last_ckpt(exp_dir: pathlib.Path, model_dir: str) -> pathlib.Path:
 @app.function(gpu="A10G", timeout=seconds_for(TRAIN_CAP_DOLLARS), scaledown_window=60, volumes={VOLUME: volume}, cpu=4)
 def train_remote(name: str, commit: str) -> dict:
     """fastpitch_finetune.py as the tutorial runs it, then the last checkpoint saved as models/fastpitch_9017.nemo."""
-    stats = json.loads((DATA / "stats.json").read_text())
+    stats = json.loads(STATS.read_text())
     run_dir = _fresh(pathlib.Path(VOLUME) / "runs" / name)
     t0 = time.time()
     cmd = [sys.executable, f"{SRC}/examples/tts/fastpitch_finetune.py", "--config-name=fastpitch_align_v1.05.yaml",
            f"train_dataset={DATA / 'train.json'}", f"validation_datasets={DATA / 'val.json'}",
-           f"sup_data_path={DATA / 'sup_data'}", f"phoneme_dict_path={DICT}", f"heteronyms_path={HETERONYMS}",
+           f"sup_data_path={SUP}", f"phoneme_dict_path={DICT}", f"heteronyms_path={HETERONYMS}",
            f"exp_manager.exp_dir={run_dir}", "+init_from_nemo_model=/root/pretrained/tts_en_fastpitch_align.nemo",
            f"model.pitch_mean={stats['pitch_mean']}", f"model.pitch_std={stats['pitch_std']}", *FASTPITCH_OVERRIDES]
     _run(cmd, cwd=f"{SRC}/examples/tts", log_path=run_dir / "console.log")
@@ -202,7 +223,8 @@ def train_remote(name: str, commit: str) -> dict:
     model.save_to(str(out / "fastpitch_9017.nemo"))
     volume.commit()
     return {"name": name, "commit": commit, "machine": _machine(), "seconds": time.time() - t0, "checkpoint": str(ckpt),
-            "nemo": "models/fastpitch_9017.nemo", "pitch_stats": {k: stats[k] for k in ("pitch_mean", "pitch_std")},
+            "nemo": "models/fastpitch_9017.nemo",
+            "pitch_stats": {k: stats[k] for k in ("pitch_mean", "pitch_std", "pitch_min", "pitch_max", "pitch_fmin", "pitch_fmax")},
             "overrides": FASTPITCH_OVERRIDES}
 
 
