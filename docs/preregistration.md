@@ -26,7 +26,7 @@ Rules, from the v1 Research plan (§8):
 | PR-009 | On two Kokoro voices and eight neutral sentences the render was not developed on, does raising a PHQ-9 or YMRS score move pitch, range, rate and pauses the way page 09's mapping says, at every step and within tolerance? | `6c43d5e` | **Reported: not supported** (S4 failed: pitch offset on target in 169 of 192 checks, 88.0%, needed 173; S1 96 of 96, S2 29 of 32, S3 384 of 384, S5 177 of 192 held) |
 | PR-010 | Does a LoRA trained on DailyTalk (kyutai's moshi-finetune, test fold held out) move Moshi's turn gaps closer to DailyTalk's own, on 100 held-out dialogues? | `4df9ef3` | **Reported: not supported, moved away** (distance to the reference 496 ms base, 1,035 ms LoRA; gain −539 ms, 95% interval −685 to −402; overlap 85 → 2 turn changes, but median gap 160 → 1,220 ms against 420) |
 | PR-011 | Does a LoRA trained on verbatim transcripts make `whisper-small.en` write down disfluent speech as spoken -- fillers and all -- on the eval set's disfluent cohort, without hurting the other cohorts? | `65c833c` | **Reported: supported** (S1 raw WER on the disfluent cohort 9.9% → 2.3%, −7.6 points, interval −9.6 to −5.7; S2 29 of 29 fillers kept; S3 the other 150 clips −2.3 points normalized where +1.0 was allowed -- most of it EdAcc's verbatim references, not new accent robustness) |
-| PR-012 | On eight sentences neither voice has spoken, do renders made by giving page 09's severity targets to FastPitch as its own inputs meet PR-009's five criteria, over the base LJSpeech voice and a 5-minute fine-tune together? | this commit | **Registered, not run** (predicted: not supported, all five criteria fail) |
+| PR-012 | On eight sentences neither voice has spoken, do renders made by giving page 09's severity targets to FastPitch as its own inputs meet PR-009's five criteria, over the base LJSpeech voice and a 5-minute fine-tune together? | `89edd05` | **Reported: not supported** (all five criteria failed, as predicted: S1 92 of 96, S2 14 of 32, S3 357 of 384, S4 109 of 192, 56.8%, S5 115 of 192, 59.9%; rate on target in 192 of 192; the base voice 67 and 78 of 96 on S4 and S5, the 5-minute fine-tune 42 and 37) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -2786,8 +2786,124 @@ voice; each neutral render's median F0 and the number of pauses found.
 
 ### Deviations
 
-None yet.
+- **2026-09-27, the report file.** V5 names the printed report as evidence. NeMo writes its
+  "restored from" messages to standard output, so the captured report begins with six lines of
+  NeMo's, four of them with paths of the author's machine. `runs/ft3/pr012-report.md` leaves those
+  six lines out and is otherwise the output, verbatim (170 lines). Nothing in them is a measure.
+- **2026-09-27, the training evidence.** V5 promised "the stages' run files". The FastPitch
+  training has none: it finished its 1,000 steps and failed in the packaging that followed, before
+  its record was written, and the packaging run that saved the model lost its record the same way
+  (`docs/ft3-log.md`, entries 7 and 8). What is committed instead: both trainings' validation
+  losses as their logs printed them, the data stage's two run files and the vocoder stage's. The
+  four model files are held by SHA-256 in the run file, which is what V3 asked.
+- **2026-09-27, the Background's count of clips.** HiFi-GAN trained on 74 of the 76 training
+  clips: its config prunes clips under 0.75 s, and two are. The entry said 76. FastPitch used 76.
+- **2026-09-27, registry row.** Its "Registered" cell was changed to the registering commit's
+  hash, `89edd05`, and its status updated, as for the earlier entries. Times here are CDT.
 
 ### Results
 
-Not run yet.
+**Run:** 2026-09-27, finished 13:47 CDT, commit `89edd05` (the registering commit), clean tree,
+laptop CPU (WSL), all 32 sweeps, first and only run; the four model files matched their SHA-256
+before anything loaded. 490 s. \$0. Run file `runs/ft3/pr012.json`; report
+`runs/ft3/pr012-report.md`; the renders and the exact neutral clips in `results/ft3/pr012/`
+(208 files, ignored).
+
+The criteria, verbatim:
+
+```
+PR-012, PR-009's criteria on FastPitch's renders (docs/preregistration.md):
+  S1  pitch offset, rate, pauses in order, every sweep: 92 of 96   FAIL
+  S2  pitch range in order, at least 28 of 32: 14 of 32   FAIL
+  S3  rate and pauses within 10%, every check: 357 of 384   FAIL
+  S4  pitch offset within 3 Hz or 10%, at least 90%: 109 of 192 (56.8%)   FAIL
+  S5  pitch range within 10%, at least 80%: 115 of 192 (59.9%)   FAIL
+PR-012: NOT SUPPORTED -- failed S1, S2, S3, S4, S5
+
+each voice alone (descriptive; the bars are the pooled run's):
+  tts_en_fastpitch_align   S1 47 of 48   S2 11 of 16   S3 175 of 192   S4 67 of 96   S5 78 of 96
+  fastpitch_9017           S1 45 of 48   S2 3 of 16   S3 182 of 192   S4 42 of 96   S5 37 of 96
+rate within 10%: 192 of 192
+```
+
+and the report's summary lines above it, verbatim (its pitch-offset line uses the module's own
+3 Hz rule, not S4's):
+
+```
+monotonicity: 106 of 128 feature sweeps in order (a sweep = one voice, sentence, condition and feature, every step)
+within tolerance, f0_offset_hz: 106 of 192
+within tolerance, f0_dev_scale: 115 of 192
+within tolerance, rate: 192 of 192
+within tolerance, pause_scale: 165 of 192
+```
+
+**Verdict: not supported.** All five criteria failed. Giving page 09's targets to FastPitch as
+its own inputs reaches the rate on every check and the pitch on little more than half of them.
+
+**The predictions, scored.**
+
+| Prediction | Outcome |
+|---|---|
+| Not supported, all five fail | **right** |
+| S1 86 to 94 of 96 | right: 92 |
+| S2 6 to 14 of 32 | right, at the upper edge: 14 |
+| S3 350 to 376 of 384 | right: 357 |
+| S4 50 to 68% | right: 56.8% |
+| S5 35 to 55% | **wrong**: 59.9% |
+| Rate within 10% on all 192 checks | right: 192 |
+| The base voice meets more S4 and S5 checks than the fine-tuned voice | right: 67 against 42, 78 against 37 |
+| The fine-tuned voice's range in order on at most 3 of its 16 sweeps | right, at the edge: 3 |
+| Every pause miss of more than 10% is in mania | **wrong**: 8 of the 27 are in depression |
+
+**What I got wrong.** Both misses come from reading four dev sentences as if they were the voice.
+S5: the base voice met 31 of 48 range checks on dev (65%) and 78 of 96 here (81%); the range I
+predicted was the dev estimate with a margin too small for four sentences. The pauses: on dev
+every depression pause was on target for both voices; here the base voice missed 8, all on two
+sentences (u7: 2.95, 3.57, 4.49 for 2.67, 3.22, 4.00; u8: every step from 5 up, 5.45 for 4.00).
+
+**Reported alongside, descriptively.**
+
+| | base voice | fine-tuned 9017 | PR-009 (Praat on Kokoro, other voices and sentences) |
+|---|---:|---:|---:|
+| S1 offset, rate, pauses in order | 47 of 48 | 45 of 48 | 96 of 96 |
+| S2 range in order | 11 of 16 | 3 of 16 | 29 of 32 |
+| S3 rate and pauses within 10% | 175 of 192 | 182 of 192 | 384 of 384 |
+| S4 pitch offset within 3 Hz or 10% | 67 of 96 (69.8%) | 42 of 96 (43.8%) | 169 of 192 (88.0%) |
+| S5 pitch range within 10% | 78 of 96 (81.3%) | 37 of 96 (38.5%) | 177 of 192 (92.2%) |
+
+By condition, checks within tolerance of 48:
+
+| | base, depression | base, mania | fine-tuned, depression | fine-tuned, mania |
+|---|---:|---:|---:|---:|
+| pitch offset | 44 | 23 | 18 | 24 |
+| pitch range | 36 | 42 | 18 | 19 |
+| rate | 48 | 48 | 48 | 48 |
+| pauses | 40 | 39 | 48 | 38 |
+
+| per sentence, u1 to u8 | base voice | fine-tuned 9017 |
+|---|---|---|
+| range measured at depression 0 (target 1.00) | 1.01, 0.95, 0.84, 1.00, 1.10, 1.03, 1.03, 0.99 | 1.12, 1.13, 0.70, 1.04, 0.74, 1.09, 0.77, 1.13 |
+| the neutral render's median F0, Hz | 211.7, 203.1, 202.9, 220.4, 215.0, 201.5, 212.6, 205.1 | 144.2, 139.6, 155.6, 148.2, 150.3, 143.3, 149.3, 163.3 |
+| pauses found | 2, 2, 3, 2, 2, 2, 2, 1 | 2, 2, 3, 3, 2, 3, 3, 3 |
+
+**What the run shows, and no more.**
+
+- **Rate is exact; it is an input the model obeys.** 192 of 192, both voices, as on dev.
+- **The base voice's range is on target more often than its offset**: 78 of 96 against 67, and
+  alone it is over S5's share (81.3%; no per-voice criterion was registered, and the pooled run
+  failed). Its offset misses are mostly in mania: 23 of 48 on target against 44 in depression.
+- **The fine-tuned voice is worse on every pitch count**, and its range is in order on 3 of 16
+  sweeps. At depression 0, where only a 5 Hz shift is asked, its range measured 0.70 to 1.13; the
+  base voice's 0.84 to 1.10. The two voices differ in speaker as well as in training, and the
+  cause was not measured: this is a difference between two checkpoints, not an effect of
+  fine-tuning.
+- **The fine-tuned voice's pauses are better than the base voice's in depression** (48 of 48
+  against 40), and about the same in mania. It trained on text without punctuation and finds as
+  many pauses or more.
+- **Shortened pauses miss low**: all 19 pause misses in mania are under the target (at YMRS 60,
+  0.00 to 0.25 for 0.30). Durations are whole frames of 11.6 ms, and a short pause made shorter
+  has few.
+- **Not explained:** the base voice on u8. One pause was found; in mania at 40 and 60 the measured
+  pause is 0.00, in depression it grows by more than the target at every step. Not looked into.
+- **Beside PR-009:** the Praat edit of Kokoro's audio met S1, S2, S3 and S5 and missed S4 by four
+  checks; FastPitch's own inputs met none. Other voices, other sentences: beside, not against.

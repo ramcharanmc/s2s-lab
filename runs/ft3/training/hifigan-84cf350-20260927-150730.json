@@ -1,0 +1,22 @@
+{
+ "name": "hifigan-84cf350-20260927-150730",
+ "commit": "84cf350",
+ "machine": "Modal NVIDIA A10, 580.95.05",
+ "seconds": 644.1282794475555,
+ "checkpoint": "/ft3/runs/hifigan-84cf350-20260927-150730/HifiGan/2026-09-27_15-09-00/checkpoints/HifiGan--val_loss=0.4317-epoch=167-last.ckpt",
+ "nemo": "models/hifigan_9017.nemo",
+ "overrides": [
+  "model.train_ds.dataloader_params.batch_size=32",
+  "model.max_steps=1000",
+  "model.optim.lr=0.00001",
+  "~model.optim.sched",
+  "trainer.check_val_every_n_epoch=10",
+  "model/train_ds=train_ds_finetune",
+  "model/validation_ds=val_ds_finetune"
+ ],
+ "pruned_by_duration": {
+  "train": 2,
+  "val": 0
+ },
+ "wall_s": 668.8408761024475
+}

@@ -1,0 +1,14 @@
+{
+ "speaker": "9017",
+ "clips_train": 76,
+ "clips_val": 2,
+ "seconds_train": 290.6,
+ "pitch_mean": 158.11416625976562,
+ "pitch_std": 90.88006591796875,
+ "tutorial_stats": {
+  "pitch_mean": 152.3,
+  "pitch_std": 64.0
+ },
+ "source": "https://multilangaudiosamples.s3.us-east-2.amazonaws.com/9017_5_mins.tar.gz",
+ "seconds": 113
+}

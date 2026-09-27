@@ -52,6 +52,14 @@ one. A failed run is still a row, since it was still billed.
 | 2026-09-26 | `f37d0df` | `modal run modal_app/ft2_train.py::export --adapter runs/.../csv/version_0/adapters/step-000900` | CPU | 44 s | 48 s | ≈ \$0.01 (CPU rate) | the adapter merged into small.en and converted to CTranslate2 float16, on the volume; `ct2/model.bin` SHA-256 `b31833fe...` |
 | 2026-09-26 | `f37d0df` | `modal run modal_app/ft2_train.py::bench --limit 8` | T4 | 4 s | 12 s | \$0.002 | FT-2 bench smoke test, base small.en alone on 8 clean clips: raw 5.1%. Not evidence |
 | 2026-09-26 | `65c833c` | `modal run modal_app/ft2_train.py::bench --export export-runs_train-f37d0df-...-step-000900-float16 --confirm PR-011` | T4 | 67 s | 76 s | \$0.012 | **the PR-011 run**: small.en then the exported model, 200 clips, one container: disfluent raw 9.9% → 2.3%, fillers 29 of 29, the other 150 clips −2.3 points normalized; **supported** (`runs/ft2/`) |
+| 2026-09-27 | `d4dfa4b` | `modal run modal_app/ft3_train.py::data` | CPU | — | — | CPU rate (failed) | FT-3's image did not build: two of NeMo's TTS extras compile, and Modal's Python calls `clang`, which the image lacked (fixed in `5e65d85`). No function ran |
+| 2026-09-27 | `5e65d85` | `modal run modal_app/ft3_train.py::data` | CPU | 113 s | 122 s | ≈ \$0.01 (CPU rate) | FT-3's data stage, first extract: 76 + 2 clips of Hi-Fi TTS 9017 (290.6 s). **Pitch extracted at 65-2093 Hz, the config's default, not the training's 30-512**: mean 158.1, std 90.9, max 2,022 Hz. Never used by a training (fixed in `12bc015`; `runs/ft3/training/`) |
+| 2026-09-27 | `12bc015` | `modal run modal_app/ft3_train.py::data` | CPU | 108 s | 118 s | ≈ \$0.01 (CPU rate) | the extract at 30-512 Hz, into its own cache: mean 162.3, std 75.1 Hz (the tutorial states 152.3 and 64.0) |
+| 2026-09-27 | `12bc015` | `modal run modal_app/ft3_train.py::train` | A10 | — | ≈ 855 s | ≈ \$0.261 (failed after the training) | **FT-3's FastPitch training**: 1,000 steps, validation loss 2.10 → 1.74 (step 900); then the packaging looked for the checkpoint in the wrong folder and the run record was never written (fixed in `3e6be7f`). Timed from the run's name stamp to its last checkpoint; the checkpoints were on the volume |
+| 2026-09-27 | `3e6be7f` | `modal run modal_app/ft3_train.py::package --name fastpitch-12bc015-20260927-140956` | CPU | — | — | ≈ \$0.01 (CPU rate; failed after saving) | the last checkpoint saved as `models/fastpitch_9017.nemo`, 178.4 MiB; then `nvidia-smi` was missing on the CPU container and the run record was lost (fixed in `84cf350`) |
+| 2026-09-27 | `3e6be7f` | `modal run modal_app/ft3_train.py::vocoder` | A10 | — | — | ≤ \$0.04 (failed) | the mel loop failed on its first clip: the tutorial's alignment prior is one frame short in NeMo 3.0.0 (90 against 89); fixed in `84cf350` after a dry run of the stage on the laptop |
+| 2026-09-27 | `84cf350` | `modal run modal_app/ft3_train.py::vocoder` | A10 | 644 s | 669 s | \$0.204 | **FT-3's HiFi-GAN training**: mels of 76 + 2 clips from the fine-tuned FastPitch, then 1,000 steps (500 generator updates) on 74 clips (its config prunes the 2 under 0.75 s); validation loss 0.424 at step 60, 0.432 at 960: flat. `models/hifigan_9017.nemo` |
+| 2026-09-27 | `89edd05` | `python -m src.ft3.pr012 test --confirm PR-012` (laptop) | none (CPU) | 490 s | — | \$0 | **the PR-012 run**: two voices, eight new sentences, 32 sweeps: **not supported**, all five criteria failed (S4 56.8%, S5 59.9%); rate on target in 192 of 192 (`runs/ft3/`) |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -60,5 +68,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$8.261 + seven failed runs and one CPU export | \$36.93 |
+| Modal | \$8.726 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
 | Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |

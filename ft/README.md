@@ -143,6 +143,22 @@ both voices over eight new sentences, with the prediction that all five fail:
     PYTHONPATH=ft:src ~/.venvs/s2slab-ft3/bin/python -m src.ft3.pr012 dry                     # dev sentences, no lock
     PYTHONPATH=ft:src ~/.venvs/s2slab-ft3/bin/python -m src.ft3.pr012 test --confirm PR-012   # once
 
+**Result (2026-09-27, `runs/ft3/`): not supported, and all five criteria failed, as predicted.**
+
+| 32 sweeps | bar | pooled | base voice | fine-tuned 9017 | PR-009 (Praat on Kokoro) |
+|---|---|---:|---:|---:|---:|
+| S1 offset, rate, pauses in order | all | 92 of 96 | 47 of 48 | 45 of 48 | 96 of 96 |
+| S2 range in order | 28 of 32 | 14 | 11 of 16 | 3 of 16 | 29 |
+| S3 rate and pauses within 10% | all | 357 of 384 | 175 of 192 | 182 of 192 | 384 of 384 |
+| S4 pitch offset within 3 Hz or 10% | 90% | 56.8% | 67 of 96 | 42 of 96 | 88.0% |
+| S5 pitch range within 10% | 80% | 59.9% | 78 of 96 | 37 of 96 | 92.2% |
+
+Rate is exact (192 of 192): a duration is an input the model obeys. Pitch is an input the model
+interprets: the base voice reached the offset on 70% of its checks and the range on 81%, the
+5-minute fine-tune on 44% and 39%. The two checkpoints differ in speaker as well as in training,
+and the cause was not measured. PR-009's Praat edit came closer to page 09's targets on every
+count, on other voices and sentences.
+
 What happened on the way, run by run and failure by failure: `docs/ft3-log.md`.
 
 **Training** (`modal_app/ft3_train.py`, the tutorial's recipe on an A10): `::data` (the 5-minute

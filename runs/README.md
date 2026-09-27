@@ -120,6 +120,25 @@ Re-score the criteria without any audio or model:
 
     PYTHONPATH=src python -c "import json; from s2slab import ft2; d = json.load(open('runs/ft2/pr011.json', encoding='utf-8')); h = {m: {i: t['text'] for i, t in d['models'][m]['turns'].items()} for m in d['models']}; d['criteria'] = ft2.pr011(h['small.en'], h['ft2']); print(ft2.format_pr011(d))"
 
+## What PR-012's run holds
+
+`runs/ft3/pr012.json` is a severity run (next section) with two voices that are FastPitch
+checkpoints, and: `settings` (the centre of the pitch scale, the range gain, the shortest pause),
+`model_files` and `model_sha256` (the four `.nemo` files), `criteria` for the 32 pooled sweeps,
+`criteria_by_voice`, `voice_info` (each checkpoint's pitch statistics and hop), and in each row
+`centre_hz` (the neutral render's median F0) and `pauses` (how many the control found).
+`pr012-report.md` is the run's printed report without the six lines NeMo wrote above it.
+
+`training/`: the data stage's two run files (the first extract, at the wrong pitch range, is kept
+and named so), the vocoder stage's run file, and each training's validation losses as printed.
+FastPitch's own run file does not exist: the run failed after the training (docs/ft3-log.md,
+entry 7). `dev/`: the fine-tuned voice's dev sweep, and `pr012-dry.json`, the registered run's
+code on the four dev sentences for both voices.
+
+Re-count the criteria without any audio or model (the `ft` project's environment):
+
+    cd ft && PYTHONPATH=.:../src uv run python -c "import json; from src.ft3 import pr012; print(pr012.format_criteria(json.load(open('../runs/ft3/pr012.json', encoding='utf-8'))))"
+
 ## What a severity run holds
 
 `registration`, `commit`, `ran`, `voices`, `sentences`, `scores`, `sr`,

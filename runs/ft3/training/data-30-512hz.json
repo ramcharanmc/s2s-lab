@@ -1,0 +1,26 @@
+{
+ "speaker": "9017",
+ "clips_train": 76,
+ "clips_val": 2,
+ "seconds_train": 290.6,
+ "pitch_mean": 162.299560546875,
+ "pitch_std": 75.0986328125,
+ "pitch_min": 30.0,
+ "pitch_max": 511.4882507324219,
+ "pitch_fmin": 30,
+ "pitch_fmax": 512,
+ "sup_data": "sup_data_f30_512",
+ "tutorial_stats": {
+  "pitch_mean": 152.3,
+  "pitch_std": 64.0
+ },
+ "first_extract": {
+  "pitch_fmin": 65.40639132514966,
+  "pitch_fmax": 2093.004522404789,
+  "pitch_mean": 158.11416625976562,
+  "pitch_std": 90.88006591796875,
+  "pitch_max": 2021.7091064453125
+ },
+ "source": "https://multilangaudiosamples.s3.us-east-2.amazonaws.com/9017_5_mins.tar.gz",
+ "seconds": 108
+}

@@ -20,9 +20,10 @@ Logs of each run are under `results/` (not in git); the run files under `results
 | 9 | 09-27 14:43 | `::vocoder` | **failed** on the first clip | `ft/src/ft3/mels.py` (new) | 84cf350 |
 | 10 | 09-27 14:50 | review and dry run, laptop | vocoder stage passed end to end on the CPU | `ft3_train.py`, tests | 84cf350 |
 | 11 | 09-27 15:07 | `::vocoder` | trained 1,000 steps, packaged | — | — |
-| 12 | 09-27, afternoon | models downloaded | first download unusable; second, file by file, verified | download command in `ft3_train.py`, README | registering commit |
+| 12 | 09-27, afternoon | models downloaded | first download unusable; second, file by file, verified | download command in `ft3_train.py`, README | 89edd05 |
 | 13 | 09-27 17:46 | dev sweep, fine-tuned voice, laptop | pitch control worse than the base voice's | — | — |
-| 14 | 09-27 | PR-012 registered | predicted: not supported | `ft/src/ft3/pr012.py`, tests, the entry | registering commit |
+| 14 | 09-27 18:38 | PR-012 registered | predicted: not supported | `ft/src/ft3/pr012.py`, tests, the entry | 89edd05 |
+| 15 | 09-27 18:39 | the PR-012 run, laptop | **not supported**, all five criteria failed | — (results commit: evidence and text only) | — |
 
 ## 1. The control and the renderer (680a246)
 
@@ -205,7 +206,31 @@ files held by SHA-256. Predicted: not supported, all five criteria fail. The run
 first on the dev sentences (`python -m src.ft3.pr012 dry`). The entry is in
 `docs/preregistration.md`.
 
-## Owed
+## 15. The PR-012 run
 
-- Ledger rows: entries 4, 5, 6, 7, 8, 9, 11 (with the results commit).
-- The registered run, its evidence under `runs/ft3/`, and the Results of PR-012.
+Laptop CPU, 490 s, commit 89edd05, clean tree, first and only run. $0.
+
+| 32 sweeps | bar | pooled | base voice | fine-tuned 9017 |
+|---|---|---:|---:|---:|
+| S1 offset, rate, pauses in order | all | 92 of 96 | 47 of 48 | 45 of 48 |
+| S2 range in order | 28 of 32 | 14 | 11 of 16 | 3 of 16 |
+| S3 rate and pauses within 10% | all | 357 of 384 | 175 of 192 | 182 of 192 |
+| S4 pitch offset | 90% | 109 of 192 (56.8%) | 67 of 96 | 42 of 96 |
+| S5 pitch range | 80% | 115 of 192 (59.9%) | 78 of 96 | 37 of 96 |
+
+- **Predictions:** two wrong, the rest right. Wrong: S5 came out at 59.9%, above the predicted 35 to
+  55% (the base voice did better on these eight sentences than on the four dev ones); and "every
+  pause miss is in mania" -- 8 of the 27 pause misses are in depression, all on the base voice's
+  u7 and u8.
+- **Not explained:** the base voice on u8, where one pause was found; in mania at 40 and 60 the
+  measured pause is 0.00, and in depression it overshoots (5.45 for 4.00).
+- **The report file:** NeMo printed six lines to standard output above the report, with local
+  paths in them; `runs/ft3/pr012-report.md` leaves them out and is otherwise verbatim.
+- Evidence: `runs/ft3/`; the ledger's eight FT-3 rows; the entry's Results in
+  `docs/preregistration.md`.
+
+## Money
+
+Modal, FT-3: about $0.26 (FastPitch, timed from its log) + $0.204 (HiFi-GAN) + at most $0.04
+(the failed vocoder run) + the CPU stages: about $0.52. With FT-2's $0.25, about $0.77 of the
+$10 cap for the two milestones.

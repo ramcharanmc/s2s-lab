@@ -1,0 +1,17 @@
+epoch	global_step	val_loss	best_so_far
+9	60	0.42358	0.42358
+19	120	0.44559	0.42358
+29	180	0.43348	0.42358
+39	240	0.44547	0.42358
+49	300	not in the top 3 (value not printed)	
+59	360	not in the top 3 (value not printed)	
+69	420	not in the top 3 (value not printed)	
+79	480	not in the top 3 (value not printed)	
+89	540	not in the top 3 (value not printed)	
+99	600	not in the top 3 (value not printed)	
+109	660	not in the top 3 (value not printed)	
+119	720	not in the top 3 (value not printed)	
+129	780	not in the top 3 (value not printed)	
+139	840	not in the top 3 (value not printed)	
+149	900	not in the top 3 (value not printed)	
+159	960	0.43166	0.42358
