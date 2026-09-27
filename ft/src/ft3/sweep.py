@@ -26,7 +26,7 @@ import numpy as np
 from s2slab import severity
 from src.ft3 import control, synth
 
-SENTENCE_SETS = {"dev": severity.DEV_SENTENCES, "test": severity.TEST_SENTENCES}
+SENTENCE_SETS = {"dev": severity.DEV_SENTENCES}      # PR-012's eight sentences are pr012.py's, behind its lock
 
 
 def run(v: synth.Voice, sentences: dict, scores: dict = severity.SCORES, listen: pathlib.Path | None = None,
@@ -72,8 +72,6 @@ def main(argv=None) -> None:
     ap.add_argument("--centre", choices=("audio", "tokens"), default=synth.CENTRE_MODE, help="dev knob: where the range is scaled about")
     ap.add_argument("--range-gain", type=float, default=control.RANGE_GAIN, help="dev knob: a_eff = 1 + (a - 1) * gain")
     args = ap.parse_args(argv)
-    if args.sentences == "test":
-        raise SystemExit("the test sentences are PR-012's; the registered run has its own command (not this one)")
     t0 = time.time()
     v = synth.load(args.fastpitch, args.hifigan)
     out = pathlib.Path(args.out)

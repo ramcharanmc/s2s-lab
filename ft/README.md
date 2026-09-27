@@ -130,12 +130,30 @@ about 0.83 of it): rate within 10% on 48 of 48 checks, pauses on 45 of 48 (the m
 YMRS 60, ×0.30), the pitch offset within 3 Hz or 10% on 33 of 48, the range within 10% on 31 of 48;
 28 of 32 feature sweeps in order. Rate and pauses are as exact as the Praat render's; the pitch is
 not -- FastPitch's pitch is a per-token input the model interprets, and its answer is damped and
-noisy on the range. PR-012 registers PR-009's five criteria on these renders with that prediction.
+noisy on the range.
+
+**The fine-tuned voice on the same sentences** (2026-09-27): rate 48 of 48; pauses within 10% on 39
+of 48 (every miss in mania); the pitch offset on 23 of 48; the range on 11 of 48, and in order on
+none of its 8 sweeps. Its range moves before any range is asked for (0.80 to 1.27 at depression
+0, where the base voice gave 0.94 to 1.06). The cause was not measured. Nothing was tuned on it.
+
+**PR-012** (`src/ft3/pr012.py`, `docs/preregistration.md`) registers PR-009's five criteria on
+both voices over eight new sentences, with the prediction that all five fail:
+
+    PYTHONPATH=ft:src ~/.venvs/s2slab-ft3/bin/python -m src.ft3.pr012 dry                     # dev sentences, no lock
+    PYTHONPATH=ft:src ~/.venvs/s2slab-ft3/bin/python -m src.ft3.pr012 test --confirm PR-012   # once
+
+What happened on the way, run by run and failure by failure: `docs/ft3-log.md`.
 
 **Training** (`modal_app/ft3_train.py`, the tutorial's recipe on an A10): `::data` (the 5-minute
 Hi-Fi TTS speaker 9017, CPU), `::train` (FastPitch, 1,000 steps), `::vocoder` (HiFi-GAN on the
-fine-tuned model's mels, 1,000 steps); `modal volume get ft3 models data/ft3/models` brings the
-two `.nemo` files back, and `--fastpitch`/`--hifigan` point `synth` and `sweep` at them.
+fine-tuned model's mels, 1,000 steps). The two `.nemo` files come back one file a call, into a
+folder that exists (given the folder, `modal volume get` wrote both models into ONE file):
+
+    mkdir -p data/ft3/models && for m in fastpitch hifigan; do modal volume get ft3 models/${m}_9017.nemo data/ft3/models/; done
+
+`--fastpitch`/`--hifigan` point `synth` and `sweep` at them. The Modal stages' code that can run
+without a GPU (`src/ft3/mels.py`) is run on the laptop first.
 
 ## Licences
 

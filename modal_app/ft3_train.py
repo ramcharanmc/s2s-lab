@@ -6,8 +6,11 @@ FT-3 on Modal: NeMo's own FastPitch and HiFi-GAN fine-tuning recipe, on one A10,
     modal run modal_app/ft3_train.py::train       FastPitch: tts_en_fastpitch -> speaker 9017, 1,000 steps
     modal run modal_app/ft3_train.py::vocoder     mels from the fine-tuned FastPitch, then HiFi-GAN
                                                   fine-tuned on them, 1,000 steps
-    modal volume get ft3 models/ data/ft3/models/ the two .nemo files, back to the laptop: the dev sweep
-                                                  and PR-012 run there on a CPU (ft/src/ft3/), $0
+    mkdir -p data/ft3/models && for m in fastpitch hifigan; do \
+        modal volume get ft3 models/${m}_9017.nemo data/ft3/models/; done
+                                                  the two .nemo files, back to the laptop, ONE FILE A CALL into a
+                                                  folder that exists (the folder form wrote both into one file):
+                                                  the dev sweep and PR-012 run there on a CPU (ft/src/ft3/), $0
 
 What happens where:
   image   nvidia/cuda 12.6 + torch 2.8 (cu126) + nemo-toolkit[tts] 3.0.0 (the pins of
@@ -69,6 +72,9 @@ FASTPITCH_OVERRIDES = ["+trainer.max_steps=1000", "~trainer.max_epochs", "traine
 HIFIGAN_OVERRIDES = ["model.train_ds.dataloader_params.batch_size=32", "model.max_steps=1000", "model.optim.lr=0.00001",
                      "~model.optim.sched", "trainer.check_val_every_n_epoch=10", "model/train_ds=train_ds_finetune",
                      "model/validation_ds=val_ds_finetune"]
+
+
+GET_MODELS = "mkdir -p data/ft3/models && for m in fastpitch hifigan; do modal volume get ft3 models/${m}_9017.nemo data/ft3/models/; done"
 
 
 def seconds_for(dollars: float, rate: float = A10_DOLLARS_PER_HOUR) -> int:
@@ -373,4 +379,4 @@ def vocoder():
     print(f"\n{out['machine']} · commit {commit} · {out['nemo']} from {out['checkpoint']}")
     print(f"saved -> {_save('vocoder', out).relative_to(REPO)}")
     print(_cost_line(out["seconds"], wall))
-    print("bring both voices back:  modal volume get ft3 models data/ft3/models")
+    print("bring both voices back:  " + GET_MODELS)

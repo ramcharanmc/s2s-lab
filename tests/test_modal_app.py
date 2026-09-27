@@ -298,6 +298,8 @@ def test_the_ft3_stages_are_the_tutorials_recipe_with_caps(ft3_train):
     for ep in (ft3_train.data, ft3_train.train, ft3_train.vocoder):
         assert hasattr(ep, "info")
     assert ft3_train.SPEAKER == "9017" and ft3_train.DATA_URL.endswith("9017_5_mins.tar.gz")
+    # one file a call, into a folder that exists: given the folder, the download wrote both models into one file
+    assert "mkdir -p data/ft3/models" in ft3_train.GET_MODELS and "models/${m}_9017.nemo data/ft3/models/" in ft3_train.GET_MODELS
 
 
 def test_the_ft3_last_checkpoint_is_found_below_exp_managers_dated_directory(ft3_train, tmp_path):
