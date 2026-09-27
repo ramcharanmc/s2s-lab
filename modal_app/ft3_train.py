@@ -197,10 +197,46 @@ def data_remote() -> dict:
 
 
 def _last_ckpt(exp_dir: pathlib.Path, model_dir: str) -> pathlib.Path:
-    cks = sorted((exp_dir / model_dir / "checkpoints").glob("*last.ckpt"))
+    """The run's last checkpoint. NeMo's exp_manager writes <exp_dir>/<model>/<date_time>/checkpoints/:
+    the first training run finished its 1,000 steps and failed here, on a path without the date."""
+    root = pathlib.Path(exp_dir) / model_dir
+    cks = sorted(root.rglob("*last.ckpt"), key=lambda p: (p.stat().st_mtime, str(p)))
     if not cks:
-        raise RuntimeError(f"no *last.ckpt under {exp_dir / model_dir / 'checkpoints'}")
+        found = sorted(str(p.relative_to(root)) for p in root.rglob("*.ckpt")) if root.exists() else []
+        raise RuntimeError(f"no *last.ckpt under {root}; checkpoints there: {found}")
     return cks[-1]
+
+
+def _package(run_dir: pathlib.Path, model_dir: str, nemo_name: str) -> pathlib.Path:
+    """The run's last checkpoint as models/<nemo_name>; a model file is never overwritten."""
+    from nemo.collections.tts import models
+    out = pathlib.Path(VOLUME) / "models" / nemo_name
+    if out.exists():
+        raise RuntimeError(f"{out} exists: a model file is never overwritten")
+    ckpt = _last_ckpt(run_dir, model_dir)
+    model = getattr(models, MODEL_CLASSES[model_dir]).load_from_checkpoint(str(ckpt), map_location="cpu")
+    out.parent.mkdir(exist_ok=True)
+    model.save_to(str(out))
+    return ckpt
+
+
+MODEL_CLASSES = {"FastPitch": "FastPitchModel", "HifiGan": "HifiGanModel"}
+NEMO_NAMES = {"FastPitch": "fastpitch_9017.nemo", "HifiGan": "hifigan_9017.nemo"}
+
+
+@app.function(timeout=20 * 60, volumes={VOLUME: volume}, cpu=4, memory=8192)
+def package_remote(name: str) -> dict:
+    """A finished run on the volume, packaged on a CPU: for a run whose training completed and whose
+    packaging did not."""
+    run_dir = pathlib.Path(VOLUME) / "runs" / name
+    found = [m for m in MODEL_CLASSES if (run_dir / m).exists()]
+    if len(found) != 1:
+        raise RuntimeError(f"{run_dir}: expected one of {sorted(MODEL_CLASSES)} in it, found {found}")
+    t0 = time.time()
+    ckpt = _package(run_dir, found[0], NEMO_NAMES[found[0]])
+    volume.commit()
+    return {"name": name, "machine": _machine(), "seconds": time.time() - t0, "checkpoint": str(ckpt),
+            "nemo": f"models/{NEMO_NAMES[found[0]]}", "packaged_after_the_run": True}
 
 
 @app.function(gpu="A10G", timeout=seconds_for(TRAIN_CAP_DOLLARS), scaledown_window=60, volumes={VOLUME: volume}, cpu=4)
@@ -215,12 +251,8 @@ def train_remote(name: str, commit: str) -> dict:
            f"exp_manager.exp_dir={run_dir}", "+init_from_nemo_model=/root/pretrained/tts_en_fastpitch_align.nemo",
            f"model.pitch_mean={stats['pitch_mean']}", f"model.pitch_std={stats['pitch_std']}", *FASTPITCH_OVERRIDES]
     _run(cmd, cwd=f"{SRC}/examples/tts", log_path=run_dir / "console.log")
-    from nemo.collections.tts.models import FastPitchModel
-    ckpt = _last_ckpt(run_dir, "FastPitch")
-    model = FastPitchModel.load_from_checkpoint(str(ckpt))
-    out = pathlib.Path(VOLUME) / "models"
-    out.mkdir(exist_ok=True)
-    model.save_to(str(out / "fastpitch_9017.nemo"))
+    volume.commit()                                                          # the checkpoints first: packaging can fail
+    ckpt = _package(run_dir, "FastPitch", NEMO_NAMES["FastPitch"])
     volume.commit()
     return {"name": name, "commit": commit, "machine": _machine(), "seconds": time.time() - t0, "checkpoint": str(ckpt),
             "nemo": "models/fastpitch_9017.nemo",
@@ -235,7 +267,7 @@ def vocoder_remote(name: str, commit: str) -> dict:
     import numpy as np
     import soundfile as sf
     import torch
-    from nemo.collections.tts.models import FastPitchModel, HifiGanModel
+    from nemo.collections.tts.models import FastPitchModel
     from nemo.collections.tts.parts.utils.tts_dataset_utils import BetaBinomialInterpolator
     run_dir = _fresh(pathlib.Path(VOLUME) / "runs" / name)
     t0 = time.time()
@@ -272,9 +304,8 @@ def vocoder_remote(name: str, commit: str) -> dict:
            f"train_dataset={manifests['train']}", f"validation_datasets={manifests['val']}",
            f"exp_manager.exp_dir={run_dir}", "+init_from_nemo_model=/root/pretrained/tts_hifigan.nemo", *HIFIGAN_OVERRIDES]
     _run(cmd, cwd=f"{SRC}/examples/tts", log_path=run_dir / "console.log")
-    ckpt = _last_ckpt(run_dir, "HifiGan")
-    model = HifiGanModel.load_from_checkpoint(str(ckpt))
-    model.save_to(f"{VOLUME}/models/hifigan_9017.nemo")
+    volume.commit()
+    ckpt = _package(run_dir, "HifiGan", NEMO_NAMES["HifiGan"])
     volume.commit()
     return {"name": name, "commit": commit, "machine": _machine(), "seconds": time.time() - t0, "checkpoint": str(ckpt),
             "nemo": "models/hifigan_9017.nemo", "overrides": HIFIGAN_OVERRIDES}
@@ -324,6 +355,16 @@ def train():
     print(f"\n{out['machine']} · commit {commit} · {out['nemo']} from {out['checkpoint']}")
     print(f"saved -> {_save('train', out).relative_to(REPO)}")
     print(_cost_line(out["seconds"], wall))
+
+
+@app.local_entrypoint()
+def package(name: str):
+    """A finished run's last checkpoint as its .nemo file, on a CPU:  ::package --name fastpitch-<commit>-<stamp>"""
+    t0 = time.time()
+    out = package_remote.remote(name)
+    out["commit"] = _commit()
+    print(f"\n{out['nemo']} from {out['checkpoint']}")
+    print(f"saved -> {_save('package', out).relative_to(REPO)}; {time.time() - t0:.0f} s end to end, CPU rate")
 
 
 @app.local_entrypoint()

@@ -300,6 +300,20 @@ def test_the_ft3_stages_are_the_tutorials_recipe_with_caps(ft3_train):
     assert ft3_train.SPEAKER == "9017" and ft3_train.DATA_URL.endswith("9017_5_mins.tar.gz")
 
 
+def test_the_ft3_last_checkpoint_is_found_below_exp_managers_dated_directory(ft3_train, tmp_path):
+    """<run>/FastPitch/<date_time>/checkpoints/: the layout the first training run left on the volume."""
+    cks = tmp_path / "FastPitch" / "2026-09-27_14-10-28" / "checkpoints"
+    cks.mkdir(parents=True)
+    for n in ("FastPitch--val_loss=1.7385-epoch=224.ckpt", "FastPitch--val_loss=1.9000-epoch=249-last.ckpt"):
+        (cks / n).write_bytes(b"")
+    assert ft3_train._last_ckpt(tmp_path, "FastPitch").name == "FastPitch--val_loss=1.9000-epoch=249-last.ckpt"
+    (cks / "FastPitch--val_loss=1.9000-epoch=249-last.ckpt").unlink()
+    with pytest.raises(RuntimeError, match="epoch=224"):                     # the error says what is there
+        ft3_train._last_ckpt(tmp_path, "FastPitch")
+    assert hasattr(ft3_train.package_remote, "remote") and hasattr(ft3_train.package, "info")
+    assert set(ft3_train.NEMO_NAMES) == set(ft3_train.MODEL_CLASSES) == {"FastPitch", "HifiGan"}
+
+
 def test_the_ft3_data_stage_extracts_pitch_with_the_trainings_range(ft3_train):
     """The training loads the pitch files the data stage caches: one range, one directory, in both."""
     assert (ft3_train.PITCH_FMIN, ft3_train.PITCH_FMAX) == (30, 512)                # the tutorial's
