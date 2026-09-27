@@ -80,8 +80,10 @@ def download_pretrained() -> None:
 
 
 image = (
-    modal.Image.from_registry("nvidia/cuda:12.6.3-cudnn-devel-ubuntu22.04", add_python="3.12")   # devel: NeMo's numba/apex-free path still wants nvcc-less builds of a few wheels
-    .apt_install("git", "gcc", "g++", "libsndfile1", "ffmpeg", "sox")
+    modal.Image.from_registry("nvidia/cuda:12.6.3-cudnn-devel-ubuntu22.04", add_python="3.12")
+    # clang, cmake, build-essential: two of NeMo's TTS extras (pyopenjtalk, cdifflib) have no wheel for
+    # Python 3.12 and compile here, and Modal's Python calls clang -- the first build died on its absence
+    .apt_install("git", "gcc", "g++", "clang", "cmake", "build-essential", "libsndfile1", "ffmpeg", "sox")
     .pip_install(TORCH, "torchaudio==2.8.0", index_url="https://download.pytorch.org/whl/cu126")
     .pip_install(NEMO, "praat-parselmouth==0.4.7", "soundfile==0.14.0")
     .run_commands(f"git clone --depth 1 --branch {SPEECH_TAG} {SPEECH_REPO} {SRC}")
