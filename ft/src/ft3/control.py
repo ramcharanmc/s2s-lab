@@ -9,8 +9,10 @@ s2slab.severity.Targets become arithmetic on two arrays, done here, and the mode
 result. Everything in this module is a pure function on numpy arrays, tested without NeMo.
 
     f0_offset_hz    pitch + offset / pitch_std, on speech tokens
-    f0_dev_scale    a * pitch, on speech tokens: the centre is 0 = the speaker's mean, page 09's
-                    own centre (the Praat render used the measured median; see severity.py)
+    f0_dev_scale    c + a * (pitch - c), on speech tokens, about a CENTRE c given by the caller in
+                    normalized units: the neutral render's measured median F0, as the Praat render
+                    centres its compression (severity.py: offset and scale then do not interact in
+                    the measurement, which reads the median). c = 0 would be the speaker's mean
     rate            speech tokens' durations / rate
     pause_scale     durations * pause_scale, on the tokens of each PAUSE: a run of pause tokens
                     (punctuation, the space beside it) predicted to last MIN_PAUSE_S or more --
@@ -81,12 +83,28 @@ def control_durations(durs: np.ndarray, pause_mask: np.ndarray, t: Targets) -> n
     return out
 
 
-def control_pitch(pitch: np.ndarray, pause_mask: np.ndarray, t: Targets, pitch_std: float) -> np.ndarray:
+# DECISIONS MADE ON DEV AUDIO (tts_en_fastpitch, the four DEV_SENTENCES, 2026-09-26; results/ft3/compare*.json):
+#   - The pitch scale is centred on the neutral render's MEASURED median (synth.centre_of, Praat), as
+#     the Praat render centres its compression: with the model's mean as the centre the offset
+#     overshot (d2: -21 Hz for -16). Centring on the duration-weighted median of the predicted token
+#     pitch instead (token_median, kept for reference) was worse: offset 34 -> 30 of 48 within
+#     tolerance, range 26 -> 23.
+#   - RANGE_GAIN 1.2: a range sweep with the offset at zero (a = 0.4 ... 1.8) came back damped,
+#     measured - 1 = 0.83 (target - 1) on average -- the model's own pitch movement inside a token is
+#     not scaled by a per-token factor. Asking for 1.2x the deviation took the range from 26 to 31 of
+#     48 within 10%; the offset 34 -> 33, pauses 44 -> 45. Still far from PR-009's 80% bar; reported,
+#     not tuned further on four sentences.
+RANGE_GAIN = 1.2            # a_eff = 1 + (a - 1) * RANGE_GAIN
+
+
+def control_pitch(pitch: np.ndarray, pause_mask: np.ndarray, t: Targets, pitch_std: float,
+                  centre: float = 0.0, range_gain: float = RANGE_GAIN) -> np.ndarray:
     """The per-token pitch, in the model's normalized units, after the targets: speech tokens
-    scaled about 0 (the speaker's mean) by f0_dev_scale and shifted by offset / pitch_std; pause
-    tokens as predicted."""
+    scaled about `centre` by f0_dev_scale (through `range_gain`) and shifted by offset / pitch_std;
+    pause tokens as predicted. `centre` is the neutral render's median in normalized units."""
     pitch = np.asarray(pitch, dtype=np.float32)
-    shifted = t.f0_dev_scale * pitch + t.f0_offset_hz / pitch_std
+    a = 1.0 + (t.f0_dev_scale - 1.0) * range_gain
+    shifted = centre + a * (pitch - centre) + t.f0_offset_hz / pitch_std
     return np.where(pause_mask, pitch, shifted).astype(np.float32)
 
 
@@ -105,8 +123,19 @@ class Plan(NamedTuple):
     pauses_out: list            # the same pauses in THIS render
 
 
+def token_median(pitch_pred: np.ndarray, durs_pred: np.ndarray, is_pause: np.ndarray) -> float:
+    """The duration-weighted median of the predicted pitch over speech tokens, normalized units:
+    the centre of the model's own contour, frame for frame."""
+    p, w = np.asarray(pitch_pred, dtype=float)[~is_pause], np.asarray(durs_pred, dtype=float)[~is_pause]
+    if len(p) == 0 or w.sum() == 0:
+        return 0.0
+    order = np.argsort(p)
+    cum = np.cumsum(w[order])
+    return float(p[order][np.searchsorted(cum, cum[-1] / 2)])
+
+
 def plan(durs_pred: np.ndarray, pitch_pred: np.ndarray, is_pause: np.ndarray, hop_s: float,
-         pitch_std: float, t: Targets | None) -> Plan:
+         pitch_std: float, t: Targets | None, centre: float = 0.0, range_gain: float = RANGE_GAIN) -> Plan:
     """The controlled inputs for one target set; with t=None, the model's own prediction (the
     neutral render), so both go through the same forward pass."""
     durs_pred, pitch_pred = np.asarray(durs_pred), np.asarray(pitch_pred, dtype=np.float32)
@@ -115,7 +144,7 @@ def plan(durs_pred: np.ndarray, pitch_pred: np.ndarray, is_pause: np.ndarray, ho
     if t is None:
         return Plan(durs_pred.astype(int), pitch_pred, runs, intervals(durs_pred, runs, hop_s), intervals(durs_pred, runs, hop_s))
     durs = control_durations(durs_pred, mask, t)
-    return Plan(durs, control_pitch(pitch_pred, mask, t, pitch_std), runs,
+    return Plan(durs, control_pitch(pitch_pred, mask, t, pitch_std, centre, range_gain), runs,
                 intervals(durs_pred, runs, hop_s), intervals(durs, runs, hop_s))
 
 

@@ -54,13 +54,32 @@ def test_pitch_is_scaled_about_the_mean_and_shifted_in_std_units_on_speech_only(
     pitch = np.array([0.0, 0.5, -0.5, 0.0, 1.0], dtype=np.float32)
     mask = np.array([True, False, False, True, False])
     t = severity.depression(27)                                              # -25 Hz, scale 0.4
-    got = control.control_pitch(pitch, mask, t, pitch_std=50.0)
+    got = control.control_pitch(pitch, mask, t, pitch_std=50.0, range_gain=1.0)
     assert got.dtype == np.float32
     assert got[0] == 0.0 and got[3] == 0.0                                    # pauses untouched
     assert got[1] == pytest.approx(0.4 * 0.5 - 0.5) and got[2] == pytest.approx(0.4 * -0.5 - 0.5)
     assert got[4] == pytest.approx(0.4 - 0.5)
-    neutral = control.control_pitch(pitch, mask, severity.mania(0), pitch_std=50.0)   # +0 Hz, scale 1
+    neutral = control.control_pitch(pitch, mask, severity.mania(0), pitch_std=50.0)   # +0 Hz, scale 1: the gain has nothing to amplify
     assert np.array_equal(neutral, pitch)
+    gained = control.control_pitch(pitch, mask, t, pitch_std=50.0)                    # the default gain, 1.2: a_eff = 1 + (0.4 - 1) * 1.2
+    assert control.RANGE_GAIN == 1.2 and gained[1] == pytest.approx(0.28 * 0.5 - 0.5)
+    centred = control.control_pitch(pitch, mask, t, pitch_std=50.0, centre=0.5, range_gain=1.0)      # about the median, not the mean
+    assert centred[1] == pytest.approx(0.5 + 0.4 * 0.0 - 0.5) and centred[4] == pytest.approx(0.5 + 0.4 * 0.5 - 0.5)
+    assert centred[0] == 0.0
+    # with the centre at the median, the median moves by the offset alone, whatever the scale
+    med = 0.5
+    for a in (0.4, 1.0, 1.8):
+        tt = severity.Targets("x", 0, 0, -25.0, a, 1.0, 1.0, {})
+        assert control.control_pitch(np.array([med], np.float32), np.array([False]), tt, 50.0, centre=med)[0] == pytest.approx(med - 0.5)
+
+
+def test_the_token_median_is_duration_weighted_and_ignores_pauses():
+    pitch = np.array([0.0, -1.0, 0.2, 0.9, 0.0], dtype=np.float32)
+    durs = np.array([3, 1, 10, 1, 3])
+    is_pause = np.array([True, False, False, False, True])
+    assert control.token_median(pitch, durs, is_pause) == pytest.approx(0.2)        # the long token carries the median
+    assert control.token_median(pitch, np.array([3, 9, 1, 1, 3]), is_pause) == pytest.approx(-1.0)   # weight decides, not count
+    assert control.token_median(pitch, durs, np.ones(5, dtype=bool)) == 0.0
 
 
 def test_intervals_come_from_the_durations_in_seconds():

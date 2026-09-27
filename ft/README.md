@@ -116,7 +116,26 @@ that file); CPU is enough for synthesis, and the control tests run in `ft/`'s en
     PYTHONPATH=ft:src ~/.venvs/s2slab-ft3/bin/python -m src.ft3.synth "The train leaves at nine. I bought a ticket." --condition depression --score 15
 
 writes the neutral and the controlled render under `results/ft3/dev/` and prints the four measures
-against their targets. The dev sweep, the fine-tune on Modal and PR-012 follow.
+against their targets.
+
+**The dev sweep** (`src/ft3/sweep.py`, the base LJSpeech voice, the four dev sentences of PR-009,
+both conditions, six scores; 172 s on the CPU) produces `severity.run`'s exact results shape, so
+`severity.report` prints it and PR-009's `severity.criteria` scores it unchanged:
+
+    PYTHONPATH=ft:src ~/.venvs/s2slab-ft3/bin/python -m src.ft3.sweep --sentences dev [--listen]
+
+Dev result, with the two decisions fixed in `control.py` (the range scaled about the neutral
+render's measured median; a range gain of 1.2, because the model answers a per-token scale with
+about 0.83 of it): rate within 10% on 48 of 48 checks, pauses on 45 of 48 (the misses all at
+YMRS 60, ×0.30), the pitch offset within 3 Hz or 10% on 33 of 48, the range within 10% on 31 of 48;
+28 of 32 feature sweeps in order. Rate and pauses are as exact as the Praat render's; the pitch is
+not -- FastPitch's pitch is a per-token input the model interprets, and its answer is damped and
+noisy on the range. PR-012 registers PR-009's five criteria on these renders with that prediction.
+
+**Training** (`modal_app/ft3_train.py`, the tutorial's recipe on an A10): `::data` (the 5-minute
+Hi-Fi TTS speaker 9017, CPU), `::train` (FastPitch, 1,000 steps), `::vocoder` (HiFi-GAN on the
+fine-tuned model's mels, 1,000 steps); `modal volume get ft3 models data/ft3/models` brings the
+two `.nemo` files back, and `--fastpitch`/`--hifigan` point `synth` and `sweep` at them.
 
 ## Licences
 

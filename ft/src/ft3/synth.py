@@ -15,6 +15,7 @@ or a local .nemo path for a fine-tuned voice (FT-3's training, later).
 from __future__ import annotations
 
 import argparse
+import hashlib
 import pathlib
 import time
 from typing import NamedTuple
@@ -64,16 +65,32 @@ class Predicted(NamedTuple):
 def predict(v: Voice, text: str) -> Predicted:
     """The model's own durations and pitch for the text: the neutral plan's inputs."""
     tokens = v.fastpitch.parse(text)
-    spect, dec_lens, durs, log_durs, pitch, *_ = v.fastpitch.fastpitch.infer(text=tokens)
+    # forward() with nothing forced predicts both (infer() insists on a pitch tensor to add); NeMo's
+    # type check counts the keywords, and durs and pitch are mandatory ones, so they are passed as None
+    spect, dec_lens, durs, log_durs, pitch, *_ = v.fastpitch(text=tokens, durs=None, pitch=None)
     ids = tokens[0].cpu().numpy()
     return Predicted(tokens, durs[0].cpu().numpy().astype(int), pitch[0].cpu().numpy().astype(np.float32),
                      np.array([int(i) in v.pause_ids for i in ids]))
 
 
-def render(v: Voice, pred: Predicted, t: severity.Targets | None) -> tuple[np.ndarray, control.Plan]:
+CENTRE_MODE = "audio"       # the neutral render's measured median F0 (control.py's dev decisions); "tokens"
+                            # = the duration-weighted median of the predicted token pitch, tried and rejected
+
+
+def centre_of(v: Voice, neutral: np.ndarray, pred: Predicted | None = None, mode: str = CENTRE_MODE) -> float:
+    """The centre the pitch range is scaled about, in the model's normalized units, so that scale
+    and offset do not interact in the measured median."""
+    if mode == "tokens" and pred is not None:
+        return control.token_median(pred.pitch, pred.durs, pred.is_pause)
+    f0 = severity.f0_hz(neutral, v.sr)
+    return float((np.median(f0) - v.pitch_mean) / v.pitch_std) if len(f0) else 0.0
+
+
+def render(v: Voice, pred: Predicted, t: severity.Targets | None, centre: float = 0.0,
+           range_gain: float = control.RANGE_GAIN) -> tuple[np.ndarray, control.Plan]:
     """One render through forward() with the plan's durations and pitch; the audio at v.sr."""
     import torch
-    p = control.plan(pred.durs, pred.pitch, pred.is_pause, v.hop_s, v.pitch_std, t)
+    p = control.plan(pred.durs, pred.pitch, pred.is_pause, v.hop_s, v.pitch_std, t, centre, range_gain)
     durs = torch.tensor(p.durs, dtype=torch.long, device=pred.tokens.device).unsqueeze(0)
     pitch = torch.tensor(p.pitch, dtype=torch.float32, device=pred.tokens.device).unsqueeze(0)
     spect, *_ = v.fastpitch(text=pred.tokens, durs=durs, pitch=pitch, pace=1.0)
@@ -85,7 +102,7 @@ def measure(v: Voice, text: str, t: severity.Targets):
     """Neutral and controlled renders of one sentence, and severity's four measures of the pair."""
     pred = predict(v, text)
     neutral, _ = render(v, pred, None)
-    audio, p = render(v, pred, t)
+    audio, p = render(v, pred, t, centre_of(v, neutral))
     got = severity.achieved(neutral, control.as_render(audio, p), v.sr)
     return neutral, audio, p, got
 
@@ -107,7 +124,7 @@ def main(argv=None) -> None:
     neutral, audio, p, got = measure(v, args.text, t)
     out = pathlib.Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    stem = f"{v.name}-{abs(hash(args.text)) % 10_000:04d}"
+    stem = f"{v.name}-{hashlib.sha1(args.text.encode()).hexdigest()[:6]}"     # stable across runs
     severity.write_synthetic(out / f"{stem}-neutral.wav", neutral, v.sr, v.name, args.text)
     severity.write_synthetic(out / f"{stem}-{t.condition}-{t.score:g}.wav", audio, v.sr, v.name, args.text, t)
     print(f"tokens {len(p.durs)}, pauses {len(p.runs)}: in {[(round(a, 2), round(b, 2)) for a, b in p.pauses_in]} "

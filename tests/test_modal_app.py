@@ -264,3 +264,37 @@ def test_ft2_validations_are_read_from_what_the_module_writes(ft2_train, tmp_pat
     assert [r["step"] for r in rows] == [150, 300] and rows[1]["wer_raw"] == pytest.approx(0.2)
     assert rows[0]["loss"] == 0.3
     assert rows[0]["file"] == "runs/x/sub/val-step-000150.jsonl"
+
+
+
+@pytest.fixture(scope="module")
+def ft3_train():
+    pytest.importorskip("modal")
+    spec = importlib.util.spec_from_file_location("ft3_train", ROOT / "modal_app" / "ft3_train.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_ft3_image_pins_what_the_laptop_env_installs(ft3_train):
+    """ft/requirements-ft3.txt is the laptop env; the image installs the same NeMo, with CUDA torch of the
+    version the env's install command names."""
+    req = (ROOT / "ft" / "requirements-ft3.txt").read_text(encoding="utf-8")
+    assert ft3_train.NEMO in req and "torch==2.8.0" in req and ft3_train.TORCH == "torch==2.8.0"
+    assert ft3_train.SPEECH_TAG == "v" + ft3_train.NEMO.split("==")[1]        # the scripts at the wheel's version
+
+
+def test_the_ft3_stages_are_the_tutorials_recipe_with_caps(ft3_train):
+    for o in ("+trainer.max_steps=1000", "model.optim.lr=2e-4", "model.train_ds.dataloader_params.batch_size=24",
+              "model.n_speakers=1", "+model.text_tokenizer.add_blank_at=true"):
+        assert o in ft3_train.FASTPITCH_OVERRIDES
+    for o in ("model.max_steps=1000", "model.optim.lr=0.00001", "model.train_ds.dataloader_params.batch_size=32"):
+        assert o in ft3_train.HIFIGAN_OVERRIDES
+    assert not any(o.startswith("model.pitch_mean") or o.startswith("model.pitch_std") for o in ft3_train.FASTPITCH_OVERRIDES), \
+        "the pitch statistics come from extract_sup_data.py on the speaker's own data, not from the tutorial's numbers"
+    assert ft3_train.seconds_for(ft3_train.TRAIN_CAP_DOLLARS) <= 3600 and ft3_train.TRAIN_CAP_DOLLARS + ft3_train.VOCODER_CAP_DOLLARS <= 2.0
+    for fn in (ft3_train.data_remote, ft3_train.train_remote, ft3_train.vocoder_remote):
+        assert hasattr(fn, "remote")
+    for ep in (ft3_train.data, ft3_train.train, ft3_train.vocoder):
+        assert hasattr(ep, "info")
+    assert ft3_train.SPEAKER == "9017" and ft3_train.DATA_URL.endswith("9017_5_mins.tar.gz")
