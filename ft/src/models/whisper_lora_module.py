@@ -115,7 +115,9 @@ class WhisperLoRAModule(LightningModule):
     # -- the adapter on disk ----------------------------------------------------------------------
     @property
     def output_dir(self) -> pathlib.Path:
-        return pathlib.Path(self.trainer.log_dir or self.trainer.default_root_dir)
+        """The run's root (hydra's run dir), not the logger's subfolder: FT-2's first run put the adapters
+        under csv/version_0/, which the dev look then could not find by the run's name."""
+        return pathlib.Path(self.trainer.default_root_dir)
 
     def save_adapter(self, path: pathlib.Path | str) -> pathlib.Path:
         """PEFT's format: adapter_model.safetensors + adapter_config.json, a few MB."""

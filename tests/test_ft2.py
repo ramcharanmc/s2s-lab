@@ -82,4 +82,4 @@ def test_the_report_names_the_verdict_and_the_validity_problems(refs):
     half = {k: v for k, v in base.items() if refs[k][0] != "slow"}
     short = {"criteria": ft2.pr011(half, half, n=100), "commit": "abc1234", "export_sha256": "ff", "base_model": "small.en"}
     assert any("not the frozen 200" in p for p in ft2.pr011_validity(short))
-    assert ft2.FILLER_RECALL_BAR == 0.80 and ft2.GUARD_PP == 1.0 and ft2.BASE_MODEL == "small.en"
+    assert ft2.FILLER_RECALL_BAR == 0.90 and ft2.GUARD_PP == 1.0 and ft2.BASE_MODEL == "small.en"

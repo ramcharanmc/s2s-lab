@@ -25,6 +25,7 @@ Rules, from the v1 Research plan (§8):
 | PR-008 | When the caller's voice is upset rather than calm, with the same words, does R4 (Qwen2.5-Omni, speaking for itself) answer with a wider pitch range -- beyond chance and beyond what R3's words carry into Kokoro? | `f4da0bc` | **Reported: not supported** (R4 14 wider / 16 narrower of 39; no consistent direction, p = 0.86) |
 | PR-009 | On two Kokoro voices and eight neutral sentences the render was not developed on, does raising a PHQ-9 or YMRS score move pitch, range, rate and pauses the way page 09's mapping says, at every step and within tolerance? | `6c43d5e` | **Reported: not supported** (S4 failed: pitch offset on target in 169 of 192 checks, 88.0%, needed 173; S1 96 of 96, S2 29 of 32, S3 384 of 384, S5 177 of 192 held) |
 | PR-010 | Does a LoRA trained on DailyTalk (kyutai's moshi-finetune, test fold held out) move Moshi's turn gaps closer to DailyTalk's own, on 100 held-out dialogues? | `4df9ef3` | **Reported: not supported, moved away** (distance to the reference 496 ms base, 1,035 ms LoRA; gain −539 ms, 95% interval −685 to −402; overlap 85 → 2 turn changes, but median gap 160 → 1,220 ms against 420) |
+| PR-011 | Does a LoRA trained on verbatim transcripts make `whisper-small.en` write down disfluent speech as spoken -- fillers and all -- on the eval set's disfluent cohort, without hurting the other cohorts? | The commit that adds this entry | Open |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -2417,3 +2418,152 @@ training, run the adapter on dev, then register the test.
 - Six conversations to listen to, user left, model right (`results/ft1/listen/`, not in git):
   dialogues 0, 10 and 20, each with both models. In dialogue 10 the LoRA's only words are
   "Goodbye, Mary.".
+
+---
+
+## PR-011 — Does a verbatim LoRA make small.en write down disfluent speech as spoken?
+
+**Registered:** 2026-09-27, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+v2 plan, FT-2 (Notion page 17 §7): "ASR LoRA on SEP-28k, via Tier-B pseudo-labels" -- the
+highest-ROI item in the WER playbook. Two facts changed the recipe, both checked before any code
+was written (ft/README.md). SEP-28k has no transcripts, its annotations are CC BY-NC and its audio
+stays the podcasts' copyright; and pseudo-labels from the slow tier would teach the student the
+slow tier's habit, which is the very thing the disfluent cohort exists to measure: **Whisper cleans
+speech up.** On the eval set's disfluent cohort `small.en` scores 9.9% raw against 7.6%
+normalized (PR-004's run), and the gap is the fillers and repetitions it drops. So FT-2's target
+is **verbatim transcription**: a LoRA on `whisper-small.en` (R2's slow tier, `r0-gpu-bigger`'s
+recognizer, 244M parameters) trained on transcripts that keep the "uh"s, the "the, the"s and the
+restarts.
+
+**The data**, and what it can claim. amaai-lab/DisfluencySpeech (Apache-2.0, revision `b7da294`,
+the eval set's own pin): ONE speaker re-performing Switchboard utterances in a studio, 4,500
+train / 250 validation / 250 test clips, four transcripts each; `transcript_a` is the verbatim
+one and the eval set's reference for its disfluent cohort. The training used the TRAIN split
+only; the datamodule has no test loader and lists no test file (`ft/src/data/disfluencyspeech_datamodule.py`).
+**The eval set's disfluent cohort is 50 clips of the TEST split -- the same speaker, the same
+studio.** So S1 and S2 below measure same-speaker adaptation to a verbatim target, and the entry
+says so; the other 150 clips of the eval set (LibriSpeech clean, EdAcc accented, the slowed
+proxy) are other speakers, and that is where the guardrail is. No open corpus of *other*
+disfluent speakers with verbatim transcripts was found (SEP-28k: no transcripts; LibriStutter:
+synthetic stutters, CC BY-NC, no verbatim reference; FluencyBank: membership), so there is no
+leak-free disfluent test here, and the claim is worded to that.
+
+**The model.** PEFT LoRA r = 32, α = 64, dropout 0.05 on q and v projections (PEFT's own Whisper
+recipe): 3,538,944 trainable of 245,273,088 parameters, 1.44%. AdamW 2e-4, 50 warm-up steps then
+linear decay, batch 16, 900 steps (about 3.2 epochs), bf16, seed 0; every 150 steps a validation
+on 64 clips and the adapter saved. Run `train-f37d0df-20260926-235222` on a Modal A10, commit
+`f37d0df`, 545 s, \$0.168 (`ft/`, the Lightning-Hydra project; `modal_app/ft2_train.py::train`).
+It converged early: raw WER on the 64 clips 2.4% at step 150, 2.0% at 900; the loss 0.177 → 0.164.
+**The adapter under test is `step-000900`, the run's end -- fixed before any look at it against
+the base**, merged into the base weights and converted to CTranslate2 float16 (`ft/src/export.py`),
+so the bench loads it exactly as it loads Systran's `small.en`. Export
+`export-runs_train-f37d0df-20260926-235222_csv_version_0_adapters_step-000900-float16` on the
+Modal volume `ft2`; `ct2/model.bin` SHA-256
+`b31833fe4ed0e1cb429d33a52d81e9974fe32838e32e9a85f19e666af2a51cff`.
+
+**Development -- the dev look FT-1 never had** (all 250 validation clips, the training speaker,
+`::evaluate`, A10, \$0.014 each):
+
+| 250 validation clips | base `small.en` | + LoRA, step 900 |
+|---|---:|---:|
+| raw WER | 10.9% | **2.1%** |
+| normalized WER | 7.8% | 2.1% |
+| fillers kept, of 176 in the references | 8 (4.5%) | 174 (98.9%) |
+| validation loss | 0.728 | 0.174 |
+
+Raw and normalized WER meet at 2.1%: the model writes what the normalizer would have deleted.
+How much of the 8.8-point drop is the verbatim target and how much is the speaker cannot be told
+apart on this data, and this entry does not try.
+
+**The comparator's known numbers** on the eval set (PR-004's run, one T4, commit `91048b3`,
+`small.en` as `r2-gpu`'s slow tier, raw / normalized): disfluent 9.9 / 7.6%, clean 3.5 / 3.3%,
+accented 27.0 / 23.9%, slow 3.7 / 3.5%. The bench re-runs `small.en` beside the LoRA rather than
+reusing them (V1), but they fix the guardrail's bar without a look at the test cohorts.
+
+What was known, and by whom: the LoRA has met none of the eval set's 200 clips; the bench has run
+on 8 clean clips with the base model only (`results/ft2/bench-small.en-limit8-20260927-001214.json`,
+raw 5.1%); the disfluent references were counted (28 fillers over the 50 clips) to set S2's bar.
+
+### Question
+
+On the frozen eval set, does `small.en` + FT-2's LoRA transcribe the 50 disfluent clips closer
+to their verbatim references than `small.en` does -- keeping the fillers -- without costing the
+other 150 clips, which are other speakers, more than a point of normalized WER?
+
+### Validity requirements
+
+| | Requirement |
+|---|---|
+| **V1 · Frozen** | As committed with this entry: `src/s2slab/ft2.py` (the criterion); `src/s2slab/wer.py` and `evalset.py` (unchanged since the ladder's rows); `s2slab.r0.WhisperASR` (the rungs' recognizer class); `modal_app/ft2_train.py`'s image, `bench_remote`, `bench_guard` and `bench`; `ft/src/export.py`. Reporting (`format_pr011`, the tables) may gain lines, tested on made-up transcripts only. |
+| **V2 · Held out** | The frozen eval set (`evalset/manifest.json`, verified on the container before any clip is read). The LoRA was trained on DisfluencySpeech's train split only, and the exported model has never been run on any eval-set clip. |
+| **V3 · The model** | The step-900 adapter of run `train-f37d0df-20260926-235222`, merged and converted; the run records the export's name and `ct2/model.bin`'s SHA-256, which must equal the one above. |
+| **V4 · One run, one container** | `modal run modal_app/ft2_train.py::bench --export export-runs_train-f37d0df-20260926-235222_csv_version_0_adapters_step-000900-float16 --confirm PR-011`, from a clean tree: `small.en` first, then the exported model, over all 200 clips, same T4 container, the same `WhisperASR` settings the rungs use (float16, greedy, no context between clips). A crashed run writes no run file; it is reported and repeated once, in full. |
+| **V5 · Evidence** | `runs/ft2/pr011.json` (both models' transcripts and per-clip recognizer times, the criteria, the export's SHA-256) and the printed report, committed with the results, together with the training evidence brought back from the volume: the run's six `val-step-*.jsonl` (every validation's transcripts), its `metrics.csv` and hydra config, and both dev-look `metrics.json`. The adapter, the merged model and the dataset stay out of git. |
+
+### Primary outcome
+
+`ft2.pr011(base, lora)` on the two transcript sets, as coded at this commit:
+- **S1** raw WER on the 50 disfluent clips, LoRA minus base, in points, with the 95% bootstrap
+  interval over clips (10,000 resamples, seed 0; corpus WER recomputed on each resample).
+- **S2** of the 28 fillers in the disfluent references, how many the LoRA's transcripts keep
+  (word for word, up to the reference's count).
+- **S3** normalized WER over the other 150 clips (clean, accented, slow), LoRA minus base, in
+  points, with the same bootstrap.
+
+### Success criterion
+
+**Supported only if all three hold:** S1's whole interval below zero; S2 at least 90% (26 of 28;
+raised from the 80% first coded, because the dev look showed 98.9% and 28 fillers make 80% a bar
+of 23 that a broken model could clear -- changed in this commit, before the run); S3's interval
+upper end at most +1.0 point. Otherwise not supported, and which criterion failed is reported.
+
+### Predictions, recorded but not criteria
+
+- **Supported.** S1: base about 10% raw, the LoRA about 3% -- a drop of 6 to 8 points with an
+  interval wholly below zero (the dev look gave 10.9 → 2.1 on 250 clips of the same speaker; the
+  test clips are the same speaker and the same recording set-up).
+- **S2: 26 to 28 of 28.** The dev look kept 174 of 176.
+- **S3 is the criterion most likely to fail**, and the prediction is that it holds narrowly:
+  normalized WER on the other 150 clips rises by 0.2 to 0.6 points -- a LoRA trained on one
+  speaker's read-aloud studio speech, applied to LibriSpeech, EdAcc and the slowed clips. If it
+  fails, the failure comes from the accented cohort, whose WER is the highest and whose speakers
+  are furthest from the training voice.
+- **Raw WER on the other cohorts rises more than normalized**: the LoRA writes a filler where a
+  fluent speaker made a noise the base ignored. Descriptive.
+- The per-clip recognizer time of the merged model is the base's, within noise: LoRA weights
+  merged add no parameters.
+
+### Reported alongside, descriptively
+
+Both models against the references, per cohort, raw and normalized (the eval set's own table);
+the fillers each model kept; recognizer time p50 per model; the training's validation curve (six
+points, 64 clips) and the two dev looks; what the LoRA wrote where the base wrote nothing, on a
+few disfluent clips.
+
+### Analysis plan
+
+1. Commit this entry with the frozen code above (S2's bar included).
+2. The one run (V4); save the evidence (V5); record the output below, verbatim.
+3. Only after step 2: any further look, labelled exploratory.
+
+### What this cannot show
+
+- **Not generalisation to disfluent speakers.** One speaker's performed disfluency trained on,
+  the same speaker's held-out clips tested. S3 says whether other speakers' fluent speech was
+  harmed; nothing here says whether another disfluent speaker would be transcribed verbatim.
+- **Not stuttering.** Fillers, repetitions and restarts, performed; no blocks, no prolongations.
+- **One LoRA, one configuration, one seed, 900 steps.**
+- **Not the ladder's latency.** The bench times the recognizer alone on a T4; the rungs' first-audio
+  numbers are untouched.
+
+### Deviations
+
+None yet.
+
+### Results
+
+Pending.

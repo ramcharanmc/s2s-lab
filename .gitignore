@@ -12,3 +12,4 @@ data/
 ft/.venv/
 ft/logs/
 ft/data/
+*.egg-info/

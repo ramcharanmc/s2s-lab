@@ -35,6 +35,7 @@ def test_one_batch_end_to_end(cfg_train: DictConfig, tmp_path):
     assert 0 <= float(metrics["val/wer_raw"])
     adapters = list((tmp_path).rglob("adapters/step-*"))
     assert adapters, "every validation saves its adapter"
+    assert all(a.parent == tmp_path / "adapters" for a in adapters), "at the run's root, not under the logger's folder"
     assert (adapters[0] / "adapter_model.safetensors").exists()
     jsonl = list(tmp_path.rglob("val-step-*.jsonl"))
     assert jsonl
