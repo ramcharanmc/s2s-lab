@@ -1,0 +1,6850 @@
+{
+ "sr": 24000,
+ "reference": "onnx-fp32",
+ "repo": "onnx-community/Kokoro-82M-v1.0-ONNX",
+ "revision": "1939ad2a8e416c0acfeecc08a694d14ef25f2231",
+ "torch_repeats": 5,
+ "rungs": {
+  "onnx-fp32": {
+   "file": "onnx/model.onnx",
+   "sha256": "8fbea51ea711f2af382e88c833d9e288c6dc82ce5e98421ea61c058ce21a34cb",
+   "size_mb": 325.5,
+   "load_s": 1.92
+  },
+  "onnx-fp16": {
+   "file": "onnx/model_fp16.onnx",
+   "sha256": "ba4527a874b42b21e35f468c10d326fdff3c7fc8cac1f85e9eb6c0dfc35c334a",
+   "size_mb": 163.2,
+   "load_s": 2.23
+  },
+  "onnx-q8": {
+   "file": "onnx/model_quantized.onnx",
+   "sha256": "fbae9257e1e05ffc727e951ef9b9c98418e6d79f1c9b6b13bd59f5c9028a1478",
+   "size_mb": 92.4,
+   "load_s": 0.72
+  }
+ },
+ "voices": [
+  "af_heart",
+  "am_michael"
+ ],
+ "sentences": {
+  "d1": "I went to the shop this morning. It was closed, so I came back home.",
+  "d2": "My sister called yesterday. We talked for a while, and then I made dinner.",
+  "d3": "The bus was late again. I waited by the stop, and then it started to rain.",
+  "d4": "We moved the table into the kitchen. It fits better there, and the room looks bigger.",
+  "t1": "The train leaves at nine. I bought a ticket, and then I found a seat by the window.",
+  "t2": "I cleaned the windows today. It took most of the morning, but the light is better now.",
+  "t3": "Our neighbour painted the fence. It is green now, and it looks much newer.",
+  "t4": "I walked to the post office. The line was short, so I was back before lunch.",
+  "t5": "The library opens at ten. I returned two books, and I borrowed a new one.",
+  "t6": "We planted tomatoes last spring. They grew well, and we had enough for the whole summer.",
+  "t7": "The meeting moved to Thursday. I changed my calendar, and I sent a note to the team.",
+  "t8": "I made soup for dinner. It needed more salt, so I added some at the table."
+ },
+ "rows": [
+  {
+   "voice": "af_heart",
+   "sentence": "d1",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.551,
+   "rtf": 0.351,
+   "audio_sha256": "aa3baf3a4005d339cf2e5c7debdcfec980fd56d3e7391c9100a0d907f1a4821d",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 106200,
+   "speech_s": 3.67,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I went to the shop this morning. It was closed so I came back home.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d1",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.41,
+   "rtf": 0.319,
+   "audio_sha256": "bd8b87ffd2c306c8bff300e29502b47dc1914e07e8541b78a65fef1cf401e9bf",
+   "finite": false,
+   "nonfinite_samples": 106200,
+   "n_samples": 106200,
+   "measures": null
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d1",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 5.926,
+   "rtf": 1.339,
+   "audio_sha256": "9b64725e5cec4085797fd7fb2ac5c1f8b3b193e4723e401229650259c6aaa487",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 106200,
+   "speech_s": 3.68,
+   "measures": {
+    "f0_offset_hz": -4.41427536601546,
+    "f0_dev_scale": 0.923709149748212,
+    "rate": 1.003030303030303,
+    "pause_scale": 1.0555555555555556
+   },
+   "heard": "I went to the shop this morning. It was closed, so I came back home.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.868,
+   "rtf": 0.422,
+   "audio_sha256": "9df162d3d0f5c03e89bf845e24ffd09bd6898298a399dd277e92acd532c002d7",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 106200,
+   "speech_s": 3.67,
+   "measures": {
+    "f0_offset_hz": 1.3053851072239695,
+    "f0_dev_scale": 0.9686717882190967,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I went to the shop this morning. It was closed so I came back home.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.68,
+   "rtf": 0.38,
+   "audio_sha256": "608676dede207422d85c25accf06377aed6dc4b9489ba34854bc3c90969d986d",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 106200,
+   "speech_s": 3.67,
+   "measures": {
+    "f0_offset_hz": 0.6803247391471245,
+    "f0_dev_scale": 1.004795041185648,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.547,
+   "rtf": 0.35,
+   "audio_sha256": "a0d1dcfa712a53cd78f21b493e42db15e7525583c82b3f03c8bd9f76e70d1417",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 106200,
+   "speech_s": 3.67,
+   "measures": {
+    "f0_offset_hz": 1.7695225327732658,
+    "f0_dev_scale": 0.9798864058554415,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.659,
+   "rtf": 0.375,
+   "audio_sha256": "4af5d7401fe44a4153206001c00914eb58594cf229f9a462ecd96ca7c4bdd2f3",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 106200,
+   "speech_s": 3.67,
+   "measures": {
+    "f0_offset_hz": 1.0000086518355715,
+    "f0_dev_scale": 1.0373140360459272,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.654,
+   "rtf": 0.374,
+   "audio_sha256": "8ac80a42f5b6a00b88a121e85b1e4e5cf374f3af02a99f9d227aee116d3689ec",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 106200,
+   "speech_s": 3.67,
+   "measures": {
+    "f0_offset_hz": -0.14203182529979586,
+    "f0_dev_scale": 0.9808822453215149,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d2",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.497,
+   "rtf": 0.324,
+   "audio_sha256": "0a5bd1de2463b8da999cc5fb1827400e4fb4b994fd959299147b10f663e7775f",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 111000,
+   "speech_s": 3.88,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "My sister called yesterday, we talked for a while, and then I made dinner. //",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d2",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.533,
+   "rtf": 0.331,
+   "audio_sha256": "2914099daba921963eb98b4fe9d3afb241a2ec35c1b24846ea78c231934fabbd",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 111000,
+   "speech_s": 3.88,
+   "measures": {
+    "f0_offset_hz": -0.06616504119585898,
+    "f0_dev_scale": 1.0200512504560537,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "My sister called yesterday, we talked for a while and then I made dinner.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d2",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 6.097,
+   "rtf": 1.311,
+   "audio_sha256": "2deb9319d355f2e3e39b403474e0d91fc8d581de1b6d92f4277612610d4eb574",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 111600,
+   "speech_s": 3.9,
+   "measures": {
+    "f0_offset_hz": -1.6903123162100542,
+    "f0_dev_scale": 0.9249148775245493,
+    "rate": 0.9942528735632183,
+    "pause_scale": 1.0
+   },
+   "heard": "My sister called yesterday, we talked for a while, and then I made dinner.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.16,
+   "rtf": 0.467,
+   "audio_sha256": "39ef4d17bef5a35c4722e6a4da114189b4a4bbcaa35b14134fd504a804ce1aea",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 111000,
+   "speech_s": 3.86,
+   "measures": {
+    "f0_offset_hz": -0.3669149313334401,
+    "f0_dev_scale": 1.013555228986621,
+    "rate": 1.0,
+    "pause_scale": 0.9523809523809524
+   },
+   "heard": "My sister called yesterday, we talked for a while, and then I made dinner.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.812,
+   "rtf": 0.392,
+   "audio_sha256": "8d9b0c7b78b73ed27126ffdaa756c11a2096d409816de0a16ef56343c859c91c",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 111000,
+   "speech_s": 3.86,
+   "measures": {
+    "f0_offset_hz": -0.48191854590982075,
+    "f0_dev_scale": 1.0169433740804465,
+    "rate": 1.0,
+    "pause_scale": 0.9523809523809524
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.842,
+   "rtf": 0.398,
+   "audio_sha256": "5f7be839d8e9497b61a1013dd5862a1d2ca3b3a19fc87f56485ed43864fc9866",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 111000,
+   "speech_s": 3.86,
+   "measures": {
+    "f0_offset_hz": 0.2074979499727192,
+    "f0_dev_scale": 1.0284676656017082,
+    "rate": 1.0,
+    "pause_scale": 0.9523809523809524
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.765,
+   "rtf": 0.382,
+   "audio_sha256": "4979c39234afac131e886f1c1b2160aa7a1847acc4458d37d94e540d7553bc29",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 111000,
+   "speech_s": 3.86,
+   "measures": {
+    "f0_offset_hz": 0.24051527831912267,
+    "f0_dev_scale": 1.029714916992279,
+    "rate": 1.0,
+    "pause_scale": 0.9523809523809524
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.633,
+   "rtf": 0.353,
+   "audio_sha256": "469b0e47262f001fd23e92281805b7a9d083c31eb3f717eb0d7a0cf7481720c8",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 111000,
+   "speech_s": 3.86,
+   "measures": {
+    "f0_offset_hz": 0.081456304721371,
+    "f0_dev_scale": 1.0393506060315356,
+    "rate": 1.0,
+    "pause_scale": 0.9523809523809524
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d3",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.494,
+   "rtf": 0.311,
+   "audio_sha256": "d00f3b160801a5a5ee946909897791dd556ba194ff5dbaccfd777cd8b3f406c4",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 115200,
+   "speech_s": 4.07,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The bus was late again. I waited by the stop and then it started to rain.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d3",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.536,
+   "rtf": 0.32,
+   "audio_sha256": "3093215246399304475657264084bff6e0620e6c108268d940912615c1da5943",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 115200,
+   "speech_s": 4.07,
+   "measures": {
+    "f0_offset_hz": -1.2982159650638323,
+    "f0_dev_scale": 1.0065101991966523,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The bus was late again. I waited by the stop and then it started to rain. //",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d3",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 6.375,
+   "rtf": 1.321,
+   "audio_sha256": "2f790d3b947a09134a8e9411eec91cb35d783bd036161bed82abda0c91821e42",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 115800,
+   "speech_s": 4.1,
+   "measures": {
+    "f0_offset_hz": -4.048113250197275,
+    "f0_dev_scale": 0.9613547004778131,
+    "rate": 0.9913793103448277,
+    "pause_scale": 1.0
+   },
+   "heard": "The bus was late again. I waited by the stop and then it started to rain.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.759,
+   "rtf": 0.366,
+   "audio_sha256": "b02e64e601d931565b05aaa7108492e6183c7ec6f0374abab07461f759e3053c",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 115200,
+   "speech_s": 4.07,
+   "measures": {
+    "f0_offset_hz": -1.6164492376487658,
+    "f0_dev_scale": 1.0065242272027675,
+    "rate": 1.0207100591715976,
+    "pause_scale": 1.1129032258064515
+   },
+   "heard": "The bus was late again. I waited by the stop and then it started to rain.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.651,
+   "rtf": 0.344,
+   "audio_sha256": "3f82834d6ed28719070dc05614dcad9996d0a5ecf3abd3a7dedc92e161804227",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 115200,
+   "speech_s": 4.07,
+   "measures": {
+    "f0_offset_hz": -1.5767688910766537,
+    "f0_dev_scale": 1.010661901730663,
+    "rate": 1.0207100591715976,
+    "pause_scale": 1.1129032258064515
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.619,
+   "rtf": 0.337,
+   "audio_sha256": "dd71739942de9048f3ccde84dda1cff9c0bcbb0e5c1be6c315f35b1da1152d0a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 115200,
+   "speech_s": 4.07,
+   "measures": {
+    "f0_offset_hz": -1.7763056630393521,
+    "f0_dev_scale": 1.0233267353756719,
+    "rate": 1.0207100591715976,
+    "pause_scale": 1.1129032258064515
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.578,
+   "rtf": 0.329,
+   "audio_sha256": "a19e54d60f017dfebee86e680ac5cc07d62bf45dab10b8dd176ebfffc28e5419",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 115200,
+   "speech_s": 4.07,
+   "measures": {
+    "f0_offset_hz": -1.2493510928156297,
+    "f0_dev_scale": 1.0035302764413239,
+    "rate": 1.0207100591715976,
+    "pause_scale": 1.1129032258064515
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.729,
+   "rtf": 0.36,
+   "audio_sha256": "6d2798d68efed794deab1f2d84f22f1bb9b375e34c173d44687b2f77925a9b03",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 115200,
+   "speech_s": 4.07,
+   "measures": {
+    "f0_offset_hz": -1.954847131010638,
+    "f0_dev_scale": 0.9937759857838431,
+    "rate": 1.0207100591715976,
+    "pause_scale": 1.1129032258064515
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d4",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.603,
+   "rtf": 0.307,
+   "audio_sha256": "2d498cb16b86521ac1b859876c53f469003cf4ab3183b7a237447a4926e0baea",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 125400,
+   "speech_s": 4.5,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "We moved the table into the kitchen. It fits better there and the room looks bigger.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d4",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.759,
+   "rtf": 0.337,
+   "audio_sha256": "3233d8100a8f7e7a05ef0021255f46eebee175c84dcbd4ff814dc04df3b50f92",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 125400,
+   "speech_s": 4.49,
+   "measures": {
+    "f0_offset_hz": 0.3927620511935288,
+    "f0_dev_scale": 1.0234155788962793,
+    "rate": 1.0024937655860349,
+    "pause_scale": 1.0
+   },
+   "heard": "We moved the table into the kitchen. It fits better there and the room looks bigger.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d4",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 6.905,
+   "rtf": 1.309,
+   "audio_sha256": "6c31a237f03ef263b9ee58bcdf3103c6be408837d16b81bc18803375dfa13f4a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 126600,
+   "speech_s": 4.52,
+   "measures": {
+    "f0_offset_hz": -2.359677703384733,
+    "f0_dev_scale": 0.9546003783742243,
+    "rate": 0.9975186104218363,
+    "pause_scale": 1.0208333333333333
+   },
+   "heard": "We moved the table into the kitchen. It fits better there and the room looks bigger.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.122,
+   "rtf": 0.406,
+   "audio_sha256": "c453b4df1050f7f4e9b39c4fdf21c51792024db82acc924fcf37918d78e507a0",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 125400,
+   "speech_s": 4.5,
+   "measures": {
+    "f0_offset_hz": 0.4261297171128433,
+    "f0_dev_scale": 0.9921283200820344,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "We moved the table into the kitchen. It fits better there and the room looks bigger.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 2.07,
+   "rtf": 0.396,
+   "audio_sha256": "ac15c379bfe6e83087a8df81f34dd99ffa6e8be228dd40ec579fea5428baff06",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 125400,
+   "speech_s": 4.5,
+   "measures": {
+    "f0_offset_hz": 0.7128178043530227,
+    "f0_dev_scale": 1.013663246924921,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.995,
+   "rtf": 0.382,
+   "audio_sha256": "253212fbf34af4d5630b8a97e49a0ee8f5c34b3b8ed182e9290d8e3543e5ee93",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 125400,
+   "speech_s": 4.5,
+   "measures": {
+    "f0_offset_hz": 0.06705526804668693,
+    "f0_dev_scale": 1.0180367719083017,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.96,
+   "rtf": 0.375,
+   "audio_sha256": "e131869acbd870d35e63898bd2124427cea308eceb5f82961cfba8d3afd1ae56",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 125400,
+   "speech_s": 4.5,
+   "measures": {
+    "f0_offset_hz": 1.7512044415265393,
+    "f0_dev_scale": 1.004215603962751,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 2.004,
+   "rtf": 0.384,
+   "audio_sha256": "da306386fb46517d17ce88a939793e9baf5623b05576ab8e5bc571018ef0532b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 125400,
+   "speech_s": 4.5,
+   "measures": {
+    "f0_offset_hz": -0.10517771970802414,
+    "f0_dev_scale": 1.0032222457916777,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t1",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.513,
+   "rtf": 0.3,
+   "audio_sha256": "ac977f86e83755d6bdda9d2c32e56ee939ca60c52c1c53f048c086cb56792dfc",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121200,
+   "speech_s": 4.31,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The train leaves at 9. I bought a ticket and then I found a seat by the window.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 18
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 18
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t1",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.606,
+   "rtf": 0.318,
+   "audio_sha256": "e575f8a28f6ce5a2a3dd1e92b7410db3726a67c50b23d2d15a09bf52de0283c2",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121200,
+   "speech_s": 4.31,
+   "measures": {
+    "f0_offset_hz": -0.49095021017464546,
+    "f0_dev_scale": 1.0430003663312417,
+    "rate": 0.997229916897507,
+    "pause_scale": 0.9859154929577465
+   },
+   "heard": "The train leaves at 9. I bought a ticket and then I found a seat by the window.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 18
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 18
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t1",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 6.666,
+   "rtf": 1.313,
+   "audio_sha256": "869271d06f9198dc3413fce6daf6b5c0d416f6a89e7623ebef84dcaafcfea80b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121800,
+   "speech_s": 4.34,
+   "measures": {
+    "f0_offset_hz": -2.787868870024141,
+    "f0_dev_scale": 0.8716448586288525,
+    "rate": 0.9944751381215469,
+    "pause_scale": 1.0140845070422535
+   },
+   "heard": "The train leaves at 9. I bought a ticket and then I found a seat by the window.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 18
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 18
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.984,
+   "rtf": 0.393,
+   "audio_sha256": "65b654f6a30715fd39984a412345f29430626ad6ef76d20a3bc2bccbdec30580",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121200,
+   "speech_s": 4.31,
+   "measures": {
+    "f0_offset_hz": -0.3418275340914647,
+    "f0_dev_scale": 1.0564580474534335,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The train leaves at 9. I bought a ticket and then I found a seat by the window.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 18
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 18
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 2.084,
+   "rtf": 0.413,
+   "audio_sha256": "a6ea57a8a4cb1a643bd581f572aa58064927f8974f6c9cbd5003b921b38f5440",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121200,
+   "speech_s": 4.31,
+   "measures": {
+    "f0_offset_hz": 0.13487858705019562,
+    "f0_dev_scale": 1.0627139370298735,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.935,
+   "rtf": 0.383,
+   "audio_sha256": "9d5a601a39f86d194c5720fbf548268f25774f40d43e1df2d292a220b209f224",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121200,
+   "speech_s": 4.31,
+   "measures": {
+    "f0_offset_hz": 0.3355090945160555,
+    "f0_dev_scale": 1.0436081390171505,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.808,
+   "rtf": 0.358,
+   "audio_sha256": "662dbbb172e05eaf1629870f697c17f564a20476e82378008801c932c921f372",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121200,
+   "speech_s": 4.31,
+   "measures": {
+    "f0_offset_hz": -0.13387447792655394,
+    "f0_dev_scale": 1.0500238513634943,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.965,
+   "rtf": 0.389,
+   "audio_sha256": "4735fa61d19810dd6ea8abc3e54d3a8ef617040f83629a8dc59d8ebda7f58909",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121200,
+   "speech_s": 4.31,
+   "measures": {
+    "f0_offset_hz": 0.28195986079356317,
+    "f0_dev_scale": 1.03435792911555,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t2",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.683,
+   "rtf": 0.313,
+   "audio_sha256": "8985f2cca2402443ff72abc57467581ac4926f4c96ccb82b39c7783ba13a59dc",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129000,
+   "speech_s": 4.65,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I cleaned the windows today. It took most of the morning, but the light is better now.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t2",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.701,
+   "rtf": 0.317,
+   "audio_sha256": "79633d701a3a5ae2f52cdf1929971dafd7aa509351bde35e2b59d414228a2f8a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129000,
+   "speech_s": 4.65,
+   "measures": {
+    "f0_offset_hz": 1.2743930441797033,
+    "f0_dev_scale": 0.9819338320367681,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I cleaned the windows today. It took most of the morning, but the light is better now.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t2",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 7.011,
+   "rtf": 1.311,
+   "audio_sha256": "64c439452a35a490d8329cd97c6d9f0f25b176d8a056602e89e1a164b923aeeb",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 128400,
+   "speech_s": 4.63,
+   "measures": {
+    "f0_offset_hz": -2.238431310639214,
+    "f0_dev_scale": 0.9261353797123165,
+    "rate": 1.0050632911392405,
+    "pause_scale": 1.0
+   },
+   "heard": "I cleaned the windows today. It took most of the morning, but the light is better now.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.132,
+   "rtf": 0.399,
+   "audio_sha256": "2f5ba6d9401a4a3f95f9e104a506b077cccaafac86d317e25492e7650505c5f2",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 128400,
+   "speech_s": 4.63,
+   "measures": {
+    "f0_offset_hz": 0.3737669376911583,
+    "f0_dev_scale": 0.9601566706628125,
+    "rate": 1.0050632911392405,
+    "pause_scale": 1.0
+   },
+   "heard": "I cleaned the windows today. It took most of the morning, but the light is better now.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 2.012,
+   "rtf": 0.376,
+   "audio_sha256": "eba86056249951ef9d7964234e53a0ad89540ede295c9dd1d82c5167174207b9",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 128400,
+   "speech_s": 4.63,
+   "measures": {
+    "f0_offset_hz": 0.2811148786248907,
+    "f0_dev_scale": 0.992941008674296,
+    "rate": 1.0050632911392405,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.962,
+   "rtf": 0.367,
+   "audio_sha256": "4900cc4a04bccb69533cd0e60cfaeec834b360a3e5be26865311e0c65c0bc619",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 128400,
+   "speech_s": 4.63,
+   "measures": {
+    "f0_offset_hz": 0.7880896774452992,
+    "f0_dev_scale": 0.9801503151073503,
+    "rate": 1.0050632911392405,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 2.017,
+   "rtf": 0.377,
+   "audio_sha256": "28ea704006fb9e88fc15cfe76fa5f3d89bcf9fb9605798178f77a47e1c0d3825",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 128400,
+   "speech_s": 4.63,
+   "measures": {
+    "f0_offset_hz": -0.24460726542727684,
+    "f0_dev_scale": 0.9740915954314991,
+    "rate": 1.0050632911392405,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 2.059,
+   "rtf": 0.385,
+   "audio_sha256": "b77507c1d79805d5574444bb004fcce79621bf5148415f45c597fd59236a08f9",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 128400,
+   "speech_s": 4.63,
+   "measures": {
+    "f0_offset_hz": 0.03649304145295673,
+    "f0_dev_scale": 0.9658622237503305,
+    "rate": 1.0050632911392405,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t3",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.534,
+   "rtf": 0.337,
+   "audio_sha256": "f3cfff1e86a77d4c6577328985f7b17a6bfb934c0b0ecac981e949c197c878ea",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 109200,
+   "speech_s": 3.81,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "Our neighbor painted the fence. It is green now and it looks much newer.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t3",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.606,
+   "rtf": 0.353,
+   "audio_sha256": "7ee119fecd9472e333a560e1b94937afd9ce6217e66439c4cf3bc5bb8f63e5a5",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 109200,
+   "speech_s": 3.81,
+   "measures": {
+    "f0_offset_hz": -1.0274785317797068,
+    "f0_dev_scale": 1.0143483449497395,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "Our neighbor painted the fence. It is green now and it looks much newer.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t3",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 6.222,
+   "rtf": 1.353,
+   "audio_sha256": "b343771f438d84585e46db0c8a0f097d2172b5704e5902b3ad361ec0d98950f3",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 110400,
+   "speech_s": 3.86,
+   "measures": {
+    "f0_offset_hz": -3.2445499679024863,
+    "f0_dev_scale": 0.8905728259045811,
+    "rate": 0.985549132947977,
+    "pause_scale": 1.0
+   },
+   "heard": "Our neighbor painted the fence. It is green now and it looks much newer.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.682,
+   "rtf": 0.37,
+   "audio_sha256": "8c4aa33e828d7459746f85235484f88bb87d22966703d356d76e5c03f15bb9ce",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 109200,
+   "speech_s": 3.81,
+   "measures": {
+    "f0_offset_hz": 0.2984697973899699,
+    "f0_dev_scale": 0.9576463575253669,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "Our neighbor painted the fence. It is green now and it looks much newer.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.617,
+   "rtf": 0.355,
+   "audio_sha256": "5e92f7c47c590d380e4381a6df4c62d0acf3e4a515f514c83f6f73924b6ccdfd",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 109200,
+   "speech_s": 3.81,
+   "measures": {
+    "f0_offset_hz": -0.27245107162073623,
+    "f0_dev_scale": 0.9920953490662592,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.58,
+   "rtf": 0.347,
+   "audio_sha256": "86b8e813ff2f1e09ba4835a52ddf5e2d841b531f56ba870c92c0899d7c8ded90",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 109200,
+   "speech_s": 3.81,
+   "measures": {
+    "f0_offset_hz": -0.4615669991888467,
+    "f0_dev_scale": 0.9983031892855198,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.662,
+   "rtf": 0.365,
+   "audio_sha256": "c1ce4277f7f93b1e0a4322ee86606c24e5e4c81653756a3bfe8fd7d846e9213d",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 109200,
+   "speech_s": 3.81,
+   "measures": {
+    "f0_offset_hz": 0.0228350470565033,
+    "f0_dev_scale": 0.9676194848057874,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.581,
+   "rtf": 0.348,
+   "audio_sha256": "e77e381f2edde49f9a9729ee956a4b81662fbb630dc6a18a9be3993a6b0ab976",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 109200,
+   "speech_s": 3.81,
+   "measures": {
+    "f0_offset_hz": 0.194926305214409,
+    "f0_dev_scale": 0.9780351278339912,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t4",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.615,
+   "rtf": 0.317,
+   "audio_sha256": "7f7ed70da269ddb0be70c63c1680cebd8de5297615371e1de0585ea1c06d980b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 122400,
+   "speech_s": 4.39,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I walked to the post office. The line was short, so I was back before lunch.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t4",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.604,
+   "rtf": 0.315,
+   "audio_sha256": "c72d41e46e2a8cbd888b4f0e9abd9428743a9434587b7e488cce7ed856566737",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 122400,
+   "speech_s": 4.39,
+   "measures": {
+    "f0_offset_hz": -0.31425410967008816,
+    "f0_dev_scale": 1.0038138479247867,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I walked to the post office. The line was short, so I was back before lunch.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t4",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 7.31,
+   "rtf": 1.426,
+   "audio_sha256": "0abc0ccee8e4cded2e38c18c49b787466e5b5fe67ca51fe8892dcacb39a63c4a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 123000,
+   "speech_s": 4.39,
+   "measures": {
+    "f0_offset_hz": -3.526615083634397,
+    "f0_dev_scale": 0.9120552229646827,
+    "rate": 0.9946666666666667,
+    "pause_scale": 0.9696969696969697
+   },
+   "heard": "I walked to the post office. The line was short, so I was back before lunch.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.868,
+   "rtf": 0.366,
+   "audio_sha256": "c85547863a3155b16e0865cbcf2cc5c7f7a7ab197fbf3487f3c49c50f587c0bc",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 122400,
+   "speech_s": 4.39,
+   "measures": {
+    "f0_offset_hz": 1.1722316689931347,
+    "f0_dev_scale": 0.9458848907250562,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I walked to the post office. The line was short, so I was back before lunch.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.882,
+   "rtf": 0.369,
+   "audio_sha256": "9b39c9cd7382d73d2282dd26679bd1df3be65aa982dc4e6c5a7e70e27196d005",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 122400,
+   "speech_s": 4.39,
+   "measures": {
+    "f0_offset_hz": 0.46520392132308075,
+    "f0_dev_scale": 0.9581944298809772,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.946,
+   "rtf": 0.382,
+   "audio_sha256": "2706748d8f5cdc58ed0edfbfb08d320ad66cc61e7f32e347726012b0ddc3c3cb",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 122400,
+   "speech_s": 4.39,
+   "measures": {
+    "f0_offset_hz": 0.34476927077923847,
+    "f0_dev_scale": 0.9781853273320618,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.98,
+   "rtf": 0.388,
+   "audio_sha256": "e92e3ed6a087aab55aee15c7df77ac8fa32a29d3b5dc5f24ed29385522bfbe7a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 122400,
+   "speech_s": 4.39,
+   "measures": {
+    "f0_offset_hz": 0.5386794805396278,
+    "f0_dev_scale": 0.9596753494438253,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.726,
+   "rtf": 0.338,
+   "audio_sha256": "fdc9752b6e62185c9484bf76491bbb1a3210812c49589e44351d6bc345478437",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 122400,
+   "speech_s": 4.39,
+   "measures": {
+    "f0_offset_hz": 0.470860760517553,
+    "f0_dev_scale": 0.96557427748794,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t5",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.343,
+   "rtf": 0.276,
+   "audio_sha256": "c7d8baf6189b6fd6754f7e660e1fe248a60f17c65f8ec193a2d8405662fec8bb",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.16,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The library opens at 10. I returned two books and I borrowed a new one. // // // // // // // // // // // // // // // // // // // // // // // // //",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t5",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.304,
+   "rtf": 0.267,
+   "audio_sha256": "f412684078bac495ec3dfc70e204d859a60bb685418abced3b87d815929aecf9",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.16,
+   "measures": {
+    "f0_offset_hz": 0.31086885241336404,
+    "f0_dev_scale": 1.0062462840595519,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The library opens at 10. I returned two books and I borrowed a new one. // // // // // // // // // // // // // // // // // // // // // // // // //",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t5",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 6.349,
+   "rtf": 1.283,
+   "audio_sha256": "193a571a586427e0e1697c365792723823f61dbb3e122cc2379af570923ff491",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 118800,
+   "speech_s": 4.24,
+   "measures": {
+    "f0_offset_hz": -6.693740223998617,
+    "f0_dev_scale": 0.8937215886004595,
+    "rate": 0.9840425531914894,
+    "pause_scale": 1.0434782608695652
+   },
+   "heard": "The library opens at 10. I returned two books and I borrowed a new one.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.661,
+   "rtf": 0.341,
+   "audio_sha256": "dfe8f4b35ea06593c7564691ef05f33e332e01ef72a60ca6b766c2eb373c1b55",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.16,
+   "measures": {
+    "f0_offset_hz": 0.038132673126142436,
+    "f0_dev_scale": 1.0104319527790668,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The library opens at 10. I returned two books and I borrowed a new one.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.642,
+   "rtf": 0.337,
+   "audio_sha256": "1b302bd1557b373ee6a61ec1e0197fb6e4f33a850df7963ae4a7d8b7147b3934",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.16,
+   "measures": {
+    "f0_offset_hz": -0.9997966596264405,
+    "f0_dev_scale": 0.9984513528697994,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.606,
+   "rtf": 0.329,
+   "audio_sha256": "86ae6ffba770dc6f4b2bc2b63d93bc5c86d9f1191572c3cb75745f813ec9d844",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.16,
+   "measures": {
+    "f0_offset_hz": -0.7284244163508617,
+    "f0_dev_scale": 0.9947628813005324,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.692,
+   "rtf": 0.347,
+   "audio_sha256": "00efcefc317927c36f5a425add3f3d12768e5c87a116fdd5c102aa546f63d741",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.16,
+   "measures": {
+    "f0_offset_hz": -0.8494726023095893,
+    "f0_dev_scale": 1.0007090624244313,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.543,
+   "rtf": 0.316,
+   "audio_sha256": "979149d684573ee4d959c372f1e967379b484907acf4755b666ebe1b0973f497",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.16,
+   "measures": {
+    "f0_offset_hz": -1.125057760754828,
+    "f0_dev_scale": 0.9969503771496294,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t6",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.619,
+   "rtf": 0.301,
+   "audio_sha256": "7a65af11134bd524b4be698e266bfe53f33d5754ae992f3179a3a1ff16f9f370",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129000,
+   "speech_s": 4.62,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "We planted tomatoes last spring. They grew well and we had enough for the whole summer.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t6",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.679,
+   "rtf": 0.312,
+   "audio_sha256": "bba7115b3b02b459654e962134603cc7f86da7272ac2b8cbe04850f0933a2986",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129000,
+   "speech_s": 4.62,
+   "measures": {
+    "f0_offset_hz": -0.5688197222894473,
+    "f0_dev_scale": 1.0324781656740938,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "We planted tomatoes last spring. They grew well and we had enough for the whole summer.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t6",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 7.187,
+   "rtf": 1.319,
+   "audio_sha256": "92192738a75c739d0065af2d8e6bb4fc792f09ea1588f78dadf95619ca934fd3",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130800,
+   "speech_s": 4.71,
+   "measures": {
+    "f0_offset_hz": -2.7011645489138516,
+    "f0_dev_scale": 1.0295415167991109,
+    "rate": 0.9949494949494949,
+    "pause_scale": 1.102941176470588
+   },
+   "heard": "We planted tomatoes last spring. They grew well and we had enough for the whole summer.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.917,
+   "rtf": 0.357,
+   "audio_sha256": "5db9218d9777ce565b34962e1397c6e6db70680a972cfc54585c618f1e9ef3be",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129000,
+   "speech_s": 4.62,
+   "measures": {
+    "f0_offset_hz": 1.8687129278924601,
+    "f0_dev_scale": 1.0297062900052865,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "We planted tomatoes last spring. They grew well and we had enough for the whole summer.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 2.112,
+   "rtf": 0.393,
+   "audio_sha256": "c9a91a312356fdd514e6bbbdd54121062aeb292ff1a11a0e14ad24a32d4bf5d3",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129000,
+   "speech_s": 4.62,
+   "measures": {
+    "f0_offset_hz": 0.49084421947608803,
+    "f0_dev_scale": 1.0395326020957516,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 2.338,
+   "rtf": 0.435,
+   "audio_sha256": "5b87e991ae998010f13006593583352b00bc841c51ce4238fa893e48375368cc",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129000,
+   "speech_s": 4.62,
+   "measures": {
+    "f0_offset_hz": 2.1585961446247666,
+    "f0_dev_scale": 1.0067685564366569,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 2.004,
+   "rtf": 0.373,
+   "audio_sha256": "74c470e662cc6e4be62d0b9ac1b2cbd1461cc74e232b165ff6b199c76ab56421",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129000,
+   "speech_s": 4.62,
+   "measures": {
+    "f0_offset_hz": 0.6936394388677627,
+    "f0_dev_scale": 1.0014616315326603,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.885,
+   "rtf": 0.351,
+   "audio_sha256": "0990a6416a427e0e71cce7b75fdea11b4f36efd0c70e3effa62b8f80f1149afe",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129000,
+   "speech_s": 4.62,
+   "measures": {
+    "f0_offset_hz": 1.7477664178095722,
+    "f0_dev_scale": 0.9951423397165937,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t7",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.84,
+   "rtf": 0.333,
+   "audio_sha256": "dc96358d7d444855795aa823f52daa80dedb60bb7e5a9d7646330aa471150a36",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 132600,
+   "speech_s": 4.79,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The meeting moved to Thursday. I changed my calendar, and I sent a note to the team.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t7",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.808,
+   "rtf": 0.327,
+   "audio_sha256": "b53311e242c226c06a358cc237f5149aa37f6e1ecd753c60b9ac9193fc4ec6a8",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 132600,
+   "speech_s": 4.79,
+   "measures": {
+    "f0_offset_hz": -2.2285939245115856,
+    "f0_dev_scale": 0.9990245165649282,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The meeting moved to Thursday. I changed my calendar, and I sent a note to the team.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t7",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 7.226,
+   "rtf": 1.308,
+   "audio_sha256": "fc67840eca5c007b0b94e765842f711a0d2616212aae600f49bb4e4660420967",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 132600,
+   "speech_s": 4.79,
+   "measures": {
+    "f0_offset_hz": -7.945325571086272,
+    "f0_dev_scale": 0.8834705872039069,
+    "rate": 0.9950617283950618,
+    "pause_scale": 0.9736842105263158
+   },
+   "heard": "The meeting moved to Thursday. I changed my calendar and I sent a note to the team.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.087,
+   "rtf": 0.379,
+   "audio_sha256": "8d29a309596eac96480058d728c2a9365ca062ad2d53a4b0a4c8c3e06c622888",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 132000,
+   "speech_s": 4.77,
+   "measures": {
+    "f0_offset_hz": -0.09390545978760656,
+    "f0_dev_scale": 0.997354989450663,
+    "rate": 1.00498753117207,
+    "pause_scale": 1.0
+   },
+   "heard": "The meeting moved to Thursday. I changed my calendar and I sent a note to the team.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.839,
+   "rtf": 0.334,
+   "audio_sha256": "064a4102df23e69079cd3ecb57cebf8d361bc61319d23394ff870a7a9f30c609",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 132000,
+   "speech_s": 4.77,
+   "measures": {
+    "f0_offset_hz": -0.7390620880003382,
+    "f0_dev_scale": 0.9976888072109825,
+    "rate": 1.00498753117207,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.916,
+   "rtf": 0.348,
+   "audio_sha256": "1b3639a65c5bc1ad8c0c80734e81cfcdb1a61c9af1d58e85a94769f7ef8e8ab1",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 132000,
+   "speech_s": 4.77,
+   "measures": {
+    "f0_offset_hz": -0.4430013193353659,
+    "f0_dev_scale": 0.9961335658459912,
+    "rate": 1.00498753117207,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.931,
+   "rtf": 0.351,
+   "audio_sha256": "a1cfe24486561d1f6eb1dc1677c15ddc4468fa858f4e8b5f9b41874dde43caeb",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 132000,
+   "speech_s": 4.77,
+   "measures": {
+    "f0_offset_hz": -0.62573402282095,
+    "f0_dev_scale": 1.0039483949742258,
+    "rate": 1.00498753117207,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.918,
+   "rtf": 0.349,
+   "audio_sha256": "27b3c421d5cf5517ec5dc776efa9c012aaffbd9db313a4f3267f9ceb0bf42f8d",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 132000,
+   "speech_s": 4.77,
+   "measures": {
+    "f0_offset_hz": -0.7378351408276558,
+    "f0_dev_scale": 1.0029489457737,
+    "rate": 1.00498753117207,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t8",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.419,
+   "rtf": 0.29,
+   "audio_sha256": "683faa24b38d7a1a43489b467ff8f361a4e1d47f0729ea5d29a42d14624334ac",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117600,
+   "speech_s": 4.15,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I made soup for dinner. It needed more salt, so I added some at the table.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t8",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.601,
+   "rtf": 0.327,
+   "audio_sha256": "d7269c7016881863da1a1e38eed1f5ba56a7080fef30ece7cd8399da2a82c8f1",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117600,
+   "speech_s": 4.15,
+   "measures": {
+    "f0_offset_hz": -0.954778270181663,
+    "f0_dev_scale": 0.9958431764380948,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I made soup for dinner. It needed more salt, so I added some at the table.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t8",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 6.46,
+   "rtf": 1.312,
+   "audio_sha256": "76dc793593912cc8c1eb2fcc955356b7a67cfb48b198d6ba00533bb67aeb7f69",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 118200,
+   "speech_s": 4.18,
+   "measures": {
+    "f0_offset_hz": -3.854120464967309,
+    "f0_dev_scale": 0.9075113611456381,
+    "rate": 1.0056179775280902,
+    "pause_scale": 1.087719298245614
+   },
+   "heard": "I made soup for dinner. It needed more salt, so I added some at the table.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.739,
+   "rtf": 0.357,
+   "audio_sha256": "cd1fefb4a79c864c39adda8688a78dd5c4f35dc6cd80a91c756747b4af7be538",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.12,
+   "measures": {
+    "f0_offset_hz": -0.7647307309941027,
+    "f0_dev_scale": 0.9805659592653528,
+    "rate": 0.9649595687331538,
+    "pause_scale": 0.7192982456140351
+   },
+   "heard": "I made soup for dinner. It needed more salt, so I added some at the table.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.654,
+   "rtf": 0.339,
+   "audio_sha256": "267875ed0a1dcd9b0822096a40419204b6b6b321a2529eeba2f0a33eff21c3b0",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.12,
+   "measures": {
+    "f0_offset_hz": -1.0031964141489311,
+    "f0_dev_scale": 0.9805264402566689,
+    "rate": 0.9649595687331538,
+    "pause_scale": 0.7192982456140351
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.739,
+   "rtf": 0.357,
+   "audio_sha256": "bf351cf0ab99882b5c4a014f0a7e30a036186b854991d3a7c8283d29e922bf63",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.12,
+   "measures": {
+    "f0_offset_hz": -0.5851382070021032,
+    "f0_dev_scale": 0.9766396646048582,
+    "rate": 0.9649595687331538,
+    "pause_scale": 0.7192982456140351
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.71,
+   "rtf": 0.351,
+   "audio_sha256": "f22d868308632387fa270eb2bc3fa4b0af92a6856c8ba68610b62bd7f84667f3",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.12,
+   "measures": {
+    "f0_offset_hz": -0.46395573672796786,
+    "f0_dev_scale": 0.9809656339198167,
+    "rate": 0.9649595687331538,
+    "pause_scale": 0.7192982456140351
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.693,
+   "rtf": 0.347,
+   "audio_sha256": "a57e52a52c1fa01a06cdc79771f05900da66c397a20c3e8d7e8358e9d3a5a96b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.12,
+   "measures": {
+    "f0_offset_hz": -1.1109501305315064,
+    "f0_dev_scale": 0.9814946270337706,
+    "rate": 0.9649595687331538,
+    "pause_scale": 0.7192982456140351
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d1",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.304,
+   "rtf": 0.258,
+   "audio_sha256": "cdef3bc973ba451bf0f6f49907e59cc474d25795559462dbc8fd5e07d7c98729",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121200,
+   "speech_s": 4.09,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I went to the shop this morning. It was closed so I came back home.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d1",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.451,
+   "rtf": 0.287,
+   "audio_sha256": "7e4dc2d481c7d8cfb1d75c85b2eeac629906365e9bebb710dcd62db0f8f20a1f",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121200,
+   "speech_s": 4.08,
+   "measures": {
+    "f0_offset_hz": 0.47536081027999444,
+    "f0_dev_scale": 1.0032510833312975,
+    "rate": 1.0056179775280898,
+    "pause_scale": 1.0196078431372548
+   },
+   "heard": "I went to the shop this morning. It was closed so I came back home.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d1",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 6.36,
+   "rtf": 1.266,
+   "audio_sha256": "8cb03a41aff01fa0d49127f5825ae0dbfe8f29ef3202a4b757b01a3f2aa2e7a2",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 120600,
+   "speech_s": 4.09,
+   "measures": {
+    "f0_offset_hz": -3.201023457270395,
+    "f0_dev_scale": 0.9201430615493393,
+    "rate": 1.0112994350282487,
+    "pause_scale": 1.0784313725490198
+   },
+   "heard": "I went to the shop this morning. It was closed so I came back home.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.125,
+   "rtf": 0.423,
+   "audio_sha256": "f9026bdac10891dd117a833bd9e7a90afde4784fcf0ab52a1ae4febf8b753b07",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 120600,
+   "speech_s": 4.06,
+   "measures": {
+    "f0_offset_hz": 0.09843813549085212,
+    "f0_dev_scale": 1.0122305368051372,
+    "rate": 1.008450704225352,
+    "pause_scale": 1.0
+   },
+   "heard": "I went to the shop this morning. It was closed so I came back home.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.864,
+   "rtf": 0.371,
+   "audio_sha256": "1a908e6f15a0b575fc2acd91912ebf2151476686d8be7f95b06687f68f62e6f6",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 120600,
+   "speech_s": 4.06,
+   "measures": {
+    "f0_offset_hz": 0.7738179564019276,
+    "f0_dev_scale": 1.0039863924637602,
+    "rate": 1.008450704225352,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.759,
+   "rtf": 0.35,
+   "audio_sha256": "71951ea62e34fec291573bdf20e6b59082d69faa220da14ef6f1031ab26a5424",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 120600,
+   "speech_s": 4.06,
+   "measures": {
+    "f0_offset_hz": 1.013204827360525,
+    "f0_dev_scale": 1.0088716365174228,
+    "rate": 1.008450704225352,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.886,
+   "rtf": 0.375,
+   "audio_sha256": "1afb7df8504addcd0756aeefae4493c931269453c1e48511b9c9f5de57b85974",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 120600,
+   "speech_s": 4.06,
+   "measures": {
+    "f0_offset_hz": 0.7885620747702831,
+    "f0_dev_scale": 1.0142412275023425,
+    "rate": 1.008450704225352,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.647,
+   "rtf": 0.328,
+   "audio_sha256": "6700b881c0c34fa8d357b53783e13ac9b802e58d23af9d6fda6e69a735fff5ce",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 120600,
+   "speech_s": 4.06,
+   "measures": {
+    "f0_offset_hz": 0.4666339381059572,
+    "f0_dev_scale": 0.9987773739233226,
+    "rate": 1.008450704225352,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d2",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.36,
+   "rtf": 0.26,
+   "audio_sha256": "ed0497736339db9b73b5dc48b735f8df258f2570d2e15f79062b0d3b215d809b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 125400,
+   "speech_s": 4.25,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "My sister called yesterday. We talked for a while and then I made dinner.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d2",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.444,
+   "rtf": 0.276,
+   "audio_sha256": "42b73caacdc431efd645383df59c441ea97345c2e93a8b10229b4b05f83b516f",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 125400,
+   "speech_s": 4.25,
+   "measures": {
+    "f0_offset_hz": -0.3028430992221587,
+    "f0_dev_scale": 1.0075792523318785,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "My sister called yesterday. We talked for a while and then I made dinner.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d2",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 6.558,
+   "rtf": 1.261,
+   "audio_sha256": "f79aa63141cbc43b610783aabac54c635a3b85847aedfa3015c872762ce1878b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 124800,
+   "speech_s": 4.25,
+   "measures": {
+    "f0_offset_hz": -3.111219767816195,
+    "f0_dev_scale": 0.9422909243209303,
+    "rate": 1.0027100271002711,
+    "pause_scale": 1.0181818181818183
+   },
+   "heard": "My sister called yesterday. We talked for a while and then I made dinner.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.902,
+   "rtf": 0.368,
+   "audio_sha256": "61ff1e29930a8e348ac3b28b8dd6b8c92c563b1a7970bfe2631f08ee55766fd4",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 124200,
+   "speech_s": 4.2,
+   "measures": {
+    "f0_offset_hz": -0.33178339042578386,
+    "f0_dev_scale": 1.0819926910096662,
+    "rate": 1.010928961748634,
+    "pause_scale": 0.9818181818181818
+   },
+   "heard": "My sister called yesterday. We talked for a while and then I made dinner.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.606,
+   "rtf": 0.31,
+   "audio_sha256": "3439fb2760ebb7815c84d9c4aad1e69bcb8a2feb83e073e4b6af109729a64dd2",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 124200,
+   "speech_s": 4.2,
+   "measures": {
+    "f0_offset_hz": 0.3323749548851822,
+    "f0_dev_scale": 1.0697354671465278,
+    "rate": 1.010928961748634,
+    "pause_scale": 0.9818181818181818
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.78,
+   "rtf": 0.344,
+   "audio_sha256": "f4d16b6b3008877b40188c1439446211b3d15fe69221a2d8cbf43996527dbe84",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 124200,
+   "speech_s": 4.2,
+   "measures": {
+    "f0_offset_hz": -0.5341326254988132,
+    "f0_dev_scale": 1.088975806666856,
+    "rate": 1.010928961748634,
+    "pause_scale": 0.9818181818181818
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 2.226,
+   "rtf": 0.43,
+   "audio_sha256": "a226d00c0a2e93104ff2716498daccb05725a24601506495c696711c33fb8726",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 124200,
+   "speech_s": 4.2,
+   "measures": {
+    "f0_offset_hz": 0.23698430109367052,
+    "f0_dev_scale": 1.0911411503307704,
+    "rate": 1.010928961748634,
+    "pause_scale": 0.9818181818181818
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.605,
+   "rtf": 0.31,
+   "audio_sha256": "cc3742f6bf9675b7e92129e3ee8de6b472eee118830c371208c4d94bc169b7ba",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 124200,
+   "speech_s": 4.2,
+   "measures": {
+    "f0_offset_hz": -0.03981679045416797,
+    "f0_dev_scale": 1.074195199583726,
+    "rate": 1.010928961748634,
+    "pause_scale": 0.9818181818181818
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d3",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.424,
+   "rtf": 0.263,
+   "audio_sha256": "cae467f76a2b213ec909c4347975a4eae88a1bf7e4235842bd9d081a3350b197",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.49,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The bus was late again. I waited by the stop and then it started to rain.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d3",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.624,
+   "rtf": 0.299,
+   "audio_sha256": "67001c23cccbb1e1cd0a3d92d034cae41aa41744fae8ae7ed71a6f5be89c4d31",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.49,
+   "measures": {
+    "f0_offset_hz": -0.12952984776465826,
+    "f0_dev_scale": 0.992472451427302,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The bus was late again. I waited by the stop and then it started to rain.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d3",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 6.967,
+   "rtf": 1.284,
+   "audio_sha256": "6dbf87d6d108c56637c9263e1573f12f6230f73746658757c98b2a830a9f7cd5",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.49,
+   "measures": {
+    "f0_offset_hz": -2.151446242026651,
+    "f0_dev_scale": 0.9305651467580426,
+    "rate": 0.9866666666666667,
+    "pause_scale": 0.9367088607594937
+   },
+   "heard": "The bus was late again. I waited by the stop and then it started to rain.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.893,
+   "rtf": 0.351,
+   "audio_sha256": "5f0aff3e67ac9e7049bf30e8dafbce18c823f171197f495c1cd80b90dbf0db01",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129600,
+   "speech_s": 4.47,
+   "measures": {
+    "f0_offset_hz": 0.13486212492801997,
+    "f0_dev_scale": 0.9469480718539183,
+    "rate": 0.9946236559139786,
+    "pause_scale": 0.9493670886075949
+   },
+   "heard": "The bus was late again. I waited by the stop and then it started to rain.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.916,
+   "rtf": 0.355,
+   "audio_sha256": "1d068e89a7a5138962350d9127ff7e9e8777af85415e9367956f95141217dc66",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129600,
+   "speech_s": 4.47,
+   "measures": {
+    "f0_offset_hz": -0.11196851935829955,
+    "f0_dev_scale": 0.918885554524187,
+    "rate": 1.0000000000000002,
+    "pause_scale": 0.9746835443037974
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.721,
+   "rtf": 0.319,
+   "audio_sha256": "79bf85fa0423f98930d4a3a0012e78611b30aeadbde33e37db8f463ed9107ffb",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129600,
+   "speech_s": 4.47,
+   "measures": {
+    "f0_offset_hz": -0.12591084175736,
+    "f0_dev_scale": 0.9500421304968135,
+    "rate": 1.0000000000000002,
+    "pause_scale": 0.9746835443037974
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.855,
+   "rtf": 0.344,
+   "audio_sha256": "72cc823118314d5d20a93b6990615c33cfc7e69632769d321ecc344610bba1c4",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129600,
+   "speech_s": 4.47,
+   "measures": {
+    "f0_offset_hz": 0.02850855153567977,
+    "f0_dev_scale": 0.9784736720031957,
+    "rate": 0.9973045822102427,
+    "pause_scale": 0.9620253164556962
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.758,
+   "rtf": 0.326,
+   "audio_sha256": "11cde179de61e70c254cd455c7a41143292245c84be43ab404164f968ba2698a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129600,
+   "speech_s": 4.47,
+   "measures": {
+    "f0_offset_hz": -0.016404074240213617,
+    "f0_dev_scale": 0.953752791569309,
+    "rate": 0.9946236559139786,
+    "pause_scale": 0.9493670886075949
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d4",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.55,
+   "rtf": 0.266,
+   "audio_sha256": "1e4384a59e034c0e60fe25aa9351e544ca54fe43fc20a5ca4c7bac89fcd9fb2c",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 139800,
+   "speech_s": 4.86,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "We move the table into the kitchen. It fits better there and the room looks bigger.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d4",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.718,
+   "rtf": 0.295,
+   "audio_sha256": "be0340bb1835e3b2a0942166c3f0082f204cc6c8b6f790ff2bd9af5df1200f48",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 139800,
+   "speech_s": 4.86,
+   "measures": {
+    "f0_offset_hz": 0.28520378949764336,
+    "f0_dev_scale": 1.0686733035164635,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "We move the table into the kitchen. It fits better there and the room looks bigger.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d4",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 7.456,
+   "rtf": 1.264,
+   "audio_sha256": "587525ddfc9b5e2353b80a5675c3eabb88c93e35f35eddb7c95246d7faf7d9cf",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141600,
+   "speech_s": 4.94,
+   "measures": {
+    "f0_offset_hz": 0.3315948082140494,
+    "f0_dev_scale": 0.9089352107405723,
+    "rate": 0.9771167048054921,
+    "pause_scale": 0.9661016949152542
+   },
+   "heard": "We move the table into the kitchen. It fits better there and the room looks bigger.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.62,
+   "rtf": 0.45,
+   "audio_sha256": "1e3dff7ca011ac91038f72c5c7f41671aac71d8bc58c06a574059de2669c292c",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 139800,
+   "speech_s": 4.87,
+   "measures": {
+    "f0_offset_hz": 0.14723267286223063,
+    "f0_dev_scale": 0.9542712477273866,
+    "rate": 0.9976635514018692,
+    "pause_scale": 1.0
+   },
+   "heard": "We move the table into the kitchen. It fits better there and the room looks bigger.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.83,
+   "rtf": 0.314,
+   "audio_sha256": "ead1142335f6a455e4c7c3d5d64fd281c6456c4440f719c0a76c621c94d3875c",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 139800,
+   "speech_s": 4.87,
+   "measures": {
+    "f0_offset_hz": -0.23484504049413601,
+    "f0_dev_scale": 0.9547095722446067,
+    "rate": 0.9976635514018692,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.858,
+   "rtf": 0.319,
+   "audio_sha256": "5c299e585fae6a4fb9b31a2c49c73c01f953ca255372e8673a8cf28ef648f65a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 139800,
+   "speech_s": 4.87,
+   "measures": {
+    "f0_offset_hz": -0.4570577334314976,
+    "f0_dev_scale": 0.9336176618805686,
+    "rate": 0.9976635514018692,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.939,
+   "rtf": 0.333,
+   "audio_sha256": "a7c8fccc24eda652498e034e1497d900c25b94431a569337204f6963609b31a3",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 139800,
+   "speech_s": 4.87,
+   "measures": {
+    "f0_offset_hz": -0.10093254681680719,
+    "f0_dev_scale": 0.9257724472202433,
+    "rate": 0.9976635514018692,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.833,
+   "rtf": 0.315,
+   "audio_sha256": "585cba29cf4acd42bb5b887bc175ddc8a24c9e3cd15f2724bddff0eef4b17010",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 139800,
+   "speech_s": 4.87,
+   "measures": {
+    "f0_offset_hz": 0.2668181191538963,
+    "f0_dev_scale": 0.9815903147041658,
+    "rate": 0.9976635514018692,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t1",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.764,
+   "rtf": 0.299,
+   "audio_sha256": "5aeacab56bd4f1cfafa559da633f670fc1088486491bcc5255d1c041406b2812",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141600,
+   "speech_s": 4.95,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The train leaves at 9. I bought a ticket and then I found a seat by the window.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 18
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 18
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t1",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.664,
+   "rtf": 0.282,
+   "audio_sha256": "c60adf52ad9f4d4da8ea06abfadbedbf655da3d9009e96e1fe11791700e47f54",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141600,
+   "speech_s": 4.95,
+   "measures": {
+    "f0_offset_hz": -0.2893712176139758,
+    "f0_dev_scale": 1.069787055499272,
+    "rate": 1.0024570024570023,
+    "pause_scale": 1.0114942528735633
+   },
+   "heard": "The train leaves at 9. I bought a ticket and then I found a seat by the window.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 18
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 18
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t1",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 7.43,
+   "rtf": 1.254,
+   "audio_sha256": "24ce00b1c77a227f4096831b0089650a4e564f02d2cd0c904fecdb5e3907e0c2",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 142200,
+   "speech_s": 4.98,
+   "measures": {
+    "f0_offset_hz": -3.5115934380444003,
+    "f0_dev_scale": 1.0863486660843897,
+    "rate": 1.0049261083743841,
+    "pause_scale": 1.0574712643678161
+   },
+   "heard": "The train leaves at 9. I bought a ticket and then I found a seat by the window.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 18
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 18
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.378,
+   "rtf": 0.405,
+   "audio_sha256": "ca0a26d177bd8211b3f471a1522fa139c1b317e9e6cd5655bccdb900030b16ff",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.92,
+   "measures": {
+    "f0_offset_hz": 0.2417983877987524,
+    "f0_dev_scale": 1.1247522255609768,
+    "rate": 1.00990099009901,
+    "pause_scale": 1.0114942528735633
+   },
+   "heard": "The train leaves at 9. I bought a ticket and then I found a seat by the window.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 18
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 18
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.822,
+   "rtf": 0.31,
+   "audio_sha256": "096430c397ebe5431f0d19bc269cf7fb8f2a49fcc83426f7a31b0ff66ef7244e",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.92,
+   "measures": {
+    "f0_offset_hz": 0.08126640956125186,
+    "f0_dev_scale": 1.132839734923506,
+    "rate": 1.0124069478908189,
+    "pause_scale": 1.0229885057471264
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 2.276,
+   "rtf": 0.387,
+   "audio_sha256": "840bc02c09d1fe692c739c44357ceec4ff436543824d246c73434d0bc947dd2c",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.92,
+   "measures": {
+    "f0_offset_hz": -0.3882394952626953,
+    "f0_dev_scale": 1.1099285666644991,
+    "rate": 1.00990099009901,
+    "pause_scale": 1.0114942528735633
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 2.024,
+   "rtf": 0.344,
+   "audio_sha256": "20d539dc92c5f632faf1cbf0f4c6e9c8badb133705e0b099854db19e6c0fd695",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.92,
+   "measures": {
+    "f0_offset_hz": 0.7193056842281749,
+    "f0_dev_scale": 1.1447684222048022,
+    "rate": 1.0124069478908189,
+    "pause_scale": 1.0229885057471264
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 2.332,
+   "rtf": 0.397,
+   "audio_sha256": "77796a805cdff6af1abd7661d41f085213c54395edde441632efd7770197021f",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.92,
+   "measures": {
+    "f0_offset_hz": -0.4541063499660396,
+    "f0_dev_scale": 1.1219482871162108,
+    "rate": 1.00990099009901,
+    "pause_scale": 1.0114942528735633
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t2",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.629,
+   "rtf": 0.277,
+   "audio_sha256": "923b7b3005939b6bfad620ee20d8d70aefcda8112888097207d944f9e7253170",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.86,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I cleaned the windows today. It took most of the morning but the light is better now.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t2",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.682,
+   "rtf": 0.286,
+   "audio_sha256": "0fdb7a97363170518dbf504f60d5242a7c90c9d809a2d0385390f3df26107f67",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.86,
+   "measures": {
+    "f0_offset_hz": -0.3764340742488059,
+    "f0_dev_scale": 0.9853312492139206,
+    "rate": 1.0023529411764707,
+    "pause_scale": 1.0166666666666666
+   },
+   "heard": "I cleaned the windows today. It took most of the morning but the light is better now.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t2",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 7.224,
+   "rtf": 1.235,
+   "audio_sha256": "5535b896b3e1523eaf490ce94bb47a0e0e34a7bfb135604923b3dba20f2b2bbf",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 140400,
+   "speech_s": 4.85,
+   "measures": {
+    "f0_offset_hz": -3.2446463145339663,
+    "f0_dev_scale": 0.9533661007755629,
+    "rate": 0.997658079625293,
+    "pause_scale": 0.9666666666666667
+   },
+   "heard": "I cleaned the windows today. It took most of the morning but the light is better now.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.92,
+   "rtf": 0.327,
+   "audio_sha256": "43d4b5518522e4b06478a025bdf165ecca39749f78f77d53c0b4f3f4183e3fdd",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.86,
+   "measures": {
+    "f0_offset_hz": 0.23140575282225484,
+    "f0_dev_scale": 1.0126125405466464,
+    "rate": 0.9976580796252927,
+    "pause_scale": 0.9833333333333333
+   },
+   "heard": "I cleaned the windows today. It took most of the morning but the light is better now.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.808,
+   "rtf": 0.308,
+   "audio_sha256": "3223786881c67764f87fa77b879b4bfbe8178929730375d1a0bbaa4e6517c500",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.86,
+   "measures": {
+    "f0_offset_hz": 1.131521436906695,
+    "f0_dev_scale": 1.00920978011268,
+    "rate": 0.9976580796252927,
+    "pause_scale": 0.9833333333333333
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.999,
+   "rtf": 0.34,
+   "audio_sha256": "0f00eee89720edf039b50094d88506a6b5ed252898565ab7a9871881666ea9f7",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.86,
+   "measures": {
+    "f0_offset_hz": 0.35022197310325964,
+    "f0_dev_scale": 0.9987011790920745,
+    "rate": 0.9976580796252927,
+    "pause_scale": 0.9833333333333333
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.893,
+   "rtf": 0.322,
+   "audio_sha256": "851e6da857c179ef745ee79d9d1de7aa32bf9dac1626254aee0a971203aead5e",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.86,
+   "measures": {
+    "f0_offset_hz": 0.12426784692232218,
+    "f0_dev_scale": 1.0045946558124121,
+    "rate": 0.9953271028037384,
+    "pause_scale": 0.9666666666666667
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 2.011,
+   "rtf": 0.342,
+   "audio_sha256": "cca676d25f995656c894d5e7202db794b3df3fd618e92734c6a6753ba4897843",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.86,
+   "measures": {
+    "f0_offset_hz": 0.21639555886858375,
+    "f0_dev_scale": 1.0036243854765254,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t3",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.19,
+   "rtf": 0.427,
+   "audio_sha256": "f9e6903aeef2e6c245c77be213f95799ce781cdf7d54f8729559412e8ccc0a54",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 123000,
+   "speech_s": 4.18,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "Our neighbor painted the fence. It is green now and it looks much newer.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t3",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.466,
+   "rtf": 0.481,
+   "audio_sha256": "702b87fe78db3a574802bd8dd4328767597d06a71093ad07dc9b0085add36d61",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 123000,
+   "speech_s": 4.18,
+   "measures": {
+    "f0_offset_hz": -0.8312494590817892,
+    "f0_dev_scale": 1.0059470543459434,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "Our neighbor painted the fence. It is green now and it looks much newer.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t3",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 8.205,
+   "rtf": 1.593,
+   "audio_sha256": "3b21ed7f3b61e02566d9dc8b83a8107f67a6a4c459f98e6cfab11090c1def821",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 123600,
+   "speech_s": 4.2,
+   "measures": {
+    "f0_offset_hz": -4.987842825034122,
+    "f0_dev_scale": 0.8637907144084307,
+    "rate": 0.9947089947089945,
+    "pause_scale": 1.0
+   },
+   "heard": "Our neighbor painted the fence. It is green now and it looks much newer.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.912,
+   "rtf": 0.373,
+   "audio_sha256": "98878b9e090f682971444d084d8812872681e920651539ef6385c7d53d52aff0",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 123000,
+   "speech_s": 4.18,
+   "measures": {
+    "f0_offset_hz": 0.3111305629353467,
+    "f0_dev_scale": 0.9674575505770645,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "Our neighbor painted the fence. It is green now and it looks much newer.",
+   "wer": {
+    "raw": {
+     "errors": 1,
+     "words": 14
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 14
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 2.304,
+   "rtf": 0.45,
+   "audio_sha256": "f848e88c05fe1fa529c876711ea80249267028e6bee2d743fd9c54f280f246e2",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 123000,
+   "speech_s": 4.18,
+   "measures": {
+    "f0_offset_hz": -0.21518586005576879,
+    "f0_dev_scale": 0.9921213052758142,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 2.318,
+   "rtf": 0.452,
+   "audio_sha256": "7c90e3467dbd0cd5c6940e7e971cbafeef6db8f156ec149a72be2c1c48850df4",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 123000,
+   "speech_s": 4.18,
+   "measures": {
+    "f0_offset_hz": -0.35135956222147513,
+    "f0_dev_scale": 0.9951199970830229,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.782,
+   "rtf": 0.348,
+   "audio_sha256": "3c7ce0ebf0f060fda989071447817ab35e42d045bd745e6b8fed7363eba3f5f4",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 123000,
+   "speech_s": 4.18,
+   "measures": {
+    "f0_offset_hz": -0.23081522486792494,
+    "f0_dev_scale": 0.9994473158445553,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.785,
+   "rtf": 0.348,
+   "audio_sha256": "e20bb221ce2828ad6bb5ecb10d2030299c83a913d10db34bbf801330d4762447",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 123000,
+   "speech_s": 4.18,
+   "measures": {
+    "f0_offset_hz": -0.7018200282331009,
+    "f0_dev_scale": 0.9536302776967074,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t4",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.484,
+   "rtf": 0.446,
+   "audio_sha256": "e032732e6fdba91f614820267d34cceb6883d7375e0423e3c9e0fbf8ed68b38a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 133800,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I walked to the post office. The line was short, so I was back before lunch.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t4",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.489,
+   "rtf": 0.446,
+   "audio_sha256": "00d293e9e5c08f97cc084f04c13a5113e04f575428bde5bb6fc2ad6af349ebb3",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 133800,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": 0.29838947484600453,
+    "f0_dev_scale": 1.0124992889137556,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I walked to the post office. The line was short, so I was back before lunch.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t4",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 7.755,
+   "rtf": 1.355,
+   "audio_sha256": "e80180f15975b70146f9ede261d9e4a47a40e79f866465848bb6d49b49050683",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 137400,
+   "speech_s": 4.82,
+   "measures": {
+    "f0_offset_hz": -1.6200318485922622,
+    "f0_dev_scale": 0.8920021901183921,
+    "rate": 0.9781553398058253,
+    "pause_scale": 1.09375
+   },
+   "heard": "I walked to the post office. The line was short, so I was back before lunch.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.396,
+   "rtf": 0.43,
+   "audio_sha256": "6b95b412a8c8578830642ad92e422d7c6aea0e4349056bef02342883f3dcdf21",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 133800,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": 0.2950910817714174,
+    "f0_dev_scale": 1.0011861014585015,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I walked to the post office. The line was short so I was back before lunch.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 2.513,
+   "rtf": 0.451,
+   "audio_sha256": "712e483e1dc19b47a028f75710868d7f3ed23d98bc55efde851d649653039a04",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 133800,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": -0.3287045766695087,
+    "f0_dev_scale": 0.977766447554656,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 2.959,
+   "rtf": 0.531,
+   "audio_sha256": "4c0b652a949bc2c1a3d560a91ca1e7dc73ea611877701ffcaceafea904428537",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 133800,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": 0.2904644401713625,
+    "f0_dev_scale": 0.9888339325536233,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 2.874,
+   "rtf": 0.515,
+   "audio_sha256": "8096f9fa83278fd1be7447161e9aec76af22c740a6f0b1a0beb387cba3a1bb03",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 133800,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": -0.011752308106110831,
+    "f0_dev_scale": 0.989097862967701,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 2.47,
+   "rtf": 0.443,
+   "audio_sha256": "2ad5aeb931b55f064f9feeb5c11524a519c9f1897269d6658d74ef81bcd78d44",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 133800,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": 0.1511714878296715,
+    "f0_dev_scale": 0.9540572575805791,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t5",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.729,
+   "rtf": 0.307,
+   "audio_sha256": "080e135bde00a3cd2235144cfa7c7eb7847166386cad967bfe2ad4242023c46f",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 135000,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The library opens at 10. I return two books and I borrowed a new one.",
+   "wer": {
+    "raw": {
+     "errors": 2,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t5",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.732,
+   "rtf": 0.308,
+   "audio_sha256": "0ac4a76c90ac7995c47075a1567e46765097c3a00ee5f20ff0fce04a24e99a2b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 135000,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": 0.040447174633641225,
+    "f0_dev_scale": 1.0045726581763437,
+    "rate": 1.002469135802469,
+    "pause_scale": 1.0163934426229508
+   },
+   "heard": "The library opens at 10. I return two books and I borrowed a new one.",
+   "wer": {
+    "raw": {
+     "errors": 2,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t5",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 7.357,
+   "rtf": 1.308,
+   "audio_sha256": "c05bdc6210bd758de38647de86e248a8bef3c0034196f13c83a67b2603563530",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 135000,
+   "speech_s": 4.7,
+   "measures": {
+    "f0_offset_hz": -4.089461983642025,
+    "f0_dev_scale": 0.8846242516415681,
+    "rate": 0.9950980392156862,
+    "pause_scale": 1.0163934426229508
+   },
+   "heard": "The library opens at 10. I return two books and I borrow the new one.",
+   "wer": {
+    "raw": {
+     "errors": 4,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 3,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.982,
+   "rtf": 0.352,
+   "audio_sha256": "e0b4b601ac56a721f651afd4fd49135ef82cc23bebf5a75c1474a17bd48ab884",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 135000,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": 0.4947789199209467,
+    "f0_dev_scale": 0.9538262163179293,
+    "rate": 0.9975429975429974,
+    "pause_scale": 0.9836065573770492
+   },
+   "heard": "The library opens at 10. I return two books and I borrowed a new one.",
+   "wer": {
+    "raw": {
+     "errors": 2,
+     "words": 15
+    },
+    "normalized": {
+     "errors": 1,
+     "words": 15
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.931,
+   "rtf": 0.343,
+   "audio_sha256": "59dbd3bcc5a9a16d974210280558724019ec5ba4262b8333e5c2c4da27e2f3a3",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 135000,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": -0.33656378663572184,
+    "f0_dev_scale": 0.9511460000939115,
+    "rate": 0.9975429975429974,
+    "pause_scale": 0.9836065573770492
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 2.098,
+   "rtf": 0.373,
+   "audio_sha256": "48af6249ff037518873f9e0b0f266b568dd23f1f20aa629f1c437467be19596b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 135000,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": 0.37742440218389106,
+    "f0_dev_scale": 0.9709635803759553,
+    "rate": 0.9975429975429974,
+    "pause_scale": 0.9836065573770492
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.996,
+   "rtf": 0.355,
+   "audio_sha256": "add469bc47962acd785bdd1c5974b74f4de2ee9dc910b64c4ce0d78c3d56d07a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 135000,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": 0.20483375637215318,
+    "f0_dev_scale": 0.9591657483594868,
+    "rate": 1.002469135802469,
+    "pause_scale": 1.0163934426229508
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.94,
+   "rtf": 0.345,
+   "audio_sha256": "7fb9c73adad50734e6fd0dee1f2f16adb44748864178f71e52e6d497f7ce3271",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 135000,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": 0.9957425619536053,
+    "f0_dev_scale": 0.9630029223713544,
+    "rate": 0.9975429975429974,
+    "pause_scale": 0.9836065573770492
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t6",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.713,
+   "rtf": 0.285,
+   "audio_sha256": "edd33f632947148770e1f5e9164dc02281adf7c0e709d392290f72554001f8bf",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 144000,
+   "speech_s": 5.04,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "We planted tomatoes last spring. They grew well and we had enough for the whole summer.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t6",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.65,
+   "rtf": 0.275,
+   "audio_sha256": "40330ab07e3525d5aebd05b2ca34c84891fe3eb259cb0f0177b3c1bc9250d92b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 144000,
+   "speech_s": 5.06,
+   "measures": {
+    "f0_offset_hz": -0.01904126772778625,
+    "f0_dev_scale": 0.9936775281939197,
+    "rate": 0.9953271028037384,
+    "pause_scale": 1.0
+   },
+   "heard": "We planted tomatoes last spring. They grew well and we had enough for the whole summer.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t6",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 7.642,
+   "rtf": 1.268,
+   "audio_sha256": "d5a3049855f81954ef42c8ec0767b1e585da21f112b93d97d857def907ee0aa8",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 144600,
+   "speech_s": 5.06,
+   "measures": {
+    "f0_offset_hz": -3.3430883003204315,
+    "f0_dev_scale": 0.9370065000503861,
+    "rate": 0.9976580796252927,
+    "pause_scale": 1.0128205128205128
+   },
+   "heard": "We planted tomatoes last spring. They grew well and we had enough for the whole summer.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.283,
+   "rtf": 0.381,
+   "audio_sha256": "cc7322cfd050d7d0397d0baff77ec0ad09adaef1ae3089912b3b13a0e8110aa0",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 144000,
+   "speech_s": 5.04,
+   "measures": {
+    "f0_offset_hz": -0.05965591145486826,
+    "f0_dev_scale": 1.0035233068928973,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "We planted tomatoes last spring. They grew well and we had enough for the whole summer.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.901,
+   "rtf": 0.317,
+   "audio_sha256": "81510161bcd62c8f04d99d734a3298a0521f610e3c07b5f639cecaf2766b283c",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 144000,
+   "speech_s": 5.06,
+   "measures": {
+    "f0_offset_hz": 0.06693893747637958,
+    "f0_dev_scale": 1.0108743923895571,
+    "rate": 0.9930069930069931,
+    "pause_scale": 0.9871794871794871
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.92,
+   "rtf": 0.32,
+   "audio_sha256": "3cde2483b03105f47ef946a578a9ceadd8d4116c0aaa074fdd1a2627a7b133b1",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 144000,
+   "speech_s": 5.04,
+   "measures": {
+    "f0_offset_hz": -0.6099903018176462,
+    "f0_dev_scale": 1.020806142360529,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.822,
+   "rtf": 0.304,
+   "audio_sha256": "64c00e876c8869b973463cc42e932b2e5bc37eb161cc729256516e4237aa1e0e",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 144000,
+   "speech_s": 5.06,
+   "measures": {
+    "f0_offset_hz": -0.5876611946807344,
+    "f0_dev_scale": 0.9752206695554133,
+    "rate": 0.9930069930069931,
+    "pause_scale": 0.9871794871794871
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.986,
+   "rtf": 0.331,
+   "audio_sha256": "7af7ef2c1be95cf8fddb21a092c155c2608858edb7cefa0563b8e237f418d20b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 144000,
+   "speech_s": 5.06,
+   "measures": {
+    "f0_offset_hz": -0.32403495242242286,
+    "f0_dev_scale": 1.0151236735543763,
+    "rate": 0.9930069930069931,
+    "pause_scale": 0.9871794871794871
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t7",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.834,
+   "rtf": 0.292,
+   "audio_sha256": "e5d765c6c5848c1b9cbe17381794fc35281d39642949d2d17dcb1fc5caa53823",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 150600,
+   "speech_s": 5.33,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The meeting moved to Thursday. I changed my calendar and I sent a note to the team.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t7",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.783,
+   "rtf": 0.284,
+   "audio_sha256": "0173f6076bbc5e99bb1907bcdbfe31943f78f5eabba9c1961fc0d4db316b1f9f",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 150600,
+   "speech_s": 5.33,
+   "measures": {
+    "f0_offset_hz": -1.036860023628762,
+    "f0_dev_scale": 0.9766185267785503,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "The meeting moved to Thursday. I changed my calendar and I sent a note to the team.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t7",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 7.667,
+   "rtf": 1.237,
+   "audio_sha256": "4c1911704c8f7d730d421499684749cf51e8644b055fb9d0d267a7166014c486",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 148800,
+   "speech_s": 5.28,
+   "measures": {
+    "f0_offset_hz": -1.4995598542182478,
+    "f0_dev_scale": 0.9516177048339719,
+    "rate": 1.013452914798206,
+    "pause_scale": 1.0123456790123455
+   },
+   "heard": "The meeting moved to Thursday. I changed my calendar and I sent a note to the team.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.297,
+   "rtf": 0.366,
+   "audio_sha256": "385329741f6008896085504243906334ef90131203183bd0e273bd417880eb7e",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 150600,
+   "speech_s": 5.33,
+   "measures": {
+    "f0_offset_hz": -0.45834256389973405,
+    "f0_dev_scale": 1.0210422470002476,
+    "rate": 0.9977924944812361,
+    "pause_scale": 0.9876543209876543
+   },
+   "heard": "The meeting moved to Thursday. I changed my calendar and I sent a note to the team.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 17
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 17
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 2.058,
+   "rtf": 0.328,
+   "audio_sha256": "515c6dcf61479c31cf897125832290e321fb36a02a51b5d2140d438dd58b0d4a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 150600,
+   "speech_s": 5.33,
+   "measures": {
+    "f0_offset_hz": -0.11472056219314197,
+    "f0_dev_scale": 1.0365162053101564,
+    "rate": 0.9977924944812361,
+    "pause_scale": 0.9876543209876543
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.928,
+   "rtf": 0.307,
+   "audio_sha256": "addf70d456027ecc484245711853d3d4a4523df9b7f2d2b9d355e3a9a43ac287",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 150600,
+   "speech_s": 5.33,
+   "measures": {
+    "f0_offset_hz": -0.33301602502147887,
+    "f0_dev_scale": 1.0444953131852217,
+    "rate": 0.9977924944812361,
+    "pause_scale": 0.9876543209876543
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 2.018,
+   "rtf": 0.322,
+   "audio_sha256": "4a1f5c87e87ea42e553c5f44511dfab8de0e3c46e856e6f47794bcb305de73ad",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 150600,
+   "speech_s": 5.33,
+   "measures": {
+    "f0_offset_hz": -0.37371404437266165,
+    "f0_dev_scale": 1.0148291805039138,
+    "rate": 0.9977924944812361,
+    "pause_scale": 0.9876543209876543
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 2.075,
+   "rtf": 0.331,
+   "audio_sha256": "e628cba871d5a67846280f95da0fe1fd16fb72e1218978f5b8982d4ff3d836ed",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 150600,
+   "speech_s": 5.33,
+   "measures": {
+    "f0_offset_hz": -0.4373898378489969,
+    "f0_dev_scale": 1.0415911232747508,
+    "rate": 0.9977924944812361,
+    "pause_scale": 0.9876543209876543
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t8",
+   "rung": "onnx-fp32",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 1.836,
+   "rtf": 0.338,
+   "audio_sha256": "161b521480525503a12f4b1786fb2b5bebf9d1dc76357be5a7ebf76af8890f3f",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.48,
+   "measures": {
+    "f0_offset_hz": 0.0,
+    "f0_dev_scale": 1.0,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "heard": "I made soup for dinner. It needed more salt so I added some at the table.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t8",
+   "rung": "onnx-fp16",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.005,
+   "rtf": 0.37,
+   "audio_sha256": "32fdd0816428874f6fc506bfb1e530c2c2cc9eeccb71138d5aea23a4fce267a6",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.48,
+   "measures": {
+    "f0_offset_hz": -0.5931540168046467,
+    "f0_dev_scale": 0.9861571997337841,
+    "rate": 1.002659574468085,
+    "pause_scale": 1.0140845070422535
+   },
+   "heard": "I made soup for dinner. It needed more salt so I added some at the table.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t8",
+   "rung": "onnx-q8",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 6.82,
+   "rtf": 1.263,
+   "audio_sha256": "a81a021c8f28e016593e06d0e9415dbbfd31666ee92da3b91219311bc209f844",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129600,
+   "speech_s": 4.45,
+   "measures": {
+    "f0_offset_hz": -4.110287302807691,
+    "f0_dev_scale": 0.9443324127834478,
+    "rate": 1.0080213903743316,
+    "pause_scale": 1.0
+   },
+   "heard": "I made soup for dinner. It needed more salt so I added some at the table.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 0,
+   "against": "onnx-fp32",
+   "seconds": 2.026,
+   "rtf": 0.373,
+   "audio_sha256": "ca065b17a4d373a7d901a8b2880b4fa2567af6b16097e1e5e514d6ba6c56e821",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.48,
+   "measures": {
+    "f0_offset_hz": -0.060169846325052845,
+    "f0_dev_scale": 0.9632569941735193,
+    "rate": 1.002659574468085,
+    "pause_scale": 1.0140845070422535
+   },
+   "heard": "I made soup for dinner. It needed more salt so I added some at the table.",
+   "wer": {
+    "raw": {
+     "errors": 0,
+     "words": 16
+    },
+    "normalized": {
+     "errors": 0,
+     "words": 16
+    }
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "onnx-fp32",
+   "seconds": 1.795,
+   "rtf": 0.331,
+   "audio_sha256": "ab4e40f9204097a58e0029b6053a06d083458bfb41ecfe32d31bdc3af291882d",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.47,
+   "measures": {
+    "f0_offset_hz": -0.42389624612327736,
+    "f0_dev_scale": 0.9853651228684914,
+    "rate": 1.0053333333333334,
+    "pause_scale": 1.0140845070422535
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "onnx-fp32",
+   "seconds": 1.693,
+   "rtf": 0.312,
+   "audio_sha256": "b36e6fae989e2cf5126ab921ef16db75e9953adcc4f46b4f4ad12af64a21fc6f",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.48,
+   "measures": {
+    "f0_offset_hz": -0.3972522693733822,
+    "f0_dev_scale": 1.0065659642989988,
+    "rate": 1.002659574468085,
+    "pause_scale": 1.0140845070422535
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "onnx-fp32",
+   "seconds": 1.678,
+   "rtf": 0.309,
+   "audio_sha256": "706db1bc1f74a3c51ab0af7bdddc5233c552be1c3c8e424f74a4b14acb41e8c1",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.48,
+   "measures": {
+    "f0_offset_hz": -0.4828959070886327,
+    "f0_dev_scale": 0.9870911635945431,
+    "rate": 1.002659574468085,
+    "pause_scale": 1.0140845070422535
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "onnx-fp32",
+   "seconds": 1.732,
+   "rtf": 0.319,
+   "audio_sha256": "f63f7d0bb5e82e106485495be567ae60966cdf70ec4933964018387eda8c3c4c",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.48,
+   "measures": {
+    "f0_offset_hz": -0.6200763826717974,
+    "f0_dev_scale": 1.0018720745709604,
+    "rate": 1.002659574468085,
+    "pause_scale": 1.0140845070422535
+   }
+  }
+ ],
+ "floor_rows": [
+  {
+   "voice": "af_heart",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.68,
+   "rtf": 0.38,
+   "audio_sha256": "608676dede207422d85c25accf06377aed6dc4b9489ba34854bc3c90969d986d",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 106200,
+   "speech_s": 3.67,
+   "measures": {
+    "f0_offset_hz": -0.625060368076845,
+    "f0_dev_scale": 1.0372915299133094,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.547,
+   "rtf": 0.35,
+   "audio_sha256": "a0d1dcfa712a53cd78f21b493e42db15e7525583c82b3f03c8bd9f76e70d1417",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 106200,
+   "speech_s": 3.67,
+   "measures": {
+    "f0_offset_hz": 0.46413742554929627,
+    "f0_dev_scale": 1.0115773141870508,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.659,
+   "rtf": 0.375,
+   "audio_sha256": "4af5d7401fe44a4153206001c00914eb58594cf229f9a462ecd96ca7c4bdd2f3",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 106200,
+   "speech_s": 3.67,
+   "measures": {
+    "f0_offset_hz": -0.30537645538839797,
+    "f0_dev_scale": 1.0708622349299852,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.654,
+   "rtf": 0.374,
+   "audio_sha256": "8ac80a42f5b6a00b88a121e85b1e4e5cf374f3af02a99f9d227aee116d3689ec",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 106200,
+   "speech_s": 3.67,
+   "measures": {
+    "f0_offset_hz": -1.4474169325237654,
+    "f0_dev_scale": 1.0126053605059224,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.812,
+   "rtf": 0.392,
+   "audio_sha256": "8d9b0c7b78b73ed27126ffdaa756c11a2096d409816de0a16ef56343c859c91c",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 111000,
+   "speech_s": 3.86,
+   "measures": {
+    "f0_offset_hz": -0.11500361457638064,
+    "f0_dev_scale": 1.0033428322373839,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.842,
+   "rtf": 0.398,
+   "audio_sha256": "5f7be839d8e9497b61a1013dd5862a1d2ca3b3a19fc87f56485ed43864fc9866",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 111000,
+   "speech_s": 3.86,
+   "measures": {
+    "f0_offset_hz": 0.5744128813061593,
+    "f0_dev_scale": 1.0147129985506533,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.765,
+   "rtf": 0.382,
+   "audio_sha256": "4979c39234afac131e886f1c1b2160aa7a1847acc4458d37d94e540d7553bc29",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 111000,
+   "speech_s": 3.86,
+   "measures": {
+    "f0_offset_hz": 0.6074302096525628,
+    "f0_dev_scale": 1.0159435692732943,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.633,
+   "rtf": 0.353,
+   "audio_sha256": "469b0e47262f001fd23e92281805b7a9d083c31eb3f717eb0d7a0cf7481720c8",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 111000,
+   "speech_s": 3.86,
+   "measures": {
+    "f0_offset_hz": 0.4483712360548111,
+    "f0_dev_scale": 1.0254503911648756,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.651,
+   "rtf": 0.344,
+   "audio_sha256": "3f82834d6ed28719070dc05614dcad9996d0a5ecf3abd3a7dedc92e161804227",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 115200,
+   "speech_s": 4.07,
+   "measures": {
+    "f0_offset_hz": 0.03968034657211206,
+    "f0_dev_scale": 1.0041108543799235,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.619,
+   "rtf": 0.337,
+   "audio_sha256": "dd71739942de9048f3ccde84dda1cff9c0bcbb0e5c1be6c315f35b1da1152d0a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 115200,
+   "speech_s": 4.07,
+   "measures": {
+    "f0_offset_hz": -0.1598564253905863,
+    "f0_dev_scale": 1.0166935953639191,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.578,
+   "rtf": 0.329,
+   "audio_sha256": "a19e54d60f017dfebee86e680ac5cc07d62bf45dab10b8dd176ebfffc28e5419",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 115200,
+   "speech_s": 4.07,
+   "measures": {
+    "f0_offset_hz": 0.3670981448331361,
+    "f0_dev_scale": 0.9970254558404777,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.729,
+   "rtf": 0.36,
+   "audio_sha256": "6d2798d68efed794deab1f2d84f22f1bb9b375e34c173d44687b2f77925a9b03",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 115200,
+   "speech_s": 4.07,
+   "measures": {
+    "f0_offset_hz": -0.3383978933618721,
+    "f0_dev_scale": 0.987334391886072,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 2.07,
+   "rtf": 0.396,
+   "audio_sha256": "ac15c379bfe6e83087a8df81f34dd99ffa6e8be228dd40ec579fea5428baff06",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 125400,
+   "speech_s": 4.5,
+   "measures": {
+    "f0_offset_hz": 0.28668808724017936,
+    "f0_dev_scale": 1.0217057878572664,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.995,
+   "rtf": 0.382,
+   "audio_sha256": "253212fbf34af4d5630b8a97e49a0ee8f5c34b3b8ed182e9290d8e3543e5ee93",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 125400,
+   "speech_s": 4.5,
+   "measures": {
+    "f0_offset_hz": -0.3590744490661564,
+    "f0_dev_scale": 1.0261140129778021,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.96,
+   "rtf": 0.375,
+   "audio_sha256": "e131869acbd870d35e63898bd2124427cea308eceb5f82961cfba8d3afd1ae56",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 125400,
+   "speech_s": 4.5,
+   "measures": {
+    "f0_offset_hz": 1.325074724413696,
+    "f0_dev_scale": 1.0121831860214585,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 2.004,
+   "rtf": 0.384,
+   "audio_sha256": "da306386fb46517d17ce88a939793e9baf5623b05576ab8e5bc571018ef0532b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 125400,
+   "speech_s": 4.5,
+   "measures": {
+    "f0_offset_hz": -0.5313074368208675,
+    "f0_dev_scale": 1.0111819464126637,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 2.084,
+   "rtf": 0.413,
+   "audio_sha256": "a6ea57a8a4cb1a643bd581f572aa58064927f8974f6c9cbd5003b921b38f5440",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121200,
+   "speech_s": 4.31,
+   "measures": {
+    "f0_offset_hz": 0.47670612114166033,
+    "f0_dev_scale": 1.0059215693339831,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.935,
+   "rtf": 0.383,
+   "audio_sha256": "9d5a601a39f86d194c5720fbf548268f25774f40d43e1df2d292a220b209f224",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121200,
+   "speech_s": 4.31,
+   "measures": {
+    "f0_offset_hz": 0.6773366286075202,
+    "f0_dev_scale": 0.987836801974998,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.808,
+   "rtf": 0.358,
+   "audio_sha256": "662dbbb172e05eaf1629870f697c17f564a20476e82378008801c932c921f372",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121200,
+   "speech_s": 4.31,
+   "measures": {
+    "f0_offset_hz": 0.20795305616491078,
+    "f0_dev_scale": 0.9939096530094605,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.965,
+   "rtf": 0.389,
+   "audio_sha256": "4735fa61d19810dd6ea8abc3e54d3a8ef617040f83629a8dc59d8ebda7f58909",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 121200,
+   "speech_s": 4.31,
+   "measures": {
+    "f0_offset_hz": 0.6237873948850279,
+    "f0_dev_scale": 0.9790809314282235,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 2.012,
+   "rtf": 0.376,
+   "audio_sha256": "eba86056249951ef9d7964234e53a0ad89540ede295c9dd1d82c5167174207b9",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 128400,
+   "speech_s": 4.63,
+   "measures": {
+    "f0_offset_hz": -0.09265205906626761,
+    "f0_dev_scale": 1.0341447797148062,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.962,
+   "rtf": 0.367,
+   "audio_sha256": "4900cc4a04bccb69533cd0e60cfaeec834b360a3e5be26865311e0c65c0bc619",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 128400,
+   "speech_s": 4.63,
+   "measures": {
+    "f0_offset_hz": 0.4143227397541409,
+    "f0_dev_scale": 1.020823314627118,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 2.017,
+   "rtf": 0.377,
+   "audio_sha256": "28ea704006fb9e88fc15cfe76fa5f3d89bcf9fb9605798178f77a47e1c0d3825",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 128400,
+   "speech_s": 4.63,
+   "measures": {
+    "f0_offset_hz": -0.6183742031184352,
+    "f0_dev_scale": 1.0145131781035974,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 2.059,
+   "rtf": 0.385,
+   "audio_sha256": "b77507c1d79805d5574444bb004fcce79621bf5148415f45c597fd59236a08f9",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 128400,
+   "speech_s": 4.63,
+   "measures": {
+    "f0_offset_hz": -0.3372738962382016,
+    "f0_dev_scale": 1.0059423146886846,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.617,
+   "rtf": 0.355,
+   "audio_sha256": "5e92f7c47c590d380e4381a6df4c62d0acf3e4a515f514c83f6f73924b6ccdfd",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 109200,
+   "speech_s": 3.81,
+   "measures": {
+    "f0_offset_hz": -0.5709208690107062,
+    "f0_dev_scale": 1.0359725605075252,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.58,
+   "rtf": 0.347,
+   "audio_sha256": "86b8e813ff2f1e09ba4835a52ddf5e2d841b531f56ba870c92c0899d7c8ded90",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 109200,
+   "speech_s": 3.81,
+   "measures": {
+    "f0_offset_hz": -0.7600367965788166,
+    "f0_dev_scale": 1.042454953690017,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.662,
+   "rtf": 0.365,
+   "audio_sha256": "c1ce4277f7f93b1e0a4322ee86606c24e5e4c81653756a3bfe8fd7d846e9213d",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 109200,
+   "speech_s": 3.81,
+   "measures": {
+    "f0_offset_hz": -0.2756347503334666,
+    "f0_dev_scale": 1.010414206875064,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.581,
+   "rtf": 0.348,
+   "audio_sha256": "e77e381f2edde49f9a9729ee956a4b81662fbb630dc6a18a9be3993a6b0ab976",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 109200,
+   "speech_s": 3.81,
+   "measures": {
+    "f0_offset_hz": -0.10354349217556091,
+    "f0_dev_scale": 1.0212905005573356,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.882,
+   "rtf": 0.369,
+   "audio_sha256": "9b39c9cd7382d73d2282dd26679bd1df3be65aa982dc4e6c5a7e70e27196d005",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 122400,
+   "speech_s": 4.39,
+   "measures": {
+    "f0_offset_hz": -0.7070277476700539,
+    "f0_dev_scale": 1.0130137813560858,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.946,
+   "rtf": 0.382,
+   "audio_sha256": "2706748d8f5cdc58ed0edfbfb08d320ad66cc61e7f32e347726012b0ddc3c3cb",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 122400,
+   "speech_s": 4.39,
+   "measures": {
+    "f0_offset_hz": -0.8274623982138962,
+    "f0_dev_scale": 1.0341483799178208,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.98,
+   "rtf": 0.388,
+   "audio_sha256": "e92e3ed6a087aab55aee15c7df77ac8fa32a29d3b5dc5f24ed29385522bfbe7a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 122400,
+   "speech_s": 4.39,
+   "measures": {
+    "f0_offset_hz": -0.6335521884535069,
+    "f0_dev_scale": 1.0145794259470602,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.726,
+   "rtf": 0.338,
+   "audio_sha256": "fdc9752b6e62185c9484bf76491bbb1a3210812c49589e44351d6bc345478437",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 122400,
+   "speech_s": 4.39,
+   "measures": {
+    "f0_offset_hz": -0.7013709084755817,
+    "f0_dev_scale": 1.0208158381172483,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.642,
+   "rtf": 0.337,
+   "audio_sha256": "1b302bd1557b373ee6a61ec1e0197fb6e4f33a850df7963ae4a7d8b7147b3934",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.16,
+   "measures": {
+    "f0_offset_hz": -1.037929332752583,
+    "f0_dev_scale": 0.988143090807534,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.606,
+   "rtf": 0.329,
+   "audio_sha256": "86ae6ffba770dc6f4b2bc2b63d93bc5c86d9f1191572c3cb75745f813ec9d844",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.16,
+   "measures": {
+    "f0_offset_hz": -0.7665570894770042,
+    "f0_dev_scale": 0.984492699943387,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.692,
+   "rtf": 0.347,
+   "audio_sha256": "00efcefc317927c36f5a425add3f3d12768e5c87a116fdd5c102aa546f63d741",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.16,
+   "measures": {
+    "f0_offset_hz": -0.8876052754357318,
+    "f0_dev_scale": 0.9903774912027534,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.543,
+   "rtf": 0.316,
+   "audio_sha256": "979149d684573ee4d959c372f1e967379b484907acf4755b666ebe1b0973f497",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.16,
+   "measures": {
+    "f0_offset_hz": -1.1631904338809704,
+    "f0_dev_scale": 0.986657611536969,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 2.112,
+   "rtf": 0.393,
+   "audio_sha256": "c9a91a312356fdd514e6bbbdd54121062aeb292ff1a11a0e14ad24a32d4bf5d3",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129000,
+   "speech_s": 4.62,
+   "measures": {
+    "f0_offset_hz": -1.377868708416372,
+    "f0_dev_scale": 1.009542830014581,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 2.338,
+   "rtf": 0.435,
+   "audio_sha256": "5b87e991ae998010f13006593583352b00bc841c51ce4238fa893e48375368cc",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129000,
+   "speech_s": 4.62,
+   "measures": {
+    "f0_offset_hz": 0.28988321673230644,
+    "f0_dev_scale": 0.9777240036394147,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 2.004,
+   "rtf": 0.373,
+   "audio_sha256": "74c470e662cc6e4be62d0b9ac1b2cbd1461cc74e232b165ff6b199c76ab56421",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129000,
+   "speech_s": 4.62,
+   "measures": {
+    "f0_offset_hz": -1.1750734890246974,
+    "f0_dev_scale": 0.9725701797233063,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.885,
+   "rtf": 0.351,
+   "audio_sha256": "0990a6416a427e0e71cce7b75fdea11b4f36efd0c70e3effa62b8f80f1149afe",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129000,
+   "speech_s": 4.62,
+   "measures": {
+    "f0_offset_hz": -0.12094651008288793,
+    "f0_dev_scale": 0.9664331949564811,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.839,
+   "rtf": 0.334,
+   "audio_sha256": "064a4102df23e69079cd3ecb57cebf8d361bc61319d23394ff870a7a9f30c609",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 132000,
+   "speech_s": 4.77,
+   "measures": {
+    "f0_offset_hz": -0.6451566282127317,
+    "f0_dev_scale": 1.0003347030534266,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.916,
+   "rtf": 0.348,
+   "audio_sha256": "1b3639a65c5bc1ad8c0c80734e81cfcdb1a61c9af1d58e85a94769f7ef8e8ab1",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 132000,
+   "speech_s": 4.77,
+   "measures": {
+    "f0_offset_hz": -0.34909585954775935,
+    "f0_dev_scale": 0.9987753371491684,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.931,
+   "rtf": 0.351,
+   "audio_sha256": "a1cfe24486561d1f6eb1dc1677c15ddc4468fa858f4e8b5f9b41874dde43caeb",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 132000,
+   "speech_s": 4.77,
+   "measures": {
+    "f0_offset_hz": -0.5318285630333435,
+    "f0_dev_scale": 1.0066108914010592,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.918,
+   "rtf": 0.349,
+   "audio_sha256": "27b3c421d5cf5517ec5dc776efa9c012aaffbd9db313a4f3267f9ceb0bf42f8d",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 132000,
+   "speech_s": 4.77,
+   "measures": {
+    "f0_offset_hz": -0.6439296810400492,
+    "f0_dev_scale": 1.0056087916360834,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.654,
+   "rtf": 0.339,
+   "audio_sha256": "267875ed0a1dcd9b0822096a40419204b6b6b321a2529eeba2f0a33eff21c3b0",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.12,
+   "measures": {
+    "f0_offset_hz": -0.2384656831548284,
+    "f0_dev_scale": 0.9999596977558618,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.739,
+   "rtf": 0.357,
+   "audio_sha256": "bf351cf0ab99882b5c4a014f0a7e30a036186b854991d3a7c8283d29e922bf63",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.12,
+   "measures": {
+    "f0_offset_hz": 0.17959252399199954,
+    "f0_dev_scale": 0.9959958892888386,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.71,
+   "rtf": 0.351,
+   "audio_sha256": "f22d868308632387fa270eb2bc3fa4b0af92a6856c8ba68610b62bd7f84667f3",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.12,
+   "measures": {
+    "f0_offset_hz": 0.30077499426613485,
+    "f0_dev_scale": 1.0004075958895855,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "af_heart",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.693,
+   "rtf": 0.347,
+   "audio_sha256": "a57e52a52c1fa01a06cdc79771f05900da66c397a20c3e8d7e8358e9d3a5a96b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 117000,
+   "speech_s": 4.12,
+   "measures": {
+    "f0_offset_hz": -0.34621939953740366,
+    "f0_dev_scale": 1.0009470732281116,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.864,
+   "rtf": 0.371,
+   "audio_sha256": "1a908e6f15a0b575fc2acd91912ebf2151476686d8be7f95b06687f68f62e6f6",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 120600,
+   "speech_s": 4.06,
+   "measures": {
+    "f0_offset_hz": 0.6753798209110755,
+    "f0_dev_scale": 0.9918554676611537,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.759,
+   "rtf": 0.35,
+   "audio_sha256": "71951ea62e34fec291573bdf20e6b59082d69faa220da14ef6f1031ab26a5424",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 120600,
+   "speech_s": 4.06,
+   "measures": {
+    "f0_offset_hz": 0.9147666918696729,
+    "f0_dev_scale": 0.9966816844922344,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.886,
+   "rtf": 0.375,
+   "audio_sha256": "1afb7df8504addcd0756aeefae4493c931269453c1e48511b9c9f5de57b85974",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 120600,
+   "speech_s": 4.06,
+   "measures": {
+    "f0_offset_hz": 0.6901239392794309,
+    "f0_dev_scale": 1.001986396007723,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d1",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.647,
+   "rtf": 0.328,
+   "audio_sha256": "6700b881c0c34fa8d357b53783e13ac9b802e58d23af9d6fda6e69a735fff5ce",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 120600,
+   "speech_s": 4.06,
+   "measures": {
+    "f0_offset_hz": 0.3681958026151051,
+    "f0_dev_scale": 0.986709388432129,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.606,
+   "rtf": 0.31,
+   "audio_sha256": "3439fb2760ebb7815c84d9c4aad1e69bcb8a2feb83e073e4b6af109729a64dd2",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 124200,
+   "speech_s": 4.2,
+   "measures": {
+    "f0_offset_hz": 0.6641583453109661,
+    "f0_dev_scale": 0.9886716204601155,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.78,
+   "rtf": 0.344,
+   "audio_sha256": "f4d16b6b3008877b40188c1439446211b3d15fe69221a2d8cbf43996527dbe84",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 124200,
+   "speech_s": 4.2,
+   "measures": {
+    "f0_offset_hz": -0.20234923507302938,
+    "f0_dev_scale": 1.0064539397679975,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 2.226,
+   "rtf": 0.43,
+   "audio_sha256": "a226d00c0a2e93104ff2716498daccb05725a24601506495c696711c33fb8726",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 124200,
+   "speech_s": 4.2,
+   "measures": {
+    "f0_offset_hz": 0.5687676915194544,
+    "f0_dev_scale": 1.0084551951201883,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d2",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.605,
+   "rtf": 0.31,
+   "audio_sha256": "cc3742f6bf9675b7e92129e3ee8de6b472eee118830c371208c4d94bc169b7ba",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 124200,
+   "speech_s": 4.2,
+   "measures": {
+    "f0_offset_hz": 0.2919665999716159,
+    "f0_dev_scale": 0.9927933973207675,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.916,
+   "rtf": 0.355,
+   "audio_sha256": "1d068e89a7a5138962350d9127ff7e9e8777af85415e9367956f95141217dc66",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129600,
+   "speech_s": 4.47,
+   "measures": {
+    "f0_offset_hz": -0.2468306442863195,
+    "f0_dev_scale": 0.9703653049582845,
+    "rate": 1.0054054054054054,
+    "pause_scale": 1.0266666666666666
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.721,
+   "rtf": 0.319,
+   "audio_sha256": "79bf85fa0423f98930d4a3a0012e78611b30aeadbde33e37db8f463ed9107ffb",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129600,
+   "speech_s": 4.47,
+   "measures": {
+    "f0_offset_hz": -0.26077296668537997,
+    "f0_dev_scale": 1.0032674005416555,
+    "rate": 1.0054054054054054,
+    "pause_scale": 1.0266666666666666
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.855,
+   "rtf": 0.344,
+   "audio_sha256": "72cc823118314d5d20a93b6990615c33cfc7e69632769d321ecc344610bba1c4",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129600,
+   "speech_s": 4.47,
+   "measures": {
+    "f0_offset_hz": -0.1063535733923402,
+    "f0_dev_scale": 1.0332917940131154,
+    "rate": 1.0026954177897573,
+    "pause_scale": 1.0133333333333334
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d3",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.758,
+   "rtf": 0.326,
+   "audio_sha256": "11cde179de61e70c254cd455c7a41143292245c84be43ab404164f968ba2698a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 129600,
+   "speech_s": 4.47,
+   "measures": {
+    "f0_offset_hz": -0.15126619916823358,
+    "f0_dev_scale": 1.0071859481186425,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.83,
+   "rtf": 0.314,
+   "audio_sha256": "ead1142335f6a455e4c7c3d5d64fd281c6456c4440f719c0a76c621c94d3875c",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 139800,
+   "speech_s": 4.87,
+   "measures": {
+    "f0_offset_hz": -0.38207771335636664,
+    "f0_dev_scale": 1.000459329062113,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.858,
+   "rtf": 0.319,
+   "audio_sha256": "5c299e585fae6a4fb9b31a2c49c73c01f953ca255372e8673a8cf28ef648f65a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 139800,
+   "speech_s": 4.87,
+   "measures": {
+    "f0_offset_hz": -0.6042904062937282,
+    "f0_dev_scale": 0.9783566927160335,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.939,
+   "rtf": 0.333,
+   "audio_sha256": "a7c8fccc24eda652498e034e1497d900c25b94431a569337204f6963609b31a3",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 139800,
+   "speech_s": 4.87,
+   "measures": {
+    "f0_offset_hz": -0.24816521967903782,
+    "f0_dev_scale": 0.9701355347601496,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "d4",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.833,
+   "rtf": 0.315,
+   "audio_sha256": "585cba29cf4acd42bb5b887bc175ddc8a24c9e3cd15f2724bddff0eef4b17010",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 139800,
+   "speech_s": 4.87,
+   "measures": {
+    "f0_offset_hz": 0.11958544629166568,
+    "f0_dev_scale": 1.0286281987871269,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.822,
+   "rtf": 0.31,
+   "audio_sha256": "096430c397ebe5431f0d19bc269cf7fb8f2a49fcc83426f7a31b0ff66ef7244e",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.92,
+   "measures": {
+    "f0_offset_hz": -0.16053197823750054,
+    "f0_dev_scale": 1.0071904808710164,
+    "rate": 1.0024813895781637,
+    "pause_scale": 1.0113636363636365
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 2.276,
+   "rtf": 0.387,
+   "audio_sha256": "840bc02c09d1fe692c739c44357ceec4ff436543824d246c73434d0bc947dd2c",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.92,
+   "measures": {
+    "f0_offset_hz": -0.6300378830614477,
+    "f0_dev_scale": 0.9868205116117159,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 2.024,
+   "rtf": 0.344,
+   "audio_sha256": "20d539dc92c5f632faf1cbf0f4c6e9c8badb133705e0b099854db19e6c0fd695",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.92,
+   "measures": {
+    "f0_offset_hz": 0.47750729642942247,
+    "f0_dev_scale": 1.017796094276535,
+    "rate": 1.0024813895781637,
+    "pause_scale": 1.0113636363636365
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t1",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 2.332,
+   "rtf": 0.397,
+   "audio_sha256": "77796a805cdff6af1abd7661d41f085213c54395edde441632efd7770197021f",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.92,
+   "measures": {
+    "f0_offset_hz": -0.695904737764792,
+    "f0_dev_scale": 0.9975070612166448,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.808,
+   "rtf": 0.308,
+   "audio_sha256": "3223786881c67764f87fa77b879b4bfbe8178929730375d1a0bbaa4e6517c500",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.86,
+   "measures": {
+    "f0_offset_hz": 0.9001156840844402,
+    "f0_dev_scale": 0.996639622463959,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.999,
+   "rtf": 0.34,
+   "audio_sha256": "0f00eee89720edf039b50094d88506a6b5ed252898565ab7a9871881666ea9f7",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.86,
+   "measures": {
+    "f0_offset_hz": 0.1188162202810048,
+    "f0_dev_scale": 0.9862619107530882,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.893,
+   "rtf": 0.322,
+   "audio_sha256": "851e6da857c179ef745ee79d9d1de7aa32bf9dac1626254aee0a971203aead5e",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.86,
+   "measures": {
+    "f0_offset_hz": -0.10713790589993266,
+    "f0_dev_scale": 0.992081981593961,
+    "rate": 0.9976635514018692,
+    "pause_scale": 0.983050847457627
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t2",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 2.011,
+   "rtf": 0.342,
+   "audio_sha256": "cca676d25f995656c894d5e7202db794b3df3fd618e92734c6a6753ba4897843",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 141000,
+   "speech_s": 4.86,
+   "measures": {
+    "f0_offset_hz": -0.015010193953671092,
+    "f0_dev_scale": 0.9911237964075886,
+    "rate": 1.0023474178403755,
+    "pause_scale": 1.0169491525423728
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 2.304,
+   "rtf": 0.45,
+   "audio_sha256": "f848e88c05fe1fa529c876711ea80249267028e6bee2d743fd9c54f280f246e2",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 123000,
+   "speech_s": 4.18,
+   "measures": {
+    "f0_offset_hz": -0.5263164229911155,
+    "f0_dev_scale": 1.025493371449774,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 2.318,
+   "rtf": 0.452,
+   "audio_sha256": "7c90e3467dbd0cd5c6940e7e971cbafeef6db8f156ec149a72be2c1c48850df4",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 123000,
+   "speech_s": 4.18,
+   "measures": {
+    "f0_offset_hz": -0.6624901251568218,
+    "f0_dev_scale": 1.0285929305006285,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.782,
+   "rtf": 0.348,
+   "audio_sha256": "3c7ce0ebf0f060fda989071447817ab35e42d045bd745e6b8fed7363eba3f5f4",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 123000,
+   "speech_s": 4.18,
+   "measures": {
+    "f0_offset_hz": -0.5419457878032716,
+    "f0_dev_scale": 1.0330658076402521,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t3",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.785,
+   "rtf": 0.348,
+   "audio_sha256": "e20bb221ce2828ad6bb5ecb10d2030299c83a913d10db34bbf801330d4762447",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 123000,
+   "speech_s": 4.18,
+   "measures": {
+    "f0_offset_hz": -1.0129505911684475,
+    "f0_dev_scale": 0.9857076180013173,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 2.513,
+   "rtf": 0.451,
+   "audio_sha256": "712e483e1dc19b47a028f75710868d7f3ed23d98bc55efde851d649653039a04",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 133800,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": -0.6237956584409261,
+    "f0_dev_scale": 0.9766080912732125,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 2.959,
+   "rtf": 0.531,
+   "audio_sha256": "4c0b652a949bc2c1a3d560a91ca1e7dc73ea611877701ffcaceafea904428537",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 133800,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": -0.0046266416000548816,
+    "f0_dev_scale": 0.9876624646637784,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 2.874,
+   "rtf": 0.515,
+   "audio_sha256": "8096f9fa83278fd1be7447161e9aec76af22c740a6f0b1a0beb387cba3a1bb03",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 133800,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": -0.30684338987752824,
+    "f0_dev_scale": 0.9879260824004741,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t4",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 2.47,
+   "rtf": 0.443,
+   "audio_sha256": "2ad5aeb931b55f064f9feeb5c11524a519c9f1897269d6658d74ef81bcd78d44",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 133800,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": -0.14391959394174592,
+    "f0_dev_scale": 0.9529269894885014,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.931,
+   "rtf": 0.343,
+   "audio_sha256": "59dbd3bcc5a9a16d974210280558724019ec5ba4262b8333e5c2c4da27e2f3a3",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 135000,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": -0.8313427065566685,
+    "f0_dev_scale": 0.9971900371596366,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 2.098,
+   "rtf": 0.373,
+   "audio_sha256": "48af6249ff037518873f9e0b0f266b568dd23f1f20aa629f1c437467be19596b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 135000,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": -0.11735451773705563,
+    "f0_dev_scale": 1.0179669669011422,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.996,
+   "rtf": 0.355,
+   "audio_sha256": "add469bc47962acd785bdd1c5974b74f4de2ee9dc910b64c4ce0d78c3d56d07a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 135000,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": -0.2899451635487935,
+    "f0_dev_scale": 1.0055980135062441,
+    "rate": 1.0049382716049384,
+    "pause_scale": 1.0333333333333334
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t5",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.94,
+   "rtf": 0.345,
+   "audio_sha256": "7fb9c73adad50734e6fd0dee1f2f16adb44748864178f71e52e6d497f7ce3271",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 135000,
+   "speech_s": 4.67,
+   "measures": {
+    "f0_offset_hz": 0.5009636420326586,
+    "f0_dev_scale": 1.0096209413165955,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.901,
+   "rtf": 0.317,
+   "audio_sha256": "81510161bcd62c8f04d99d734a3298a0521f610e3c07b5f639cecaf2766b283c",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 144000,
+   "speech_s": 5.06,
+   "measures": {
+    "f0_offset_hz": 0.12659484893124784,
+    "f0_dev_scale": 1.007325276300179,
+    "rate": 0.9930069930069931,
+    "pause_scale": 0.9871794871794871
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.92,
+   "rtf": 0.32,
+   "audio_sha256": "3cde2483b03105f47ef946a578a9ceadd8d4116c0aaa074fdd1a2627a7b133b1",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 144000,
+   "speech_s": 5.04,
+   "measures": {
+    "f0_offset_hz": -0.550334390362778,
+    "f0_dev_scale": 1.0172221565248372,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.822,
+   "rtf": 0.304,
+   "audio_sha256": "64c00e876c8869b973463cc42e932b2e5bc37eb161cc729256516e4237aa1e0e",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 144000,
+   "speech_s": 5.06,
+   "measures": {
+    "f0_offset_hz": -0.5280052832258662,
+    "f0_dev_scale": 0.9717967314330601,
+    "rate": 0.9930069930069931,
+    "pause_scale": 0.9871794871794871
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t6",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.986,
+   "rtf": 0.331,
+   "audio_sha256": "7af7ef2c1be95cf8fddb21a092c155c2608858edb7cefa0563b8e237f418d20b",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 144000,
+   "speech_s": 5.06,
+   "measures": {
+    "f0_offset_hz": -0.2643790409675546,
+    "f0_dev_scale": 1.0115596385074461,
+    "rate": 0.9930069930069931,
+    "pause_scale": 0.9871794871794871
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 2.058,
+   "rtf": 0.328,
+   "audio_sha256": "515c6dcf61479c31cf897125832290e321fb36a02a51b5d2140d438dd58b0d4a",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 150600,
+   "speech_s": 5.33,
+   "measures": {
+    "f0_offset_hz": 0.3436220017065921,
+    "f0_dev_scale": 1.0151550617571117,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.928,
+   "rtf": 0.307,
+   "audio_sha256": "addf70d456027ecc484245711853d3d4a4523df9b7f2d2b9d355e3a9a43ac287",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 150600,
+   "speech_s": 5.33,
+   "measures": {
+    "f0_offset_hz": 0.12532653887825518,
+    "f0_dev_scale": 1.0229697314228452,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 2.018,
+   "rtf": 0.322,
+   "audio_sha256": "4a1f5c87e87ea42e553c5f44511dfab8de0e3c46e856e6f47794bcb305de73ad",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 150600,
+   "speech_s": 5.33,
+   "measures": {
+    "f0_offset_hz": 0.0846285195270724,
+    "f0_dev_scale": 0.9939149760799934,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t7",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 2.075,
+   "rtf": 0.331,
+   "audio_sha256": "e628cba871d5a67846280f95da0fe1fd16fb72e1218978f5b8982d4ff3d836ed",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 150600,
+   "speech_s": 5.33,
+   "measures": {
+    "f0_offset_hz": 0.02095272605073717,
+    "f0_dev_scale": 1.020125392788471,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 1,
+   "against": "torch",
+   "seconds": 1.795,
+   "rtf": 0.331,
+   "audio_sha256": "ab4e40f9204097a58e0029b6053a06d083458bfb41ecfe32d31bdc3af291882d",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.47,
+   "measures": {
+    "f0_offset_hz": -0.3637263997982245,
+    "f0_dev_scale": 1.022951433344059,
+    "rate": 1.0026666666666668,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 2,
+   "against": "torch",
+   "seconds": 1.693,
+   "rtf": 0.312,
+   "audio_sha256": "b36e6fae989e2cf5126ab921ef16db75e9953adcc4f46b4f4ad12af64a21fc6f",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.48,
+   "measures": {
+    "f0_offset_hz": -0.33708242304832936,
+    "f0_dev_scale": 1.0449609713580528,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 3,
+   "against": "torch",
+   "seconds": 1.678,
+   "rtf": 0.309,
+   "audio_sha256": "706db1bc1f74a3c51ab0af7bdddc5233c552be1c3c8e424f74a4b14acb41e8c1",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.48,
+   "measures": {
+    "f0_offset_hz": -0.4227260607635799,
+    "f0_dev_scale": 1.0247433131191264,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  },
+  {
+   "voice": "am_michael",
+   "sentence": "t8",
+   "rung": "torch",
+   "repeat": 4,
+   "against": "torch",
+   "seconds": 1.732,
+   "rtf": 0.319,
+   "audio_sha256": "f63f7d0bb5e82e106485495be567ae60966cdf70ec4933964018387eda8c3c4c",
+   "finite": true,
+   "nonfinite_samples": 0,
+   "n_samples": 130200,
+   "speech_s": 4.48,
+   "measures": {
+    "f0_offset_hz": -0.5599065363467446,
+    "f0_dev_scale": 1.0400880353125006,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   }
+  }
+ ],
+ "seconds": 546,
+ "set": "dev"
+}

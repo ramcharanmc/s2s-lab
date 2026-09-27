@@ -120,6 +120,23 @@ Re-score the criteria without any audio or model:
 
     PYTHONPATH=src python -c "import json; from s2slab import ft2; d = json.load(open('runs/ft2/pr011.json', encoding='utf-8')); h = {m: {i: t['text'] for i, t in d['models'][m]['turns'].items()} for m in d['models']}; d['criteria'] = ft2.pr011(h['small.en'], h['ft2']); print(ft2.format_pr011(d))"
 
+## What PR-013's run holds
+
+`runs/m26/pr013.json`: `registration`, `commit`, `ran`, `voices`, `sentences`, `reference`, the
+ONNX repo's `repo` and `revision`, `rungs` (each copy's file, SHA-256, size and load time), and
+`rows`, one per voice x sentence x copy (the torch package five times, `repeat` 0 to 4): `finite`
+(is it audio), `nonfinite_samples`, `n_samples`, `seconds`, `rtf`, `audio_sha256`, `measures`
+(severity's four, against ONNX fp32's render of the same sentence and voice; none when the render
+is not audio), and `heard` and `wer` (the recognizer's transcript, scored raw and normalized).
+`floor_rows` are the torch package's repeats against its own first render: the noise floor.
+`floor`, `summary` and `criteria` are computed from the rows. `pr013-report.md` is the run's
+standard output, verbatim. `dev/` holds the dev run and the dry run of the registered code on the
+dev set. The audio stays in `results/m26/` (ignored); every file is synthetic speech and says so.
+
+Re-count the criteria without any audio or model:
+
+    PYTHONPATH=src python -c "import json; from s2slab import quantladder as q; print(q.format_criteria(json.load(open('runs/m26/pr013.json', encoding='utf-8'))))"
+
 ## What PR-012's run holds
 
 `runs/ft3/pr012.json` is a severity run (next section) with two voices that are FastPitch

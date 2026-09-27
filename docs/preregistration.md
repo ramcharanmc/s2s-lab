@@ -27,7 +27,7 @@ Rules, from the v1 Research plan (§8):
 | PR-010 | Does a LoRA trained on DailyTalk (kyutai's moshi-finetune, test fold held out) move Moshi's turn gaps closer to DailyTalk's own, on 100 held-out dialogues? | `4df9ef3` | **Reported: not supported, moved away** (distance to the reference 496 ms base, 1,035 ms LoRA; gain −539 ms, 95% interval −685 to −402; overlap 85 → 2 turn changes, but median gap 160 → 1,220 ms against 420) |
 | PR-011 | Does a LoRA trained on verbatim transcripts make `whisper-small.en` write down disfluent speech as spoken -- fillers and all -- on the eval set's disfluent cohort, without hurting the other cohorts? | `65c833c` | **Reported: supported** (S1 raw WER on the disfluent cohort 9.9% → 2.3%, −7.6 points, interval −9.6 to −5.7; S2 29 of 29 fillers kept; S3 the other 150 clips −2.3 points normalized where +1.0 was allowed -- most of it EdAcc's verbatim references, not new accent robustness) |
 | PR-012 | On eight sentences neither voice has spoken, do renders made by giving page 09's severity targets to FastPitch as its own inputs meet PR-009's five criteria, over the base LJSpeech voice and a 5-minute fine-tune together? | `89edd05` | **Reported: not supported** (all five criteria failed, as predicted: S1 92 of 96, S2 14 of 32, S3 357 of 384, S4 109 of 192, 56.8%, S5 115 of 192, 59.9%; rate on target in 192 of 192; the base voice 67 and 78 of 96 on S4 and S5, the 5-minute fine-tune 42 and 37) |
-| PR-013 | On two voices and 24 sentences no copy has spoken: when Kokoro-82M is quantized to 8 bits, has its pitch left PR-009's guardrail by more than the package's own noise while its words have stayed (Claim A), and is the fp16 copy a usable rung on a CPU (Claim B)? | this commit | **Registered, not run** (predicted: Claim A supported, Claim B not) |
+| PR-013 | On two voices and 24 sentences no copy has spoken: when Kokoro-82M is quantized to 8 bits, has its pitch left PR-009's guardrail by more than the package's own noise while its words have stayed (Claim A), and is the fp16 copy a usable rung on a CPU (Claim B)? | `192dd8a` | **Reported: Claim A supported** (the 8-bit copy's pitch is lower than fp32's on 48 of 48 renders, by 3.96 Hz, interval -4.36 to -3.58, the noise floor 1.44; within 3 Hz on 12 of 48; its normalized WER +0.24 points, 10 errors against 8 in 820 words); **Claim B not supported** (fp16 returned no audio for 6 of 48 renders) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -3043,8 +3043,154 @@ and fp32 differ.
 
 ### Deviations
 
-None yet.
+- **2026-09-27, the phoneme counts.** "Reported alongside" promised the renders that are not
+  audio "with their phoneme counts". The run file does not hold them. They were computed after
+  the run from the package's text front end alone (`KPipeline(model=False)`), which renders
+  nothing, and are in the Results.
+- **2026-09-27, the dry run in the evidence.** V5 names "the dry run". The one made before this
+  entry ran in a scratch copy of the tree and stamped no commit. The file committed,
+  `runs/m26/dev/pr013-dry.json`, was made by the author after the registered run, on the registering commit's code (its stamp reads `192dd8a-dirty`: the registered run's file, not yet committed, was in the tree), with the
+  same command; it gives the counts the entry's Development table
+  gives. The dev run's file carries no commit stamp (`dev` does not write one); it was made at
+  `1133033`.
+- **2026-09-27, two spellings.** Sentences v03 and v15 are spelled "harbour" and "neighbour". The
+  project's normalizer has no British-to-American map, so the recognizer's "harbor" and "neighbor"
+  count as an error in every copy, raw and normalized. It was noticed after the entry was
+  written and before the run, and the text was left as registered. A3 is a difference between two
+  copies on the same text, where it cancels; every copy's own WER reads higher by it.
+- **2026-09-27, registry row.** Its "Registered" cell was changed to the registering commit's
+  hash, `192dd8a`, and its status updated, as for the earlier entries. Times here are CDT.
 
 ### Results
 
-Not run yet.
+**Run:** 2026-09-27, finished 17:51 CDT, commit `192dd8a` (the registering commit), clean tree,
+laptop CPU (WSL), ONNX Runtime 1.23.2, kokoro 0.9.4; all 48 renders a copy and torch five times
+each, first and only run; the three ONNX files matched their SHA-256 before anything loaded.
+1,185 s. \$0. Run file `runs/m26/pr013.json`; report `runs/m26/pr013-report.md` (standard output,
+verbatim); the renders in `results/m26/pr013/` (186 files, ignored).
+
+The criteria, verbatim:
+
+```
+PR-013, the registered criteria (docs/preregistration.md):
+  Claim A: at the 8-bit rung the pitch has left its guardrail while the words have not
+  A1  8-bit pitch offset within 3 Hz on fewer than 90% of renders: 12 of 48 (25.0%)   PASS
+  A2  its mean offset's 95% interval excludes zero and lies beyond the noise floor (1.44 Hz): -3.96 Hz, -4.36 to -3.58   PASS
+  A3  normalized WER, 8-bit minus fp32, interval's upper end at most +2.0 points: +0.24 points, +0.00 to +0.61 (10 against 8 errors in 820 words)   PASS
+  Claim B: fp16 on a CPU is a usable rung
+  B1  fp16 returns audio for every render: 42 of 48   FAIL
+  B2  its renders that are audio: pitch offset within 3 Hz on at least 90%, range within 10% on at least 80%: 41 and 42 of 42   PASS
+PR-013, Claim A: SUPPORTED
+PR-013, Claim B: NOT SUPPORTED -- failed B1
+```
+
+**Verdict, Claim A: supported.** The 8-bit copy speaks lower than fp32 on all 48 renders, by
+3.96 Hz on average, more than twice the noise floor; three renders in four are outside PR-009's
+3 Hz. Its words are fp32's but for two: 10 errors in 820 against 8. A check of the words would
+have passed it.
+
+**Verdict, Claim B: not supported.** fp16 returned no audio for 6 of 48 renders. Where it speaks
+it is fp32: mean offset +0.01 Hz.
+
+The ladder, from the report:
+
+| 48 renders a copy | size | audio | pitch offset within 3 Hz | range within 10% | rate | pauses | WER raw / normalized | real-time factor |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| ONNX fp32, the reference | 325.5 MB | 48 | — | — | — | — | 1.8 / 1.0% | 0.33 |
+| ONNX fp16 | 163.2 MB | **42** | 41 of 42 | 42 of 42 | 42 of 42 | 41 of 42 | 2.2 / 1.3% | 0.33 |
+| ONNX 8-bit | 92.4 MB | 48 | **12** | 39 | 48 | 45 | 2.1 / 1.2% | **1.36** |
+| torch package | — | 48 | 45 | 47 | 48 | 46 | 1.8 / 1.1% | 0.38 |
+
+| Noise floor, torch against torch, 192 pairs | median | 95th percentile | max |
+|---|---:|---:|---:|
+| pitch offset, Hz | 0.28 | 1.44 | 3.07 |
+| pitch range | 0.008 | 0.037 | 0.071 |
+| rate | 0.000 | 0.003 | 0.008 |
+| pauses | 0.000 | 0.024 | 0.026 |
+
+**The predictions, scored.**
+
+| Prediction | Outcome |
+|---|---|
+| Claim A supported | **right** |
+| A1: 30 to 55% of the 8-bit renders within 3 Hz | **wrong**: 25.0%; further out than dev's 37.5% |
+| A2: a mean offset between -2.5 and -4.0 Hz | right, at the edge: -3.96 |
+| A3: a WER difference between 0 and +1.0 points, upper end under +2.0 | right: +0.24, upper end +0.61 |
+| A3 is the criterion most likely to fail | **wrong**: it held with the most room of the three |
+| Claim B not supported, on B1 | **right** |
+| fp16 returns no audio for 1 to 4 of 48 renders | **wrong**: 6 |
+| Every fp16 render that is audio is within tolerance on every measure | **wrong**: one pitch offset (3.64 Hz) and one pause (1.25) are outside |
+| The 8-bit copy's range within 10% on 60 to 85% of renders | right: 39 of 48, 81.3% |
+| The 8-bit copy is slower than real time, and the slowest | right: 1.36 against 0.33 to 0.38 |
+| The torch package against fp32: its mean offset's interval includes zero | right: +0.11 Hz, -0.32 to +0.56 |
+
+**What I got wrong.** Three of the four misses are counts predicted from 24 dev renders, and each
+came out further from fp32 than dev had it: the 8-bit copy within 3 Hz on a quarter of renders,
+not a third or more; fp16 silent six times, not one to four. The fourth is a judgement: I named
+A3 as the weak criterion because dev's interval began at zero, and on twice the renders it
+narrowed to +0.61 where +2.0 was allowed. The bar of +1.0 that was set aside as too strict would
+have held as well.
+
+**Reported alongside, descriptively.**
+
+| The 8-bit copy against fp32 | `af_sarah` | `am_adam` | both |
+|---|---:|---:|---:|
+| mean pitch offset, Hz | -4.15 | -3.77 | -3.96 (interval -4.36 to -3.58) |
+| within 3 Hz | 6 of 24 | 6 of 24 | 12 of 48 |
+| lower than fp32 | 24 | 24 | 48 of 48 |
+| range narrower than fp32 | | | 45 of 48; 6.9% narrower on average |
+
+| The other two copies against fp32 | mean pitch offset, Hz | interval | outside 3 Hz |
+|---|---:|---|---|
+| ONNX fp16, its 42 renders that are audio | +0.01 | -0.26 to +0.30 | `af_sarah` v10, +3.64 |
+| torch package | +0.11 | -0.32 to +0.56 | `af_sarah` v07 +4.31, `af_sarah` v10 +5.27, `am_adam` v21 -4.13 |
+
+Where the recognizer's normalized errors differ between the 8-bit copy and fp32, all of them:
+
+| Render | the 8-bit copy was heard as | fp32 was heard as |
+|---|---|---|
+| `af_sarah` v20 | "The house was **worn** by 7" | "The house was warm by 7" |
+| `am_adam` v13 | "We **book** the tickets in March" | "We booked the tickets in March" |
+
+fp32's own 8 normalized errors are in three sentences: v15 (5), v03 (2), v05 (1); v15 and v03 are
+the two spellings of the Deviations.
+
+The renders that are not audio, all fp16's, every sample not a number:
+
+| Voice | Sentence | Phoneme ids | Samples |
+|---|---|---:|---:|
+| `af_sarah` | v02 | 87 | 139,200 |
+| `af_sarah` | v06 | 85 | 131,400 |
+| `af_sarah` | v12 | 80 | 133,200 |
+| `af_sarah` | v18 | 82 | 141,000 |
+| `am_adam` | v06 | 85 | 122,400 |
+| `am_adam` | v13 | 86 | 135,000 |
+
+The 24 sentences have 79 to 93 phoneme ids, median 87. The ones that failed have 80 to 87: not
+the longest and not the shortest.
+
+**What the run shows, and no more.**
+
+- **v1's P3 holds for this model and this recipe.** At the 8-bit rung the pitch level has left
+  its guardrail and the words have not. What moved is the level: every render lower. The range
+  moved less (within 10% on 81% of renders, which PR-009's own 80% bar would pass), and rate and
+  pauses hardly at all.
+- **The shift is systematic, not scatter.** 48 of 48 renders lower, both voices alike; on dev,
+  other voices and other sentences, 23 of 24 and -3.34 Hz. A constant of about 4 Hz is the kind
+  of change a correction could undo; none was tried.
+- **Whether a listener would hear 4 Hz was not tested.**
+- **The publisher's "resilient to quantization" holds for the words and not for the pitch**, on
+  these measures.
+- **fp16 on this CPU either speaks as fp32 or does not speak.** One sentence failed in both
+  voices (v06), four in one voice only, so neither the text alone nor the voice alone decides it;
+  the length does not. The cause was not looked into, and the same file on a GPU was not run.
+- **Smaller is slower here.** The 8-bit file is 28% of fp32's size and takes four times as long
+  on this CPU, 1.36 of real time: it could not keep up with its own speech. fp16 is half the size
+  at the same speed, when it speaks.
+- **The export is faithful on average and not render by render.** The torch package's mean offset
+  against fp32 is inside the noise, but three of its 48 renders are more than 3 Hz away, one by
+  5.3 Hz, where the floor's largest pair is 3.1. `af_sarah` v10 is outside 3 Hz for torch and
+  for fp16 alike, which points at fp32's render of that sentence, or at the pitch measure on it;
+  not looked into.
+- **The floor is a sample.** Its 95th percentile was 1.44 Hz here and 0.78 to 1.34 on dev. A2
+  held against the largest of them with 2 Hz to spare.

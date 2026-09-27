@@ -13,7 +13,8 @@ Kept as events happen, from the milestone's first day. Times are CDT. The earlie
 | 5 | 09-27, afternoon | the dev run, scratch, 24 renders a rung | the 8-bit copy speaks lower and flatter | `src/s2slab/quantladder.py`, tests | 1133033 |
 | 6 | 09-27, evening | the dev run, the author's, at 1133033 | the ONNX copies' audio identical to the scratch run's | — | — |
 | 7 | 09-27, evening | — | the test text changed before any render | — | — |
-| 8 | 09-27, evening | the dry run, scratch | PR-013 registered | `quantladder.py` (the PR-013 section), tests, the entry | this commit |
+| 8 | 09-27, evening | the dry run, scratch | PR-013 registered | `quantladder.py` (the PR-013 section), tests, the entry | 192dd8a |
+| 9 | 09-27 17:51 | the PR-013 run, laptop | **Claim A supported, Claim B not** | — (results commit: evidence and text only) | — |
 
 ## 1. The design
 
@@ -159,3 +160,44 @@ run's code on the dev set, in a scratch copy of the tree, 547 s. It gave the dev
 **Seen in the dry runs:** the noise floor moves from run to run. Its 95th percentile for the pitch
 offset was 0.78, 0.99, 1.07 and 1.34 Hz over four runs of the dev set. A2 uses the floor of its own
 run; the 8-bit copy's interval ended at -2.7 Hz, twice the largest of them.
+
+## 9. The PR-013 run
+
+Laptop CPU, 1,185 s, commit 192dd8a, clean tree, first and only run. $0.
+
+| 48 renders a copy | Audio | Pitch offset within 3 Hz | Range within 10% | WER normalized | Real-time factor |
+|---|---:|---:|---:|---:|---:|
+| ONNX fp32 (the reference) | 48 | — | — | 1.0% | 0.33 |
+| ONNX fp16 | **42** | 41 of 42 | 42 of 42 | 1.3% | 0.33 |
+| ONNX 8-bit | 48 | **12** | 39 | 1.2% | **1.36** |
+| torch package | 48 | 45 | 47 | 1.1% | 0.38 |
+
+- **Claim A supported.** The 8-bit copy is lower than fp32 on 48 of 48 renders, by 3.96 Hz on
+  average (interval -4.36 to -3.58; the noise floor 1.44). Its words: 10 errors in 820 against 8.
+- **Claim B not supported.** fp16 returned no audio for 6 of 48 renders; one sentence in both
+  voices, four in one. The sentences that failed have 80 to 87 phoneme ids of 79 to 93: not the
+  length. The cause was not looked into.
+- **Predictions:** four wrong, the rest right. Wrong: the 8-bit copy within 3 Hz on 25%, not 30
+  to 55%; fp16 silent 6 times, not 1 to 4; one fp16 offset and one pause outside tolerance; and A3,
+  named the criterion most likely to fail, held with the most room.
+- **A wrong statement of mine, corrected before the commit:** the hand-over said the normalized
+  WER handles "neighbour". It does not; the project's normalizer has no spelling map. Two of the
+  24 sentences cost every copy an error. The text was left as the author approved it; A3 is a
+  difference, where it cancels.
+- **Not explained:** `af_sarah` v10, more than 3 Hz from fp32 for the torch package and for fp16
+  alike; the torch package's three renders outside 3 Hz, where the floor's largest pair is 3.1.
+- Evidence: `runs/m26/`; the ledger's row; the entry's Results in `docs/preregistration.md`.
+
+## What the milestone taught
+
+- **The dry run on the laptop first.** Nothing failed on its first real run in this milestone. The
+  pilot found the two things that would have (a render that is not a number; a floor that cannot
+  come from a copy that repeats itself) before any code was handed over.
+- **Check the test text before promising it.** The eval set's references could not be read aloud.
+- **Check a claim before writing it into a hand-over.** "The normalizer handles it" was a guess.
+- **Counts from 24 renders need wider ranges.** Three predictions missed for that reason, as two
+  did in PR-012.
+
+## Money
+
+$0. Everything ran on the laptop's CPU. The model files are 581 MB of download.
