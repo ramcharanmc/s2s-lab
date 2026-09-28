@@ -21,7 +21,8 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 13 | 09-28 | `modal serve`, by the author, with a new code | the new code was shorter than ten characters: the live part stayed closed and said so; the one live request refused, 401; no turn, the T4 never woke | — | — |
 | 14 | 09-28 | the page in a browser, laptop, scratch, a made-up microphone | the author: "I dont know when it started and stopped". The page now shows that it is recording, the time, the limit, and plays the recording back before it is sent | `demo_page.html`, a test | 22fce45 |
 | 15 | 09-28 | `modal serve`, by the author, a code of ten characters or more | two live turns through four rungs on a T4: one that woke it (the wake 47 s) and one with it up (3.1 s for all four); Modal's warning gone; the recorder used with a real microphone | — | 430c522 |
-| 16 | 09-28 | the tests and the page in a browser, laptop, scratch | prosody in the demo: a measured panel from PR-006's run, and a live card of the visitor's pitch and range beside the words the rungs received | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | this commit |
+| 16 | 09-28 | the tests and the page in a browser, laptop, scratch | prosody in the demo: a measured panel from PR-006's run, and a live card of the visitor's pitch and range beside the words the rungs received | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | cdb890b |
+| 17 | 09-28 | `modal serve`, by the author, his own voice | the voice card and the prosody panel on Modal; two live turns, and **both woke the T4**: it had gone to sleep in between | — | — |
 
 ## 1. The design
 
@@ -489,7 +490,8 @@ replies, against 4.3 s for the four in the first turn.
 **How to read it.** As entry 9: one turn, not a measurement. The same shape again: R0, the
 first rung to run, has the slowest LLM (808 ms against 404 to 425 ms), which is warm-up, not R0.
 Two first turns now agree on it, so the first rung's card after a wake should not be compared
-with the others.
+with the others. (Entry 17 has a wake where it did not happen, and a second cause: the length
+of the reply.)
 
 **The verbatim rung wrote no filler this time.** All four heard the same words: "Hi, this is
 [a first name]. Let's see if the service is able to answer. Thank you." The verbatim rung differs
@@ -555,3 +557,67 @@ Words a second counts the silence before and after the speech.
 
 **Not run:** a real voice through the card; the CPU image's rebuild on Modal with Praat in it.
 Both are the author's next `modal serve`.
+
+## 17. The fourth session on Modal: the voice card, and a T4 that slept between turns (at cdb890b)
+
+857 tests passed on the author's machine. Then `modal serve`. No stage failed.
+
+| What | Result |
+|---|---|
+| the CPU image, with Praat added | rebuilt in 2.6 s |
+| the prosody panel and the voice card | served; the card filled from the author's voice, twice |
+| a live request with a wrong code | 401, once; counted by the door |
+| the first turn | 200, 63.7 s end to end; the rungs loaded in 50.1 s; the wake 59 s |
+| the second turn | 200, 63.0 s end to end; **the rungs loaded again**, in 45.0 s; the wake 54 s |
+| Modal's warning (entry 10) | not printed |
+| the budget | \$0.93 after the first turn, \$0.91 after the second; charged \$0.0200 and \$0.0193 |
+
+**Both turns woke the T4.** It sleeps 60 s after its last turn. Between sending one recording
+and sending the next the author listened to four replies, read four cards and recorded again,
+which took longer than that. So a visitor who uses the page as it is meant to be used waits
+about a minute for every turn, and pays a wake each time. The warm turn of entry 15 (3.1 s)
+was a recording sent again at once. Not a fault in the code: the window was chosen for batch
+runs, where the next call comes at once. For the author to decide: a longer window costs more
+for each burst of use and less waiting inside it.
+
+**What the voice card showed**, from the author's screenshots:
+
+| Turn | Recording | Median pitch | Pitch range | Words a second | Seconds with pitch |
+|---|---:|---:|---:|---:|---:|
+| 1 | 5.2 s | 133 Hz | 3.1 semitones | 1.7 | 1.6 |
+| 2 | 7.0 s | 126 Hz (−0.9 semitones) | 6.1 semitones (+3.0) | 2.7 (+1.0) | 3.6 |
+
+The card worked on a real voice, through the browser's recorder, the decoder and Praat, in the
+CPU container. **The two recordings were different sentences**, so the change in brackets is
+between two sentences and says nothing of delivery: the comparison the card is for, one sentence
+said two ways, has not been made yet.
+
+**The cards**, the rungs one after another, each turn on a T4 just woken:
+
+| Turn | Rung | Recognizer | LLM | Speech | First audio | Whole reply |
+|---|---|---:|---:|---:|---:|---:|
+| 1 | R0 | 67 ms | 348 ms | 122 ms | 536 ms | 536 ms |
+| 1 | R1 | 62 ms | 228 ms | 458 ms | 301 ms | 748 ms |
+| 1 | R2 | 115 ms | 238 ms | 410 ms | 352 ms | 764 ms |
+| 1 | R2 verbatim | 131 ms | 264 ms | 414 ms | 379 ms | 809 ms |
+| 2 | R0 | 95 ms | 790 ms | 250 ms | 1.13 s | 1.13 s |
+| 2 | R1 | 138 ms | 391 ms | 299 ms | 652 ms | 829 ms |
+| 2 | R2 | 168 ms | 424 ms | 282 ms | 733 ms | 875 ms |
+| 2 | R2 verbatim | 165 ms | 473 ms | 274 ms | 777 ms | 913 ms |
+
+**A correction to entries 9 and 15.** I read R0's slow LLM after a wake as warm-up. In turn 1
+here R0's LLM took 348 ms after a wake, not 760 to 808: its reply was one short sentence. So the
+LLM's time follows the length of what it says as well as the order the rungs ran in, and one
+turn cannot separate the two. The reading that stands: a card is one turn, and the differences
+between cards are not the differences between rungs. The measurements are PR-002 and PR-004.
+
+**The two tiers heard different words**, in turn 2: R0 and R1 (`base.en`) wrote "on how it
+responds. I want to see"; R2 and R2 verbatim (`small.en`, and `small.en` with the LoRA) wrote
+"and how it responds. I wanna see". Which is right is not known: no reference. It is R2's point
+(the slow tier hears other words than the fast one) seen live for the first time. The verbatim
+rung wrote no filler in either turn; in turn 1 it differed from the others by one comma.
+
+**Cost.** About \$0.04 of T4 time: two wakes, by the app's count \$0.0200 and \$0.0193. The
+dashboard's figure was not sent.
+
+**Still not said by the author:** whether the recorder now makes clear when it starts and stops.
