@@ -1,0 +1,56 @@
+# Backlog
+
+What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
+are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
+
+Last updated 2026-09-27, at commit `e29da85`.
+
+## Chosen next: M27, a live demo on Modal
+
+Asked for by the author on 2026-09-27: a version of the ladder that can be shown on demand, for
+the portfolio. Neither plan has one. v2's week 8 says "publish"; v1 argues against a live bot as
+the centrepiece and scopes the client transport out. So the demo shows measured turns first and
+live turns second. The design note is in the milestone's run log when it is agreed.
+
+## Owed
+
+| What | Why |
+|---|---|
+| A licence file for the code | the root README says there is none |
+| A remote | the repo has never been pushed |
+| Local paths in committed files | six report files from M16 to M20 under `runs/` hold Modal's "Created mount" lines with the author's local path, and three comments in `src/s2slab/` (`policies.py`, `prosody.py`, `simulate.py`) hold a local command; every Modal report holds the workspace's URL. Checked for only from M25 on. Removing them from files is a commit; removing them from history is a rewrite, and evidence files are never overwritten: a decision for the author before any push |
+| `probes/README.md`, "Recording notes" | microphone and room are still to fill in |
+
+## Raised by PR-013, none started
+
+| What | It would answer | Cost |
+|---|---|---|
+| fp16 on a GPU, and why it returns no audio on a CPU | whether Claim B failed on the file or on the CPU runtime | under \$0.50 on Modal, or \$0 if found on the laptop |
+| A constant pitch correction for the 8-bit copy | whether it comes back inside the 3 Hz guardrail | \$0 |
+| A listening check | whether a 4 Hz shift is heard | \$0 |
+| `af_sarah` v10 | why the torch package and fp16 both sit more than 3 Hz from fp32 on it | \$0 |
+
+## The rest of week 8
+
+| What | Cost |
+|---|---|
+| Leading silence across TTS engines | \$0 to small |
+| Cold-start economics on Modal | a few dollars |
+
+## Parked
+
+| What | From |
+|---|---|
+| T4, the voice-activity-projection turn-taking model | v2 §3.1 |
+| A second FT-1, keeping dev checkpoints to see what the LoRA learns when | PR-010 |
+| A streaming Talker, or R3 with streamed output | R3, R4 |
+| The upward pitch bias in the Praat severity render | PR-009 |
+| The base voice's sentence u8, whose pause vanishes in mania | PR-012 |
+| Another disfluent speaker with verbatim transcripts | PR-011 |
+| Wiring the barge-in policy and truncation into R1's live playback | PR-003 |
+| A blind barge-in set, its script written by someone else | PR-003 |
+| emotion2vec features for the tone tagger | PR-005 |
+| MiniCPM-o as a third full-duplex model | set aside 2026-09-24 |
+| A splitter that also cuts long sentences without commas | PR-002 |
+| PR-001, registered and open | the turn-taking track |
+| The Vast kit's fixes, untested on a machine | FT-1 |
