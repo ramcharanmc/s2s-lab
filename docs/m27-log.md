@@ -20,7 +20,8 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 12 | 09-28 | the tests, laptop, scratch | wrong codes are counted and close the door; a code under ten characters is no code | `demo.py`, `demoweb.py`, `demo_page.html`, tests | c58e588 |
 | 13 | 09-28 | `modal serve`, by the author, with a new code | the new code was shorter than ten characters: the live part stayed closed and said so; the one live request refused, 401; no turn, the T4 never woke | — | — |
 | 14 | 09-28 | the page in a browser, laptop, scratch, a made-up microphone | the author: "I dont know when it started and stopped". The page now shows that it is recording, the time, the limit, and plays the recording back before it is sent | `demo_page.html`, a test | 22fce45 |
-| 15 | 09-28 | `modal serve`, by the author, a code of ten characters or more | two live turns through four rungs on a T4: one that woke it (the wake 47 s) and one with it up (3.1 s for all four); Modal's warning gone; the recorder used with a real microphone | — | — |
+| 15 | 09-28 | `modal serve`, by the author, a code of ten characters or more | two live turns through four rungs on a T4: one that woke it (the wake 47 s) and one with it up (3.1 s for all four); Modal's warning gone; the recorder used with a real microphone | — | 430c522 |
+| 16 | 09-28 | the tests and the page in a browser, laptop, scratch | prosody in the demo: a measured panel from PR-006's run, and a live card of the visitor's pitch and range beside the words the rungs received | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | this commit |
 
 ## 1. The design
 
@@ -502,3 +503,55 @@ and a visitor's words are not kept. The screenshot with it is the author's, outs
 
 **Cost.** About \$0.02 of T4 time: the app's count for the first turn, \$0.0182, and a second
 turn inside its window. The dashboard's figure was not sent.
+
+## 16. Commit 7: prosody in the demo
+
+**The author, after the third session:** "are we also focusing on prosody, pitch, emotional
+variations for live". The live part did not: its four rungs are cascades, and a cascade hands its
+language model words. How they were said is gone by then. That is the project's first point
+(v2 §2, the input bottleneck), and the page did not show it.
+
+**The measured panel, "What the words do not carry".** From `runs/prosody/pr006.json`: R3 asked
+"Is the person speaking upset?" of two deliveries of one sentence by one actor. Three pairs, one
+for each emotion, and the registered result beside them: the loaded delivery scored higher in 13
+of 13 pairs for each emotion; Yes to it and No to the plain one in 11, 11 and 9 of 13.
+
+**The live card, "What your voice carried".** Median pitch, pitch range, and words a second,
+beside the words the rungs received. A second recording shows the change from the first, so one
+sentence said two ways shows a voice that moved and words that did not. The comparison is in
+the page's memory; nothing is kept by the server.
+
+| Decision, as approved | Built |
+|---|---|
+| CREMA-D's audio is not served | the panel shows the sentence and R3's scores; no clip of it is in the image or on the page |
+| the pair with the middle difference in each emotion | `pick_pairs`, held by a test: `sad-t05`, `fea-t04`, `ang-t10` |
+| no emotion label on the live card | numbers only; the card says it cannot tell how anyone feels; a test holds that no label is sent |
+| no loudness | not sent |
+| compare with the recording before | in the page's memory |
+| measured in the CPU container | beside the door, before the rungs: shown even if they fail; a measure that fails costs no turn |
+
+**One change to the design the author approved, made while building it.** He approved "median
+pitch, pitch range, speech rate, and pauses". Speech rate and pauses from the audio are left
+out. `prosodycheck.py` records why, from this project's own dev pairs: both ways of timing speech
+by its energy turned a difference in LEVEL into a difference in LENGTH, and a sentence said upset
+is 10 to 15 dB louder than the same sentence said plainly. That is the comparison the card
+invites. In their place: words a second, from the first rung's transcript over the recording's
+whole length, silences included, and said so on the card.
+
+**Limits, said on the page.** Pitch is looked for between 75 and 600 Hz. CREMA-D is acted
+emotion, and a benchmark the model may have met. R3 ranks; its Yes and No are not calibrated.
+Words a second counts the silence before and after the speech.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop:
+
+| What | Result |
+|---|---|
+| the full suite | 852 passed, 5 skipped, the skipped ones for audio the scratch copy does not hold |
+| the measured panel in a browser, from the committed run file | the three pairs with their sentences and R3's scores (0.39 and 0.98; 0.20 and 0.99; 0.22 and 0.98), the registered counts, the citation; no audio element in it |
+| a live turn in a browser, the recorder fed a tone of 130 Hz, through WebM to the server and Praat | the card: "Median pitch 130 Hz", range 0.0 semitones, 2.4 s with pitch |
+| a second turn, a tone of 195 Hz | "Median pitch 195 Hz (+7.0 semitones)": the change from the first, which is what 195 over 130 is |
+| errors in the browser's console | none |
+| words a second | not seen: the stub rungs hear no words, and the card then leaves the rate out |
+
+**Not run:** a real voice through the card; the CPU image's rebuild on Modal with Praat in it.
+Both are the author's next `modal serve`.

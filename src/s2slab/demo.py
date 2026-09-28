@@ -67,6 +67,18 @@ VERBATIM_RUN = "runs/ft2/pr011.json"
 VERBATIM_CLIPS = ("disfluent-29", "disfluent-42")             # DisfluencySpeech test split, Apache-2.0; set by pick_verbatim()
 VERBATIM_NOTE = ("These two clips are the ones where the difference is largest, chosen for that; the cohort's numbers are "
                  "beside them. One speaker, performing disfluency, trained on and tested on: same-speaker adaptation.")
+# The prosody panel: PR-006's run, R3 asked one question of two deliveries of the same sentence.
+PROSODY_RUN = "runs/prosody/pr006.json"
+PROSODY_PAIRS = ("ang-t10", "fea-t04", "sad-t05")             # CREMA-D test pairs; set by pick_pairs(). No audio is served
+EMOTION_WORDS = {"SAD": "sad", "FEA": "fearful", "ANG": "angry"}
+PROSODY_NOTE = ("Acted emotion, and a benchmark the model may have met in training. One pair for each emotion, the one "
+                "with the middle difference of its thirteen: a usual case, not the best. The clips are CREMA-D's and are "
+                "not played here: its audio is not redistributed by this project.")
+PROSODY_SOURCE = ("CREMA-D: Cao, Cooper, Keutmann, Gur, Nenkova, Verma, IEEE Transactions on Affective Computing 5(4), 2014; "
+                  "Open Database License 1.0")
+VOICE_NOTE = ("Measured from the recording, in the page's server, by Praat. Numbers, not a reading of how anyone feels: "
+              "nothing here can tell that. Loudness, and a speaking rate taken from the sound, are left out: both follow the "
+              "microphone and the level more than the speaker.")
 READ_WITH_CARE = ("The rows come from different GPUs and different days, and the same rung measured 17% slower three days "
                   "apart: only rungs run in one container are comparable. R5's number is a response gap in stream time, "
                   "not a turn's latency.")
@@ -224,14 +236,65 @@ def verbatim(root, items: dict, clips=VERBATIM_CLIPS, rel: str = VERBATIM_RUN) -
                        "source": "DisfluencySpeech, test split, Apache-2.0"} for k in clips]}
 
 
-def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS, verbatim_run=VERBATIM_RUN) -> dict:
+def pick_pairs(run: dict) -> tuple[str, ...]:
+    """For each emotion, the pair whose difference p(Yes) loaded - p(Yes) neutral is the middle one
+    of its pairs: how PROSODY_PAIRS was chosen, kept so it can be checked."""
+    wording = next(iter(run["wordings"]))
+    p = {c: a["p_yes"][wording] for c, a in run["answers"].items()}
+    out = []
+    for emotion in EMOTION_WORDS:
+        mine = sorted((p[pr["loaded"]] - p[pr["neutral"]], pr["id"]) for pr in run["pairs"] if pr["emotion"] == emotion)
+        if mine:
+            out.append(mine[len(mine) // 2][1])
+    return tuple(sorted(out))
+
+
+def prosody(root, pairs=PROSODY_PAIRS, rel: str = PROSODY_RUN) -> dict | None:
+    """The prosody panel's data from PR-006's run file; None if the file is not there."""
+    from .prosodycheck import SENTENCES
+    path = pathlib.Path(root) / rel
+    if not path.exists():
+        return None
+    run = json.loads(path.read_text(encoding="utf-8"))
+    wording = next(iter(run["wordings"]))
+    p = {c: a["p_yes"][wording] for c, a in run["answers"].items()}
+    by_id = {pr["id"]: pr for pr in run["pairs"]}
+    return {"file": rel, "registration": "PR-006", "run": run["run"], "question": run["wordings"][wording], "note": PROSODY_NOTE,
+            "source": PROSODY_SOURCE,
+            "scores": [{"emotion": EMOTION_WORDS[e], "answered": a, "ranked": r, "pairs": n} for e, (a, r, n) in run["scores"][wording].items()],
+            "pairs": [{"id": k, "emotion": EMOTION_WORDS[by_id[k]["emotion"]], "sentence": SENTENCES[by_id[k]["sentence"]],
+                       "neutral": round(p[by_id[k]["neutral"]], 2), "loaded": round(p[by_id[k]["loaded"]], 2)} for k in pairs]}
+
+
+def voice(audio: np.ndarray) -> dict | None:
+    """What a recording's voice carried, as three numbers: median pitch, pitch range (10th to 90th
+    percentile, in semitones), and the seconds that had pitch. prosodycheck's definitions, so a
+    visitor's numbers and the probe set's mean the same. None where Praat is not installed.
+
+    Takes mono float32 at 16 kHz. Pitch is None when less than a tenth of a second has any."""
+    import math
+    try:
+        from .prosodycheck import FRAME_S, MIN_VOICED_FRAMES, PITCH_CEILING_HZ, PITCH_FLOOR_HZ, pitch_hz
+        voiced = pitch_hz(audio)
+    except ImportError:
+        return None
+    out = {"voiced_s": round(voiced.size * FRAME_S, 1), "pitch_hz": None, "range_st": None,
+           "floor_hz": PITCH_FLOOR_HZ, "ceiling_hz": PITCH_CEILING_HZ, "note": VOICE_NOTE}
+    if voiced.size >= MIN_VOICED_FRAMES:
+        lo, hi = np.percentile(voiced, [10, 90])
+        out.update(pitch_hz=round(float(np.median(voiced)), 1), range_st=round(12 * math.log2(hi / lo), 1))
+    return out
+
+
+def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS, verbatim_run=VERBATIM_RUN,
+             prosody_pairs=PROSODY_PAIRS, prosody_run=PROSODY_RUN) -> dict:
     """The Measured part's data, from the committed run files under `root`. A rung whose file is
     missing is listed as missing, not left out. "audio" names every clip the page may play."""
     root = pathlib.Path(root)
     manifest = json.loads((root / "evalset" / "manifest.json").read_text(encoding="utf-8"))
     items = {i["id"]: i for i in manifest["items"]}
     panel = verbatim(root, items, verbatim_clips, verbatim_run)
-    out = {"note": READ_WITH_CARE, "rungs": [], "verbatim": panel,
+    out = {"note": READ_WITH_CARE, "rungs": [], "verbatim": panel, "prosody": prosody(root, prosody_pairs, prosody_run),
            "audio": list(clips) + [c["id"] for c in (panel or {"clips": []})["clips"]],
            "clips": [{"id": c, "seconds": items[c]["duration_s"], "reference": items[c]["text"].capitalize() + ".",
                       "source": f"LibriSpeech test-clean, utterance {items[c]['source_id']}, CC BY 4.0"} for c in clips]}

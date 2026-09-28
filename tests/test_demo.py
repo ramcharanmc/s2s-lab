@@ -182,11 +182,12 @@ def test_the_page_the_measured_data_and_only_the_clips_it_shows(web):
     assert page.status_code == 200 and "Measured" in page.text and "Nothing is stored" in page.text
     assert "no clinical validity" in page.text and "http://" not in page.text and "https://" not in page.text   # nothing fetched from outside
     assert 'rel="icon" href="data:,"' in page.text                                        # and no request for an icon
+    assert "What your voice carried" in page.text and "What the words do not carry" in page.text
     for said in ('id="rec" class="rec" role="status" hidden', "stops by itself", "it was stopped at the limit", 'id="mine" controls hidden',
                  "Listen, then send", "ago. "):                                           # the recorder says what it is doing
         assert said in page.text, said
     data = client.get("/api/measured").json()
-    assert [r["label"] for r in data["rungs"]] == ["R0", "R5", "R9"]
+    assert [r["label"] for r in data["rungs"]] == ["R0", "R5", "R9"] and data["prosody"] is None     # its run file is not in this tree
     clip = client.get("/api/clip/clean-01")
     assert clip.status_code == 200 and clip.headers["content-type"] == "audio/wav" and clip.content[:4] == b"RIFF"
     assert client.get("/api/clip/dis-01").status_code == 200 and data["verbatim"]["clips"][0]["lora"] == "And, uh, they have a, a policy."
@@ -369,3 +370,79 @@ def test_a_code_too_short_to_be_one_keeps_the_live_part_closed_and_the_page_says
     assert (status["code_set"], status["code_short"], status["min_code_len"]) == (False, True, 10)
     r = client.post("/api/live", files={"audio": ("turn", wav(2.0), "audio/wav")}, headers={"X-Access-Code": "12345"})
     assert r.status_code == 401 and "code_short" in client.get("/").text
+
+
+# --------------------------------------------------------------------------- #
+# prosody: the measured panel, and what a visitor's voice carried
+# --------------------------------------------------------------------------- #
+def tone(hz, seconds=2.0, sr=16_000):
+    """A voice-like tone: a fundamental and two harmonics, so Praat finds a pitch."""
+    t = np.arange(int(seconds * sr)) / sr
+    return (0.3 * np.sin(2 * np.pi * hz * t) + 0.15 * np.sin(4 * np.pi * hz * t) + 0.08 * np.sin(6 * np.pi * hz * t)).astype(np.float32)
+
+
+def test_a_voices_pitch_and_range_are_measured_and_silence_is_not_given_one():
+    pytest.importorskip("parselmouth")
+    low, high = demo.voice(tone(120.0)), demo.voice(tone(240.0))
+    assert low["pitch_hz"] == pytest.approx(120, abs=2) and high["pitch_hz"] == pytest.approx(240, abs=3)
+    assert low["range_st"] < 0.5 and low["voiced_s"] == pytest.approx(2.0, abs=0.2)
+    glide = np.concatenate([tone(110.0, 1.0), tone(220.0, 1.0)])                  # an octave: twelve semitones
+    assert demo.voice(glide)["range_st"] == pytest.approx(12, abs=0.5)
+    quiet = demo.voice(np.zeros(16_000, np.float32))
+    assert quiet["pitch_hz"] is None and quiet["range_st"] is None and quiet["voiced_s"] == 0
+    assert (low["floor_hz"], low["ceiling_hz"]) == (75, 600) and "not a reading of how anyone feels" in low["note"]
+    assert "level_db" not in low and "emotion" not in json.dumps(low)               # no loudness, and no label
+    json.dumps(low)
+
+
+def prosody_run(tmp_path):
+    pairs, answers = [], {}
+    for e, name in (("SAD", "sad"), ("FEA", "fea"), ("ANG", "ang")):
+        for i, (n, l) in enumerate(((0.1, 0.9), (0.2, 0.5), (0.6, 0.7))):           # differences 0.8, 0.3, 0.1: the middle is 0.3
+            pid = f"{name}-t{i + 1:02d}"
+            pairs.append({"id": pid, "emotion": e, "sentence": "IEO", "neutral": f"{pid}-n", "loaded": f"{pid}-l"})
+            answers[f"{pid}-n"], answers[f"{pid}-l"] = {"p_yes": {"upset": n}}, {"p_yes": {"upset": l}}
+    (tmp_path / "runs" / "p.json").write_text(json.dumps({
+        "run": "9 test pairs · confirms PR-006 · a model on a GPU · commit 5c1f3aa", "wordings": {"upset": "Is the person speaking upset?"},
+        "pairs": pairs, "answers": answers, "scores": {"upset": {"SAD": [2, 3, 3], "FEA": [2, 3, 3], "ANG": [2, 3, 3]}}}))
+    return json.loads((tmp_path / "runs" / "p.json").read_text())
+
+
+def test_the_prosody_panel_is_pr006s_run_its_pairs_the_middle_ones_and_no_audio(tree):
+    run = prosody_run(tree)
+    assert demo.pick_pairs(run) == ("ang-t02", "fea-t02", "sad-t02")
+    data = demo.measured(tree, clips=PICK, rows=ROWS, verbatim_run="runs/none.json", prosody_pairs=demo.pick_pairs(run), prosody_run="runs/p.json")
+    p = data["prosody"]
+    assert (p["registration"], p["question"], p["file"]) == ("PR-006", "Is the person speaking upset?", "runs/p.json")
+    assert p["scores"][0] == {"emotion": "sad", "answered": 2, "ranked": 3, "pairs": 3}
+    assert p["pairs"][0] == {"id": "ang-t02", "emotion": "angry", "sentence": "It's eleven o'clock", "neutral": 0.2, "loaded": 0.5}
+    assert "not played here" in p["note"] and "Open Database License" in p["source"] and data["audio"] == list(PICK)   # no clip of it is served
+    json.dumps(data)
+
+
+def test_the_prosody_pairs_shown_are_the_ones_the_rule_picks_from_the_committed_run():
+    import pathlib
+    root = pathlib.Path(__file__).resolve().parents[1]
+    run = json.loads((root / demo.PROSODY_RUN).read_text(encoding="utf-8"))
+    assert demo.PROSODY_PAIRS == demo.pick_pairs(run)
+    p = demo.prosody(root)
+    assert [(s["emotion"], s["answered"], s["ranked"], s["pairs"]) for s in p["scores"]] == [("sad", 11, 13, 13), ("fearful", 11, 13, 13),
+                                                                                           ("angry", 9, 13, 13)]
+    assert all(x["loaded"] > x["neutral"] for x in p["pairs"]) and "/" not in p["run"].replace("Qwen/Qwen2", "")    # no path in what is shown
+
+
+def test_a_live_turn_carries_the_voices_measures_and_a_failed_measure_costs_no_turn(web, monkeypatch):
+    pytest.importorskip("parselmouth")
+    client, _, _ = web
+    send = lambda: client.post("/api/live", files={"audio": ("turn", wav(2.0), "audio/wav")}, data={"rungs": "R0"},
+                               headers={"X-Access-Code": "open sesame"})
+    ok = send().json()
+    assert 60 < ok["voice"]["pitch_hz"] < 600 and ok["voice"]["range_st"] >= 0 and [t["label"] for t in ok["turns"]] == ["R0"]
+    from s2slab import demoweb
+
+    def broken(audio):
+        raise RuntimeError("Praat fell over at /a/path/nobody/should/see")
+
+    monkeypatch.setattr(demoweb, "voice", broken)
+    again = send()
+    assert again.status_code == 200 and again.json()["voice"] is None and "path" not in again.text

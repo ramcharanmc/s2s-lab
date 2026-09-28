@@ -19,7 +19,7 @@ from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 
 from .demo import (CLIPS, CODE_ENV, MAX_CLIP_S, MAX_UPLOAD_BYTES, MEASURED, MIN_CODE_LEN, PAGE, SR, Budget, Door, Live, code_ok,
-                   code_usable, decode, measured)
+                   code_usable, decode, measured, voice)
 
 
 def create_app(live: Live, budget: Budget, root=".", machine: str = "this machine", code_env: str = CODE_ENV, clock=time.time,
@@ -77,6 +77,11 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
         except ValueError as e:
             raise HTTPException(400, str(e)) from None
         try:
+            carried = voice(clip)                                  # here, not with the rungs: it is shown even if they fail
+        except Exception as e:                                     # a measurement is not worth a turn
+            print(f"the voice was not measured: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
+            carried = None
+        try:
             with one_at_a_time:
                 out = live.turns(wanted, clip)
         except Exception as e:
@@ -89,6 +94,7 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
             busy_s = sum(t.get("total_ms", 0.0) for t in out["turns"]) / 1000
             budget.store["wake_s"] = round(max(0.0, end - start - busy_s), 1)
         return JSONResponse({"machine": out.get("machine") or machine, "clip_s": round(len(clip) / SR, 2), "turns": out["turns"],
+                             "voice": carried,
                              "cold": bool(out.get("cold")), "wake_s": budget.store.get("wake_s") if out.get("cold") else None,
                              "load_s": out.get("load_s"), "charged": round(dollars, 4), "budget_left": round(budget.left(clock()), 3)})
 

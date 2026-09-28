@@ -12,7 +12,8 @@ characters or more, or the live part stays closed; --force replaces a code alrea
 What happens where:
   laptop   sends src/s2slab, the run files the measured part reads, the manifest and six clips
   web      a CPU container: the page, the measured data, the clips, the status, and the door of the
-           live part: the access code, the day's budget, the decoding. It holds no model
+           live part: the access code, the day's budget, the decoding, and the measures of the
+           visitor's voice (Praat). It holds no model
   rungs    a T4: the four rungs, loaded when the container starts, one turn through each. Woken
            only by a request that passed the door; asleep 60 s after the last one
   volume   `ft2`, read-only: PR-011's export, for the rung r2-gpu-verbatim
@@ -57,7 +58,7 @@ ABOUT = {"R2": "slow tier small.en here; the measured R2 row is large-v3-turbo",
 RUN_FILES = ("runs/r0-gpu/evalset-modal-t4-pr002.json", "runs/r1-gpu/evalset-modal-t4-pr002.json",
              "runs/r2-gpu-turbo/evalset-modal-t4-pr004.json", "runs/r3-gpu/evalset-modal-a10.json",
              "runs/r4-gpu/evalset-modal-l40s.json", "runs/r5-moshi/evalset-modal-a10.json",
-             "runs/r5-personaplex/evalset-modal-a10.json", "runs/ft2/pr011.json")
+             "runs/r5-personaplex/evalset-modal-a10.json", "runs/ft2/pr011.json", "runs/prosody/pr006.json")
 CLIPS = ("clean-07", "clean-11", "clean-23", "clean-37", "disfluent-29", "disfluent-42")
 
 # Every Hugging Face repo the four rungs load, and which files (None = all). The verbatim rung's
@@ -92,6 +93,7 @@ web_image = (
     modal.Image.debian_slim(python_version="3.12")
     .pip_install_from_requirements(str(REPO / "requirements" / "demo.txt"))
     .pip_install("numpy==2.2.6", "soundfile==0.14.0", "av==17.1.0")      # av decodes what a browser records
+    .pip_install("praat-parselmouth==0.4.7")                             # the visitor's pitch, measured beside the door
     .add_local_dir(REPO / "src" / "s2slab", "/root/s2slab", ignore=["**/__pycache__"])
     .add_local_file(REPO / "evalset" / "manifest.json", "/root/evalset/manifest.json")
 )

@@ -58,6 +58,7 @@
       <p id="clip-ref" class="soft"></p></div>
     <div id="rungs"></div>
     <div id="verbatim"></div>
+    <div id="prosody"></div>
   </section>
 
   <section id="live" hidden>
@@ -155,9 +156,60 @@ function showVerbatim(v) {
   }
 }
 
+function showProsody(p) {
+  const box = $("prosody"); box.replaceChildren();
+  if (!p) return;
+  box.appendChild(el("h2", null, "What the words do not carry"));
+  const head = el("div", "card");
+  head.appendChild(el("p", null, "One actor says one sentence twice, once plainly and once " + p.pairs.map((x) => x.emotion).join(", or ")
+    + ". A recognizer writes the same words both times, so a cascade's language model is asked the same thing twice. R3 hears the audio, and was asked: “"
+    + p.question + "” (" + p.registration + ")."));
+  head.appendChild(el("p", null, p.scores.map((s) => s.emotion + ": the loaded delivery scored higher in " + s.ranked + " of " + s.pairs
+    + " pairs; Yes to it and No to the plain one in " + s.answered).join(".  ") + ". It ranks; its Yes and No are not calibrated."));
+  head.appendChild(el("p", "soft", p.note));
+  head.appendChild(el("p", "soft", p.source + "  ·  " + p.run + "  ·  " + p.file));
+  box.appendChild(head);
+  for (const x of p.pairs) {
+    const card = el("div", "card");
+    card.appendChild(el("div", "row")).append(el("strong", null, x.id), el("span", "soft", "plain, and " + x.emotion));
+    card.appendChild(el("blockquote", null, x.sentence));
+    for (const [who, v] of [["said plainly", x.neutral], ["said " + x.emotion, x.loaded]]) {
+      const b = el("div", "bar"), s = el("span", "s2s"); s.style.width = (100 * v) + "%"; b.appendChild(s);
+      card.appendChild(el("p", "soft", "R3's p(Yes), " + who + ": " + v.toFixed(2))); card.appendChild(b);
+    }
+    box.appendChild(card);
+  }
+}
+
+let lastVoice = null;
+function voiceCard(v, turns, clipS) {
+  const heard = (turns.find((t) => t.transcript) || {}).transcript || "";
+  const words = heard.trim() ? heard.trim().split(/\s+/).length : 0;
+  const now = v && v.pitch_hz != null ? {pitch: v.pitch_hz, range: v.range_st, rate: words / clipS} : null;
+  const c = el("div", "card");
+  c.appendChild(el("div", "row")).append(el("strong", null, "What your voice carried"), el("span", "soft", "and the rungs below did not receive"));
+  if (!v) c.appendChild(el("p", "soft", "Not measured on this machine."));
+  else if (!now) c.appendChild(el("p", "soft", "Too little voice in the recording to measure a pitch (" + v.voiced_s + " s had any)."));
+  else {
+    const st = (a, b) => 12 * Math.log2(a / b), sign = (x, d) => (x >= 0 ? "+" : "−") + Math.abs(x).toFixed(d);
+    const was = lastVoice;
+    c.appendChild(el("p", "num", "Median pitch " + now.pitch.toFixed(0) + " Hz" + (was ? " (" + sign(st(now.pitch, was.pitch), 1) + " semitones)" : "")
+      + "  ·  pitch range " + now.range.toFixed(1) + " semitones" + (was ? " (" + sign(now.range - was.range, 1) + ")" : "")
+      + (words ? "  ·  " + now.rate.toFixed(1) + " words a second" + (was && was.rate ? " (" + sign(now.rate - was.rate, 1) + ")" : "") : "")));
+    c.appendChild(el("p", "soft", (was ? "In brackets: the change from your recording before this one. " : "Send a second recording, the same sentence said another way, and the change is shown. ")
+      + "Words a second: the first rung's transcript over the recording's length, silences included. Pitch looked for between "
+      + v.floor_hz + " and " + v.ceiling_hz + " Hz; " + v.voiced_s + " s of the recording had any."));
+    c.appendChild(el("p", "soft", v.note));
+  }
+  c.appendChild(el("p", "soft", "What the rungs received:"));
+  c.appendChild(el("blockquote", null, heard || "(no words)"));
+  if (now) lastVoice = now;
+  return c;
+}
+
 async function loadMeasured() {
   data = await (await fetch("api/measured")).json();
-  showVerbatim(data.verbatim);
+  showVerbatim(data.verbatim); showProsody(data.prosody);
   $("note").textContent = data.note;
   for (const c of data.clips) $("clip").appendChild(new Option(c.id + "  (" + c.seconds.toFixed(1) + " s)", c.id));
   $("clip").onchange = showMeasured; showMeasured();
@@ -227,6 +279,7 @@ $("send").onclick = async () => {
     box.appendChild(el("p", "soft", "One turn of " + body.clip_s + " s, on " + body.machine + ". Charged to today's budget: $" + body.charged.toFixed(4) + "."
       + (body.cold && body.wake_s > 1 ? " The machine was asleep: " + body.wake_s.toFixed(0) + " s of the wait was waking it, not the rungs." : "")
       + " The rungs answered one after another; each card's times are its own."));
+    box.appendChild(voiceCard(body.voice, body.turns, body.clip_s));
     for (const t of body.turns) box.appendChild(turnCard(t.label, t.rung + (about[t.label] ? "  ·  " + about[t.label] : ""), Object.assign({kind: "turn"}, t)));
     loadStatus();
   } catch (e) { $("error").textContent = "The server did not answer."; }

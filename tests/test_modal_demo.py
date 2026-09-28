@@ -44,7 +44,7 @@ def test_the_image_holds_every_model_the_four_rungs_load_and_the_export_is_pr011
 
 
 def test_the_web_container_is_sent_what_the_measured_part_reads_and_no_more(app):
-    assert list(app.RUN_FILES) == [rel for _, _, rel in demo.MEASURED] + [demo.VERBATIM_RUN]
+    assert list(app.RUN_FILES) == [rel for _, _, rel in demo.MEASURED] + [demo.VERBATIM_RUN, demo.PROSODY_RUN]
     assert app.CLIPS == demo.CLIPS + demo.VERBATIM_CLIPS
     for rel in app.RUN_FILES:
         assert (ROOT / rel).exists(), rel
@@ -72,6 +72,7 @@ def test_the_gpu_is_reached_only_with_the_code_and_inside_the_budget(app, monkey
     ok = send("open sesame").json()
     assert calls == [(list(app.OFFERED), 2 * 16_000 * 4)] and ok["machine"] == "Modal Tesla T4" and ok["cold"]
     assert [t["label"] for t in ok["turns"]] == list(app.OFFERED) and ok["load_s"] == 41.0
+    assert 80 < ok["voice"]["pitch_hz"] < 400 and ok["voice"]["voiced_s"] > 1            # measured beside the door, not on the T4
     assert 0 < ok["charged"] < 0.02 and store["wake_s"] >= 0                                       # the window, and the wall time
     assert client.get("/api/status").json()["wake_s"] == store["wake_s"]
     store[f"dollars:{demo.Budget.day(__import__('time').time())}"] = 1.0                           # the day's dollar is spent
