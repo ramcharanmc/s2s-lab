@@ -6,11 +6,11 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-09-28** (commit `ef3d827`): rungs R0 to R5 built and measured; three fine-tunes run;
+**Status, 2026-09-28** (commit `15a0aa3`): rungs R0 to R5 built and measured; three fine-tunes run;
 thirteen registrations, twelve of them reported, four with a supported claim. In progress: a demo
-that shows the measured turns and answers a live one (`docs/m27-log.md`); run on the laptop, written
-for Modal, not yet run there. About
-\$33 spent: \$8.73 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+that shows the measured turns and answers a live one (`docs/m27-log.md`); run on Modal with
+`modal serve`, one live turn through four rungs on a T4; not deployed. About
+\$33 spent: \$8.75 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 
@@ -85,6 +85,10 @@ On Modal (`requirements/modal.txt`, your own account; each command prints what i
 modal run modal_app/r0_bench.py --rung r0-gpu           # a T4, about \$0.01
 modal serve modal_app/demo.py                           # the demo, at a temporary URL; needs the secret `s2s-lab-demo`
 ```
+
+`modal serve` prints two addresses. The demo is the one ending in `modal.run`, printed once near
+the top; the one printed last, on `modal.com/apps`, is Modal's dashboard. The laptop's address
+(`localhost:8000`) answers only while the laptop's server runs.
 
 The fine-tunes are their own project with their own environment: `ft/README.md`.
 

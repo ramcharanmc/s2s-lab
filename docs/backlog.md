@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-09-28, at commit `ef3d827`.
+Last updated 2026-09-28, at commit `15a0aa3`.
 
 ## Chosen next: M27, a live demo on Modal
 
@@ -16,9 +16,10 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 |---|---|---|
 | 1, commit 1 | the measured part and a live turn, on the laptop's CPU | done |
 | 1, commit 2 | FT-2's verbatim recognizer as a rung and a tier; its measured panel | done, on a stand-in model: PR-011's model has not run in a rung yet |
-| 1, commit 3 | the Modal app: a CPU container for the page and the door, a T4 for the rungs; the access code as a secret, the spend counter, the volume `ft2`; a rung that fails answered with a sentence | done on the laptop, with a function in the T4's place; nothing has run on Modal |
-| 1, first run | the author creates the secret and runs `modal serve`; the wake is measured; PR-011's model answers in a rung for the first time | next |
-| 1, deploy | `modal deploy`, the URL that stays | the author's call, after the first run |
+| 1, commit 3 | the Modal app: a CPU container for the page and the door, a T4 for the rungs; the access code as a secret, the spend counter, the volume `ft2`; a rung that fails answered with a sentence | done |
+| 1, first run | the author creates the secret and runs `modal serve`; the wake is measured; PR-011's model answers in a rung for the first time | done: one live turn through four rungs on a T4, the wake 72 s (`docs/m27-log.md`, entry 9) |
+| 1, commit 4 | the live handler not `async`, after Modal's warning in the first run | done on the laptop; not yet run on Modal |
+| 1, deploy | `modal deploy`, the URL that stays | the author's call |
 | 2 | live R3, on an A10 | not started |
 | 3 | live R4 and R5, on an L40S and an A10; R5 over WebSocket | not started |
 | 4 | barge-in in live playback | not started |
@@ -31,6 +32,8 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | A remote | the repo has never been pushed |
 | Local paths in committed files | six report files from M16 to M20 under `runs/` hold Modal's "Created mount" lines with the author's local path, and three comments in `src/s2slab/` (`policies.py`, `prosody.py`, `simulate.py`) hold a local command; every Modal report holds the workspace's URL. Checked for only from M25 on. Removing them from files is a commit; removing them from history is a rewrite, and evidence files are never overwritten: a decision for the author before any push |
 | `probes/README.md`, "Recording notes" | microphone and room are still to fill in |
+| A limit on wrong access codes, and a longer code | the live part accepts any number of attempts; the first code was five digits and was shown in a paste. Before any deploy |
+| A second live turn on Modal, the T4 already up | the first run had one turn, and it carried the wake and the warm-up |
 | The page says nothing of its 15 s limit before it stops the recorder | the author's first recording was cut in mid-sentence (`docs/m27-log.md`, entry 7) |
 
 ## Raised by PR-013, none started

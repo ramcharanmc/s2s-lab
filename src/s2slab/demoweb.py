@@ -5,6 +5,8 @@ status, and the live turn. Needs requirements/demo.txt; nothing else in the libr
     PYTHONPATH=src DEMO_ACCESS_CODE=... python -m uvicorn s2slab.demoweb:laptop --factory --port 8000
 
 No `from __future__ import annotations` here: FastAPI reads the handlers' annotations as objects.
+No handler is `async`: the spend counter (a modal.Dict in the deployment) and the rungs are blocking
+calls, and FastAPI runs a plain function on a worker thread, so the page is served meanwhile.
 """
 
 import os
@@ -15,7 +17,6 @@ import time
 
 from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
-from starlette.concurrency import run_in_threadpool
 
 from .demo import CLIPS, CODE_ENV, MAX_CLIP_S, MAX_UPLOAD_BYTES, MEASURED, PAGE, SR, Budget, Live, code_ok, decode, measured
 
@@ -53,7 +54,7 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
                 "max_clip_s": MAX_CLIP_S, "keeps": "nothing: the recording is decoded in memory and discarded"}
 
     @app.post("/api/live")
-    async def api_live(audio: UploadFile = File(...), rungs: str = Form(""), x_access_code: str = Header(default="")):
+    def api_live(audio: UploadFile = File(...), rungs: str = Form(""), x_access_code: str = Header(default="")):
         start = clock()
         if not code_ok(x_access_code, os.environ.get(code_env)):
             raise HTTPException(401, "the live part needs an access code")
@@ -64,15 +65,12 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
         if unknown:
             raise HTTPException(400, f"no rung {', '.join(unknown)} here")
         try:
-            clip = decode(await audio.read(MAX_UPLOAD_BYTES + 1))
+            clip = decode(audio.file.read(MAX_UPLOAD_BYTES + 1))
         except ValueError as e:
             raise HTTPException(400, str(e)) from None
-        def answer():
-            with one_at_a_time:
-                return live.turns(wanted, clip)
-
         try:
-            out = await run_in_threadpool(answer)                  # the page is still served while the rungs work
+            with one_at_a_time:
+                out = live.turns(wanted, clip)
         except Exception as e:
             print(f"the rungs did not answer: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
             budget.charge(start, clock())                          # a machine that woke and failed was still up

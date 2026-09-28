@@ -13,7 +13,9 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 5 | 09-27, night | the demo on the laptop, by the author | the measured part loaded; the one live request was refused, 401; no live turn yet | — | — |
 | 6 | 09-27, night | FT-2's recognizer as a rung, laptop, scratch, on a stand-in model | the rung loads from a folder and answers; refuses a model that is not PR-011's | `src/s2slab/r2verbatim.py`, `rungs.py`, `demo.py`, `demoweb.py`, `demo_page.html`, tests | ef3d827 |
 | 7 | 09-28 | the demo on the laptop, by the author, from the microphone | a live turn answered by the rungs: the live part and the microphone confirmed | — | — |
-| 8 | 09-28 | the Modal app, laptop, scratch, with a function in the T4's place | the web app, the door and the spend counter run; nothing has run on Modal | `modal_app/demo.py`, `demo.py`, `demoweb.py`, `demo_page.html`, tests | this commit |
+| 8 | 09-28 | the Modal app, laptop, scratch, with a function in the T4's place | the web app, the door and the spend counter run; nothing has run on Modal | `modal_app/demo.py`, `demo.py`, `demoweb.py`, `demo_page.html`, tests | 15a0aa3 |
+| 9 | 09-28 | `modal serve modal_app/demo.py`, by the author | both images built; the page and the measured part served from the CPU container; one live turn answered by all four rungs on a T4, PR-011's model among them; the wake 72 s | — | — |
+| 10 | 09-28 | the tests, laptop, scratch | Modal's warning in that run: the live handler was `async` and called the spend counter, which blocks. Mine: written and tested against a dict | `demoweb.py`, a test | this commit |
 
 ## 1. The design
 
@@ -249,3 +251,81 @@ Those times say nothing about the code or about a T4.
 hash check of the export on it; four rungs in one T4's memory (about 1.7 to 1.9 GB each when
 measured alone; not measured together); the wake; a request that waits longer than Modal's 150 s
 limit for a web request; the microphone over the public URL.
+
+## 9. The first run on Modal (at 15a0aa3)
+
+850 tests passed on the author's machine. Then `modal serve modal_app/demo.py`, with the secret
+`s2s-lab-demo` created by the author beforehand. The first time any of it ran on Modal. No stage
+failed.
+
+| What had not run before | What happened |
+|---|---|
+| the two image builds | both built |
+| the secret | read: the status reported a code as set, and the author's code was accepted |
+| the spend counter, a `modal.Dict` | \$1.00 before the turn, \$0.98 after |
+| the page and the measured part, from the CPU container | served: seven rows, four clips, the verbatim panel with its two clips. Opened by me, read-only, before any live turn; the T4 stayed asleep (the dashboard showed `Rungs.*` inactive, no activity) |
+| the volume `ft2` and the export's hash check | the verbatim rung loaded and answered, which it does only if `model.bin` has PR-011's SHA-256 |
+| four rungs on one T4 | all four loaded and answered. GPU memory was not measured; the dashboard showed 5.2 GiB of the container's memory |
+| the wake | **72 s**, measured by the app: the wait, less the turns' own time. Of it 62.8 s was the four rungs loading (the container's own line; none failed to load), so about 9 s was the container starting. The 45 s in the laptop's budget was an estimate, and low |
+| Modal's 150 s limit on a web request | not reached: the request took 81.4 s end to end |
+| the microphone over the public address | worked: recorded, 163 kB, 10.32 s |
+
+**The one live turn**, from the author's screenshot. One recording, the T4 just woken, the rungs
+one after another in this order:
+
+| Rung | Recognizer | LLM | Speech | First audio | Whole reply |
+|---|---:|---:|---:|---:|---:|
+| R0, `r0-gpu` | 137 ms | 760 ms | 184 ms | 1.08 s | 1.08 s |
+| R1, `r1-gpu` | 99 ms | 443 ms | 460 ms | 517 ms | 1.00 s |
+| R2, `r2-gpu` | 181 ms | 417 ms | 333 ms | 485 ms | 931 ms |
+| R2 verbatim, `r2-gpu-verbatim` | 195 ms | 340 ms | 284 ms | 476 ms | 819 ms |
+
+Charged to the day's budget by the app: \$0.0223. On the laptop the same rungs had taken 16.6 s
+and 22.7 s to first audio (entry 7).
+
+**How to read it: as one turn, not as a measurement.**
+
+- The LLM's time fell from each rung to the next (760, 443, 417, 340 ms) although three of the
+  four replies begin with the same words. That is the shape of a machine warming up, in the order
+  the rungs ran, and it is mixed into every difference between the cards. PR-002 and PR-004 are
+  the measurements: 200 turns each.
+- R1 against R0 is the one difference the turn shows by construction: R1's first audio came
+  before its reply was whole (517 ms of 1.00 s); R0's could not.
+- **The verbatim rung wrote "uh" twice and "wanna"; R0, R1 and R2 wrote none and "want to".**
+  PR-011's model, on a speaker it was not trained on. It is one recording, and what the author
+  said is known only to the author: no reference exists for it. It is not evidence for the
+  claim PR-011 did not make; it is the first time the question has an example.
+- The recognizers of R0 and R1 are the same model and heard the same words.
+
+**Addresses.** The author first looked for the demo at the laptop server's address, and then at
+the link `modal serve` prints last, which is Modal's dashboard. The demo's own address is printed
+once, above the list of watched folders, and had scrolled away. My hand-over said only that a URL
+would be printed. The README now says which is which.
+
+**Seen in the terminal:** a warning from Modal, eight times, once for each call to the spend
+counter from the live handler, an `async` function. Entry 10. And after Ctrl+C, `FATAL: exception
+not rethrown` and a core dump from Modal's client as it shut down; the app had stopped.
+
+**The author's paste of the run showed the access code** (an `echo` of the laptop's variable).
+It is in no file of the repo. To be replaced by a longer one before any deploy; the app has no
+limit on wrong attempts yet.
+
+**Not seen by me:** a second turn, with the T4 already up. The author sent one.
+
+## 10. Commit 4: the live handler is not `async`
+
+**The fault.** `POST /api/live` was an `async` handler, and it reads and writes the spend counter.
+On Modal the counter is a `modal.Dict`, whose plain calls block; from an `async` function they
+hold up everything else the web container is serving. Modal warned of it on the first live
+request. The turn was answered and charged correctly.
+
+**Cause, and whose.** Mine. The handler was written for a dict, and tested with a dict, which
+cannot block. Commit 3 moved the rungs to a worker thread and left the counter's calls where they
+were.
+
+**The fix.** No handler is `async`. FastAPI runs a plain function on a worker thread, so the
+counter, the decoding and the rungs are all off the event loop, and the page is served while a
+turn waits. A test holds every handler to it.
+
+**Run before the hand-over:** the full suite in a scratch copy, 845 passed, 5 skipped (the skipped ones for audio the scratch copy does not hold). **Not run:** the
+fixed handler on Modal; the warning's absence is for the author's next `modal serve` to show.

@@ -1,6 +1,7 @@
 """The demo (s2slab.demo, s2slab.demoweb) on made-up run files, the stub rung and audio made here: no
 model, no GPU, no network."""
 import base64
+import inspect
 import io
 import json
 
@@ -188,6 +189,8 @@ def test_the_page_the_measured_data_and_only_the_clips_it_shows(web):
     for other in ("secret", "clean-05", "dis-02", "..%2F..%2Fmanifest", "clean-01.wav"):
         assert client.get(f"/api/clip/{other}").status_code == 404
     assert client.get("/docs").status_code == 404 and client.get("/openapi.json").status_code == 404
+    handlers = [r.endpoint for r in client.app.routes if getattr(r, "path", "").startswith("/api/") or getattr(r, "path", "") == "/"]
+    assert len(handlers) == 5 and not any(inspect.iscoroutinefunction(h) for h in handlers)   # blocking calls stay off the event loop
 
 
 def test_the_live_part_needs_the_code_answers_with_every_rung_and_charges_the_budget(web):
