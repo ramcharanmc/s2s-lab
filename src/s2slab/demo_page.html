@@ -33,6 +33,7 @@
                                            background: var(--card); color: var(--ink); }
   audio { height: 34px; max-width: 100%; } label { display: inline-flex; gap: 6px; align-items: center; }
   .wide { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; } td { padding: 3px 12px 3px 0; vertical-align: top; border-top: 1px solid var(--line); }
   .btn.on { border-color: #c0392b; color: #c0392b; font-weight: 600; }
   .rec { display: flex; gap: 8px; align-items: center; margin: 8px 0; } .rec[hidden] { display: none; }
   .dot { width: 10px; height: 10px; border-radius: 50%; background: #c0392b; animation: blink 1s steps(2) infinite; }
@@ -59,6 +60,7 @@
     <div id="rungs"></div>
     <div id="verbatim"></div>
     <div id="prosody"></div>
+    <div id="findings"></div>
   </section>
 
   <section id="live" hidden>
@@ -192,6 +194,24 @@ function showProsody(p) {
   }
 }
 
+function showFindings(list) {
+  const box = $("findings"); box.replaceChildren();
+  if (!list || !list.length) return;
+  box.appendChild(el("h2", null, "What else was claimed, and what happened"));
+  box.appendChild(el("p", "soft", "Each claim was written down with its criteria before its data was seen. Most were not supported, and are here as they came out."));
+  for (const f of list) {
+    const card = el("div", "card");
+    card.appendChild(el("div", "row")).append(el("strong", null, f.title), el("span", f.supported ? "num" : "warn", f.registration + ": " + (f.supported ? "supported" : "not supported")));
+    card.appendChild(el("p", null, f.question));
+    const table = el("table");
+    for (const [what, value] of f.rows) { const tr = el("tr"); tr.append(el("td", "soft", what), el("td", "num", value)); table.appendChild(tr); }
+    card.appendChild(el("div", "wide")).appendChild(table);
+    card.appendChild(el("p", "soft", f.note));
+    card.appendChild(el("p", "soft", (f.commit ? "commit " + f.commit + "  ·  " : "") + f.file));
+    box.appendChild(card);
+  }
+}
+
 let lastVoice = null;
 function voiceCard(v, turns, clipS) {
   const heard = (turns.find((t) => t.transcript) || {}).transcript || "";
@@ -220,7 +240,7 @@ function voiceCard(v, turns, clipS) {
 
 async function loadMeasured() {
   data = await (await fetch("api/measured")).json();
-  showVerbatim(data.verbatim); showProsody(data.prosody);
+  showVerbatim(data.verbatim); showProsody(data.prosody); showFindings(data.findings);
   $("note").textContent = data.note;
   for (const c of data.clips) $("clip").appendChild(new Option(c.id + "  (" + c.seconds.toFixed(1) + " s)", c.id));
   $("clip").onchange = showMeasured; showMeasured();

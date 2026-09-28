@@ -27,7 +27,9 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 19 | 09-28 | the plan for the rest of the demo | seven decisions by the author; R5 as a conversation and barge-in live left out, and why | — | — |
 | 20 | 09-28 | the tests and the page in a browser, laptop, scratch | R3 and R4 live, each on a machine of its own that wakes only when asked; one cap over three machines | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | ab45907 |
 | 21 | 09-28 | `modal serve`, by the author | R3 and R4 on Modal for the first time, both asked for at once; a second turn that found all three machines up | — | — |
-| 22 | 09-28 | the tests and the page in a browser, laptop, scratch | R5 on the visitor's recording: Moshi, on an A10 of its own, hears it as one side of a call | `demo.py`, `demo_page.html`, `modal_app/demo.py`, tests | this commit |
+| 22 | 09-28 | the tests and the page in a browser, laptop, scratch | R5 on the visitor's recording: Moshi, on an A10 of its own, hears it as one side of a call | `demo.py`, `demo_page.html`, `modal_app/demo.py`, tests | 7650d36 |
+| 23 | 09-28 | `modal serve`, by the author | the sixth session: Moshi in the demo for the first time, one recording answered on four machines; the call ran at 1.67 of real time and was not answered | — | — |
+| 24 | 09-28 | the tests and the page in a browser, laptop, scratch | the measured panels for five more registrations, from their run files; the note on R3's card; a throwaway call when Moshi loads | `demo.py`, `demo_page.html`, `modal_app/demo.py`, tests | this commit |
 
 ## 1. The design
 
@@ -822,3 +824,103 @@ the visitor's own browser and nowhere else; nothing is stored.
 **Not run, and first run by the author:** Moshi itself in the demo: the image build, the load,
 a call on a real recording, and how long a call of up to 28 s of stream takes (the eval run's
 real-time factor says less than its length).
+
+## 23. The sixth session on Modal: Moshi answers a call, slowly (at 7650d36)
+
+865 tests passed on the author's machine, and `7650d36` was committed. The record of the session
+came a message late and without the terminal's output: three screenshots of the page. (I had
+first written this entry as "nothing reached me"; that was true for one message.) Not known: how
+long Moshi's image took to build and the model to load, how long the request took end to end.
+
+One recording of 12.1 s, every box ticked, every machine asleep:
+
+| Machine | Its wake | Rung | First audio | Whole reply |
+|---|---:|---|---:|---:|
+| T4 | 52 s | R0 | 966 ms | 966 ms |
+| | | R1 | 548 ms | 814 ms |
+| | | R2 | 527 ms | 1.21 s |
+| | | R2 verbatim | 585 ms | 1.03 s |
+| A10 | 33 s | R3 | 1.36 s | 1.36 s |
+| L40S | 50 s | R4 | 5.99 s | 5.99 s |
+| a second A10 | 82 s | R5, Moshi | not answered | a call of 25.0 s, in 41.8 s |
+
+Charged by the app: \$0.2754. The budget after it: \$0.34 of the day's dollar. The voice card:
+108 Hz, 4.9 semitones, 2.1 words a second.
+
+**Moshi ran in the demo**: its image built, it loaded, and it took the recording as one side
+of a call. Commit 10 is confirmed that far. Three things about the call:
+
+- **It ran at 1.67 of real time: 41.8 s for 25.0 s of stream.** Slower than the speech it
+  handles, which a full-duplex model cannot be. The cause is in the committed eval run: its first
+  clip ran at 1.677 and the 199 after it at a median of 0.69. The first call after loading pays
+  for start-up. Mine to have seen: the number was in `runs/r5-moshi/evalset-modal-a10.json` when I
+  wrote `Call.load()`, and the rungs take a throwaway turn at load for this very reason. Fixed in
+  entry 24.
+- **It did not answer.** It opened the call, spoke over none of the recording, and said nothing
+  in the 8 s after it. In the eval run it answered 96 of 200 callers: not answering is what Moshi
+  does about half the time, and the card says it as it is.
+- **The wait came near Modal's limit.** Moshi's wake, 82 s, and its call, 41.8 s, are 124 s of
+  one request, and a web request may take 150 s. A recording of 15 s makes a call of 28 s.
+  With the throwaway call moved into the wake the call itself takes about 17 s, but the wake is
+  longer by as much: the sum is not shorter. Not fixed. What would fix it is answering the page
+  first and the slow machines after, which is a change to how the page asks; in the backlog.
+
+**The two tiers heard different words, and this time one of them is plainly right.** The author
+said the rungs' names. R0 and R1 (`base.en`) wrote "are three are four and are five"; R2
+(`small.en`) wrote "R3, R4 and R5"; the verbatim rung wrote "R three, R four and R five, all the
+rungs, uh, testing". R2's point, on the project's own vocabulary. R3, which has no transcript,
+replied "We're recording and testing R3, R4, and R5": it heard them too.
+
+**R3 restated the recording this time**, and named no feeling. The session ran before the note
+on its card (entry 24).
+
+**Cost.** \$0.28 by the app's count, one turn on four machines. The day's spend by the app's
+count: \$0.66.
+
+## 24. Commit 11: what else was claimed, and what happened
+
+**What was missing.** The measured tab showed the six rungs, FT-2's recognizer and the prosody
+probe. Five more registrations had run and were in `runs/` only: barge-in, FT-1, the two severity
+renders, the quantization ladder. Four of the five are fine-tunes or methods that did not do
+what was claimed for them, which is what the author asked the demo to show as such (entry 1).
+
+| Panel | From | As it came out |
+|---|---|---|
+| When the caller breaks in, PR-003 | `runs/bargein/pr003-70ms.json` | supported: wrong on 1 of 20, against 8 for the best duration threshold |
+| A LoRA on a full-duplex model, PR-010 | `runs/ft1/pr010.json` | not supported: 496 ms from the human gaps became 1035 ms |
+| A severity score, put onto speech, PR-009 | `runs/severity/pr009.json` | not supported: four criteria of five; pitch offset 88.0% against 90% |
+| The same targets, as a synthesizer's own inputs, PR-012 | `runs/ft3/pr012.json` | not supported: all five failed |
+| A synthesizer made smaller, PR-013 | `runs/m26/pr013.json` | Claim A supported: 3.96 Hz lower, words unchanged; Claim B not |
+
+- `demo.py`: `findings()`. Every number is read from the run file's own criteria, or counted from
+  its outcomes; nothing is typed in. A test holds each against the registered result.
+- **A fault found by checking, before the hand-over.** I had written one criterion's bar into a
+  label from memory, "at least 24 of 32"; the registered bar is 28. It was a label, not a verdict,
+  and it was wrong. The bars are now read from `severity.py`, where the criteria are.
+- **No audio.** The barge-in set is the author's own voice; the renders are synthetic speech
+  kept out of git. The panels are numbers and sentences.
+- The severity panels carry the project's boundary: synthetic speech, no clinical validity
+  claimed or implied.
+- The five run files go to the web container with the rest; none holds a local path (checked).
+
+**A throwaway call when Moshi loads** (`Call.load`): one second of silence and four after it,
+through `duplex.converse`, so that the first call a visitor makes runs at the model's speed and
+the card's real-time factor is the model's. It lengthens the wake by what it takes.
+
+**The note on R3's card**, the author's decision after entry 21: "Its reply may describe you,
+how you sound included: it is not asked to, and nothing here checks what it says."
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop:
+
+| What | Result |
+|---|---|
+| the full suite | 862 passed, 5 skipped, the skipped ones for audio the scratch copy does not hold |
+| the measured tab in a browser, from the committed run files | five panels under "What else was claimed, and what happened", each with its registration and "supported" or "not supported" (two and three), its rows, its note and its file |
+| the numbers on them | as registered: 1 of 20 against 8; 496 ms and 1035 ms; 169 of 192 (88.0%): failed; five failed; -3.96 Hz, 10 errors against 8, 42 of 48 |
+| audio in the panels | none |
+| errors in the browser's console | none |
+| the throwaway call at load | on a made-up model, by a test: one call of 63 frames before the visitor's |
+
+**Not run:** on Modal. The panels need no GPU: the CPU container serves them. The throwaway
+call has run on a made-up model only: whether one call is enough to bring Moshi to 0.7 is for
+the next session to show.

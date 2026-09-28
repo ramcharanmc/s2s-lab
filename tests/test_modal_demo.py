@@ -44,7 +44,7 @@ def test_the_image_holds_every_model_the_four_rungs_load_and_the_export_is_pr011
 
 
 def test_the_web_container_is_sent_what_the_measured_part_reads_and_no_more(app):
-    assert list(app.RUN_FILES) == [rel for _, _, rel in demo.MEASURED] + [demo.VERBATIM_RUN, demo.PROSODY_RUN]
+    assert list(app.RUN_FILES) == [rel for _, _, rel in demo.MEASURED] + [demo.VERBATIM_RUN, demo.PROSODY_RUN] + list(demo.FINDINGS)
     assert app.CLIPS == demo.CLIPS + demo.VERBATIM_CLIPS
     for rel in app.RUN_FILES:
         assert (ROOT / rel).exists(), rel
@@ -66,6 +66,7 @@ def test_the_gpu_is_reached_only_with_the_code_and_inside_the_budget(app, monkey
     status = client.get("/api/status").json()
     assert status["rungs"] == list(app.OFFERED) and status["about"] == app.ABOUT and status["wake_s"] is None
     assert client.get("/").status_code == 200 and len(client.get("/api/measured").json()["rungs"]) == 7
+    assert [f["registration"] for f in client.get("/api/measured").json()["findings"]] == ["PR-003", "PR-010", "PR-009", "PR-012", "PR-013"]
     send = lambda code, rungs="": client.post("/api/live", files={"audio": ("turn", wav(), "audio/wav")}, data={"rungs": rungs},
                                               headers={"X-Access-Code": code} if code else {})
     assert send(None).status_code == 401 and send("wrong").status_code == 401 and calls == []      # the T4 stays asleep
@@ -107,6 +108,7 @@ def test_r3_r4_and_r5_are_on_machines_of_their_own_that_hold_their_models(app):
     assert r3.llm.model_name in app.MODELS_A10 and f"voices/{r3.tts.voice}.pt" in app.MODELS_A10["hexgrad/Kokoro-82M"]
     assert r4.model.model_name in app.MODELS_L40S
     assert set(app.ABOUT) == set(app.OFFERED) - {"R0", "R1"} | {"R3", "R4", "R5"} and "no transcript" in app.ABOUT["R3"]
+    assert "may describe you" in app.ABOUT["R3"] and "nothing here checks" in app.ABOUT["R3"]
 
 
 def test_the_bigger_machines_wake_only_for_a_visitor_who_asks(app, monkeypatch):

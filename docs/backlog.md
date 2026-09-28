@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-09-28, at commit `ab45907`.
+Last updated 2026-09-28, at commit `7650d36`.
 
 ## Chosen next: M27, a live demo on Modal
 
@@ -24,8 +24,8 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | 1, commit 7 | prosody: a measured panel from PR-006's run; a live card of the visitor's pitch, range and words a second, beside the words the rungs received | done; on Modal the card filled from the author's voice, twice (`docs/m27-log.md`, entry 17) |
 | 1, commit 8 | the T4's window 300 s, so a visitor's next turn finds it up | done; on Modal a second turn found the machines up (`docs/m27-log.md`, entry 21) |
 | 2 and 3, commit 9 | R3 on an A10 and R4 on an L40S, live, each woken only when a visitor asks; one cap over three machines | done; on Modal both answered, the wakes 37 s and 51 s (`docs/m27-log.md`, entry 21) |
-| 3, commit 10 | R5 on the visitor's recording: Moshi, on an A10 of its own, hears it as one side of a call | done on the laptop, with a made-up model; Moshi itself has not run in the demo |
-| 4, commit 11 | measured panels for the rest: barge-in (PR-003), FT-1, severity, quantization | next |
+| 3, commit 10 | R5 on the visitor's recording: Moshi, on an A10 of its own, hears it as one side of a call | done; on Modal Moshi took a recording as a call, at 1.67 of real time, and did not answer it (`docs/m27-log.md`, entry 23) |
+| 4, commit 11 | measured panels for the rest: barge-in (PR-003), FT-1, the two severity renders, quantization; the note on R3's card; a throwaway call when Moshi loads | done on the laptop; not yet run on Modal |
 | commit 12 | `modal deploy`, the URL that stays, and what is owed before a public link | the author's call |
 | left out | a conversation with R5, and barge-in while a reply plays: both need the microphone open while the machine speaks (`docs/m27-log.md`, entry 19) | can follow; not planned |
 
@@ -37,7 +37,7 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | A remote | the repo has never been pushed |
 | Local paths in committed files | six report files from M16 to M20 under `runs/` hold Modal's "Created mount" lines with the author's local path, and three comments in `src/s2slab/` (`policies.py`, `prosody.py`, `simulate.py`) hold a local command; every Modal report holds the workspace's URL. Checked for only from M25 on. Removing them from files is a commit; removing them from history is a rewrite, and evidence files are never overwritten: a decision for the author before any push |
 | `probes/README.md`, "Recording notes" | microphone and room are still to fill in |
-| R3's replies may describe the speaker, and name a feeling | in the fifth session R3 said of the author "The speaker is expressing frustration" (`docs/m27-log.md`, entry 21). The author's decision: whether R3's card should say so |
+| A request with every machine asleep comes near Modal's 150 s limit | in the sixth session Moshi's wake and call were 124 s of one request (`docs/m27-log.md`, entry 23). To answer the page first and the slow machines after is a change to how the page asks |
 | One sentence said two ways, through the voice card | the card's comparison has been made between two different sentences only |
 | A live turn with a reference, for the verbatim tier | in the demo's first live turn it wrote "uh" twice and "wanna" where three other recognizers wrote none; what was said is not known. The committed data says it adds no filler to read speech (`docs/m27-log.md`, entry 11). Still open: a recording whose words are known, a script read once plainly and once with fillers put in |
 

@@ -66,7 +66,8 @@ EXPORT = f"{VOLUME}/export/{EXPORT_NAME}/ct2"
 OFFERED = {"R0": "r0-gpu", "R1": "r1-gpu", "R2": "r2-gpu", "R2 verbatim": "r2-gpu-verbatim"}
 ABOUT = {"R2": "slow tier small.en here; the measured R2 row is large-v3-turbo",
          "R2 verbatim": "R2 with FT-2's LoRA on its recognizer (PR-011): one speaker's disfluency, not a visitor's",
-         "R3": "speech-LLM: Qwen2-Audio hears the recording itself; no transcript reaches it",
+         "R3": "speech-LLM: Qwen2-Audio hears the recording itself; no transcript reaches it. Its reply may describe you, how "
+               "you sound included: it is not asked to, and nothing here checks what it says",
          "R4": "speech-to-speech: Qwen2.5-Omni hears the recording and speaks the reply itself; no recognizer, no TTS",
          "R5": "full duplex: Moshi, no turns. Your recording is the caller's side of one call"}
 # The machines beside the T4, each woken only by a visitor who asks for its rung.
@@ -79,7 +80,9 @@ OTHERS = {"a10": {"offered": {"R3": "r3-gpu"}, "says": "an A10", "rate": A10_DOL
 RUN_FILES = ("runs/r0-gpu/evalset-modal-t4-pr002.json", "runs/r1-gpu/evalset-modal-t4-pr002.json",
              "runs/r2-gpu-turbo/evalset-modal-t4-pr004.json", "runs/r3-gpu/evalset-modal-a10.json",
              "runs/r4-gpu/evalset-modal-l40s.json", "runs/r5-moshi/evalset-modal-a10.json",
-             "runs/r5-personaplex/evalset-modal-a10.json", "runs/ft2/pr011.json", "runs/prosody/pr006.json")
+             "runs/r5-personaplex/evalset-modal-a10.json", "runs/ft2/pr011.json", "runs/prosody/pr006.json",
+             "runs/bargein/pr003-70ms.json", "runs/ft1/pr010.json", "runs/severity/pr009.json", "runs/ft3/pr012.json",
+             "runs/m26/pr013.json")
 CLIPS = ("clean-07", "clean-11", "clean-23", "clean-37", "disfluent-29", "disfluent-42")
 
 # Every Hugging Face repo the four rungs load, and which files (None = all). The verbatim rung's

@@ -188,6 +188,7 @@ def test_the_page_the_measured_data_and_only_the_clips_it_shows(web):
         assert said in page.text, said
     data = client.get("/api/measured").json()
     assert [r["label"] for r in data["rungs"]] == ["R0", "R5", "R9"] and data["prosody"] is None     # its run file is not in this tree
+    assert data["findings"] == [] and "What else was claimed, and what happened" in page.text
     clip = client.get("/api/clip/clean-01")
     assert clip.status_code == 200 and clip.headers["content-type"] == "audio/wav" and clip.content[:4] == b"RIFF"
     assert client.get("/api/clip/dis-01").status_code == 200 and data["verbatim"]["clips"][0]["lora"] == "And, uh, they have a, a policy."
@@ -536,7 +537,7 @@ class Answers:
         self.loaded += 1
 
     def begin(self, seed):
-        self.k, self.rng = 0, np.random.default_rng(seed)
+        self.k, self.rng, self.calls = 0, np.random.default_rng(seed), getattr(self, "calls", 0) + 1
 
     def step(self, frame):
         k, self.k = self.k, self.k + 1
@@ -552,7 +553,9 @@ def test_a_recording_is_one_side_of_a_call_and_comes_back_measured_and_in_stereo
     model = Answers(speak=list(range(5, 21)) + list(range(89, 101)), text={90: " Sure", 91: ",", 92: " I can"})
     live = demo.Live({"R5": "r5-made-up"}, get=lambda rung_id: demo.Call(model))
     assert live.load_all() >= 0 and model.loaded == 1 and live.unavailable == {}
+    assert model.calls == 1 and model.k == 63                     # the throwaway call at load: 5 s of stream, 63 frames
     t = live.turns(["R5"], caller)["turns"][0]
+    assert model.calls == 2
     assert (t["label"], t["rung"], t["kind"], t["transcript"]) == ("R5", "r5-made-up", "duplex", None)
     assert t["opened"] and t["reply_text"] == "Sure, I can" and t["lead_s"] == duplex.LEAD_S and t["overlap"] == 0
     assert 200 <= t["gap_ms"] <= 700 and t["stream_s"] == pytest.approx(4.8 + 2.5 + 8.0, abs=0.1) and t["rtf"] >= 0 and t["total_ms"] >= 0
@@ -567,12 +570,50 @@ def test_a_recording_is_one_side_of_a_call_and_comes_back_measured_and_in_stereo
 def test_a_call_that_fails_is_a_sentence_and_the_registry_knows_the_duplex_models(capsys):
     class Falls(Answers):
         def step(self, frame):
-            raise RuntimeError("CUDA out of memory at /a/path/nobody/should/see")
+            if self.calls > 1:                                    # the throwaway call at load goes through; the visitor's does not
+                raise RuntimeError("CUDA out of memory at /a/path/nobody/should/see")
+            return super().step(frame)
 
     live = demo.Live({"R5": "r5-made-up"}, get=lambda rung_id: demo.Call(Falls()))
     assert live.turn("R5", voice()) == {"label": "R5", "rung": "r5-made-up", "error": demo.NOT_ANSWERED}
     assert "nobody/should/see" in capsys.readouterr().err
+
+    class Never(Answers):
+        def step(self, frame):
+            raise RuntimeError("no such weights")
+
+    dead = demo.Live({"R5": "r5-made-up"}, get=lambda rung_id: demo.Call(Never()))
+    assert dead.turn("R5", voice())["error"] == demo.NOT_LOADED    # it fell in the throwaway call: it never loaded
     call = demo.any_rung("r5-moshi")
     assert isinstance(call, demo.Call) and call.rung_id == "r5-moshi" and demo.any_rung("stub").rung_id == "stub"
     page = demo.PAGE.read_text(encoding="utf-8")
     assert "Not a conversation" in page and "you are on the left and the model on the right" in page
+
+
+# --------------------------------------------------------------------------- #
+# what else was registered and run
+# --------------------------------------------------------------------------- #
+def test_the_other_findings_are_read_from_their_committed_run_files_as_they_came_out():
+    import pathlib
+    root = pathlib.Path(__file__).resolve().parents[1]
+    by = {f["registration"]: f for f in demo.findings(root)}
+    assert list(by) == ["PR-003", "PR-010", "PR-009", "PR-012", "PR-013"] and [f["file"] for f in by.values()] == list(demo.FINDINGS)
+    assert {k: f["supported"] for k, f in by.items()} == {"PR-003": True, "PR-010": False, "PR-009": False, "PR-012": False, "PR-013": True}
+    assert dict(by["PR-003"]["rows"])["after 1500 ms"] == "wrong on 8 of 20"
+    assert dict(by["PR-003"]["rows"])["stop when the words are not a backchannel"] == "wrong on 1 of 20" and "not played" in by["PR-003"]["note"]
+    assert by["PR-010"]["rows"][0][1] == "496 ms" and by["PR-010"]["rows"][1][1] == "1035 ms" and "further away" in by["PR-010"]["rows"][2][1]
+    assert by["PR-010"]["rows"][2][1].startswith("+539 ms, 95% interval +402 to +685")
+    s4 = dict(by["PR-009"]["rows"])["pitch offset within 3 Hz or 10%, at least 90%"]
+    assert s4 == "169 of 192 (88.0%): failed" and dict(by["PR-009"]["rows"])["rate and pauses within 10%, every check"] == "384 of 384 (100.0%)"
+    assert dict(by["PR-009"]["rows"])["pitch range in order, at least 28 of 32"] == "29 of 32 (90.6%)"      # the bar is severity's, not typed here
+    assert all(v.endswith(": failed") for _, v in by["PR-012"]["rows"]) and "no clinical validity" in by["PR-012"]["note"]
+    q = dict(by["PR-013"]["rows"])
+    assert q["the 8-bit copy's pitch, against the full one"].startswith("-3.96 Hz on average") and "12 of 48" in q["the 8-bit copy's pitch, against the full one"]
+    assert q["its words, by a recognizer"] == "10 errors in 820 words, against 8" and q["size"] == "92 MB against 326 MB"
+    assert q["the 16-bit copy"].startswith("spoke on 42 of 48") and "slower" in q["speed on a laptop's CPU"]
+    json.dumps(list(by.values()))
+    assert "/" not in json.dumps([f["note"] for f in by.values()])                    # no path in what is said
+
+
+def test_a_finding_whose_run_file_is_missing_is_left_out(tree):
+    assert demo.findings(tree) == [] and demo.measured(tree, clips=PICK, rows=ROWS)["findings"] == []

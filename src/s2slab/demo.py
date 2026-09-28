@@ -50,6 +50,7 @@ WRONG_CODES, LOCK_S = 5, 600.0      # this many wrong codes inside LOCK_S close 
 NOT_LOADED = "This rung could not be loaded on this machine."
 NOT_ANSWERED = "This rung failed on this recording."
 NO_MACHINE = "The machine this rung runs on did not answer."
+WARM_UP_S = 4.0                     # a full-duplex model's throwaway call at load: a second of silence, and this much after it
 PAGE = pathlib.Path(__file__).with_name("demo_page.html")
 
 # What the Measured part shows: one committed run per rung, and the same four clips for all of them.
@@ -295,7 +296,7 @@ def voice(audio: np.ndarray) -> dict | None:
 
 
 def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS, verbatim_run=VERBATIM_RUN,
-             prosody_pairs=PROSODY_PAIRS, prosody_run=PROSODY_RUN) -> dict:
+             prosody_pairs=PROSODY_PAIRS, prosody_run=PROSODY_RUN, findings_files=None) -> dict:
     """The Measured part's data, from the committed run files under `root`. A rung whose file is
     missing is listed as missing, not left out. "audio" names every clip the page may play."""
     root = pathlib.Path(root)
@@ -303,6 +304,7 @@ def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS
     items = {i["id"]: i for i in manifest["items"]}
     panel = verbatim(root, items, verbatim_clips, verbatim_run)
     out = {"note": READ_WITH_CARE, "rungs": [], "verbatim": panel, "prosody": prosody(root, prosody_pairs, prosody_run),
+           "findings": findings(root, FINDINGS if findings_files is None else findings_files),
            "audio": list(clips) + [c["id"] for c in (panel or {"clips": []})["clips"]],
            "clips": [{"id": c, "seconds": items[c]["duration_s"], "reference": items[c]["text"].capitalize() + ".",
                       "source": f"LibriSpeech test-clean, utterance {items[c]['source_id']}, CC BY 4.0"} for c in clips]}
@@ -335,6 +337,99 @@ def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS
 
 
 # --------------------------------------------------------------------------- #
+# the measured part: what else was registered and run
+# --------------------------------------------------------------------------- #
+# One panel a registration, from its committed run file. No audio: the barge-in set is the
+# author's own voice, and the renders are synthetic speech kept out of git.
+FINDINGS = ("runs/bargein/pr003-70ms.json", "runs/ft1/pr010.json", "runs/severity/pr009.json", "runs/ft3/pr012.json",
+            "runs/m26/pr013.json")
+BARGEIN_POLICIES = (("B0_duration_200ms", "stop after 200 ms of caller sound"), ("B0_duration_400ms", "after 400 ms"),
+                    ("B0_duration_800ms", "after 800 ms"), ("B0_duration_1500ms", "after 1500 ms"),
+                    ("B1_words", "stop when the recognizer has written words"), ("B2_speechlike", "stop when the words are not a backchannel"))
+
+
+def _share(c: dict) -> str:
+    return f"{c['met']} of {c['of']} ({100 * c['met'] / c['of']:.1f}%)" + ("" if c["pass"] else ": failed")
+
+
+def _severity(run: dict, rel: str, registration: str, title: str, question: str, note: str) -> dict:
+    from .severity import S2_MIN_RANGE_IN_ORDER, S4_OFFSET_SHARE, S5_RANGE_SHARE      # the bars, from where the criteria are
+    c = run["criteria"]
+    named = (("S1", "pitch offset, rate and pauses in order, every sweep"),
+             ("S2", f"pitch range in order, at least {S2_MIN_RANGE_IN_ORDER} of {c['S2']['of']}"),
+             ("S3", "rate and pauses within 10%, every check"),
+             ("S4", f"pitch offset within 3 Hz or 10%, at least {100 * S4_OFFSET_SHARE:.0f}%"),
+             ("S5", f"pitch range within 10%, at least {100 * S5_RANGE_SHARE:.0f}%"))
+    return {"registration": registration, "title": title, "question": question, "supported": bool(c["supported"]),
+            "rows": [[what, _share(c[k])] for k, what in named], "note": note, "commit": run.get("commit"), "file": rel}
+
+
+def _bargein(run: dict, rel: str) -> dict:
+    wrong = {k: sum(not o["correct"] for o in v) for k, v in run["outcomes"].items()}
+    n = len(next(iter(run["outcomes"].values())))
+    best = min(wrong[k] for k in wrong if k.startswith("B0"))
+    return {"registration": "PR-003", "title": "When the caller breaks in",
+            "question": "Does a barge-in policy that reads the caller's words make fewer wrong stop or keep-going decisions than the "
+                        "best duration threshold?",
+            "supported": wrong["B2_speechlike"] < best,
+            "rows": [[what, f"wrong on {wrong[k]} of {n}"] for k, what in BARGEIN_POLICIES if k in wrong],
+            "note": "Twenty recordings of the author's own voice, breaking in on a reply or only saying 'mm-hm'. They are not played "
+                    "here. Supported, narrowly: one set, one speaker, written by the person who built the policy.",
+            "commit": None, "file": rel}
+
+
+def _ft1(run: dict, rel: str) -> dict:
+    c = run["criteria"]
+    return {"registration": "PR-010", "title": "A LoRA on a full-duplex model", "supported": bool(c["supported"]),
+            "question": "Does a LoRA trained on two-channel dialogues move Moshi's turn gaps toward the dialogues' own?",
+            "rows": [["distance from the human gaps, base Moshi", f"{c['distance_base_ms']:.0f} ms"],
+                     ["distance, Moshi with the LoRA", f"{c['distance_lora_ms']:.0f} ms"],
+                     ["the change", f"{-c['gain_ms']:+.0f} ms, 95% interval {-c['ci95_ms'][1]:+.0f} to {-c['ci95_ms'][0]:+.0f}: further away"]],
+            "note": f"{c['n_dialogues']} test dialogues the LoRA never saw. It moved the model, away from the target: a fine-tune "
+                    "that ran and did not do what it was trained for, reported as such.",
+            "commit": run.get("commit"), "file": rel}
+
+
+def _quant(run: dict, rel: str) -> dict:
+    c, s, size = run["criteria"], run["summary"], {k: v["size_mb"] for k, v in run["rungs"].items()}
+    return {"registration": "PR-013", "title": "A synthesizer made smaller", "supported": bool(c["claim_a"]),
+            "question": "Quantized to 8 bits, does Kokoro's pitch drift while its words stay?",
+            "rows": [["the 8-bit copy's pitch, against the full one", f"{c['A2']['mean']:+.2f} Hz on average, 95% interval {c['A2']['lo']:+.2f} to "
+                                                                      f"{c['A2']['hi']:+.2f}; within 3 Hz on {c['A1']['within']} of {c['A1']['of']} renders"],
+                     ["what the same model does from one run to the next", f"{c['A2']['floor_p95']:.2f} Hz at the 95th percentile"],
+                     ["its words, by a recognizer", f"{c['A3']['quantized']['errors']} errors in {c['A3']['quantized']['words']} words, "
+                                                    f"against {c['A3']['reference']['errors']}"],
+                     ["size", f"{size['onnx-q8']:.0f} MB against {size['onnx-fp32']:.0f} MB"],
+                     ["speed on a laptop's CPU", f"{s['onnx-q8']['rtf_median']:.2f} of real time against {s['onnx-fp32']['rtf_median']:.2f}: slower"],
+                     ["the 16-bit copy", f"spoke on {c['B1']['audio']} of {c['B1']['of']} renders; no audio on the rest"]],
+            "note": "Claim A, the 8-bit copy, supported; Claim B, that the 16-bit copy is usable as it is, not. Whether a listener "
+                    "hears a 4 Hz shift was not tested.",
+            "commit": run.get("commit"), "file": rel}
+
+
+def findings(root, files=FINDINGS) -> list[dict]:
+    """The panels of what else was registered and run, each from its run file; a file that is
+    not there is left out."""
+    make = {"runs/bargein/pr003-70ms.json": _bargein, "runs/ft1/pr010.json": _ft1, "runs/m26/pr013.json": _quant,
+            "runs/severity/pr009.json": lambda run, rel: _severity(
+                run, rel, "PR-009", "A severity score, put onto speech",
+                "Does a severity score render onto neutral speech as the mapping says: lower, slower, flatter, with longer pauses?",
+                "Synthetic speech edited after the fact; no clinical validity is claimed or implied. Four criteria of five met; "
+                "pitch offset missed its bar."),
+            "runs/ft3/pr012.json": lambda run, rel: _severity(
+                run, rel, "PR-012", "The same targets, as a synthesizer's own inputs",
+                "Given the same targets as its own durations and pitch, does FastPitch meet the criteria the edited speech missed?",
+                "Synthetic speech; no clinical validity is claimed or implied. Rate was exact and pitch on target in little more "
+                "than half the checks: all five criteria failed, as predicted.")}
+    out = []
+    for rel in files:
+        path = pathlib.Path(root) / rel
+        if path.exists():
+            out.append(make[rel](json.loads(path.read_text(encoding="utf-8")), rel))
+    return out
+
+
+# --------------------------------------------------------------------------- #
 # the live part
 # --------------------------------------------------------------------------- #
 class Call:
@@ -351,8 +446,13 @@ class Call:
         self.model, self.rung_id = model, model.rung_id
 
     def load(self) -> float:
+        """Load the model, then one throwaway call of silence, as the rungs take a throwaway turn:
+        the first call after loading runs at about 1.7 of real time and the ones after it at 0.7
+        (the eval run's first clip, and the demo's first call), and that belongs to start-up."""
+        from . import duplex
         t0 = time.perf_counter()
         self.model.load()
+        duplex.converse(self.model, np.zeros(duplex.IN_SR, np.float32), duplex.IN_SR, lead_s=0.0, tail_s=WARM_UP_S)
         return (time.perf_counter() - t0) * 1000
 
     def record(self, audio: np.ndarray, sr: int) -> dict:
