@@ -29,7 +29,9 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 21 | 09-28 | `modal serve`, by the author | R3 and R4 on Modal for the first time, both asked for at once; a second turn that found all three machines up | — | — |
 | 22 | 09-28 | the tests and the page in a browser, laptop, scratch | R5 on the visitor's recording: Moshi, on an A10 of its own, hears it as one side of a call | `demo.py`, `demo_page.html`, `modal_app/demo.py`, tests | 7650d36 |
 | 23 | 09-28 | `modal serve`, by the author | the sixth session: Moshi in the demo for the first time, one recording answered on four machines; the call ran at 1.67 of real time and was not answered | — | — |
-| 24 | 09-28 | the tests and the page in a browser, laptop, scratch | the measured panels for five more registrations, from their run files; the note on R3's card; a throwaway call when Moshi loads | `demo.py`, `demo_page.html`, `modal_app/demo.py`, tests | this commit |
+| 24 | 09-28 | the tests and the page in a browser, laptop, scratch | the measured panels for five more registrations, from their run files; the note on R3's card; a throwaway call when Moshi loads | `demo.py`, `demo_page.html`, `modal_app/demo.py`, tests | b4b4dd7 |
+| 25 | 09-28 | the plan for what is left | the author's questions (the portfolio; whether Moshi was tuned as a patient) and seven decisions | — | — |
+| 26 | 09-28 | the tests and the page in a browser, laptop, scratch | one request a machine: each machine's cards appear when it has answered | `demoweb.py`, `demo_page.html`, tests | this commit |
 
 ## 1. The design
 
@@ -924,3 +926,74 @@ how you sound included: it is not asked to, and nothing here checks what it says
 **Not run:** on Modal. The panels need no GPU: the CPU container serves them. The throwaway
 call has run on a made-up model only: whether one call is enough to bring Moshi to 0.7 is for
 the next session to show.
+
+## 25. What is left, and two questions of the author's
+
+**"Isnt moshi finetuned for emotions for psychiatric patient simulation"**: no, and the repo says
+why. FT-1 is a LoRA on Moshi trained on DailyTalk's dialogues for turn-taking; the plan chose that
+target in place of a patient model (v2 §7.1, quoted in PR-010's registration), because a patient
+model needs clinical data that does not exist in a form that can be shared. What the project has
+that simulates psychiatric states in speech is the severity render: a PHQ-9 or YMRS score becomes
+targets for pitch, range, rate and pauses, rendered onto neutral Kokoro speech in Praat (PR-009,
+four criteria of five) and given to FastPitch as its own inputs (PR-012, none of five).
+
+**The portfolio.** The author's site is a GitHub Pages repository with one `index.html`. Three
+ways to join it to the demo were put to him: a link, a frame, or the page itself in the
+portfolio calling Modal. Chosen: a link.
+
+| Commit | What |
+|---|---|
+| 12 | answers arrive as they are ready: one request a machine |
+| 13 | a severity render that can be heard: a sentence, a condition and a score; neutral and rendered speech; targets against what was measured |
+| 14 | `modal deploy`, the link from the portfolio, and what is owed before it |
+
+| Decision | Chosen |
+|---|---|
+| The severity render's text | a fixed list of neutral sentences, not free text: free text would let anyone make the demo say anything in a "patient" voice |
+| Its scores | the six registered steps of each condition, not a slider: every render is a measured case |
+| Its label | on the card: synthetic speech edited to a specification; no clinical validity claimed or implied; not a diagnosis |
+| PR-009's result | beside the player, the miss included |
+| Extreme scores | a warning: at the top of the mania scale the mapping asks for +45 Hz at 1.8 times the speed, which sounds processed |
+| The portfolio | a link |
+| The measured tab | open without a code |
+
+Left out: FastPitch's voice as a player (it failed every criterion; it stays a measured panel), and
+Moshi as a patient (nothing here supports it).
+
+## 26. Commit 12: one request a machine
+
+**What was wrong.** One request carried a recording to every machine and came back when the
+slowest had answered. In the sixth session that was Moshi: 82 s to wake and 41.8 s for the call,
+124 s of a request that may take 150 (entry 23). And a visitor saw nothing for two minutes,
+though the T4's four rungs had answered in the first.
+
+**Now.** The page asks the door once (`POST /api/enter`), then sends the recording to each
+machine in a request of its own, all at once. Each machine's cards say "Sent N s ago" until it
+answers, and then hold its answer. No request waits for another machine.
+
+- `demoweb.py`: `/api/enter`, the door alone; `voice_too`, so the voice is measured once a
+  recording and not once a machine; a lock for each machine in place of one for all.
+- `demo_page.html`: the cards as places that fill; the line above them adds up what has been
+  charged and which machines were woken, as the answers come.
+- **Why the door is asked first.** Every request checks the code. Four requests with a wrong
+  code would be four wrong codes, and five close the live part (entry 12): one mistyped code
+  would all but lock the visitor out. Asked once, it is one.
+- The budget is as it was: each request is charged for its machine.
+
+**What it does not change.** A machine's own wait. Moshi asleep is still two minutes; the page
+now shows the rest meanwhile.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop:
+
+| What | Result |
+|---|---|
+| the full suite | 864 passed, 5 skipped, the skipped ones for audio the scratch copy does not hold |
+| the page in a browser: three made-up machines with stub rungs, their wakes played as 2 s, 6 s and 4 s, the third made to fail | — |
+| a wrong code, then Send | "the live part needs an access code", no card, one request to the door and none to a machine |
+| the right code, R3 and R4 ticked, 1.2 s after Send | four cards waiting, each counting "Sent 1 s ago" |
+| at 3.4 s | the voice card and the first machine's two cards filled; R3 and R4 still waiting; the line above them: charged so far, and the first machine's wake |
+| at 5.2 s | R4's card: "The machine this rung runs on did not answer."; the rest as they were; the charge grown by that machine's |
+| at 7.8 s | R3's card filled, naming its machine; every card settled |
+| errors in the browser's console | one: the 401 of the wrong code, as meant |
+
+**Not run:** on Modal, where the requests go through Modal's own web layer at the same time.

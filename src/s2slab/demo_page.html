@@ -101,6 +101,13 @@ function bar(stages, total) {
   return b;
 }
 
+function waitingCard(title, where) {
+  const c = el("div", "card");
+  c.appendChild(el("div", "row")).append(el("strong", null, title), el("span", "soft", where));
+  c.appendChild(el("p", "warn", "Sent."));
+  return c;
+}
+
 function turnCard(title, sub, t) {
   const c = el("div", "card");
   c.appendChild(el("div", "row")).append(el("strong", null, title), el("span", "soft", sub));
@@ -254,6 +261,7 @@ function showMore(optional) {                  // the rungs on machines of their
   box.appendChild(el("span", null, "Also ask:"));
   for (const o of optional) {
     const label = el("label"), tick = el("input"); tick.type = "checkbox"; tick.value = o.label; tick.checked = ticked.has(o.label);
+    tick.dataset.machine = o.machine;
     label.append(tick, el("span", null, o.label + ", on " + o.machine + " (it wakes for this: "
       + (o.wake_s == null ? "a minute or more" : "about " + Math.round(o.wake_s) + " s the last time") + ", and $" + o.dollars.toFixed(2) + " of the budget or more)"));
     box.appendChild(label);
@@ -310,26 +318,43 @@ $("record").onclick = async () => {
     if (s >= limit && rec.state === "recording") rec.stop();
   }, 100);
 };
+// One request a machine, all sent at once: each machine's cards appear when it has answered, and no
+// request waits for another machine's wake.
 $("send").onclick = async () => {
-  const more = [...$("more").querySelectorAll("input:checked")].map((i) => i.value);
-  const form = new FormData(); form.append("audio", blob, "turn"); form.append("rungs", more.length ? usual.concat(more).join(",") : "");
-  const sent = performance.now(), waiting = setInterval(() => {
-    $("wait").textContent = "Sent " + Math.round((performance.now() - sent) / 1000) + " s ago. " + waitText; }, 1000);
-  sending = true; ready(); $("error").textContent = ""; $("wait").textContent = "Sent. " + waitText; $("wait").hidden = false;
+  const code = $("code").value, recording = blob;
+  const ticked = [...$("more").querySelectorAll("input:checked")].map((i) => ({labels: [i.value], where: i.dataset.machine, first: false}));
+  const groups = [{labels: usual, where: "", first: true}].concat(ticked);
+  sending = true; ready(); $("error").textContent = ""; $("wait").hidden = true;
   try {
-    const r = await fetch("api/live", {method: "POST", body: form, headers: {"X-Access-Code": $("code").value}});
-    const body = await r.json();
-    if (!r.ok) { $("error").textContent = body.detail || "It did not work."; return; }
-    const box = $("answers"); box.replaceChildren();
-    box.appendChild(el("p", "soft", "One turn of " + body.clip_s + " s, on " + body.machine + ". Charged to today's budget: $" + body.charged.toFixed(4) + "."
-      + (body.woken || []).filter((w) => w.wake_s > 1).map((w) => " " + w.machine + " was asleep: " + w.wake_s.toFixed(0) + " s of the wait was waking it, not the rungs.").join("")
-      + " On each machine the rungs answered one after another; each card's times are its own."));
-    box.appendChild(voiceCard(body.voice, body.turns, body.clip_s));
-    for (const t of body.turns) box.appendChild(turnCard(t.label, t.rung + (t.machine && t.machine !== body.machine ? "  ·  on " + t.machine : "")
-      + (about[t.label] ? "  ·  " + about[t.label] : ""), Object.assign({kind: "turn"}, t)));
+    const door = await fetch("api/enter", {method: "POST", headers: {"X-Access-Code": code}});
+    if (!door.ok) { $("error").textContent = (await door.json()).detail || "It did not work."; return; }
+    const box = $("answers"), head = el("p", "soft", "Sent."), carried = el("div"), sent = performance.now();
+    box.replaceChildren(head, carried);
+    let charged = 0, clipS = null; const woken = [];
+    const say = () => { head.textContent = (clipS == null ? "Sent." : "One recording of " + clipS + " s.") + " Charged to today's budget so far: $" + charged.toFixed(4) + "."
+      + woken.filter((w) => w.wake_s > 1).map((w) => " " + w.machine + " was asleep: " + w.wake_s.toFixed(0) + " s of its wait was waking it, not the rungs.").join("")
+      + " Each machine answers when it is ready; on each, the rungs answered one after another, and each card's times are its own."; };
+    await Promise.all(groups.map(async (g) => {
+      const slots = g.labels.map((label) => box.appendChild(waitingCard(label, g.where ? "on " + g.where : "")));
+      const tick = setInterval(() => { for (const c of slots) c.lastChild.textContent = "Sent " + Math.round((performance.now() - sent) / 1000) + " s ago. "
+        + (g.first ? waitText : "It wakes for this, and loads its model first."); }, 1000);
+      try {
+        const form = new FormData(); form.append("audio", recording, "turn"); form.append("rungs", g.labels.join(",")); form.append("voice_too", g.first ? "1" : "0");
+        const r = await fetch("api/live", {method: "POST", body: form, headers: {"X-Access-Code": code}});
+        const body = await r.json();
+        if (!r.ok) throw new Error(body.detail || "It did not work.");
+        charged += body.charged; clipS = body.clip_s; woken.push(...(body.woken || []));
+        body.turns.forEach((t, i) => slots[i].replaceWith(turnCard(t.label, t.rung + (g.first || !t.machine ? "" : "  ·  on " + t.machine)
+          + (about[t.label] ? "  ·  " + about[t.label] : ""), Object.assign({kind: "turn"}, t))));
+        if (g.first) carried.replaceWith(voiceCard(body.voice, body.turns, body.clip_s));
+      } catch (e) {
+        g.labels.forEach((label, i) => slots[i].replaceWith(turnCard(label, g.where ? "on " + g.where : "",
+          {error: e instanceof TypeError ? "The server did not answer for this machine." : e.message})));
+      } finally { clearInterval(tick); say(); }
+    }));
     loadStatus();
   } catch (e) { $("error").textContent = "The server did not answer."; }
-  finally { clearInterval(waiting); $("wait").hidden = true; sending = false; ready(); }
+  finally { sending = false; ready(); }
 };
 
 for (const name of ["measured", "live"]) $("tab-" + name).onclick = () => {

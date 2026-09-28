@@ -196,7 +196,7 @@ def test_the_page_the_measured_data_and_only_the_clips_it_shows(web):
         assert client.get(f"/api/clip/{other}").status_code == 404
     assert client.get("/docs").status_code == 404 and client.get("/openapi.json").status_code == 404
     handlers = [r.endpoint for r in client.app.routes if getattr(r, "path", "").startswith("/api/") or getattr(r, "path", "") == "/"]
-    assert len(handlers) == 5 and not any(inspect.iscoroutinefunction(h) for h in handlers)   # blocking calls stay off the event loop
+    assert len(handlers) == 6 and not any(inspect.iscoroutinefunction(h) for h in handlers)   # blocking calls stay off the event loop
 
 
 def test_the_live_part_needs_the_code_answers_with_every_rung_and_charges_the_budget(web):
@@ -617,3 +617,62 @@ def test_the_other_findings_are_read_from_their_committed_run_files_as_they_came
 
 def test_a_finding_whose_run_file_is_missing_is_left_out(tree):
     assert demo.findings(tree) == [] and demo.measured(tree, clips=PICK, rows=ROWS)["findings"] == []
+
+
+# --------------------------------------------------------------------------- #
+# one request a machine
+# --------------------------------------------------------------------------- #
+def test_the_door_is_asked_once_and_a_request_may_leave_the_voice_to_another(web):
+    client, _, budget = web
+    enter = lambda code: client.post("/api/enter", headers={"X-Access-Code": code} if code else {})
+    assert enter(None).status_code == 401 and enter("wrong").status_code == 401 and budget.store["wrong_codes"] == [DAY]   # one guess, counted once
+    assert enter("open sesame").json() == {"ok": True} and budget.spent(DAY) == 0.0                 # the door costs nothing
+    send = lambda voice_too: client.post("/api/live", files={"audio": ("turn", wav(2.0), "audio/wav")}, data={"rungs": "R1", "voice_too": voice_too},
+                                         headers={"X-Access-Code": "open sesame"}).json()
+    assert send("0")["voice"] is None and [t["label"] for t in send("0")["turns"]] == ["R1"]
+    pytest.importorskip("parselmouth")
+    assert send("1")["voice"]["pitch_hz"] > 0
+    page = client.get("/").text
+    assert "api/enter" in page and "Each machine answers when it is ready" in page and "It wakes for this, and loads its model first." in page
+
+
+def test_a_request_to_one_machine_does_not_wait_for_another(tree, monkeypatch):
+    pytest.importorskip("fastapi")
+    import threading
+    import time
+
+    from fastapi.testclient import TestClient
+
+    from s2slab import demoweb
+    monkeypatch.setenv("TEST_DEMO_CODE", "open sesame")
+
+    class Slow(StubRung):
+        def _respond(self, audio, sr, sink):
+            time.sleep(0.8)                                       # the first machine, waking
+            return super()._respond(audio, sr, sink)
+
+    first = demo.Live({"R0": "stub"}, get=lambda rung_id: Slow())
+    far = demo.Live({"R3": "stub"}, get=lambda rung_id: StubRung())
+    live = demo.Several(first, {"a10": demo.Remote({"R3": "stub"}, lambda labels, samples: demo.answer(far, labels, samples))}, says={"a10": "an A10"})
+    budget = demo.Budget({}, 1.0, 0.59, window_s=300.0, cold_start_s=0.0, machines={"a10": (1.10, 120.0)})
+    app = demoweb.create_app(live, budget, root=tree, code_env="TEST_DEMO_CODE", clips=PICK, rows=ROWS, verbatim_run="runs/none.json")
+    done = {}
+
+    def send(rungs):
+        r = TestClient(app).post("/api/live", files={"audio": ("turn", wav(1.0), "audio/wav")}, data={"rungs": rungs, "voice_too": "0"},
+                                 headers={"X-Access-Code": "open sesame"})
+        done[rungs] = (time.perf_counter(), r.status_code, [t["label"] for t in r.json()["turns"]])
+
+    threads = [threading.Thread(target=send, args=(rungs,)) for rungs in ("R0", "R3")]
+    threads[0].start(); time.sleep(0.2); threads[1].start()
+    for t in threads:
+        t.join()
+    assert done["R0"][1:] == (200, ["R0"]) and done["R3"][1:] == (200, ["R3"])
+    assert done["R3"][0] < done["R0"][0]                          # sent later, answered sooner: it did not wait for the first machine
+    again = [threading.Thread(target=send, args=("R0",)) for _ in range(2)]
+    t0 = time.perf_counter()
+    for t in again:
+        t.start()
+    for t in again:
+        t.join()
+    assert time.perf_counter() - t0 > 1.5                         # two recordings on one machine: one after the other

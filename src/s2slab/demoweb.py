@@ -29,7 +29,18 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
     usual = list(getattr(live, "default", live.offered))           # what answers a recording when nothing is asked for
     asked_for = dict(getattr(live, "optional", {}))                # label -> the machine it wakes
     root = pathlib.Path(root)
-    one_at_a_time = threading.Lock()                               # one recording on the rungs at a time
+    busy = {name: threading.Lock() for name in {None, *asked_for.values()}}     # one recording at a time, on each machine
+
+    def enter(given: str, now: float) -> None:
+        """The door: the lock on wrong codes, the code, the day's budget. Raises what the visitor is told."""
+        if door.locked_s(now) > 0:                                 # before the code is looked at: a locked door tells nothing
+            raise HTTPException(429, f"too many wrong codes; the live part opens again in {door.locked_s(now) / 60:.0f} min")
+        if not code_ok(given, os.environ.get(code_env)):
+            if given:                                              # a request with no code is not a guess
+                door.wrong(now)
+            raise HTTPException(401, "the live part needs an access code")
+        if not budget.allows(now):
+            raise HTTPException(429, f"today's budget of ${budget.cap:.2f} is spent; the measured part is still here")
     door = Door(budget.store)
     app = FastAPI(title="s2s-lab demo", docs_url=None, redoc_url=None, openapi_url=None)
     data = measured(root, clips, rows, **panel)
@@ -62,17 +73,18 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
                 "about": about or {}, "wake_s": budget.store.get("wake_s"),
                 "max_clip_s": MAX_CLIP_S, "keeps": "nothing: the recording is decoded in memory and discarded"}
 
+    @app.post("/api/enter")
+    def api_enter(x_access_code: str = Header(default="")):
+        """The door alone, asked once before a recording is sent to several machines at once: a
+        wrong code is then one wrong code, not one for each machine."""
+        enter(x_access_code, clock())
+        return {"ok": True}
+
     @app.post("/api/live")
-    def api_live(audio: UploadFile = File(...), rungs: str = Form(""), x_access_code: str = Header(default="")):
+    def api_live(audio: UploadFile = File(...), rungs: str = Form(""), voice_too: str = Form("1"),
+                 x_access_code: str = Header(default="")):
         start = clock()
-        if door.locked_s(start) > 0:                               # before the code is looked at: a locked door tells nothing
-            raise HTTPException(429, f"too many wrong codes; the live part opens again in {door.locked_s(start) / 60:.0f} min")
-        if not code_ok(x_access_code, os.environ.get(code_env)):
-            if x_access_code:                                      # a request with no code is not a guess
-                door.wrong(start)
-            raise HTTPException(401, "the live part needs an access code")
-        if not budget.allows(start):
-            raise HTTPException(429, f"today's budget of ${budget.cap:.2f} is spent; the measured part is still here")
+        enter(x_access_code, start)
         wanted = [r for r in rungs.split(",") if r] or usual
         unknown = [r for r in wanted if r not in live.offered]
         if unknown:
@@ -81,14 +93,22 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
             clip = decode(audio.file.read(MAX_UPLOAD_BYTES + 1))
         except ValueError as e:
             raise HTTPException(400, str(e)) from None
+        carried = None
+        if voice_too != "0":                                       # once a recording: the page asks it of one request
+            try:
+                carried = voice(clip)                              # here, not with the rungs: it is shown even if they fail
+            except Exception as e:                                 # a measurement is not worth a turn
+                print(f"the voice was not measured: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
+        mine = sorted({asked_for.get(label) for label in wanted}, key=str)      # the machines this request uses, in one order
+        held = [busy[name] for name in mine]
         try:
-            carried = voice(clip)                                  # here, not with the rungs: it is shown even if they fail
-        except Exception as e:                                     # a measurement is not worth a turn
-            print(f"the voice was not measured: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
-            carried = None
-        try:
-            with one_at_a_time:
+            for lock in held:
+                lock.acquire()
+            try:
                 out = live.turns(wanted, clip)
+            finally:
+                for lock in reversed(held):
+                    lock.release()
         except Exception as e:
             print(f"the rungs did not answer: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
             budget.charge(start, clock())                          # a machine that woke and failed was still up
