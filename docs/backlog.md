@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-09-28, at commit `c58e588`.
+Last updated 2026-09-28, at commit `22fce45`.
 
 ## Chosen next: M27, a live demo on Modal
 
@@ -18,10 +18,10 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | 1, commit 2 | FT-2's verbatim recognizer as a rung and a tier; its measured panel | done, on a stand-in model: PR-011's model has not run in a rung yet |
 | 1, commit 3 | the Modal app: a CPU container for the page and the door, a T4 for the rungs; the access code as a secret, the spend counter, the volume `ft2`; a rung that fails answered with a sentence | done |
 | 1, first run | the author creates the secret and runs `modal serve`; the wake is measured; PR-011's model answers in a rung for the first time | done: one live turn through four rungs on a T4, the wake 72 s (`docs/m27-log.md`, entry 9) |
-| 1, commit 4 | the live handler not `async`, after Modal's warning in the first run | done on the laptop; not yet run on Modal |
+| 1, commit 4 | the live handler not `async`, after Modal's warning in the first run | done; on Modal two turns ran and the warning was gone (`docs/m27-log.md`, entry 15) |
 | 1, commit 5 | wrong codes counted, five in ten minutes close the live part for ten; a code under ten characters refused | done; on Modal it refused a code that was too short (`docs/m27-log.md`, entry 13) |
-| 1, commit 6 | the recorder shows that it is recording, the time and the limit, and plays the recording back; Send off while the live part is closed | done on the laptop with a made-up microphone; the author's microphone is the test |
-| 1, deploy | `modal deploy`, the URL that stays | the author's call, after a new code is in the secret |
+| 1, commit 6 | the recorder shows that it is recording, the time and the limit, and plays the recording back; Send off while the live part is closed | done; used by the author with his microphone on Modal. Whether it is now clear when it starts and stops: his to say |
+| 1, deploy | `modal deploy`, the URL that stays | the author's call. Phase 1 has nothing else open |
 | 2 | live R3, on an A10 | not started |
 | 3 | live R4 and R5, on an L40S and an A10; R5 over WebSocket | not started |
 | 4 | barge-in in live playback | not started |
@@ -34,9 +34,8 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | A remote | the repo has never been pushed |
 | Local paths in committed files | six report files from M16 to M20 under `runs/` hold Modal's "Created mount" lines with the author's local path, and three comments in `src/s2slab/` (`policies.py`, `prosody.py`, `simulate.py`) hold a local command; every Modal report holds the workspace's URL. Checked for only from M25 on. Removing them from files is a commit; removing them from history is a rewrite, and evidence files are never overwritten: a decision for the author before any push |
 | `probes/README.md`, "Recording notes" | microphone and room are still to fill in |
+| The cards of a warm turn | the third session's second turn took 3.1 s for four rungs, but its cards were not kept: only the first turn's were sent |
 | A live turn with a reference, for the verbatim tier | in the demo's first live turn it wrote "uh" twice and "wanna" where three other recognizers wrote none; what was said is not known. The committed data says it adds no filler to read speech (`docs/m27-log.md`, entry 11). Still open: a recording whose words are known, a script read once plainly and once with fillers put in |
-| A new access code in the secret, ten characters or more | the first code was five digits and was shown in a paste; the second was shorter than ten characters and the app refused it. The author's, before the next `modal serve` |
-| A second live turn on Modal, the T4 already up | the first run had one turn, and it carried the wake and the warm-up. The same session shows whether Modal's warning is gone (commit 4) and the door holds (commit 5) |
 
 ## Raised by PR-013, none started
 

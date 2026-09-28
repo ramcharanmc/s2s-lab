@@ -64,6 +64,8 @@ one. A failed run is still a row, since it was still billed.
 
 | 2026-09-28 | `15a0aa3` | `modal serve modal_app/demo.py` (the demo; one live turn, four rungs) | T4, and a CPU container for the page | 78.3 s | 81.4 s | ≈ \$0.023 (the T4 up for the wake, 72 s, the turns and the 60 s window; the app's own count \$0.0223) | **the demo's first run on Modal**: the page and the measured part from the CPU container; one recording of 10.3 s answered by `r0-gpu`, `r1-gpu`, `r2-gpu` and `r2-gpu-verbatim`, first audio 1.08 s, 517 ms, 485 ms, 476 ms: one turn on a machine just woken, not a measurement. No run file: a visitor's turn is never stored. The dashboard showed \$0.03 for the app, CPU and memory included, while it was still running, and the same after it stopped by the author's report (`docs/m27-log.md`, entry 9) |
 
+| 2026-09-28 | `22fce45` | `modal serve modal_app/demo.py` (the demo; two live turns, four rungs each) | T4, and a CPU container for the page | 51.8 s and 3.1 s | 51.9 s and 3.1 s | ≈ \$0.02 (the app's count for the first turn \$0.0182; the second turn fell inside its window) | **the demo's third session**: the wake 47 s, the four rungs loaded in 40.8 s; a turn with the T4 up answered by all four rungs in 3.1 s; Modal's warning of the first run gone. No run file: a visitor's turn is never stored. The session before it (`c58e588`) woke no GPU: the door refused a code too short (`docs/m27-log.md`, entries 13 and 15) |
+
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
 
@@ -71,5 +73,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$8.749 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
+| Modal | \$8.769 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
 | Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |

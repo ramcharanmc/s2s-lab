@@ -19,7 +19,8 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 11 | 09-28 | a count over `runs/ft2/pr011.json`, laptop | on 100 read clips with no filler in the reference the LoRA wrote none; on 50 accented clips it wrote 20 to the references' 31, 3 of them not in the reference | — | bd529bc |
 | 12 | 09-28 | the tests, laptop, scratch | wrong codes are counted and close the door; a code under ten characters is no code | `demo.py`, `demoweb.py`, `demo_page.html`, tests | c58e588 |
 | 13 | 09-28 | `modal serve`, by the author, with a new code | the new code was shorter than ten characters: the live part stayed closed and said so; the one live request refused, 401; no turn, the T4 never woke | — | — |
-| 14 | 09-28 | the page in a browser, laptop, scratch, a made-up microphone | the author: "I dont know when it started and stopped". The page now shows that it is recording, the time, the limit, and plays the recording back before it is sent | `demo_page.html`, a test | this commit |
+| 14 | 09-28 | the page in a browser, laptop, scratch, a made-up microphone | the author: "I dont know when it started and stopped". The page now shows that it is recording, the time, the limit, and plays the recording back before it is sent | `demo_page.html`, a test | 22fce45 |
+| 15 | 09-28 | `modal serve`, by the author, a code of ten characters or more | two live turns through four rungs on a T4: one that woke it (the wake 47 s) and one with it up (3.1 s for all four); Modal's warning gone; the recorder used with a real microphone | — | — |
 
 ## 1. The design
 
@@ -454,3 +455,50 @@ nothing is sent until Send.
 
 **Not run:** a real microphone: the browser I can drive has none, so the recorder was fed a made-up
 one (a tone). The author's microphone is the test.
+
+## 15. The third session on Modal: two turns, one of them warm (at 22fce45)
+
+853 tests passed on the author's machine. A code of ten characters or more in the secret, then
+`modal serve`. No stage failed.
+
+| What | Result |
+|---|---|
+| the door | open: the code was accepted |
+| the four rungs | loaded in 40.8 s, none failed (62.8 s in the first run) |
+| the first turn, the T4 asleep | 200, 51.9 s end to end; the wake **47 s** as the app measures it (72 s in the first run) |
+| the second turn, the T4 up | 200, **3.1 s end to end for all four rungs**, the recording's upload and the replies' download included |
+| Modal's warning (entries 9, 10) | **gone**: two turns ran, every call to the spend counter was reached, nothing was printed. Commit 4 is confirmed on Modal |
+| the recorder, with the author's microphone | used: "Recorded 8.7 s, 134 kB. Listen, then send.", the player holding the recording, the button "Record again". The author has not said whether it is now clear when it starts and stops |
+| the budget | \$0.96 of \$1.00 left after the session; the first turn was charged \$0.0182 |
+
+**The first turn's cards**, from the author's screenshot. One recording of 8.5 s, the T4 just
+woken, the rungs one after another:
+
+| Rung | Recognizer | LLM | Speech | First audio | Whole reply |
+|---|---:|---:|---:|---:|---:|
+| R0, `r0-gpu` | 78 ms | 808 ms | 172 ms | 1.06 s | 1.06 s |
+| R1, `r1-gpu` | 63 ms | 421 ms | 799 ms | 562 ms | 1.28 s |
+| R2, `r2-gpu` | 159 ms | 425 ms | 471 ms | 347 ms | 1.06 s |
+| R2 verbatim, `r2-gpu-verbatim` | 139 ms | 404 ms | 387 ms | 325 ms | 930 ms |
+
+**The second turn's cards were not sent to me.** Both screenshots show the first turn (its line
+says the machine was asleep). So the warm turn is known by its total only: 3.1 s for four
+replies, against 4.3 s for the four in the first turn.
+
+**How to read it.** As entry 9: one turn, not a measurement. The same shape again: R0, the
+first rung to run, has the slowest LLM (808 ms against 404 to 425 ms), which is warm-up, not R0.
+Two first turns now agree on it, so the first rung's card after a wake should not be compared
+with the others.
+
+**The verbatim rung wrote no filler this time.** All four heard the same words: "Hi, this is
+[a first name]. Let's see if the service is able to answer. Thank you." The verbatim rung differs
+by a comma.
+Its reply differs from the other three, which is the LLM answering a different punctuation. One
+recording; it agrees with entry 11 (none added where none is said), and whether the author chose
+the sentence beforehand is not known to me.
+
+**A name was said in the recording.** It is left out here: the repo holds no personal detail,
+and a visitor's words are not kept. The screenshot with it is the author's, outside the repo.
+
+**Cost.** About \$0.02 of T4 time: the app's count for the first turn, \$0.0182, and a second
+turn inside its window. The dashboard's figure was not sent.
