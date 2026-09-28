@@ -25,7 +25,9 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 17 | 09-28 | `modal serve`, by the author, his own voice | the voice card and the prosody panel on Modal; two live turns, and **both woke the T4**: it had gone to sleep in between | — | 2661338 |
 | 18 | 09-28 | the tests, laptop, scratch | the T4's window 300 s, the author's choice after entry 17 | `modal_app/demo.py`, `demo_page.html`, a test | 87ba16c |
 | 19 | 09-28 | the plan for the rest of the demo | seven decisions by the author; R5 as a conversation and barge-in live left out, and why | — | — |
-| 20 | 09-28 | the tests and the page in a browser, laptop, scratch | R3 and R4 live, each on a machine of its own that wakes only when asked; one cap over three machines | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | this commit |
+| 20 | 09-28 | the tests and the page in a browser, laptop, scratch | R3 and R4 live, each on a machine of its own that wakes only when asked; one cap over three machines | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | ab45907 |
+| 21 | 09-28 | `modal serve`, by the author | R3 and R4 on Modal for the first time, both asked for at once; a second turn that found all three machines up | — | — |
+| 22 | 09-28 | the tests and the page in a browser, laptop, scratch | R5 on the visitor's recording: Moshi, on an A10 of its own, hears it as one side of a call | `demo.py`, `demo_page.html`, `modal_app/demo.py`, tests | this commit |
 
 ## 1. The design
 
@@ -721,3 +723,102 @@ So the day's dollar is four bursts with everything asked for, or about seventeen
 fetched on CPUs); R3 and R4 loading in their containers; their wakes, which may be longer than
 the T4's; a request that waits past Modal's 150 s limit for a web request; the L40S's
 availability.
+
+## 21. The fifth session on Modal: six rungs answer one recording (at ab45907)
+
+863 tests passed on the author's machine. Then `modal serve`. **The terminal's output of this
+session was not sent to me**: what follows is read from two screenshots of the page, small
+ones, so the times of the single stages are left out where I could not read them with
+certainty. Not known: how long the two images took to build, how long the rungs took to load,
+how long each request took end to end.
+
+| What had not run before | What happened |
+|---|---|
+| the A10's and the L40S's images | built: both machines answered |
+| R3 and R4 loading in their containers | both loaded |
+| their wakes | the A10 37 s, the L40S 51 s; the T4 49 s in the same turn |
+| a request past Modal's 150 s limit | not reached: the machines are asked together, and the longest wake was 51 s |
+| the 300 s window (commit 8) | **held**: the second turn found all three machines up, and no wake was reported |
+
+The author ticked R3 and R4 together in both turns. I had asked for one at a time, so that a
+failure in one would not hide the other. Neither failed.
+
+| | Turn 1, every machine woken | Turn 2, every machine up |
+|---|---|---|
+| the recording | 8.6 s | 6.3 s |
+| median pitch, range, words a second | 118 Hz, 5.4 semitones, 1.6 | 135 Hz, 9.4 semitones, 1.7 |
+| R0: first audio, whole reply | 839 ms, 839 ms | 1.34 s, 1.34 s |
+| R1 | 305 ms, 625 ms | 276 ms, 1.34 s |
+| R2 | 368 ms, 702 ms | 359 ms, 945 ms |
+| R2 verbatim | 410 ms, 1.18 s | 339 ms, 1.13 s |
+| R3, on the A10 | 1.13 s, 1.13 s | 2.51 s, 2.51 s |
+| R4, on the L40S | 14.81 s, 14.81 s | 7.02 s, 7.02 s |
+| charged by the app | \$0.2063 | \$0.0829 |
+| the budget after it | \$0.70 | \$0.62 |
+
+**The first warm turn whose cards were kept.** Turn 2's replies are longer than turn 1's, and
+its times follow them: R0's 1.34 s with nothing to wake is slower than its 839 ms after a wake.
+So again: a card is one turn. What holds in both turns is what holds by construction. R1's first
+audio comes before its reply is whole and R0's cannot; R3 and R4 have no transcript; R4 is
+slowest by far, because its wait is its own speech (9.17 s at the median of its 200 measured
+turns).
+
+**R3 answered about the speaker, not to him**, in turn 1: "The speaker is expressing frustration
+about the time it's taking for something to happen or be observed." Two things in one sentence.
+It described the recording instead of replying to it: in the measured run 50 of R3's 200
+replies begin that way ("The speaker ...", counted from `runs/r3-gpu/evalset-modal-a10.json` for
+this entry). And it named a feeling in a visitor, unasked: 5 of those 50 name one, by a list of
+words of mine. The author's decision (entry 19) keeps R3's "upset?" score
+off the live part; this is the rung's own reply, which that decision does not cover. Whether
+the word came from the voice or from the words ("it's taking a long time") cannot be told from
+one turn. For the author: whether the page should say, on R3's card, that its replies may
+describe the speaker.
+
+**The verbatim rung wrote a filler and a repetition the others did not**, in turn 1: "how it,
+uh, how it behaves" where R0, R1 and R2 wrote "how it behaves". As in entry 9: what was said is
+not known. Entry 11's count says the model adds no filler to read speech.
+
+**The two recordings were again different sentences**, so the voice card's brackets compare
+sentences. One sentence said two ways is still owed.
+
+**Cost.** \$0.29 by the app's count: \$0.2063 for the turn that woke three machines, \$0.0829
+for the one that kept them up. My arithmetic before the run said about \$0.22 for a burst with
+both ticked: low by the idle time between the two turns, which the app counts on three machines
+at once. The dashboard's figure was not sent. The day's dollar stood at \$0.62.
+
+## 22. Commit 10: R5 on the visitor's recording
+
+**What it is.** Moshi has no turn to answer, so it is not a rung. The visitor's recording is
+the caller's side of one call, streamed through `duplex.converse` exactly as the 200 eval clips
+were: 4.8 s of silence in which the model may open the call, the recording, 8 s of silence in
+which to answer. The card shows what `duplex.measure` measures (the response gap, whether it
+opened the call, how much of the caller it spoke over, the real-time factor) and plays the call,
+the caller on the left and the model on the right.
+
+**What it is not, and the card says so.** A conversation. The visitor cannot hear the model
+while speaking, so nothing it says can change what the visitor says. A conversation needs the
+microphone open while the model speaks (entry 19).
+
+- `demo.py`: `Call`, a full-duplex model as the live part holds it; `any_rung`, which finds a
+  rung in the registry and a duplex model in `r5.MODELS`.
+- `modal_app/demo.py`: `Talks`, Moshi on an A10 of its own, the image pinned as `r5_bench.py`
+  pins it. Its own, because Moshi's 16.6 GB and R3's 17.0 GB do not share 24 GB, and because
+  Moshi needs a torch R3's libraries do not.
+- `demo_page.html`: a third box under "Also ask:"; the card for a call.
+
+**The caller's recording comes back in the reply**, as the left channel of the call. It goes to
+the visitor's own browser and nowhere else; nothing is stored.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop:
+
+| What | Result |
+|---|---|
+| the full suite | 860 passed, 5 skipped, the skipped ones for audio the scratch copy does not hold |
+| the page in a browser, a made-up duplex model on a made-up machine, the recorder fed a tone | "Also ask:" with R5, "on a second A10"; ticked and sent: R5's card under the first machine's, naming its machine |
+| that card | "One call of 15.2 s: 4.8 s of silence in which the model may open the call (it did), your recording, then silence in which to answer", the sentence that it is not a conversation, and a player holding the call in stereo (1.9 MB in the reply) |
+| its response gap | "It did not answer this caller": the tone fed to the recorder is not speech to the voice detector, so no caller was found to answer. The gap itself is held by a test, on a voice |
+| errors in the browser's console | none |
+
+**Not run, and first run by the author:** Moshi itself in the demo: the image build, the load,
+a call on a real recording, and how long a call of up to 28 s of stream takes (the eval run's
+real-time factor says less than its length).

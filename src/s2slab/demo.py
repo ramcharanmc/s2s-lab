@@ -337,6 +337,40 @@ def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS
 # --------------------------------------------------------------------------- #
 # the live part
 # --------------------------------------------------------------------------- #
+class Call:
+    """A full-duplex model as the live part holds it. It is not a rung: it has no finished turn to
+    answer. The visitor's recording is the caller's side of one call, streamed as duplex.converse
+    streams an eval clip: silence while the model opens the call, the recording, silence in which
+    to answer. What comes back is duplex.measure's numbers and the call to listen to, the caller
+    on the left and the model on the right.
+
+    NOT A CONVERSATION. The visitor cannot hear the model while speaking, so nothing the model says
+    can change what the visitor says. It is the eval run's protocol, on one more clip."""
+
+    def __init__(self, model):
+        self.model, self.rung_id = model, model.rung_id
+
+    def load(self) -> float:
+        t0 = time.perf_counter()
+        self.model.load()
+        return (time.perf_counter() - t0) * 1000
+
+    def record(self, audio: np.ndarray, sr: int) -> dict:
+        from . import duplex
+        conv = duplex.converse(self.model, audio, sr)
+        m = duplex.measure(audio, conv, sr)
+        return {"kind": "duplex", "transcript": None, "reply_text": m["reply_text"], "gap_ms": m["gap_ms"], "setup_s": m["setup_s"],
+                "overlap": m["overlap"], "opened": m["opened"], "backchannels": m["backchannels"], "interruptions": m["interruptions"],
+                "rtf": m["rtf"], "stream_s": m["stream_s"], "lead_s": conv.lead_s, "total_ms": round(1000 * (conv.wall_s + conv.begin_s), 1),
+                "reply_wav": base64.b64encode(wav_bytes(duplex.stereo(audio, conv, sr), duplex.SR)).decode("ascii")}
+
+
+def any_rung(rung_id: str):
+    """A registered rung, or a full-duplex model behind a Call."""
+    from . import r5
+    return Call(r5.get(rung_id)) if rung_id in r5.MODELS else ladder.get(rung_id)
+
+
 class Live:
     """The rungs the live part offers, each loaded once: on first use, or all at once by
     load_all(). `offered` maps the label a visitor sees to a registered rung id: {"R0": "r0-gpu"}.
@@ -344,7 +378,7 @@ class Live:
     A rung that does not load, or fails on a recording, is answered for with a sentence, and the
     other rungs still answer. What went wrong goes to the server's log, never to the visitor."""
 
-    def __init__(self, offered: dict, get=ladder.get):
+    def __init__(self, offered: dict, get=any_rung):
         self.offered, self._get, self._loaded, self.load_ms = dict(offered), get, {}, {}
         self.unavailable, self._answered = {}, False
 
@@ -389,6 +423,8 @@ class Live:
             self.unavailable[label] = NOT_LOADED
             return self._failed(label, "loading", e, NOT_LOADED)
         try:
+            if hasattr(rung, "record"):                           # a Call: one conversation, not a turn
+                return {"label": label, "rung": self.offered[label], **rung.record(audio, SR)}
             t = rung.respond(audio, SR)
         except Exception as e:
             return self._failed(label, "answering", e, NOT_ANSWERED)

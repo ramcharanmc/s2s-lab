@@ -40,7 +40,7 @@ def test_the_image_holds_every_model_the_four_rungs_load_and_the_export_is_pr011
         if label != "R2 verbatim":
             assert f"Systran/faster-whisper-{rung.asr.model_name}" in app.MODELS
     assert app.EXPORT_NAME == r2verbatim.EXPORT_NAME and app.EXPORT == f"/ft2/export/{r2verbatim.EXPORT_NAME}/ct2"
-    assert set(app.ABOUT) <= set(app.OFFERED) | {"R3", "R4"} and "large-v3-turbo" in app.ABOUT["R2"]
+    assert set(app.ABOUT) <= set(app.OFFERED) | {"R3", "R4", "R5"} and "large-v3-turbo" in app.ABOUT["R2"]
 
 
 def test_the_web_container_is_sent_what_the_measured_part_reads_and_no_more(app):
@@ -97,13 +97,16 @@ def test_a_t4_that_does_not_answer_is_a_sentence_on_its_cards_and_is_still_charg
     assert len(spent) == 1 and spent[0] > 0                  # a T4 that started and failed was still up: the cap counts it
 
 
-def test_r3_and_r4_are_on_machines_of_their_own_that_hold_their_models(app):
-    assert {name: o["offered"] for name, o in app.OTHERS.items()} == {"a10": {"R3": "r3-gpu"}, "l40s": {"R4": "r4-gpu"}}
+def test_r3_r4_and_r5_are_on_machines_of_their_own_that_hold_their_models(app):
+    from s2slab import r5
+    assert {name: o["offered"] for name, o in app.OTHERS.items()} == {"a10": {"R3": "r3-gpu"}, "l40s": {"R4": "r4-gpu"},
+                                                                      "moshi": {"R5": "r5-moshi"}}
+    assert list(app.MODELS_MOSHI) == [r5.MOSHI_REPO] and "r5-moshi" in r5.MODELS and app.OTHERS["moshi"]["rate"] == 1.10
     assert (app.OTHERS["a10"]["rate"], app.OTHERS["l40s"]["rate"], app.WINDOW_BIG_S) == (1.10, 1.95, 120)
     r3, r4 = get("r3-gpu"), get("r4-gpu")
     assert r3.llm.model_name in app.MODELS_A10 and f"voices/{r3.tts.voice}.pt" in app.MODELS_A10["hexgrad/Kokoro-82M"]
     assert r4.model.model_name in app.MODELS_L40S
-    assert set(app.ABOUT) == set(app.OFFERED) - {"R0", "R1"} | {"R3", "R4"} and "no transcript" in app.ABOUT["R3"]
+    assert set(app.ABOUT) == set(app.OFFERED) - {"R0", "R1"} | {"R3", "R4", "R5"} and "no transcript" in app.ABOUT["R3"]
 
 
 def test_the_bigger_machines_wake_only_for_a_visitor_who_asks(app, monkeypatch):
@@ -124,7 +127,7 @@ def test_the_bigger_machines_wake_only_for_a_visitor_who_asks(app, monkeypatch):
                                      others={name: machine(name, o["offered"]) for name, o in app.OTHERS.items()}))
     status = client.get("/api/status").json()
     assert status["rungs"] == list(app.OFFERED) and [(o["label"], o["machine"], o["dollars"]) for o in status["optional"]] == [
-        ("R3", "an A10", 0.04), ("R4", "an L40S", 0.07)]                                  # what each one's idle window costs
+        ("R3", "an A10", 0.04), ("R4", "an L40S", 0.07), ("R5", "a second A10", 0.04)]    # what each one's idle window costs
     send = lambda rungs: client.post("/api/live", files={"audio": ("turn", wav(), "audio/wav")}, data={"rungs": rungs},
                                      headers={"X-Access-Code": "open sesame"})
     assert send("").status_code == 200 and woke == ["t4"]                                  # a recording alone wakes the T4 only

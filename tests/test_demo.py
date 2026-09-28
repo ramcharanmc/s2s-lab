@@ -519,3 +519,60 @@ def test_the_page_asks_the_other_machines_only_for_what_is_ticked(tree, monkeypa
     assert client.get("/api/status").json()["optional"][0]["wake_s"] == 40.0
     page = client.get("/").text
     assert "Also ask:" in page and "it wakes for this" in page
+
+
+# --------------------------------------------------------------------------- #
+# a full-duplex model: one call, not a turn
+# --------------------------------------------------------------------------- #
+class Answers:
+    """A made-up full-duplex model: greets in the lead-in, answers some steps after the caller."""
+
+    rung_id = "r5-made-up"
+
+    def __init__(self, speak=(), text=None):
+        self.speak, self.text, self.loaded = set(speak), dict(text or {}), 0
+
+    def load(self):
+        self.loaded += 1
+
+    def begin(self, seed):
+        self.k, self.rng = 0, np.random.default_rng(seed)
+
+    def step(self, frame):
+        k, self.k = self.k, self.k + 1
+        return (0.3 * self.rng.standard_normal(len(frame)) * (k in self.speak)).astype(np.float32), self.text.get(k)
+
+    def end(self):
+        pass
+
+
+def test_a_recording_is_one_side_of_a_call_and_comes_back_measured_and_in_stereo():
+    from s2slab import duplex
+    caller = np.concatenate([np.zeros(8_000, np.float32), voice()[:24_000], np.zeros(8_000, np.float32)])     # speech from 0.5 to 2.0 s
+    model = Answers(speak=list(range(5, 21)) + list(range(89, 101)), text={90: " Sure", 91: ",", 92: " I can"})
+    live = demo.Live({"R5": "r5-made-up"}, get=lambda rung_id: demo.Call(model))
+    assert live.load_all() >= 0 and model.loaded == 1 and live.unavailable == {}
+    t = live.turns(["R5"], caller)["turns"][0]
+    assert (t["label"], t["rung"], t["kind"], t["transcript"]) == ("R5", "r5-made-up", "duplex", None)
+    assert t["opened"] and t["reply_text"] == "Sure, I can" and t["lead_s"] == duplex.LEAD_S and t["overlap"] == 0
+    assert 200 <= t["gap_ms"] <= 700 and t["stream_s"] == pytest.approx(4.8 + 2.5 + 8.0, abs=0.1) and t["rtf"] >= 0 and t["total_ms"] >= 0
+    both, sr = sf.read(io.BytesIO(base64.b64decode(t["reply_wav"])))
+    assert sr == 24_000 and both.shape[1] == 2 and len(both) / sr == pytest.approx(t["stream_s"], abs=0.2)
+    lead = int(duplex.LEAD_S * sr)
+    assert not both[:lead, 0].any() and np.abs(both[lead + 14_000:lead + 40_000, 0]).mean() > 0.01        # the caller, on the left, after the lead-in
+    assert np.abs(both[int(7.3 * sr):int(7.9 * sr), 1]).mean() > 0.05                                   # the model's answer, on the right
+    json.dumps(t)
+
+
+def test_a_call_that_fails_is_a_sentence_and_the_registry_knows_the_duplex_models(capsys):
+    class Falls(Answers):
+        def step(self, frame):
+            raise RuntimeError("CUDA out of memory at /a/path/nobody/should/see")
+
+    live = demo.Live({"R5": "r5-made-up"}, get=lambda rung_id: demo.Call(Falls()))
+    assert live.turn("R5", voice()) == {"label": "R5", "rung": "r5-made-up", "error": demo.NOT_ANSWERED}
+    assert "nobody/should/see" in capsys.readouterr().err
+    call = demo.any_rung("r5-moshi")
+    assert isinstance(call, demo.Call) and call.rung_id == "r5-moshi" and demo.any_rung("stub").rung_id == "stub"
+    page = demo.PAGE.read_text(encoding="utf-8")
+    assert "Not a conversation" in page and "you are on the left and the model on the right" in page

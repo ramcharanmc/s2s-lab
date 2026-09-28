@@ -104,8 +104,18 @@ function turnCard(title, sub, t) {
   c.appendChild(el("div", "row")).append(el("strong", null, title), el("span", "soft", sub));
   if (t.error) { c.appendChild(el("p", "warn", t.error)); return c; }
   if (t.kind === "duplex") {
-    c.appendChild(el("p", null, t.gap_ms == null ? "It did not answer this caller." : "Response gap " + ms(t.gap_ms)
+    c.appendChild(el("p", t.stream_s ? "num" : null, t.gap_ms == null ? "It did not answer this caller." : (t.gap_ms < 0
+      ? "It was already talking when the caller stopped, by " + ms(-t.gap_ms) : "Response gap " + ms(t.gap_ms))
       + (t.setup_s > 1 ? ", after " + t.setup_s.toFixed(1) + " s of set-up" : "")));
+    if (t.stream_s) {                               // a live call: what happened in it, and what it is not
+      c.appendChild(el("p", "soft", "One call of " + t.stream_s.toFixed(1) + " s: " + t.lead_s.toFixed(1) + " s of silence in which the model may open the call"
+        + (t.opened ? " (it did)" : " (it did not)") + ", your recording, then silence in which to answer. It spoke over "
+        + Math.round(100 * (t.overlap || 0)) + "% of your speech" + (t.interruptions ? ", breaking in " + t.interruptions + " time" + (t.interruptions > 1 ? "s" : "") : "")
+        + (t.backchannels ? ", with " + t.backchannels + " short sound" + (t.backchannels > 1 ? "s" : "") + " while you spoke" : "")
+        + ". It ran at " + t.rtf.toFixed(2) + " of real time, " + ms(t.total_ms) + " in all."));
+      c.appendChild(el("p", "soft", "Not a conversation: you could not hear it while you spoke. In the player, you are on the left and the model on the right. "
+        + "The words below are the model's own text stream, which skips pieces."));
+    }
   } else {
     c.appendChild(el("p", "num", "First audio " + ms(t.first_audio_ms) + "  ·  whole reply " + ms(t.total_ms)));
     c.appendChild(bar(t.stages_ms, t.total_ms));

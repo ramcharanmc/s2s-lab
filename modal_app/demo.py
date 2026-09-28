@@ -1,6 +1,6 @@
 """
 The demo on Modal: the page and the measured part on a CPU, the live turn on a T4 that sleeps,
-and R3 and R4 on an A10 and an L40S that wake only when a visitor asks for them.
+and R3, R4 and R5 on machines of their own that wake only when a visitor asks for them.
 
     modal serve modal_app/demo.py       a temporary URL, gone at Ctrl+C: the first run, and every try
     modal deploy modal_app/demo.py      the URL that stays: the author's call
@@ -19,7 +19,10 @@ What happens where:
            only by a request that passed the door; asleep 300 s after the last one
   hears    an A10: R3 (Qwen2-Audio hears the recording; 17 GB). Woken only when R3 is asked for
   speaks   an L40S: R4 (Qwen2.5-Omni speaks the reply itself; 22.5 GB, more than an A10 holds).
-           Woken only when R4 is asked for. Both asleep 120 s after their last turn
+           Woken only when R4 is asked for
+  talks    a second A10: R5 (Moshi, full duplex; 16.6 GB, so not beside R3's 17). The recording
+           is one side of a call, streamed as the eval clips were. Woken only when R5 is asked
+           for. All three asleep 120 s after their last turn
   volume   `ft2`, read-only: PR-011's export, for the rung r2-gpu-verbatim
   dict     `s2s-lab-demo-spend`: the day's spend and the last measured wake, kept across restarts
 
@@ -64,10 +67,12 @@ OFFERED = {"R0": "r0-gpu", "R1": "r1-gpu", "R2": "r2-gpu", "R2 verbatim": "r2-gp
 ABOUT = {"R2": "slow tier small.en here; the measured R2 row is large-v3-turbo",
          "R2 verbatim": "R2 with FT-2's LoRA on its recognizer (PR-011): one speaker's disfluency, not a visitor's",
          "R3": "speech-LLM: Qwen2-Audio hears the recording itself; no transcript reaches it",
-         "R4": "speech-to-speech: Qwen2.5-Omni hears the recording and speaks the reply itself; no recognizer, no TTS"}
+         "R4": "speech-to-speech: Qwen2.5-Omni hears the recording and speaks the reply itself; no recognizer, no TTS",
+         "R5": "full duplex: Moshi, no turns. Your recording is the caller's side of one call"}
 # The machines beside the T4, each woken only by a visitor who asks for its rung.
 OTHERS = {"a10": {"offered": {"R3": "r3-gpu"}, "says": "an A10", "rate": A10_DOLLARS_PER_HOUR},
-          "l40s": {"offered": {"R4": "r4-gpu"}, "says": "an L40S", "rate": L40S_DOLLARS_PER_HOUR}}
+          "l40s": {"offered": {"R4": "r4-gpu"}, "says": "an L40S", "rate": L40S_DOLLARS_PER_HOUR},
+          "moshi": {"offered": {"R5": "r5-moshi"}, "says": "a second A10", "rate": A10_DOLLARS_PER_HOUR}}
 
 # What the web container is sent, and nothing else of runs/ and evalset/. tests/test_modal_demo.py
 # holds both to s2slab.demo.
@@ -92,6 +97,7 @@ MODELS_A10 = {
     "hexgrad/Kokoro-82M": ["config.json", "kokoro-v1_0.pth", "voices/af_heart.pt"],   # its voice
 }
 MODELS_L40S = {"Qwen/Qwen2.5-Omni-7B": None}                                          # R4, about 22 GB
+MODELS_MOSHI = {"kyutai/moshiko-pytorch-bf16": None}                                  # R5; == s2slab.r5.MOSHI_REPO
 
 
 def _download(models: dict) -> None:
@@ -111,6 +117,10 @@ def download_weights_a10() -> None:
 
 def download_weights_l40s() -> None:
     _download(MODELS_L40S)
+
+
+def download_weights_moshi() -> None:
+    _download(MODELS_MOSHI)
 
 
 gpu_image = (
@@ -144,6 +154,17 @@ def _speech_llm_image(download):
 
 a10_image = _speech_llm_image(download_weights_a10)
 l40s_image = _speech_llm_image(download_weights_l40s)
+
+moshi_image = (                     # as modal_app/r5_bench.py pins it: moshi 0.2.13 needs torch below 2.10
+    modal.Image.from_registry("nvidia/cuda:12.6.3-cudnn-runtime-ubuntu22.04", add_python="3.12")
+    .pip_install("torch==2.8.0", index_url="https://download.pytorch.org/whl/cu126")
+    .pip_install("moshi==0.2.13", "numpy==2.2.6", "scipy==1.15.3", "soundfile==0.14.0")
+    .run_function(download_weights_moshi)
+    .pip_install("praat-parselmouth==0.4.7")
+    .apt_install("gcc", "libportaudio2")
+    .env({"HF_HUB_OFFLINE": "1"})
+    .add_local_dir(REPO / "src" / "s2slab", "/root/s2slab", ignore=["**/__pycache__"])
+)
 
 web_image = (
     modal.Image.debian_slim(python_version="3.12")
@@ -226,6 +247,19 @@ class Speaks:
         return _turns(self, labels, raw)
 
 
+@app.cls(image=moshi_image, gpu="A10G", max_containers=1, scaledown_window=WINDOW_BIG_S, timeout=5 * 60, startup_timeout=15 * 60)
+class Talks:
+    """R5 (Moshi) on an A10 of its own, loaded when the container starts."""
+
+    @modal.enter()
+    def load(self):
+        _load_rungs(self, OTHERS["moshi"]["offered"])
+
+    @modal.method()
+    def turns(self, labels: list, raw: bytes) -> dict:
+        return _turns(self, labels, raw)
+
+
 def make_app(call, store, root="/root", others=None):
     """The web app with the T4's rungs behind `call`, the other machines' behind `others` (by
     name, as in OTHERS) and the spend in `store`: what web() serves, and what the tests run with
@@ -246,4 +280,4 @@ def make_app(call, store, root="/root", others=None):
 @modal.asgi_app()
 def web():
     return make_app(Rungs().turns.remote, modal.Dict.from_name(SPEND, create_if_missing=True),
-                    others={"a10": Hears().turns.remote, "l40s": Speaks().turns.remote})
+                    others={"a10": Hears().turns.remote, "l40s": Speaks().turns.remote, "moshi": Talks().turns.remote})
