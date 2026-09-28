@@ -3192,5 +3192,6 @@ the longest and not the shortest.
   5.3 Hz, where the floor's largest pair is 3.1. `af_sarah` v10 is outside 3 Hz for torch and
   for fp16 alike, which points at fp32's render of that sentence, or at the pitch measure on it;
   not looked into.
-- **The floor is a sample.** Its 95th percentile was 1.44 Hz here and 0.78 to 1.34 on dev. A2
-  held against the largest of them with 2 Hz to spare.
+- **The floor is a sample.** Its 95th percentile was 1.44 Hz here and 0.78 to 1.40 over five
+  runs of the dev set, the last of them the dry run in the evidence. A2 held against the largest
+  of them with 2 Hz to spare.
