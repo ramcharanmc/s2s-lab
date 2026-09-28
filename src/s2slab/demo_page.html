@@ -222,7 +222,7 @@ async function loadStatus() {
     about = s.about || {}; maxS = s.max_clip_s; liveOpen = s.code_set && s.open && !(s.locked_s > 0);
     $("status").className = liveOpen ? "soft" : "warn"; ready();
     waitText = "If the machine is asleep it has to wake and load the rungs first"
-      + (s.wake_s == null ? "" : ": about " + Math.round(s.wake_s) + " s the last time it was measured") + ". The turns after that do not wait.";
+      + (s.wake_s == null ? "" : ": about " + Math.round(s.wake_s) + " s the last time it was measured") + ". The turns after that do not wait, while it is up: it sleeps a few minutes after its last turn.";
     $("status").textContent = "Rungs here: " + s.rungs.join(", ") + ", on " + s.machine + ". Today's budget: $" + s.budget_left.toFixed(2)
       + " of $" + s.budget_cap.toFixed(2) + " left. Up to " + s.max_clip_s + " s a recording."
       + (s.code_set ? "" : (s.code_short ? " The access code configured is shorter than " + s.min_code_len + " characters, so the live part is closed."

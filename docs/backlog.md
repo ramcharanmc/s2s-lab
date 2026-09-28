@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-09-28, at commit `cdb890b`.
+Last updated 2026-09-28, at commit `2661338`.
 
 ## Chosen next: M27, a live demo on Modal
 
@@ -20,8 +20,9 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | 1, first run | the author creates the secret and runs `modal serve`; the wake is measured; PR-011's model answers in a rung for the first time | done: one live turn through four rungs on a T4, the wake 72 s (`docs/m27-log.md`, entry 9) |
 | 1, commit 4 | the live handler not `async`, after Modal's warning in the first run | done; on Modal two turns ran and the warning was gone (`docs/m27-log.md`, entry 15) |
 | 1, commit 5 | wrong codes counted, five in ten minutes close the live part for ten; a code under ten characters refused | done; on Modal it refused a code that was too short (`docs/m27-log.md`, entry 13) |
-| 1, commit 6 | the recorder shows that it is recording, the time and the limit, and plays the recording back; Send off while the live part is closed | done; used by the author with his microphone on Modal. Whether it is now clear when it starts and stops: his to say |
+| 1, commit 6 | the recorder shows that it is recording, the time and the limit, and plays the recording back; Send off while the live part is closed | done; used by the author with his microphone on Modal. The author: "recorder is clear now" |
 | 1, commit 7 | prosody: a measured panel from PR-006's run; a live card of the visitor's pitch, range and words a second, beside the words the rungs received | done; on Modal the card filled from the author's voice, twice (`docs/m27-log.md`, entry 17) |
+| 1, commit 8 | the T4's window 300 s, so a visitor's next turn finds it up | done on the laptop; not yet run on Modal |
 | 1, deploy | `modal deploy`, the URL that stays | the author's call |
 | 2 | live R3, on an A10: the rung that hears the audio, beside the cascades that do not | not started; a design note first |
 | 3 | live R4 and R5, on an L40S and an A10; R5 over WebSocket | not started |
@@ -35,7 +36,6 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | A remote | the repo has never been pushed |
 | Local paths in committed files | six report files from M16 to M20 under `runs/` hold Modal's "Created mount" lines with the author's local path, and three comments in `src/s2slab/` (`policies.py`, `prosody.py`, `simulate.py`) hold a local command; every Modal report holds the workspace's URL. Checked for only from M25 on. Removing them from files is a commit; removing them from history is a rewrite, and evidence files are never overwritten: a decision for the author before any push |
 | `probes/README.md`, "Recording notes" | microphone and room are still to fill in |
-| The T4's window, 60 s, is shorter than a visitor takes between turns | in the fourth session both turns woke it, a minute's wait each (`docs/m27-log.md`, entry 17). The author's decision: a longer window costs more for each burst of use |
 | One sentence said two ways, through the voice card | the card's comparison has been made between two different sentences only |
 | The cards of a warm turn | the third session's second turn took 3.1 s for four rungs, but its cards were not kept: only the first turn's were sent |
 | A live turn with a reference, for the verbatim tier | in the demo's first live turn it wrote "uh" twice and "wanna" where three other recognizers wrote none; what was said is not known. The committed data says it adds no filler to read speech (`docs/m27-log.md`, entry 11). Still open: a recording whose words are known, a script read once plainly and once with fillers put in |

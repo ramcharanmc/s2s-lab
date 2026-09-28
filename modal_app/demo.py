@@ -15,13 +15,17 @@ What happens where:
            live part: the access code, the day's budget, the decoding, and the measures of the
            visitor's voice (Praat). It holds no model
   rungs    a T4: the four rungs, loaded when the container starts, one turn through each. Woken
-           only by a request that passed the door; asleep 60 s after the last one
+           only by a request that passed the door; asleep 300 s after the last one
   volume   `ft2`, read-only: PR-011's export, for the rung r2-gpu-verbatim
   dict     `s2s-lab-demo-spend`: the day's spend and the last measured wake, kept across restarts
 
 WHY TWO CONTAINERS. One web app on the T4 would wake the GPU for every visit to the page, and for
 every crawler: a cost nobody decided on, outside the access code and outside the cap. Here a
 request reaches the GPU only with the code and inside the budget.
+
+THE WINDOW IS 300 S, NOT THE 60 S OF EVERY BATCH RUN HERE (v2 5.1, rule 3). A batch run's next call
+comes at once; a visitor's comes after listening and recording. What it costs: a burst of use
+ends with 300 s of an idle T4, about five cents, and the cap counts them.
 
 Cost guardrails (v1 5.1): nothing kept warm; one container of each at most; a timeout on both; the
 weights fetched in the image build on a CPU; HF_HUB_OFFLINE=1 at run time. The cap counts the T4
@@ -41,7 +45,8 @@ import modal
 REPO = pathlib.Path(__file__).resolve().parents[1]
 T4_DOLLARS_PER_HOUR = 0.59          # Modal's T4 rate, checked 2026-08-19 (v2 §5)
 CAP_DOLLARS = 1.0                   # a day
-WINDOW_S = 60                       # the T4 sleeps this long after its last turn
+WINDOW_S = 300                      # the T4 sleeps this long after its last turn: a visitor listens to four replies and
+                                    # records again in less; 60 s, the batch runs' window, made every turn a wake
 SECRET = "s2s-lab-demo"             # holds DEMO_ACCESS_CODE
 SPEND = "s2s-lab-demo-spend"
 VOLUME = "/ft2"

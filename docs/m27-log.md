@@ -22,7 +22,8 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 14 | 09-28 | the page in a browser, laptop, scratch, a made-up microphone | the author: "I dont know when it started and stopped". The page now shows that it is recording, the time, the limit, and plays the recording back before it is sent | `demo_page.html`, a test | 22fce45 |
 | 15 | 09-28 | `modal serve`, by the author, a code of ten characters or more | two live turns through four rungs on a T4: one that woke it (the wake 47 s) and one with it up (3.1 s for all four); Modal's warning gone; the recorder used with a real microphone | — | 430c522 |
 | 16 | 09-28 | the tests and the page in a browser, laptop, scratch | prosody in the demo: a measured panel from PR-006's run, and a live card of the visitor's pitch and range beside the words the rungs received | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | cdb890b |
-| 17 | 09-28 | `modal serve`, by the author, his own voice | the voice card and the prosody panel on Modal; two live turns, and **both woke the T4**: it had gone to sleep in between | — | — |
+| 17 | 09-28 | `modal serve`, by the author, his own voice | the voice card and the prosody panel on Modal; two live turns, and **both woke the T4**: it had gone to sleep in between | — | 2661338 |
+| 18 | 09-28 | the tests, laptop, scratch | the T4's window 300 s, the author's choice after entry 17 | `modal_app/demo.py`, `demo_page.html`, a test | this commit |
 
 ## 1. The design
 
@@ -620,4 +621,26 @@ rung wrote no filler in either turn; in turn 1 it differed from the others by on
 **Cost.** About \$0.04 of T4 time: two wakes, by the app's count \$0.0200 and \$0.0193. The
 dashboard's figure was not sent.
 
-**Still not said by the author:** whether the recorder now makes clear when it starts and stops.
+**Said by the author afterwards:** "recorder is clear now". Entry 14's open question is closed.
+
+## 18. Commit 8: the T4 stays up 300 s
+
+**Why.** Entry 17: with a window of 60 s every turn of a person using the page woke the T4, a
+minute's wait each. The author chose 300 s from three options.
+
+| Window | The wait between turns | An idle window's cost | Bursts of use in the day's dollar |
+|---|---|---:|---:|
+| 60 s | about a minute, every turn | \$0.01 | about 50 |
+| 180 s | none inside three minutes | \$0.03 | about 25 |
+| **300 s** | none inside five minutes | \$0.05 | about 17 |
+
+The costs are arithmetic from the T4's list rate, a wake of a minute included in a burst; none
+is measured. The cap counts the window already (`Budget.charge`), so it stays true: a test holds
+that the first turn of a burst is charged the window.
+
+**A rule of the plan, set aside here and said so.** v2 §5.1 rule 3 is `scaledown_window=60`.
+It is kept in every batch run. The demo is the one place where the next call comes from a person.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite,
+852 passed, 5 skipped (the skipped ones for audio the scratch copy does not hold). **Not run:** on Modal. The author's next `modal serve`: a second turn, sent after
+listening to the first one's replies, should take seconds and not a minute.

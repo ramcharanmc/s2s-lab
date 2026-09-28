@@ -48,7 +48,7 @@ def test_the_web_container_is_sent_what_the_measured_part_reads_and_no_more(app)
     assert app.CLIPS == demo.CLIPS + demo.VERBATIM_CLIPS
     for rel in app.RUN_FILES:
         assert (ROOT / rel).exists(), rel
-    assert (app.SECRET, app.CAP_DOLLARS, app.WINDOW_S, app.T4_DOLLARS_PER_HOUR) == ("s2s-lab-demo", 1.0, 60, 0.59)
+    assert (app.SECRET, app.CAP_DOLLARS, app.WINDOW_S, app.T4_DOLLARS_PER_HOUR) == ("s2s-lab-demo", 1.0, 300, 0.59)
 
 
 def test_the_gpu_is_reached_only_with_the_code_and_inside_the_budget(app, monkeypatch):
@@ -73,7 +73,8 @@ def test_the_gpu_is_reached_only_with_the_code_and_inside_the_budget(app, monkey
     assert calls == [(list(app.OFFERED), 2 * 16_000 * 4)] and ok["machine"] == "Modal Tesla T4" and ok["cold"]
     assert [t["label"] for t in ok["turns"]] == list(app.OFFERED) and ok["load_s"] == 41.0
     assert 80 < ok["voice"]["pitch_hz"] < 400 and ok["voice"]["voiced_s"] > 1            # measured beside the door, not on the T4
-    assert 0 < ok["charged"] < 0.02 and store["wake_s"] >= 0                                       # the window, and the wall time
+    assert ok["charged"] == pytest.approx(300 / 3600 * 0.59, abs=0.002) and store["wake_s"] >= 0   # the window, and the wall time
+    assert app.CAP_DOLLARS / ok["charged"] > 15                                                    # bursts of use in a day's dollar
     assert client.get("/api/status").json()["wake_s"] == store["wake_s"]
     store[f"dollars:{demo.Budget.day(__import__('time').time())}"] = 1.0                           # the day's dollar is spent
     assert send("open sesame").status_code == 429 and len(calls) == 1
