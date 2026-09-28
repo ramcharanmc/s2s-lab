@@ -15,7 +15,8 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 7 | 09-28 | the demo on the laptop, by the author, from the microphone | a live turn answered by the rungs: the live part and the microphone confirmed | — | — |
 | 8 | 09-28 | the Modal app, laptop, scratch, with a function in the T4's place | the web app, the door and the spend counter run; nothing has run on Modal | `modal_app/demo.py`, `demo.py`, `demoweb.py`, `demo_page.html`, tests | 15a0aa3 |
 | 9 | 09-28 | `modal serve modal_app/demo.py`, by the author | both images built; the page and the measured part served from the CPU container; one live turn answered by all four rungs on a T4, PR-011's model among them; the wake 72 s | — | — |
-| 10 | 09-28 | the tests, laptop, scratch | Modal's warning in that run: the live handler was `async` and called the spend counter, which blocks. Mine: written and tested against a dict | `demoweb.py`, a test | this commit |
+| 10 | 09-28 | the tests, laptop, scratch | Modal's warning in that run: the live handler was `async` and called the spend counter, which blocks. Mine: written and tested against a dict | `demoweb.py`, a test | ea1d37a |
+| 11 | 09-28 | a count over `runs/ft2/pr011.json`, laptop | on 100 read clips with no filler in the reference the LoRA wrote none; on 50 accented clips it wrote 20 to the references' 31, 3 of them not in the reference | — | this commit |
 
 ## 1. The design
 
@@ -295,6 +296,10 @@ and 22.7 s to first audio (entry 7).
   PR-011's model, on a speaker it was not trained on. It is one recording, and what the author
   said is known only to the author: no reference exists for it. It is not evidence for the
   claim PR-011 did not make; it is the first time the question has an example.
+  **Asked afterwards, the author is not sure whether he said them**, and is not to be held to
+  either answer. So what was said is not known. PR-011 tested whether fillers that are there are
+  kept (29 of 29); whether fillers that are not there are written had not been looked at.
+  Entry 11 looks.
 - The recognizers of R0 and R1 are the same model and heard the same words.
 
 **Addresses.** The author first looked for the demo at the laptop server's address, and then at
@@ -329,3 +334,33 @@ turn waits. A test holds every handler to it.
 
 **Run before the hand-over:** the full suite in a scratch copy, 845 passed, 5 skipped (the skipped ones for audio the scratch copy does not hold). **Not run:** the
 fixed handler on Modal; the warning's absence is for the author's next `modal serve` to show.
+
+## 11. Does FT-2's model write fillers that were not said? A look, not a test
+
+Raised by entry 9. Answered as far as committed data can: PR-011's run file holds what `small.en`
+and the LoRA wrote on all 200 eval clips. Counted: the words uh, um, uhm, er, erm, ah, hmm, mm,
+mhm in each transcript, against the same words in the clip's reference. No model ran; nothing
+was written. Not registered: the question came after the data.
+
+| Cohort | Clips | In the references | `small.en` wrote | The LoRA wrote | Of those, not in the reference |
+|---|---:|---:|---:|---:|---:|
+| clean, read | 50 | 0 | 0 | 0 | 0 |
+| slow, read | 50 | 0 | 0 | 0 | 0 |
+| accented, spontaneous | 50 | 31 | 0 | 20 | 3 |
+| disfluent | 50 | 29 | 1 | 29 | 0 |
+
+- **On read speech it adds none**: 100 clips, no filler written.
+- **On spontaneous speech from other speakers it writes fillers `small.en` drops**: 20 of the
+  references' 31, where `small.en` wrote none. PR-011 claimed nothing beyond its one speaker;
+  this is the first sign the behaviour carries.
+- **The three not in the reference are weak**: "ah" where the reference has "oh"
+  (`accented-32`), and one more "uh" (`accented-26`) and "um" (`accented-10`) than the
+  reference, in clips whose references hold fillers already. A reference can miss a filler.
+- "wanna": once in 200 clips, where the reference has it too.
+
+**For the author's recording**, the likelier reading is that the fillers were said and the three
+other recognizers dropped them, as `small.en` does in every row above. Not shown: there is no
+reference for that turn.
+
+**Mine to correct:** I wrote "the eval set's 150 fluent clips" in the backlog before looking.
+100 are read; the accented cohort is spontaneous speech.

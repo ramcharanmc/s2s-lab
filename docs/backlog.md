@@ -32,6 +32,7 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | A remote | the repo has never been pushed |
 | Local paths in committed files | six report files from M16 to M20 under `runs/` hold Modal's "Created mount" lines with the author's local path, and three comments in `src/s2slab/` (`policies.py`, `prosody.py`, `simulate.py`) hold a local command; every Modal report holds the workspace's URL. Checked for only from M25 on. Removing them from files is a commit; removing them from history is a rewrite, and evidence files are never overwritten: a decision for the author before any push |
 | `probes/README.md`, "Recording notes" | microphone and room are still to fill in |
+| A live turn with a reference, for the verbatim tier | in the demo's first live turn it wrote "uh" twice and "wanna" where three other recognizers wrote none; what was said is not known. The committed data says it adds no filler to read speech (`docs/m27-log.md`, entry 11). Still open: a recording whose words are known, a script read once plainly and once with fillers put in |
 | A limit on wrong access codes, and a longer code | the live part accepts any number of attempts; the first code was five digits and was shown in a paste. Before any deploy |
 | A second live turn on Modal, the T4 already up | the first run had one turn, and it carried the wake and the warm-up |
 | The page says nothing of its 15 s limit before it stops the recorder | the author's first recording was cut in mid-sentence (`docs/m27-log.md`, entry 7) |
