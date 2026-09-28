@@ -16,7 +16,8 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 8 | 09-28 | the Modal app, laptop, scratch, with a function in the T4's place | the web app, the door and the spend counter run; nothing has run on Modal | `modal_app/demo.py`, `demo.py`, `demoweb.py`, `demo_page.html`, tests | 15a0aa3 |
 | 9 | 09-28 | `modal serve modal_app/demo.py`, by the author | both images built; the page and the measured part served from the CPU container; one live turn answered by all four rungs on a T4, PR-011's model among them; the wake 72 s | — | — |
 | 10 | 09-28 | the tests, laptop, scratch | Modal's warning in that run: the live handler was `async` and called the spend counter, which blocks. Mine: written and tested against a dict | `demoweb.py`, a test | ea1d37a |
-| 11 | 09-28 | a count over `runs/ft2/pr011.json`, laptop | on 100 read clips with no filler in the reference the LoRA wrote none; on 50 accented clips it wrote 20 to the references' 31, 3 of them not in the reference | — | this commit |
+| 11 | 09-28 | a count over `runs/ft2/pr011.json`, laptop | on 100 read clips with no filler in the reference the LoRA wrote none; on 50 accented clips it wrote 20 to the references' 31, 3 of them not in the reference | — | bd529bc |
+| 12 | 09-28 | the tests, laptop, scratch | wrong codes are counted and close the door; a code under ten characters is no code | `demo.py`, `demoweb.py`, `demo_page.html`, tests | this commit |
 
 ## 1. The design
 
@@ -364,3 +365,28 @@ reference for that turn.
 
 **Mine to correct:** I wrote "the eval set's 150 fluent clips" in the backlog before looking.
 100 are read; the accented cohort is spontaneous speech.
+
+## 12. Commit 5: the door, before any deploy
+
+**What was open.** The live part took any number of wrong codes, and the first code was five
+digits: a hundred thousand tries find it, and nothing counted them. The code also appeared in a
+paste (entry 9).
+
+- **Wrong codes are counted** (`demo.Door`). Five inside ten minutes close the live part for ten
+  minutes, to everyone, the right code included. A request with no code is not counted. A closed
+  door answers 429 before it looks at the code, reaches no rung and charges nothing.
+- **A code shorter than ten characters is treated as no code.** The live part stays closed and
+  the page says why. So the five-digit code cannot be deployed by oversight.
+- The count lives where the spend does: a dict on the laptop, the `modal.Dict` on Modal.
+
+**What it costs, said plainly.** The count is one for all visitors. Behind Modal's proxy a
+visitor's address is what a header says, so a count for each address would be a count an attacker
+resets at will. The price: someone who sends wrong codes can keep the live part closed. They
+cannot open it, and closed it costs nothing. The measured part is not behind the door.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite,
+848 passed, 5 skipped (the skipped ones for audio the scratch copy does not hold); three new tests among them (the count and its window; the locked door refusing the
+right code and opening again; the short code).
+
+**Not run:** the door on Modal, where its count is in the `modal.Dict`. **For the author:** a
+new code of ten characters or more, put in the secret with `--force`; the old one is refused now.

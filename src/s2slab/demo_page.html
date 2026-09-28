@@ -162,7 +162,10 @@ async function loadStatus() {
       + (s.wake_s == null ? "" : ": about " + Math.round(s.wake_s) + " s the last time it was measured") + ". The turns after that do not wait.";
     $("status").textContent = "Rungs here: " + s.rungs.join(", ") + ", on " + s.machine + ". Today's budget: $" + s.budget_left.toFixed(2)
       + " of $" + s.budget_cap.toFixed(2) + " left. Up to " + s.max_clip_s + " s a recording."
-      + (s.code_set ? "" : " No access code is configured, so the live part is closed.") + (s.open ? "" : " Today's budget is spent.");
+      + (s.code_set ? "" : (s.code_short ? " The access code configured is shorter than " + s.min_code_len + " characters, so the live part is closed."
+                                           : " No access code is configured, so the live part is closed."))
+      + (s.locked_s > 0 ? " Too many wrong codes were sent: the live part opens again in " + Math.ceil(s.locked_s / 60) + " min." : "")
+      + (s.open ? "" : " Today's budget is spent.");
   } catch (e) { $("status").textContent = "The server did not answer."; }
 }
 

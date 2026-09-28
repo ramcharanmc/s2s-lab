@@ -4,7 +4,8 @@ The demo on Modal: the page and the measured part on a CPU, the live turn on a T
     modal serve modal_app/demo.py       a temporary URL, gone at Ctrl+C: the first run, and every try
     modal deploy modal_app/demo.py      the URL that stays: the author's call
 
-Before either, once, by the author (the code is typed unseen and never written down here):
+Before either, once, by the author (the code is typed unseen and never written down here; ten
+characters or more, or the live part stays closed; --force replaces a code already there):
 
     read -rs CODE && modal secret create s2s-lab-demo DEMO_ACCESS_CODE="$CODE" && unset CODE
 

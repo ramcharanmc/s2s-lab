@@ -96,6 +96,7 @@ def test_what_cannot_be_a_turn_is_refused_with_a_sentence_for_the_visitor():
 
 def test_the_access_code_lets_nobody_in_when_none_is_configured():
     assert demo.code_ok("open sesame", "open sesame")
+    assert not demo.code_ok("sesame", "sesame") and not demo.code_usable("123456789") and demo.code_usable("1234567890")   # too short to be a code
     for given, expected in (("open sesame", None), ("open sesame", ""), (None, "open sesame"), ("", "open sesame"), ("Open sesame", "open sesame")):
         assert not demo.code_ok(given, expected)
 
@@ -313,3 +314,55 @@ def test_rungs_on_another_machine_are_sent_the_samples_and_answer_as_if_here():
     assert sent == [(["R0"], bytes, 4 * len(audio))] and near.offered == {"R0": "stub"}
     assert out["cold"] and out["turns"][0]["label"] == "R0" and out["turns"][0]["reply_s"] == 0.5
     json.dumps(out)
+
+
+# --------------------------------------------------------------------------- #
+# wrong codes
+# --------------------------------------------------------------------------- #
+def test_five_wrong_codes_in_ten_minutes_close_the_door_to_everyone_for_ten():
+    store = {}
+    door = demo.Door(store)
+    for i in range(4):
+        door.wrong(DAY + i)
+    assert door.locked_s(DAY + 4) == 0
+    door.wrong(DAY + 700)                                         # the four have aged out: this is the first of a new count
+    assert door.locked_s(DAY + 700) == 0 and store["wrong_codes"] == [DAY + 700]
+    for i in range(4):
+        door.wrong(DAY + 701 + i)
+    assert door.locked_s(DAY + 705) == pytest.approx(599) and store["wrong_codes"] == []
+    assert door.locked_s(DAY + 704 + 600) == 0
+    assert demo.Door({}, tries=1, lock_s=5).locked_s(DAY) == 0
+
+
+def test_a_locked_door_refuses_the_right_code_wakes_nothing_and_opens_again(web):
+    client, clock, budget = web
+    send = lambda code: client.post("/api/live", files={"audio": ("turn", wav(2.0), "audio/wav")}, data={"rungs": ""},
+                                    headers={"X-Access-Code": code} if code else {})
+    for _ in range(9):
+        assert send(None).status_code == 401                      # no code is not a guess
+    for guess in ("00001", "00002", "00003", "00004"):
+        assert send(guess).status_code == 401
+    assert client.get("/api/status").json()["locked_s"] == 0 and send("open sesame").status_code == 200
+    spent = budget.spent(DAY)
+    assert send("00005").status_code == 401                       # the fifth: the right code in between did not reset the count
+    assert send("00006").status_code == 429                       # and a locked door does not say whether a code is wrong
+    locked = send("open sesame")
+    assert locked.status_code == 429 and "wrong codes" in locked.json()["detail"] and budget.spent(DAY) == spent
+    assert client.get("/api/status").json()["locked_s"] == 600
+    clock["t"] += 601
+    assert client.get("/api/status").json()["locked_s"] == 0 and send("open sesame").status_code == 200
+
+
+def test_a_code_too_short_to_be_one_keeps_the_live_part_closed_and_the_page_says_so(tree, monkeypatch):
+    pytest.importorskip("fastapi")
+    from fastapi.testclient import TestClient
+
+    from s2slab import demoweb
+    monkeypatch.setenv("TEST_DEMO_CODE", "12345")
+    live = demo.Live({"R0": "stub"}, get=lambda rung_id: StubRung())
+    client = TestClient(demoweb.create_app(live, demo.Budget({}, 1.0, 0.59), root=tree, code_env="TEST_DEMO_CODE", clock=lambda: DAY,
+                                           clips=PICK, rows=ROWS, verbatim_run="runs/none.json"))
+    status = client.get("/api/status").json()
+    assert (status["code_set"], status["code_short"], status["min_code_len"]) == (False, True, 10)
+    r = client.post("/api/live", files={"audio": ("turn", wav(2.0), "audio/wav")}, headers={"X-Access-Code": "12345"})
+    assert r.status_code == 401 and "code_short" in client.get("/").text

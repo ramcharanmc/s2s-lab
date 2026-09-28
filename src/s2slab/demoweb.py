@@ -18,7 +18,8 @@ import time
 from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 
-from .demo import CLIPS, CODE_ENV, MAX_CLIP_S, MAX_UPLOAD_BYTES, MEASURED, PAGE, SR, Budget, Live, code_ok, decode, measured
+from .demo import (CLIPS, CODE_ENV, MAX_CLIP_S, MAX_UPLOAD_BYTES, MEASURED, MIN_CODE_LEN, PAGE, SR, Budget, Door, Live, code_ok,
+                   code_usable, decode, measured)
 
 
 def create_app(live: Live, budget: Budget, root=".", machine: str = "this machine", code_env: str = CODE_ENV, clock=time.time,
@@ -27,6 +28,7 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
     `live` is a Live or a Remote; `about` is a sentence a rung's card carries, by label."""
     root = pathlib.Path(root)
     one_at_a_time = threading.Lock()                               # one recording on the rungs at a time
+    door = Door(budget.store)
     app = FastAPI(title="s2s-lab demo", docs_url=None, redoc_url=None, openapi_url=None)
     data = measured(root, clips, rows, **panel)
     clips = set(data["audio"])
@@ -48,7 +50,9 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
     @app.get("/api/status")
     def api_status():
         now = clock()
-        return {"machine": machine, "rungs": list(live.offered), "code_needed": True, "code_set": bool(os.environ.get(code_env)),
+        code = os.environ.get(code_env)
+        return {"machine": machine, "rungs": list(live.offered), "code_needed": True, "code_set": code_usable(code),
+                "code_short": bool(code) and not code_usable(code), "min_code_len": MIN_CODE_LEN, "locked_s": round(door.locked_s(now)),
                 "budget_left": round(budget.left(now), 3), "budget_cap": budget.cap, "open": budget.allows(now),
                 "about": about or {}, "wake_s": budget.store.get("wake_s"),
                 "max_clip_s": MAX_CLIP_S, "keeps": "nothing: the recording is decoded in memory and discarded"}
@@ -56,7 +60,11 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
     @app.post("/api/live")
     def api_live(audio: UploadFile = File(...), rungs: str = Form(""), x_access_code: str = Header(default="")):
         start = clock()
+        if door.locked_s(start) > 0:                               # before the code is looked at: a locked door tells nothing
+            raise HTTPException(429, f"too many wrong codes; the live part opens again in {door.locked_s(start) / 60:.0f} min")
         if not code_ok(x_access_code, os.environ.get(code_env)):
+            if x_access_code:                                      # a request with no code is not a guess
+                door.wrong(start)
             raise HTTPException(401, "the live part needs an access code")
         if not budget.allows(start):
             raise HTTPException(429, f"today's budget of ${budget.cap:.2f} is spent; the measured part is still here")

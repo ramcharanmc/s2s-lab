@@ -45,6 +45,8 @@ MIN_CLIP_S, MAX_CLIP_S = 0.3, 15.0
 MAX_UPLOAD_BYTES = 2_000_000        # 15 s of browser audio is well under this
 SILENT_PEAK = 1e-3
 CODE_ENV = "DEMO_ACCESS_CODE"
+MIN_CODE_LEN = 10                   # a shorter code is treated as none: it could be found by trying
+WRONG_CODES, LOCK_S = 5, 600.0      # this many wrong codes inside LOCK_S close the live part for LOCK_S
 NOT_LOADED = "This rung could not be loaded on this machine."
 NOT_ANSWERED = "This rung failed on this recording."
 PAGE = pathlib.Path(__file__).with_name("demo_page.html")
@@ -109,11 +111,38 @@ def wav_bytes(audio: np.ndarray, sr: int) -> bytes:
 # --------------------------------------------------------------------------- #
 # who may use the live part, and how much it may cost
 # --------------------------------------------------------------------------- #
+def code_usable(expected: str | None) -> bool:
+    return bool(expected) and len(expected) >= MIN_CODE_LEN
+
+
 def code_ok(given: str | None, expected: str | None) -> bool:
-    """The access code, compared in constant time. With no code configured, nobody gets in."""
-    if not expected or not given:
+    """The access code, compared in constant time. With no code configured, or one shorter than
+    MIN_CODE_LEN, nobody gets in."""
+    if not code_usable(expected) or not given:
         return False
     return hmac.compare_digest(given.encode(), expected.encode())
+
+
+class Door:
+    """Wrong codes, counted. WRONG_CODES of them inside LOCK_S close the live part to everyone for
+    LOCK_S, the right code included: five tries in ten minutes find no code of ten characters.
+
+    The count is one for all visitors, not one each: behind a proxy a visitor's address is what a
+    header says it is. So someone sending wrong codes can keep the live part closed; they cannot
+    open it, and a closed live part costs nothing. `store` as in Budget."""
+
+    def __init__(self, store, tries: int = WRONG_CODES, lock_s: float = LOCK_S):
+        self.store, self.tries, self.lock_s = store, tries, lock_s
+
+    def locked_s(self, t: float) -> float:
+        """Seconds until the live part opens again; 0 if it is open."""
+        return max(0.0, float(self.store.get("locked_until", 0.0)) - t)
+
+    def wrong(self, t: float) -> None:
+        recent = [x for x in self.store.get("wrong_codes", []) if t - x < self.lock_s] + [t]
+        if len(recent) >= self.tries:
+            self.store["locked_until"], recent = t + self.lock_s, []
+        self.store["wrong_codes"] = recent
 
 
 class Budget:

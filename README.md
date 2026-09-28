@@ -6,7 +6,7 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-09-28** (commit `15a0aa3`): rungs R0 to R5 built and measured; three fine-tunes run;
+**Status, 2026-09-28** (commit `bd529bc`): rungs R0 to R5 built and measured; three fine-tunes run;
 thirteen registrations, twelve of them reported, four with a supported claim. In progress: a demo
 that shows the measured turns and answers a live one (`docs/m27-log.md`); run on Modal with
 `modal serve`, one live turn through four rungs on a T4; not deployed. About
@@ -69,7 +69,9 @@ PYTHONPATH=src python -m s2slab.severity dev --listen   # the severity sweeps on
 PYTHONPATH=src python -m s2slab.quantladder dev         # the quantization ladder (needs the ONNX files)
 ```
 
-The demo, on the laptop's CPU (`requirements/demo.txt`; the measured part needs no model):
+The demo, on the laptop's CPU (`requirements/demo.txt`; the measured part needs no model). The
+access code must be ten characters or more, or the live part stays closed; five wrong codes in
+ten minutes close it for ten:
 
 ```bash
 PYTHONPATH=src DEMO_ACCESS_CODE=... python -m uvicorn s2slab.demoweb:laptop --factory --port 8000
