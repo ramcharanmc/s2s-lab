@@ -16,7 +16,8 @@ What happens where:
            live part: the access code, the day's budget, the decoding, and the measures of the
            visitor's voice (Praat). It holds no model
   rungs    a T4: the four rungs, loaded when the container starts, one turn through each. Woken
-           only by a request that passed the door; asleep 300 s after the last one
+           only by a request that passed the door; asleep 300 s after the last one. It also
+           renders a severity score onto Kokoro's speech (PR-009's voices, sentences and scores)
   hears    an A10: R3 (Qwen2-Audio hears the recording; 17 GB). Woken only when R3 is asked for
   speaks   an L40S: R4 (Qwen2.5-Omni speaks the reply itself; 22.5 GB, more than an A10 holds).
            Woken only when R4 is asked for
@@ -91,7 +92,8 @@ MODELS = {
     "Systran/faster-whisper-base.en": None,
     "Systran/faster-whisper-small.en": None,
     "Qwen/Qwen2.5-0.5B-Instruct": None,
-    "hexgrad/Kokoro-82M": ["config.json", "kokoro-v1_0.pth", "voices/af_heart.pt"],
+    # af_heart speaks the rungs' replies; af_sarah and am_adam are PR-009's voices, for the severity render
+    "hexgrad/Kokoro-82M": ["config.json", "kokoro-v1_0.pth", "voices/af_heart.pt", "voices/af_sarah.pt", "voices/am_adam.pt"],
 }
 
 
@@ -205,12 +207,17 @@ class Rungs:
     def turns(self, labels: list, raw: bytes) -> dict:
         return _turns(self, labels, raw)
 
+    @modal.method()
+    def render(self, voice: str, sentence: str, condition: str, score: float) -> dict:
+        """The severity render: Kokoro on the T4, the edit in Praat on its CPU."""
+        return self.live.render(voice, sentence, condition, score)
+
 
 def _load_rungs(self, offered: dict) -> None:
     import os
     os.chdir("/root")
-    from s2slab.demo import Live
-    self.live = Live(offered)
+    from s2slab.demo import Live, kokoro_speaker
+    self.live = Live(offered, speaker=lambda: kokoro_speaker("cuda"))
     self.load_s = self.live.load_all()
     self.machine = f"Modal {_gpu_name()}"
     print(f"loaded {[r for r in offered if r not in self.live.unavailable]} in {self.load_s:.1f} s on {self.machine}; "
@@ -263,7 +270,7 @@ class Talks:
         return _turns(self, labels, raw)
 
 
-def make_app(call, store, root="/root", others=None):
+def make_app(call, store, root="/root", others=None, render=None):
     """The web app with the T4's rungs behind `call`, the other machines' behind `others` (by
     name, as in OTHERS) and the spend in `store`: what web() serves, and what the tests run with
     functions and a dict in their place."""
@@ -272,7 +279,7 @@ def make_app(call, store, root="/root", others=None):
     others = dict(others or {})
     budget = Budget(store, CAP_DOLLARS, T4_DOLLARS_PER_HOUR, window_s=WINDOW_S, cold_start_s=0.0,
                     machines={name: (OTHERS[name]["rate"], WINDOW_BIG_S) for name in others})
-    live = Several(Remote(OFFERED, call), {name: Remote(OTHERS[name]["offered"], c) for name, c in others.items()},
+    live = Several(Remote(OFFERED, call, render=render), {name: Remote(OTHERS[name]["offered"], c) for name, c in others.items()},
                    says={name: OTHERS[name]["says"] for name in others})
     return create_app(live, budget, root=root, machine="Modal T4", about=ABOUT)
 
@@ -283,4 +290,5 @@ def make_app(call, store, root="/root", others=None):
 @modal.asgi_app()
 def web():
     return make_app(Rungs().turns.remote, modal.Dict.from_name(SPEND, create_if_missing=True),
-                    others={"a10": Hears().turns.remote, "l40s": Speaks().turns.remote, "moshi": Talks().turns.remote})
+                    others={"a10": Hears().turns.remote, "l40s": Speaks().turns.remote, "moshi": Talks().turns.remote},
+                    render=Rungs().render.remote)

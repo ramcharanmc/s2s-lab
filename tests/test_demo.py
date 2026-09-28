@@ -196,7 +196,7 @@ def test_the_page_the_measured_data_and_only_the_clips_it_shows(web):
         assert client.get(f"/api/clip/{other}").status_code == 404
     assert client.get("/docs").status_code == 404 and client.get("/openapi.json").status_code == 404
     handlers = [r.endpoint for r in client.app.routes if getattr(r, "path", "").startswith("/api/") or getattr(r, "path", "") == "/"]
-    assert len(handlers) == 6 and not any(inspect.iscoroutinefunction(h) for h in handlers)   # blocking calls stay off the event loop
+    assert len(handlers) == 7 and not any(inspect.iscoroutinefunction(h) for h in handlers)   # blocking calls stay off the event loop
 
 
 def test_the_live_part_needs_the_code_answers_with_every_rung_and_charges_the_budget(web):
@@ -676,3 +676,77 @@ def test_a_request_to_one_machine_does_not_wait_for_another(tree, monkeypatch):
     for t in again:
         t.join()
     assert time.perf_counter() - t0 > 1.5                         # two recordings on one machine: one after the other
+
+
+# --------------------------------------------------------------------------- #
+# the severity render, to be heard
+# --------------------------------------------------------------------------- #
+def speaks(text, voice_name):
+    """A made-up synthesizer: the harmonic voice at Kokoro's rate, whatever the text."""
+    return voice(sr=24_000)
+
+
+def test_a_render_is_the_registrations_sentence_edited_to_its_score_and_measured_again():
+    pytest.importorskip("parselmouth")
+    from s2slab import severity
+    ok = demo.render_choices()
+    assert ok["voices"] == list(severity.TEST_VOICES) and ok["sentences"] == severity.TEST_SENTENCES
+    assert ok["scores"] == {"depression": [0, 5, 10, 15, 20, 27], "mania": [0, 12, 20, 26, 40, 60]} and ok["scales"]["depression"] == "PHQ-9"
+    r = demo.render_severity(speaks, "af_sarah", "t1", "depression", 15)
+    t = severity.depression(15)
+    assert r["target"] == {"f0_offset_hz": round(t.f0_offset_hz, 3), "f0_dev_scale": round(t.f0_dev_scale, 3), "rate": round(t.rate, 3),
+                           "pause_scale": round(t.pause_scale, 3)}
+    assert r["achieved"]["f0_offset_hz"] == pytest.approx(t.f0_offset_hz, abs=3) and r["achieved"]["rate"] == pytest.approx(t.rate, rel=0.1)
+    assert r["rendered_s"] > r["neutral_s"] and r["text"] == severity.TEST_SENTENCES["t1"] and r["scale"] == "PHQ-9" and r["warning"] is None
+    assert "not a diagnosis" in r["note"] and "No clinical validity" in r["note"]
+    for key, title in (("neutral_wav", "synthetic neutral"), ("rendered_wav", "synthetic depression 15")):
+        with sf.SoundFile(io.BytesIO(base64.b64decode(r[key]))) as f:
+            assert f.samplerate == 24_000 and f.title == title and "SYNTHETIC SPEECH" in f.comment      # the file says what it is
+    assert demo.render_severity(speaks, "am_adam", "t8", "mania", 60)["warning"] == demo.RENDER_WARNING
+    json.dumps(r)
+
+
+def test_nothing_but_the_registered_voices_sentences_and_scores_is_rendered():
+    for asked in (("af_heart", "t1", "depression", 15), ("af_sarah", "d1", "depression", 15), ("af_sarah", "t1", "anxiety", 15),
+                  ("af_sarah", "t1", "depression", 14), ("af_sarah", "Say anything I type.", "mania", 60)):
+        with pytest.raises(ValueError, match="only the registered"):
+            demo.render_severity(speaks, *asked)
+
+
+def test_the_registered_run_is_read_beside_a_render():
+    import pathlib
+    root = pathlib.Path(__file__).resolve().parents[1]
+    step = demo.registered_step(root, "af_sarah", "t1", "depression", 15)
+    assert (step["registration"], step["supported"], step["file"]) == ("PR-009", False, "runs/severity/pr009.json")
+    assert step["result"] == "4 of its five criteria met; pitch within 3 Hz or 10% in 169 of 192 checks, where it needed nine in ten"
+    assert set(step["achieved"]) == {"f0_offset_hz", "f0_dev_scale", "rate", "pause_scale"} and step["achieved"]["rate"] == pytest.approx(0.722, abs=0.08)
+    assert demo.registered_step(root, "af_sarah", "t1", "depression", 14) is None and demo.registered_step(root / "nowhere", "af_sarah", "t1", "depression", 15) is None
+
+
+def test_the_page_renders_behind_the_door_and_charges_the_budget(tree, monkeypatch):
+    pytest.importorskip("fastapi")
+    pytest.importorskip("parselmouth")
+    from fastapi.testclient import TestClient
+
+    from s2slab import demoweb
+    monkeypatch.setenv("TEST_DEMO_CODE", "open sesame")
+    live = demo.Live({"R0": "stub"}, get=lambda rung_id: StubRung(), speaker=lambda: speaks)
+    budget = demo.Budget({}, cap_dollars=1.0, dollars_per_hour=0.59, window_s=300.0, cold_start_s=0.0)
+    client = TestClient(demoweb.create_app(live, budget, root=tree, code_env="TEST_DEMO_CODE", clock=lambda: DAY, clips=PICK, rows=ROWS,
+                                           verbatim_run="runs/none.json"))
+    assert client.get("/api/status").json()["render"]["voices"] == ["af_sarah", "am_adam"]
+    ask = lambda code, **form: client.post("/api/render", data={"voice": "af_sarah", "sentence": "t2", "condition": "mania", "score": "20", **form},
+                                           headers={"X-Access-Code": code} if code else {})
+    assert ask(None).status_code == 401 and ask("wrong").status_code == 401 and budget.spent(DAY) == 0.0
+    refused = ask("open sesame", sentence="Say anything I type.")
+    assert refused.status_code == 400 and "only the registered" in refused.json()["detail"] and budget.spent(DAY) == 0.0
+    ok = ask("open sesame").json()
+    assert (ok["condition"], ok["score"], ok["scale"]) == ("mania", 20.0, "YMRS") and ok["rendered_s"] < ok["neutral_s"]
+    assert ok["registered"] is None and ok["charged"] == pytest.approx(300 / 3600 * 0.59, abs=1e-3)       # no run file in this tree
+    page = client.get("/").text
+    assert 'id="render" class="card" hidden' in page and "measured in the registered run" in page and "does not say a sentence the same way twice" in page
+    no_render = TestClient(demoweb.create_app(demo.Remote({"R0": "stub"}, lambda labels, samples: {}), budget, root=tree,
+                                              code_env="TEST_DEMO_CODE", clips=PICK, rows=ROWS, verbatim_run="runs/none.json"))
+    assert no_render.get("/api/status").json()["render"] is None
+    assert no_render.post("/api/render", data={"voice": "af_sarah", "sentence": "t2", "condition": "mania", "score": "20"},
+                          headers={"X-Access-Code": "open sesame"}).status_code == 404

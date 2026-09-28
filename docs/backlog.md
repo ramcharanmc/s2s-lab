@@ -27,7 +27,7 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | 3, commit 10 | R5 on the visitor's recording: Moshi, on an A10 of its own, hears it as one side of a call | done; on Modal Moshi took a recording as a call, at 1.67 of real time, and did not answer it (`docs/m27-log.md`, entry 23) |
 | 4, commit 11 | measured panels for the rest: barge-in (PR-003), FT-1, the two severity renders, quantization; the note on R3's card; a throwaway call when Moshi loads | done on the laptop; not yet run on Modal |
 | commit 12 | answers arrive as they are ready: one request a machine, the door asked once | done on the laptop; not yet run on Modal |
-| commit 13 | a severity render that can be heard: a fixed sentence, a condition, one of the registered scores; neutral and rendered speech, targets against what was measured | next (`docs/m27-log.md`, entry 25) |
+| commit 13 | a severity render that can be heard: a fixed sentence, a condition, one of the registered scores; neutral and rendered speech, targets against what was measured | done on the laptop, Kokoro on its CPU; not yet run on Modal |
 | commit 14 | `modal deploy`, a link from the author's portfolio, and what is owed before a public link | the author's call |
 | left out | a conversation with R5, and barge-in while a reply plays: both need the microphone open while the machine speaks (`docs/m27-log.md`, entry 19) | can follow; not planned |
 

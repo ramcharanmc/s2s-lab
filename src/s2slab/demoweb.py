@@ -19,7 +19,7 @@ from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 
 from .demo import (CLIPS, CODE_ENV, MAX_CLIP_S, MAX_UPLOAD_BYTES, MEASURED, MIN_CODE_LEN, PAGE, SR, Budget, Door, Live, code_ok,
-                   code_usable, decode, measured, voice)
+                   code_usable, decode, measured, registered_step, render_choices, voice)
 
 
 def create_app(live: Live, budget: Budget, root=".", machine: str = "this machine", code_env: str = CODE_ENV, clock=time.time,
@@ -71,6 +71,7 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
                 "code_short": bool(code) and not code_usable(code), "min_code_len": MIN_CODE_LEN, "locked_s": round(door.locked_s(now)),
                 "budget_left": round(budget.left(now), 3), "budget_cap": budget.cap, "open": budget.allows(now),
                 "about": about or {}, "wake_s": budget.store.get("wake_s"),
+                "render": render_choices() if hasattr(live, "render") else None,
                 "max_clip_s": MAX_CLIP_S, "keeps": "nothing: the recording is decoded in memory and discarded"}
 
     @app.post("/api/enter")
@@ -79,6 +80,27 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
         wrong code is then one wrong code, not one for each machine."""
         enter(x_access_code, clock())
         return {"ok": True}
+
+    @app.post("/api/render")
+    def api_render(voice: str = Form(""), sentence: str = Form(""), condition: str = Form(""), score: float = Form(-1.0),
+                   x_access_code: str = Header(default="")):
+        """The severity render: one registered sentence, neutral and edited to one registered score."""
+        start = clock()
+        enter(x_access_code, start)
+        if not hasattr(live, "render"):
+            raise HTTPException(404, "no render here")
+        try:
+            with busy[None]:
+                out = live.render(voice, sentence, condition, score)
+        except ValueError as e:
+            raise HTTPException(400, str(e)) from None
+        except Exception as e:
+            print(f"the render did not answer: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
+            budget.charge(start, clock())
+            raise HTTPException(503, "the render did not answer; the measured part is still here") from None
+        dollars = budget.charge(start, clock())
+        return JSONResponse({**out, "registered": registered_step(root, voice, sentence, condition, score),
+                             "charged": round(dollars, 4), "budget_left": round(budget.left(clock()), 3)})
 
     @app.post("/api/live")
     def api_live(audio: UploadFile = File(...), rungs: str = Form(""), voice_too: str = Form("1"),

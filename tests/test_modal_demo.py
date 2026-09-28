@@ -136,3 +136,27 @@ def test_the_bigger_machines_wake_only_for_a_visitor_who_asks(app, monkeypatch):
     ok = send(",".join(list(app.OFFERED) + ["R3"])).json()
     assert sorted(woke[1:]) == ["a10", "t4"] and [t["label"] for t in ok["turns"]][-1] == "R3" and ok["turns"][-1]["machine"] == "Modal a10"
     assert send("R4").json()["turns"][0]["label"] == "R4" and woke[-1] == "l40s" and "billed_until:l40s" in store
+
+
+def test_the_t4_holds_pr009s_voices_and_the_render_reaches_it_through_the_door(app, monkeypatch):
+    pytest.importorskip("fastapi")
+    from fastapi.testclient import TestClient
+
+    from s2slab import severity
+    for name in ("af_heart", *severity.TEST_VOICES):
+        assert f"voices/{name}.pt" in app.MODELS["hexgrad/Kokoro-82M"], name
+    monkeypatch.setenv("DEMO_ACCESS_CODE", "open sesame")
+    asked, store = [], {}
+
+    def render(voice, sentence, condition, score):                 # the T4's end, here
+        asked.append((voice, sentence, condition, score))
+        return {"voice": voice, "sentence": sentence, "condition": condition, "score": score, "misses": []}
+
+    client = TestClient(app.make_app(lambda labels, raw: {}, store, root=ROOT, render=render))
+    assert client.get("/api/status").json()["render"]["scores"]["mania"] == [0, 12, 20, 26, 40, 60]
+    form = {"voice": "am_adam", "sentence": "t3", "condition": "depression", "score": "27"}
+    assert client.post("/api/render", data=form, headers={"X-Access-Code": "wrong"}).status_code == 401 and asked == []
+    ok = client.post("/api/render", data=form, headers={"X-Access-Code": "open sesame"}).json()
+    assert asked == [("am_adam", "t3", "depression", 27.0)] and ok["charged"] > 0
+    assert ok["registered"]["registration"] == "PR-009" and ok["registered"]["achieved"]["rate"] == pytest.approx(0.5, abs=0.06)   # from the run file
+    assert TestClient(app.make_app(lambda labels, raw: {}, {}, root=ROOT)).get("/api/status").json()["render"] is None

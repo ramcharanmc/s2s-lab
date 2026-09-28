@@ -84,6 +84,18 @@
       <p id="error" class="warn"></p>
     </div>
     <div id="answers"></div>
+    <div id="render" class="card" hidden>
+      <div class="row"><strong>A severity score, put onto speech</strong><span class="soft">PR-009's render, to be heard</span></div>
+      <p id="render-note" class="warn"></p>
+      <div class="row">
+        <label>Condition <select id="r-condition" class="btn"></select></label>
+        <label>Score <select id="r-score" class="btn"></select></label>
+        <label>Voice <select id="r-voice" class="btn"></select></label>
+      </div>
+      <div class="row"><label>Sentence <select id="r-sentence" class="btn"></select></label><button id="r-go" class="btn">Render</button></div>
+      <p id="r-wait" class="warn" hidden></p>
+      <div id="r-out"></div>
+    </div>
   </section>
 </main>
 <script>
@@ -219,6 +231,52 @@ function showFindings(list) {
   }
 }
 
+let choices = null;
+function showRender(r) {                        // what may be asked for: the registration's own, and no other
+  $("render").hidden = !r; if (!r || choices) return;
+  choices = r; $("render-note").textContent = r.note;
+  for (const c of Object.keys(r.scores)) $("r-condition").appendChild(new Option(c + " (" + r.scales[c] + ")", c));
+  for (const v of r.voices) $("r-voice").appendChild(new Option(v, v));
+  for (const [id, text] of Object.entries(r.sentences)) $("r-sentence").appendChild(new Option(text, id));
+  const scores = () => { $("r-score").replaceChildren(...r.scores[$("r-condition").value].map((s) => new Option(s, s))); };
+  $("r-condition").onchange = scores; scores();
+}
+$("r-go").onclick = async () => {
+  const form = new FormData();
+  for (const k of ["condition", "score", "voice", "sentence"]) form.append(k, $("r-" + k).value);
+  const sent = performance.now(), waiting = setInterval(() => {
+    $("r-wait").textContent = "Sent " + Math.round((performance.now() - sent) / 1000) + " s ago. " + waitText; }, 1000);
+  $("r-go").disabled = true; $("error").textContent = ""; $("r-wait").textContent = "Sent. " + waitText; $("r-wait").hidden = false;
+  try {
+    const r = await fetch("api/render", {method: "POST", body: form, headers: {"X-Access-Code": $("code").value}});
+    const b = await r.json();
+    if (!r.ok) { $("error").textContent = b.detail || "It did not work."; return; }
+    const out = $("r-out"); out.replaceChildren();
+    out.appendChild(el("p", "num", b.condition + ", " + b.scale + " " + b.score + "  ·  " + b.voice));
+    out.appendChild(el("blockquote", null, b.text));
+    for (const [what, wav, s] of [["Neutral, as the synthesizer said it", b.neutral_wav, b.neutral_s], ["Rendered to the score", b.rendered_wav, b.rendered_s]]) {
+      out.appendChild(el("p", "soft", what + ", " + s.toFixed(1) + " s"));
+      const a = el("audio"); a.controls = true; a.src = "data:audio/wav;base64," + wav; out.appendChild(a);
+    }
+    const show = (x) => x == null ? "not measured" : x.toFixed(2), table = el("table"), head = el("tr");
+    head.append(el("td", "soft", ""), el("td", "soft", "asked for"), el("td", "soft", "measured in this render"), el("td", "soft", b.registered ? "measured in the registered run" : ""));
+    table.appendChild(head);
+    for (const [k, what] of [["f0_offset_hz", "pitch, Hz"], ["f0_dev_scale", "pitch range, times"], ["rate", "rate, times"], ["pause_scale", "pauses, times"]]) {
+      const tr = el("tr");
+      tr.append(el("td", "soft", what), el("td", "num", show(b.target[k])), el("td", "num", show(b.achieved[k])), el("td", "num", b.registered ? show(b.registered.achieved[k]) : ""));
+      table.appendChild(tr);
+    }
+    out.appendChild(el("div", "wide")).appendChild(table);
+    out.appendChild(el("p", "soft", b.misses.length ? "Missed in this render: " + b.misses.join("; ") + "." : "Every target met in this render, within its tolerance."));
+    if (b.warning) out.appendChild(el("p", "warn", b.warning));
+    if (b.registered) out.appendChild(el("p", "soft", b.registered.registration + ", the registered test of this render: " + (b.registered.supported ? "supported" : "not supported")
+      + ". " + b.registered.result + ".  ·  commit " + b.registered.commit + "  ·  " + b.registered.file));
+    out.appendChild(el("p", "soft", "Kokoro does not say a sentence the same way twice, so this render and the registered one start from different neutral speech. Charged to today's budget: $" + b.charged.toFixed(4) + "."));
+    loadStatus();
+  } catch (e) { $("error").textContent = "The server did not answer."; }
+  finally { clearInterval(waiting); $("r-wait").hidden = true; $("r-go").disabled = false; }
+};
+
 let lastVoice = null;
 function voiceCard(v, turns, clipS) {
   const heard = (turns.find((t) => t.transcript) || {}).transcript || "";
@@ -271,7 +329,7 @@ async function loadStatus() {
   try {
     const s = await (await fetch("api/status")).json();
     about = s.about || {}; maxS = s.max_clip_s; liveOpen = s.code_set && s.open && !(s.locked_s > 0);
-    usual = s.rungs; showMore(s.optional || []);
+    usual = s.rungs; showMore(s.optional || []); showRender(liveOpen ? s.render : null);
     $("status").className = liveOpen ? "soft" : "warn"; ready();
     waitText = "If the machine is asleep it has to wake and load the rungs first"
       + (s.wake_s == null ? "" : ": about " + Math.round(s.wake_s) + " s the last time it was measured") + ". The turns after that do not wait, while it is up: it sleeps a few minutes after its last turn.";

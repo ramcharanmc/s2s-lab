@@ -430,6 +430,92 @@ def findings(root, files=FINDINGS) -> list[dict]:
 
 
 # --------------------------------------------------------------------------- #
+# the severity render, to be heard
+# --------------------------------------------------------------------------- #
+# PR-009's render, live: one of the registration's sentences in one of its voices, neutral, and
+# edited to one of its scores. Nothing else can be asked of it: no other text, no other score.
+RENDER_NOTE = ("Synthetic speech, edited to a specification. No clinical validity is claimed or implied, and this is not a "
+               "diagnosis of anyone: the numbers are one hand-written mapping from a rating scale to pitch, range, rate and "
+               "pauses, put onto a synthesizer's neutral voice.")
+RENDER_WARNING = "At this score the mapping asks for more than about 30% of rate or 40 Hz of pitch: past that, edited speech sounds processed."
+RENDER_FIELDS = (("f0_offset_hz", "pitch, Hz"), ("f0_dev_scale", "pitch range, times"), ("rate", "rate, times"),
+                 ("pause_scale", "pauses, times"))
+
+
+def kokoro_speaker(device: str = "cpu"):
+    """speak(text, voice) -> float32 at 24 kHz, through R0's Kokoro on `device` (severity.kokoro_speaker, with a device)."""
+    from .r0 import KokoroTTS
+    tts = KokoroTTS(device=device)
+    tts.load()
+
+    def speak(text: str, voice: str) -> np.ndarray:
+        parts = [np.asarray(r.audio, dtype=np.float32) for r in tts.pipeline(text, voice=voice) if r.audio is not None]
+        return np.concatenate(parts) if parts else np.zeros(0, np.float32)
+    return speak
+
+
+def synthetic_wav(audio: np.ndarray, sr: int, title: str, comment: str) -> bytes:
+    """A WAV that says in its own metadata that it is synthetic, as every file severity.py writes does."""
+    import soundfile as sf
+    buf = io.BytesIO()
+    with sf.SoundFile(buf, "w", samplerate=sr, channels=1, subtype="PCM_16", format="WAV") as f:
+        f.title, f.comment, f.software = title, comment, "s2s-lab severity.py"
+        f.write(np.clip(np.asarray(audio, dtype=np.float32), -1.0, 1.0))
+    return buf.getvalue()
+
+
+def render_choices() -> dict:
+    """What the page may ask for: the registration's voices, sentences and scores, and no other."""
+    from . import severity
+    return {"voices": list(severity.TEST_VOICES), "sentences": dict(severity.TEST_SENTENCES),
+            "scores": {k: list(v) for k, v in severity.SCORES.items()},
+            "scales": {"depression": severity.PHQ9.name, "mania": severity.YMRS.name}, "note": RENDER_NOTE}
+
+
+def render_severity(speak, voice: str, sentence: str, condition: str, score: float) -> dict:
+    """One sentence, neutral and rendered, with the targets and what was measured again from the
+    render. Raises ValueError for anything outside render_choices()."""
+    from . import severity
+    ok = render_choices()
+    if voice not in ok["voices"] or sentence not in ok["sentences"] or condition not in ok["scores"] or score not in ok["scores"][condition]:
+        raise ValueError("only the registered voices, sentences and scores can be rendered")
+    t0 = time.perf_counter()
+    text, sr = ok["sentences"][sentence], severity.KOKORO_SR
+    neutral = severity.trim(speak(text, voice), sr)
+    t = severity.CONDITIONS[condition](score)
+    r = severity.render(neutral, sr, t)
+    got = severity.achieved(neutral, r, sr)
+    clean = lambda x: None if x != x else round(float(x), 3)
+    about = f"{severity.SYNTHETIC_NOTE} Voice {voice}. Text: {text}"
+    return {"voice": voice, "sentence": sentence, "text": text, "condition": condition, "scale": ok["scales"][condition], "score": score,
+            "target": {f: clean(getattr(t, f)) for f, _ in RENDER_FIELDS}, "achieved": {f: clean(getattr(got, f)) for f, _ in RENDER_FIELDS},
+            "misses": severity.misses(got, t), "neutral_s": round(len(neutral) / sr, 2), "rendered_s": round(len(r.audio) / sr, 2),
+            "warning": RENDER_WARNING if abs(t.rate - 1) > 0.3 or abs(t.f0_offset_hz) > 40 else None,
+            "neutral_wav": base64.b64encode(synthetic_wav(neutral, sr, "synthetic neutral", about)).decode("ascii"),
+            "rendered_wav": base64.b64encode(synthetic_wav(r.audio, sr, f"synthetic {condition} {score:g}", about)).decode("ascii"),
+            "total_ms": round(1000 * (time.perf_counter() - t0), 1), "note": RENDER_NOTE}
+
+
+def registered_step(root, voice: str, sentence: str, condition: str, score: float, rel: str = "runs/severity/pr009.json") -> dict | None:
+    """What PR-009's run measured for the same voice, sentence, condition and score; None if the file is not there."""
+    path = pathlib.Path(root) / rel
+    if not path.exists():
+        return None
+    run = json.loads(path.read_text(encoding="utf-8"))
+    clean = lambda x: None if x is None or x != x else round(float(x), 3)
+    for row in run["rows"]:
+        if (row["voice"], row["sentence"], row["condition"]) == (voice, sentence, condition):
+            for step in row["steps"]:
+                if step["score"] == score:
+                    c = run["criteria"]
+                    return {"achieved": {f: clean(step["achieved"][f]) for f, _ in RENDER_FIELDS}, "misses": step["misses"],
+                            "registration": run["registration"], "commit": run["commit"], "file": rel, "supported": bool(c["supported"]),
+                            "result": f"{sum(v['pass'] for k, v in c.items() if k != 'supported')} of its five criteria met; pitch within "
+                                      f"3 Hz or 10% in {c['S4']['met']} of {c['S4']['of']} checks, where it needed nine in ten"}
+    return None
+
+
+# --------------------------------------------------------------------------- #
 # the live part
 # --------------------------------------------------------------------------- #
 class Call:
@@ -478,9 +564,16 @@ class Live:
     A rung that does not load, or fails on a recording, is answered for with a sentence, and the
     other rungs still answer. What went wrong goes to the server's log, never to the visitor."""
 
-    def __init__(self, offered: dict, get=any_rung):
+    def __init__(self, offered: dict, get=any_rung, speaker=None):
         self.offered, self._get, self._loaded, self.load_ms = dict(offered), get, {}, {}
         self.unavailable, self._answered = {}, False
+        self._speaker, self._speak = speaker, None                # the severity render's voice: made on first use
+
+    def render(self, voice: str, sentence: str, condition: str, score: float) -> dict:
+        """The severity render (render_severity), on this machine."""
+        if self._speak is None:
+            self._speak = (self._speaker or kokoro_speaker)()
+        return render_severity(self._speak, voice, sentence, condition, score)
 
     def rung(self, label: str):
         if label not in self.offered:
@@ -541,8 +634,10 @@ class Remote:
     Live. `call(labels, samples)` reaches the other end, where answer() hands them to a Live. The
     recording travels as float32 samples at 16 kHz."""
 
-    def __init__(self, offered: dict, call):
-        self.offered, self._call = dict(offered), call
+    def __init__(self, offered: dict, call, render=None):
+        self.offered, self._call, self._render = dict(offered), call, render
+        if render is not None:                                    # only a machine that renders says it can
+            self.render = lambda voice, sentence, condition, score: self._render(voice, sentence, condition, score)
 
     def turns(self, labels, audio: np.ndarray) -> dict:
         return self._call(list(labels), np.ascontiguousarray(audio, dtype=np.float32).tobytes())
@@ -568,6 +663,8 @@ class Several:
         self.default = list(first.offered)
         self.offered = dict(first.offered)
         self.optional = {}
+        if hasattr(first, "render"):                              # the render is the first machine's: Kokoro is there
+            self.render = first.render
         for name, machine in self.others.items():
             self.offered.update(machine.offered)
             self.optional.update({label: name for label in machine.offered})

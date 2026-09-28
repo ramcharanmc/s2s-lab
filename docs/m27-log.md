@@ -31,7 +31,8 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 23 | 09-28 | `modal serve`, by the author | the sixth session: Moshi in the demo for the first time, one recording answered on four machines; the call ran at 1.67 of real time and was not answered | — | — |
 | 24 | 09-28 | the tests and the page in a browser, laptop, scratch | the measured panels for five more registrations, from their run files; the note on R3's card; a throwaway call when Moshi loads | `demo.py`, `demo_page.html`, `modal_app/demo.py`, tests | b4b4dd7 |
 | 25 | 09-28 | the plan for what is left | the author's questions (the portfolio; whether Moshi was tuned as a patient) and seven decisions | — | — |
-| 26 | 09-28 | the tests and the page in a browser, laptop, scratch | one request a machine: each machine's cards appear when it has answered | `demoweb.py`, `demo_page.html`, tests | this commit |
+| 26 | 09-28 | the tests and the page in a browser, laptop, scratch | one request a machine: each machine's cards appear when it has answered | `demoweb.py`, `demo_page.html`, tests | 97e7af3 |
+| 27 | 09-28 | the tests, the render on the laptop's CPU, and the page in a browser; scratch | the severity render, to be heard: PR-009's sentences, voices and scores, and no other | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | this commit |
 
 ## 1. The design
 
@@ -997,3 +998,49 @@ now shows the rest meanwhile.
 | errors in the browser's console | one: the 401 of the wrong code, as meant |
 
 **Not run:** on Modal, where the requests go through Modal's own web layer at the same time.
+
+## 27. Commit 13: the severity render, to be heard
+
+**What was asked.** The author, entry 25: a demonstration of "TTS simulation of different
+psychiatric states". The project has one: PR-009's render. Until now it could be read about on
+the measured tab and not heard: its renders are kept out of git.
+
+**What it is.** On the live tab, behind the door: a condition (depression on PHQ-9, mania on
+YMRS), one of the six scores the registration swept, one of its two voices, one of its eight
+sentences. Kokoro says the sentence; Praat edits pitch, range, rate and pauses to the score's
+targets; the four are measured again from the render. The card plays both and sets three
+columns side by side: what was asked for, what this render measured, what the registered run
+measured for the same voice, sentence and score.
+
+| Decision, as approved | Built |
+|---|---|
+| a fixed list of sentences, not free text | `render_severity` refuses anything outside `render_choices()`; a test sends it free text, a dev sentence, a score between the steps, another condition and another voice |
+| the six registered scores, not a slider | the page's list is `severity.SCORES`; the server checks again |
+| the label on the card | "Synthetic speech, edited to a specification. No clinical validity is claimed or implied, and this is not a diagnosis of anyone" |
+| PR-009's result beside the player | read from the run file: not supported, four criteria of five, pitch in 169 of 192 checks |
+| a warning on extreme scores | shown where the target passes 30% of rate or 40 Hz: depression from 20, mania from 26 |
+
+- **The files say what they are.** Each WAV carries "synthetic" in its title and the project's
+  note in its comment, as every file `severity.py` writes does: a render saved from the page
+  stays labelled.
+- **Where it runs.** On the T4, where Kokoro is; the edit is Praat's, on that machine's CPU.
+  The T4's image gains PR-009's two voices. Charged to the budget as a turn is.
+- **This render and the registered one differ**, and the card says why: Kokoro does not say a
+  sentence the same way twice, so they start from different neutral speech.
+
+**What it is not.** A model of a patient, and not evidence that depressed or manic speech
+sounds like this. The mapping is one page's hand-written anchors (`severity.py`'s own words),
+and PR-009 tested only whether the render does what the mapping asks.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop:
+
+| What | Result |
+|---|---|
+| the full suite | 869 passed, 5 skipped, the skipped ones for audio the scratch copy does not hold |
+| the render with the real Kokoro on the laptop's CPU, `am_adam`, sentence t3, mania 26 | asked for +19.5 Hz, range 1.35, rate 1.35, pauses 0.70; measured +20.5, 1.31, 1.34, 0.68; every target met. The registered run for the same case: +20.5, 1.23, 1.34, 0.68 |
+| the page in a browser, the real Kokoro behind it: depression, PHQ-9 20, `af_sarah`, sentence t1 | the lists hold the two conditions, the six scores, the two voices, the eight sentences; the render came back in 8.0 s, Kokoro's loading included: neutral 4.3 s, rendered 8.0 s, two players, the three columns (pitch -19.82 asked, -19.55 here, -20.64 registered), "Every target met", the warning, PR-009's result, the charge |
+| errors in the browser's console | none |
+| the renders, by ear | **not listened to**: I cannot hear. How they sound is for the author |
+
+**Not run:** on Modal: the T4's image with the two voices, Kokoro on the GPU speaking them,
+the render through the door there.
