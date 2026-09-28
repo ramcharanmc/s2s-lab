@@ -90,6 +90,7 @@ function bar(stages, total) {
 function turnCard(title, sub, t) {
   const c = el("div", "card");
   c.appendChild(el("div", "row")).append(el("strong", null, title), el("span", "soft", sub));
+  if (t.error) { c.appendChild(el("p", "warn", t.error)); return c; }
   if (t.kind === "duplex") {
     c.appendChild(el("p", null, t.gap_ms == null ? "It did not answer this caller." : "Response gap " + ms(t.gap_ms)
       + (t.setup_s > 1 ? ", after " + t.setup_s.toFixed(1) + " s of set-up" : "")));
@@ -152,9 +153,13 @@ async function loadMeasured() {
   $("clip").onchange = showMeasured; showMeasured();
 }
 
+let about = {};
 async function loadStatus() {
   try {
     const s = await (await fetch("api/status")).json();
+    about = s.about || {};
+    $("wait").textContent = "Sent. If the machine is asleep it has to wake and load the rungs first"
+      + (s.wake_s == null ? "" : ": about " + Math.round(s.wake_s) + " s the last time it was measured") + ". The turns after that do not wait.";
     $("status").textContent = "Rungs here: " + s.rungs.join(", ") + ", on " + s.machine + ". Today's budget: $" + s.budget_left.toFixed(2)
       + " of $" + s.budget_cap.toFixed(2) + " left. Up to " + s.max_clip_s + " s a recording."
       + (s.code_set ? "" : " No access code is configured, so the live part is closed.") + (s.open ? "" : " Today's budget is spent.");
@@ -184,8 +189,10 @@ $("send").onclick = async () => {
     const body = await r.json();
     if (!r.ok) { $("error").textContent = body.detail || "It did not work."; return; }
     const box = $("answers"); box.replaceChildren();
-    box.appendChild(el("p", "soft", "One turn of " + body.clip_s + " s, on " + body.machine + ". Charged to today's budget: $" + body.charged.toFixed(4) + "."));
-    for (const t of body.turns) box.appendChild(turnCard(t.label, t.rung, Object.assign({kind: "turn"}, t)));
+    box.appendChild(el("p", "soft", "One turn of " + body.clip_s + " s, on " + body.machine + ". Charged to today's budget: $" + body.charged.toFixed(4) + "."
+      + (body.cold && body.wake_s > 1 ? " The machine was asleep: " + body.wake_s.toFixed(0) + " s of the wait was waking it, not the rungs." : "")
+      + " The rungs answered one after another; each card's times are its own."));
+    for (const t of body.turns) box.appendChild(turnCard(t.label, t.rung + (about[t.label] ? "  ·  " + about[t.label] : ""), Object.assign({kind: "turn"}, t)));
     loadStatus();
   } catch (e) { $("error").textContent = "The server did not answer."; }
   finally { $("wait").hidden = true; $("send").disabled = !blob; }

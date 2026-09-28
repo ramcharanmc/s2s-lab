@@ -9,18 +9,23 @@ No `from __future__ import annotations` here: FastAPI reads the handlers' annota
 
 import os
 import pathlib
+import sys
+import threading
 import time
 
 from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from starlette.concurrency import run_in_threadpool
 
 from .demo import CLIPS, CODE_ENV, MAX_CLIP_S, MAX_UPLOAD_BYTES, MEASURED, PAGE, SR, Budget, Live, code_ok, decode, measured
 
 
 def create_app(live: Live, budget: Budget, root=".", machine: str = "this machine", code_env: str = CODE_ENV, clock=time.time,
-               clips=CLIPS, rows=MEASURED, **panel):
-    """The FastAPI app: the page, the measured data and its clips, the status, and the live turn."""
+               clips=CLIPS, rows=MEASURED, about=None, **panel):
+    """The FastAPI app: the page, the measured data and its clips, the status, and the live turn.
+    `live` is a Live or a Remote; `about` is a sentence a rung's card carries, by label."""
     root = pathlib.Path(root)
+    one_at_a_time = threading.Lock()                               # one recording on the rungs at a time
     app = FastAPI(title="s2s-lab demo", docs_url=None, redoc_url=None, openapi_url=None)
     data = measured(root, clips, rows, **panel)
     clips = set(data["audio"])
@@ -44,6 +49,7 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
         now = clock()
         return {"machine": machine, "rungs": list(live.offered), "code_needed": True, "code_set": bool(os.environ.get(code_env)),
                 "budget_left": round(budget.left(now), 3), "budget_cap": budget.cap, "open": budget.allows(now),
+                "about": about or {}, "wake_s": budget.store.get("wake_s"),
                 "max_clip_s": MAX_CLIP_S, "keeps": "nothing: the recording is decoded in memory and discarded"}
 
     @app.post("/api/live")
@@ -61,10 +67,24 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
             clip = decode(await audio.read(MAX_UPLOAD_BYTES + 1))
         except ValueError as e:
             raise HTTPException(400, str(e)) from None
-        turns = [live.turn(label, clip) for label in wanted]
-        dollars = budget.charge(start, clock())
-        return JSONResponse({"machine": machine, "clip_s": round(len(clip) / SR, 2), "turns": turns, "charged": round(dollars, 4),
-                             "budget_left": round(budget.left(clock()), 3)})
+        def answer():
+            with one_at_a_time:
+                return live.turns(wanted, clip)
+
+        try:
+            out = await run_in_threadpool(answer)                  # the page is still served while the rungs work
+        except Exception as e:
+            print(f"the rungs did not answer: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
+            budget.charge(start, clock())                          # a machine that woke and failed was still up
+            raise HTTPException(503, "the rungs did not answer; the measured part is still here") from None
+        end = clock()
+        dollars = budget.charge(start, end)
+        if out.get("cold"):                                        # what the wait held beside the turns themselves
+            busy_s = sum(t.get("total_ms", 0.0) for t in out["turns"]) / 1000
+            budget.store["wake_s"] = round(max(0.0, end - start - busy_s), 1)
+        return JSONResponse({"machine": out.get("machine") or machine, "clip_s": round(len(clip) / SR, 2), "turns": out["turns"],
+                             "cold": bool(out.get("cold")), "wake_s": budget.store.get("wake_s") if out.get("cold") else None,
+                             "load_s": out.get("load_s"), "charged": round(dollars, 4), "budget_left": round(budget.left(clock()), 3)})
 
     return app
 

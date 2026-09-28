@@ -206,6 +206,7 @@ def test_the_live_part_needs_the_code_answers_with_every_rung_and_charges_the_bu
     status = client.get("/api/status").json()
     assert status["rungs"] == ["R0", "R1"] and status["code_set"] and status["open"] and status["budget_cap"] == 0.05
     assert status["budget_left"] == pytest.approx(0.05 - ok["charged"], abs=1e-3) and status["keeps"].startswith("nothing")
+    assert ok["cold"] and not one["cold"] and status["wake_s"] == ok["wake_s"] == 0.0 and status["about"] == {}
     for _ in range(3):                                                                       # three more bursts spend the day's five cents
         clock["t"] += 1_000
         last = send("open sesame")
@@ -264,3 +265,48 @@ def test_the_laptop_offers_the_verbatim_tier_only_where_the_export_is(tmp_path, 
     monkeypatch.setattr(r2verbatim, "EXPORT_SHA256", hashlib.sha256(b"a model").hexdigest())
     demoweb.laptop()
     assert seen["offered"] == {"R0": "r0", "R1": "r1", "R2": "r2", "R2 verbatim": "r2-verbatim"}
+
+
+# --------------------------------------------------------------------------- #
+# a rung that fails, and rungs on another machine
+# --------------------------------------------------------------------------- #
+class Deaf(StubRung):
+    def _respond(self, audio, sr, sink):
+        raise RuntimeError("out of memory at /a/path/nobody/should/see")
+
+
+def test_a_rung_that_fails_is_answered_for_with_a_sentence_and_the_others_still_answer(capsys):
+    def get(rung_id):
+        if rung_id == "absent":
+            raise ValueError("/a/path/nobody/should/see/model.bin has SHA-256 00, PR-011's model has b3")
+        return Deaf() if rung_id == "deaf" else StubRung()
+
+    live = demo.Live({"R0": "stub", "R1": "deaf", "R2 verbatim": "absent"}, get=get)
+    assert live.load_all() >= 0 and live.unavailable == {"R2 verbatim": demo.NOT_LOADED}
+    out = live.turns(["R0", "R1", "R2 verbatim"], voice())
+    r0, r1, r2 = out["turns"]
+    assert "error" not in r0 and r0["reply_wav"] and out["cold"]
+    assert r1 == {"label": "R1", "rung": "deaf", "error": demo.NOT_ANSWERED}
+    assert r2 == {"label": "R2 verbatim", "rung": "absent", "error": demo.NOT_LOADED}
+    assert "path" not in json.dumps(out) and "/a/path/nobody/should/see" in capsys.readouterr().err   # the log has it; the visitor does not
+    assert not live.turns(["R0"], voice())["cold"]
+    with pytest.raises(KeyError, match="no rung 'R7' here"):
+        live.turns(["R7"], voice())
+    lazy = demo.Live({"R2 verbatim": "absent"}, get=get)                                            # not loaded ahead: the same answer
+    assert lazy.turn("R2 verbatim", voice())["error"] == demo.NOT_LOADED and lazy.unavailable == {"R2 verbatim": demo.NOT_LOADED}
+
+
+def test_rungs_on_another_machine_are_sent_the_samples_and_answer_as_if_here():
+    far = demo.Live({"R0": "stub"}, get=lambda rung_id: StubRung())
+    sent = []
+
+    def call(labels, samples):
+        sent.append((labels, type(samples), len(samples)))
+        return demo.answer(far, labels, samples)
+
+    near = demo.Remote({"R0": "stub"}, call)
+    audio = voice()
+    out = near.turns(("R0",), audio.astype(np.float64))
+    assert sent == [(["R0"], bytes, 4 * len(audio))] and near.offered == {"R0": "stub"}
+    assert out["cold"] and out["turns"][0]["label"] == "R0" and out["turns"][0]["reply_s"] == 0.5
+    json.dumps(out)

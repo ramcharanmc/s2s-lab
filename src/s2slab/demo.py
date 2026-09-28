@@ -12,6 +12,8 @@ is awake, not a benchmark.
 
     PYTHONPATH=src DEMO_ACCESS_CODE=... python -m uvicorn s2slab.demoweb:laptop --factory --port 8000
         the whole demo on the laptop's CPU (rungs r0, r1, r2), for development (requirements/demo.txt)
+    modal serve modal_app/demo.py
+        the page on a CPU container, the live turn on a T4 that sleeps (modal_app/demo.py)
 
 This module is the demo without the web: decoding, the access code, the spend cap, the measured
 data, a live turn as a record. demoweb.py puts a web app around it.
@@ -31,6 +33,8 @@ import hmac
 import io
 import json
 import pathlib
+import sys
+import time
 
 import numpy as np
 
@@ -41,6 +45,8 @@ MIN_CLIP_S, MAX_CLIP_S = 0.3, 15.0
 MAX_UPLOAD_BYTES = 2_000_000        # 15 s of browser audio is well under this
 SILENT_PEAK = 1e-3
 CODE_ENV = "DEMO_ACCESS_CODE"
+NOT_LOADED = "This rung could not be loaded on this machine."
+NOT_ANSWERED = "This rung failed on this recording."
 PAGE = pathlib.Path(__file__).with_name("demo_page.html")
 
 # What the Measured part shows: one committed run per rung, and the same four clips for all of them.
@@ -232,11 +238,15 @@ def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS
 # the live part
 # --------------------------------------------------------------------------- #
 class Live:
-    """The rungs the live part offers, each loaded once, on first use. `offered` maps the label a
-    visitor sees to a registered rung id: {"R0": "r0-gpu", ...}."""
+    """The rungs the live part offers, each loaded once: on first use, or all at once by
+    load_all(). `offered` maps the label a visitor sees to a registered rung id: {"R0": "r0-gpu"}.
+
+    A rung that does not load, or fails on a recording, is answered for with a sentence, and the
+    other rungs still answer. What went wrong goes to the server's log, never to the visitor."""
 
     def __init__(self, offered: dict, get=ladder.get):
         self.offered, self._get, self._loaded, self.load_ms = dict(offered), get, {}, {}
+        self.unavailable, self._answered = {}, False
 
     def rung(self, label: str):
         if label not in self.offered:
@@ -247,12 +257,61 @@ class Live:
             self._loaded[label] = r
         return self._loaded[label]
 
+    def _failed(self, label: str, doing: str, e: Exception, sentence: str) -> dict:
+        print(f"rung {label} ({self.offered[label]}) failed while {doing}: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
+        return {"label": label, "rung": self.offered[label], "error": sentence}
+
+    def load_all(self) -> float:
+        """Load every rung offered, now. Returns the seconds it took."""
+        t0 = time.perf_counter()
+        for label in self.offered:
+            try:
+                self.rung(label)
+            except Exception as e:                                  # a rung's models: any error is "not here"
+                self.unavailable[label] = self._failed(label, "loading", e, NOT_LOADED)["error"]
+        return time.perf_counter() - t0
+
+    def turns(self, labels, audio: np.ndarray) -> dict:
+        """One recording through each rung named. "cold": this is the first recording answered
+        since the process began, so whoever waited for it also waited for the machine."""
+        cold, self._answered = not self._answered, True
+        return {"turns": [self.turn(label, audio) for label in labels], "cold": cold}
+
     def turn(self, label: str, audio: np.ndarray) -> dict:
         """One turn through one rung, as a record the page can show. The reply travels as a WAV."""
-        t = self.rung(label).respond(audio, SR)
+        if label not in self.offered:
+            raise KeyError(f"no rung {label!r} here; there are {', '.join(self.offered)}")
+        if label in self.unavailable:
+            return {"label": label, "rung": self.offered[label], "error": self.unavailable[label]}
+        try:
+            rung = self.rung(label)
+        except Exception as e:
+            self.unavailable[label] = NOT_LOADED
+            return self._failed(label, "loading", e, NOT_LOADED)
+        try:
+            t = rung.respond(audio, SR)
+        except Exception as e:
+            return self._failed(label, "answering", e, NOT_ANSWERED)
         clean = lambda x: None if x != x else round(float(x), 1)
         return {"label": label, "rung": self.offered[label], "transcript": t.transcript, "reply_text": t.reply_text,
                 "stages_ms": {k: round(float(v), 1) for k, v in t.stages_ms.items()}, "total_ms": round(float(t.total_ms), 1),
                 "first_audio_ms": clean(t.first_audio_ms), "first_sound_ms": clean(t.first_sound_ms),
                 "stall_ms": round(float(t.stall_ms), 1), "reply_s": round(t.reply_s, 2),
                 "reply_wav": base64.b64encode(wav_bytes(t.audio, t.sr)).decode("ascii") if len(t.audio) else None}
+
+
+class Remote:
+    """The live part where the rungs are on another machine: what the web app holds in place of a
+    Live. `call(labels, samples)` reaches the other end, where answer() hands them to a Live. The
+    recording travels as float32 samples at 16 kHz."""
+
+    def __init__(self, offered: dict, call):
+        self.offered, self._call = dict(offered), call
+
+    def turns(self, labels, audio: np.ndarray) -> dict:
+        return self._call(list(labels), np.ascontiguousarray(audio, dtype=np.float32).tobytes())
+
+
+def answer(live: Live, labels, samples: bytes) -> dict:
+    """The other end of a Remote."""
+    return live.turns(labels, np.frombuffer(samples, dtype=np.float32))

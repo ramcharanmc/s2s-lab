@@ -11,7 +11,9 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 3 | 09-27, evening | the pilot, laptop | browser audio decodes; no web framework installed; run files hold no reply audio | — | — |
 | 4 | 09-27, night | the demo on the laptop's CPU, scratch | the page, the measured part, and a live turn through three rungs | `src/s2slab/demo.py`, `demoweb.py`, `demo_page.html`, tests, `requirements/demo.txt` | 83a67e5 |
 | 5 | 09-27, night | the demo on the laptop, by the author | the measured part loaded; the one live request was refused, 401; no live turn yet | — | — |
-| 6 | 09-27, night | FT-2's recognizer as a rung, laptop, scratch, on a stand-in model | the rung loads from a folder and answers; refuses a model that is not PR-011's | `src/s2slab/r2verbatim.py`, `rungs.py`, `demo.py`, `demoweb.py`, `demo_page.html`, tests | this commit |
+| 6 | 09-27, night | FT-2's recognizer as a rung, laptop, scratch, on a stand-in model | the rung loads from a folder and answers; refuses a model that is not PR-011's | `src/s2slab/r2verbatim.py`, `rungs.py`, `demo.py`, `demoweb.py`, `demo_page.html`, tests | ef3d827 |
+| 7 | 09-28 | the demo on the laptop, by the author, from the microphone | a live turn answered by the rungs: the live part and the microphone confirmed | — | — |
+| 8 | 09-28 | the Modal app, laptop, scratch, with a function in the T4's place | the web app, the door and the spend counter run; nothing has run on Modal | `modal_app/demo.py`, `demo.py`, `demoweb.py`, `demo_page.html`, tests | this commit |
 
 ## 1. The design
 
@@ -165,3 +167,85 @@ matches. It never ran outside scratch.
 
 **Left for commit 3:** a rung that fails to load during a live turn still answers 500. The
 visitor sees no detail, but the page should say the rung is not available.
+
+## 7. The author's live turn (after ef3d827)
+
+844 tests passed on the author's machine. Then one turn from the microphone, on the laptop's CPU,
+with the code the server was started with. Read from the author's screenshot, which shows the
+first two cards:
+
+| Rung | Recognizer | LLM | Speech | First audio | Whole reply |
+|---|---:|---:|---:|---:|---:|
+| R0 | 1.25 s | 11.71 s | 3.66 s | 16.62 s | 16.62 s |
+| R1 | 2.91 s | 16.00 s | 3.82 s | 22.73 s | 22.73 s |
+
+The recording: 233 kB, 14.82 s. Both heard the same words and gave the same one-sentence reply.
+R2's card is below the screenshot's edge: not seen by me.
+
+What this confirms: the microphone path, the access code, and a live turn through the rungs, on
+the author's machine. Entry 5's open item is closed.
+
+What it does not show, and why:
+
+- **R1 is not sooner than R0 here.** The reply was one sentence, so R1 had one clause to hand
+  out: its first audio is its whole reply. And the rungs ran one after another on a CPU they
+  share with each other's loaded models. One turn on a laptop is not a measurement: PR-002's is.
+- **The recording stopped at the 15 s limit**, in the middle of the author's sentence. The page
+  stops the recorder at 15 s and does not say so beforehand. Noted for the page; not changed in
+  this commit.
+
+The author asked whether the wait is all right. On the laptop it is what a CPU gives: the LLM is
+most of it. On a T4 the same rungs measured 0.66 s and 0.49 s to first audio (p50, PR-002).
+
+## 8. Commit 3: the Modal app
+
+`modal_app/demo.py`. Built, and run on the laptop with a function in the T4's place. **Nothing in
+it has run on Modal**: no image built, no secret read, no volume mounted, no GPU.
+
+**One change to the design the author approved, made while building it, and shown to him before
+it was applied.** The design note had one web app on the T4. That wakes the GPU for every visit
+to the page and every crawler, outside the access code and outside the cap. So there are two
+containers:
+
+| Container | Holds | Woken by |
+|---|---|---|
+| web, CPU | the page, the measured data, six clips, the status; the access code, the budget, the decoding | any request |
+| rungs, T4 | the four rungs, loaded at start | a live request that has passed the code and the budget |
+
+The five decisions, as approved: R0, R1, R2 (`small.en`) and R2 verbatim live; no turbo; all four
+loaded at start; the wait said on the page, with the last measured wake; `modal serve` before any
+`modal deploy`.
+
+- `demo.py`: `Live.load_all()` and `Live.turns()`; a rung that does not load, or fails on a
+  recording, is a card with a sentence while the others answer; `Remote` and `answer()`, the two
+  ends when the rungs are on another machine.
+- `demoweb.py`: the turns run on a worker thread, one recording at a time, so the page is served
+  while they work; a machine that does not answer is a 503 with a sentence; the wake is measured
+  on every cold turn (the wait, less the turns' own time) and kept for the page.
+- `demo_page.html`: a failed rung's card; the wait and the wake in words; the note on R2.
+- The spend counter is a `modal.Dict`; the access code a Modal secret the author creates.
+
+**The cap on Modal** counts the wall time of a request that woke the T4, plus the 60 s window: the
+wake is inside the wall time, so the 45 s estimate is not added. A request that fails after the
+door is charged too. Not counted: both containers' CPU and memory. Modal's dashboard is the bill.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop:
+
+| What | Result |
+|---|---|
+| the new tests (4 in `test_modal_demo.py`, 2 in `test_demo.py`) and the rest of the suite | 845 passed, 5 skipped for audio the scratch copy does not hold |
+| `modal_app/demo.py` imported with Modal 1.5.5 | one app, the class `Rungs`, the web endpoint `web` |
+| its web app, the T4's end played by the CPU rungs `r0`, `r1`, `r2`; the verbatim rung without its export | four rungs offered |
+| a live request with a wrong code | 401; the far end was not called |
+| a live request with the code, twice | 200 both; the first marked cold, the second not; both charged |
+| the verbatim rung, its export absent | a card with a sentence; the other three answered |
+| anything written to disk by the turns | nothing |
+| local paths in the changed files | none |
+
+The laptop was busy during the pilot: the three rungs took 636 s to load and 40 to 62 s a turn.
+Those times say nothing about the code or about a T4.
+
+**Not run, and first run by the author:** the image builds; the secret; the volume mount and the
+hash check of the export on it; four rungs in one T4's memory (about 1.7 to 1.9 GB each when
+measured alone; not measured together); the wake; a request that waits longer than Modal's 150 s
+limit for a web request; the microphone over the public URL.
