@@ -1,0 +1,5 @@
+# The demo's web app (s2slab.demoweb), on the laptop and in its Modal image. Installed on 2026-09-27
+# (WSL, Python 3.10) beside base.txt and r0.txt; starlette 1.7.0 came with fastapi.
+fastapi==0.141.1
+uvicorn==0.54.0
+python-multipart==0.0.32

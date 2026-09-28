@@ -7,7 +7,8 @@ The point is the measurement, not the demo. Each rung is thin: get it working, m
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
 **Status, 2026-09-27** (commit `e29da85`): rungs R0 to R5 built and measured; three fine-tunes run;
-thirteen registrations, twelve of them reported, four with a supported claim; 828 tests, and 33 in `ft/`. About
+thirteen registrations, twelve of them reported, four with a supported claim. In progress: a demo
+that shows the measured turns and answers a live one (`docs/m27-log.md`); on the laptop so far. About
 \$33 spent: \$8.73 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
@@ -57,14 +58,20 @@ says why.
 
 Python 3.10, Linux or WSL. The tests and the CPU track need no GPU and no account. The packages
 are pinned in `requirements/`, one file per purpose, each with a header that says what it is for:
-`base.txt` and `r0.txt` for the library and its models (CPU torch first), `affect.txt`, `data.txt`
-and `modal.txt` as needed.
+`base.txt` and `r0.txt` for the library and its models (CPU torch first), `affect.txt`, `data.txt`,
+`demo.txt` and `modal.txt` as needed.
 
 ```bash
-PYTHONPATH=src python -m pytest -q                      # 828 tests; the models are faked
+PYTHONPATH=src python -m pytest -q                      # the tests; the models are faked
 PYTHONPATH=src python -m s2slab.rungs r0                # R0 on the laptop: the per-stage table
 PYTHONPATH=src python -m s2slab.severity dev --listen   # the severity sweeps on Kokoro speech
 PYTHONPATH=src python -m s2slab.quantladder dev         # the quantization ladder (needs the ONNX files)
+```
+
+The demo, on the laptop's CPU (`requirements/demo.txt`; the measured part needs no model):
+
+```bash
+PYTHONPATH=src DEMO_ACCESS_CODE=... python -m uvicorn s2slab.demoweb:laptop --factory --port 8000
 ```
 
 On Modal (`requirements/modal.txt`, your own account; each command prints what it cost):
@@ -83,7 +90,7 @@ The fine-tunes are their own project with their own environment: `ft/README.md`.
 | `modal_app/` | the GPU entry points, one per family of rungs, and the fine-tunes' training |
 | `ft/` | the fine-tunes (Whisper LoRA, FastPitch), on the Lightning-Hydra template |
 | `vast/` | the kit that trained the Moshi LoRA on a rented H100 |
-| `tests/` | 828 tests; nothing in them needs a GPU |
+| `tests/` | the tests; nothing in them needs a GPU |
 | `probes/`, `evalset/` | scripts, labels and SHA-256 manifests of the test sets; the audio stays out of git |
 | `runs/` | the complete output of every reportable run; `runs/README.md` says what each file holds |
 | `docs/` | see below |
@@ -94,7 +101,7 @@ The fine-tunes are their own project with their own environment: `ft/README.md`.
 |---|---|
 | `docs/preregistration.md` | every registration: criteria, predictions, deviations, results |
 | `docs/cost-ledger.md` | one row per paid run, failed runs included |
-| `docs/ft1-log.md`, `ft2-log.md`, `ft3-log.md`, `m26-log.md` | run logs, by event: what ran, what failed, the cause, the fix |
+| `docs/ft1-log.md`, `ft2-log.md`, `ft3-log.md`, `m26-log.md`, `m27-log.md` | run logs, by event: what ran, what failed, the cause, the fix |
 | `docs/backlog.md` | what is not done, and what was chosen next |
 | `docs/colab.md` | the Colab route for interactive GPU work |
 | `runs/README.md` | every committed run, and how to re-score it without audio or a model |

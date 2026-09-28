@@ -10,7 +10,17 @@ Last updated 2026-09-27, at commit `e29da85`.
 Asked for by the author on 2026-09-27: a version of the ladder that can be shown on demand, for
 the portfolio. Neither plan has one. v2's week 8 says "publish"; v1 argues against a live bot as
 the centrepiece and scopes the client transport out. So the demo shows measured turns first and
-live turns second. The design note is in the milestone's run log when it is agreed.
+live turns second. The design and what has run are in `docs/m27-log.md`.
+
+| Phase | What | State |
+|---|---|---|
+| 1, commit 1 | the measured part and a live turn, on the laptop's CPU | done |
+| 1, commit 2 | FT-2's verbatim recognizer as a tier a visitor can choose | next |
+| 1, commit 3 | the Modal app: image, the access code as a secret, the spend counter | after it |
+| 1, deploy | the author creates the secret and deploys; the cold start is measured | after it |
+| 2 | live R3, on an A10 | not started |
+| 3 | live R4 and R5, on an L40S and an A10; R5 over WebSocket | not started |
+| 4 | barge-in in live playback | not started |
 
 ## Owed
 

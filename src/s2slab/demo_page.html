@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>s2s-lab: six speech-to-speech architectures, measured</title>
+<style>
+  :root { --ink: #1c2330; --soft: #5b6678; --line: #d9dee7; --bg: #f7f8fa; --card: #fff; --accent: #1f5fbf; --warn: #9a5b00;
+          --asr: #5b8def; --llm: #e0a02a; --tts: #4caf7a; --s2s: #a06cd5; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink: #e7eaf0; --soft: #9aa5b8; --line: #2c3442; --bg: #12161d; --card: #1a2029; --accent: #7fb0ff; --warn: #e0b060; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.5 system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+  main { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; } h2 { font-size: 1.15rem; margin: 28px 0 8px; }
+  p { margin: 8px 0; } .soft { color: var(--soft); } .warn { color: var(--warn); }
+  nav { display: flex; gap: 8px; margin: 20px 0 8px; }
+  nav button, .btn { font: inherit; padding: 8px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--card);
+                     color: var(--ink); cursor: pointer; }
+  nav button[aria-selected="true"] { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin: 12px 0; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .num { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .bar { display: flex; height: 14px; border-radius: 4px; overflow: hidden; background: var(--line); margin: 6px 0; min-width: 40px; }
+  .bar span { display: block; height: 100%; } .asr { background: var(--asr); } .llm { background: var(--llm); }
+  .tts { background: var(--tts); } .s2s { background: var(--s2s); } .other { background: var(--soft); }
+  .key span { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin: 0 4px 0 12px; }
+  blockquote { margin: 6px 0; padding: 0 0 0 10px; border-left: 3px solid var(--line); }
+  input[type=password], input[type=text] { font: inherit; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px;
+                                           background: var(--card); color: var(--ink); }
+  audio { height: 34px; max-width: 100%; } label { display: inline-flex; gap: 6px; align-items: center; }
+  .wide { overflow-x: auto; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Six speech-to-speech architectures, measured</h1>
+  <p class="soft">From a naive cascade to a full-duplex model. Every number on the first tab comes from a committed run file.
+     Synthetic speech throughout; no clinical validity is claimed or implied.</p>
+  <nav role="tablist">
+    <button role="tab" id="tab-measured" aria-selected="true">Measured</button>
+    <button role="tab" id="tab-live" aria-selected="false">Live</button>
+  </nav>
+
+  <section id="measured">
+    <div class="card"><p id="note" class="soft"></p>
+      <p class="key soft">Where the time went:<span class="asr"></span>recognizer<span class="llm"></span>language model<span class="tts"></span>speech<span class="s2s"></span>speech-to-speech</p>
+      <div class="row"><label>Clip <select id="clip" class="btn"></select></label><audio id="clip-audio" controls preload="none"></audio></div>
+      <p id="clip-ref" class="soft"></p></div>
+    <div id="rungs"></div>
+  </section>
+
+  <section id="live" hidden>
+    <div class="card">
+      <p>Say a sentence or two. Each rung that is loaded answers the same recording, and shows where its time went.</p>
+      <p id="status" class="soft">Asking the server what is awake…</p>
+      <p class="soft">The recording is decoded in memory, handed to the rungs, and discarded. Nothing is stored.</p>
+      <div class="row">
+        <label>Access code <input id="code" type="password" autocomplete="off"></label>
+        <button id="record" class="btn">Record</button>
+        <label class="btn">or choose a file <input id="file" type="file" accept="audio/*" hidden></label>
+        <button id="send" class="btn" disabled>Send</button>
+      </div>
+      <p id="picked" class="soft"></p>
+      <p id="wait" class="warn" hidden>Waking the GPU. The first turn after a quiet spell takes the longest; the ones after it do not.</p>
+      <p id="error" class="warn"></p>
+    </div>
+    <div id="answers"></div>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const ms = (x) => x == null ? "none" : (x >= 1000 ? (x / 1000).toFixed(2) + " s" : Math.round(x) + " ms");
+
+function bar(stages, total) {
+  const b = el("div", "bar");
+  const sum = Object.values(stages).reduce((a, v) => a + v, 0) || 1;
+  for (const [name, v] of Object.entries(stages)) {
+    const s = el("span", ["asr", "llm", "tts", "s2s"].includes(name) ? name : "other");
+    s.style.width = (100 * v / Math.max(sum, total || 0)) + "%"; s.title = name + " " + ms(v); b.appendChild(s);
+  }
+  return b;
+}
+
+function turnCard(title, sub, t) {
+  const c = el("div", "card");
+  c.appendChild(el("div", "row")).append(el("strong", null, title), el("span", "soft", sub));
+  if (t.kind === "duplex") {
+    c.appendChild(el("p", null, t.gap_ms == null ? "It did not answer this caller." : "Response gap " + ms(t.gap_ms)
+      + (t.setup_s > 1 ? ", after " + t.setup_s.toFixed(1) + " s of set-up" : "")));
+  } else {
+    c.appendChild(el("p", "num", "First audio " + ms(t.first_audio_ms) + "  ·  whole reply " + ms(t.total_ms)));
+    c.appendChild(bar(t.stages_ms, t.total_ms));
+    c.appendChild(el("p", "soft", Object.entries(t.stages_ms).map(([k, v]) => k + " " + ms(v)).join("  ·  ")));
+    c.appendChild(el("p", "soft", t.transcript == null ? "No transcript exists in this rung: the audio goes straight to the model."
+      : "Heard: “" + t.transcript + "”"));
+  }
+  if (t.reply_text) c.appendChild(el("blockquote", null, t.reply_text));
+  if (t.reply_wav) { const a = el("audio"); a.controls = true; a.src = "data:audio/wav;base64," + t.reply_wav; c.appendChild(a); }
+  return c;
+}
+
+let data = null;
+function showMeasured() {
+  const clip = $("clip").value, info = data.clips.find((c) => c.id === clip);
+  $("clip-audio").src = "api/clip/" + clip;
+  $("clip-ref").textContent = "“" + info.reference + "”  " + info.seconds.toFixed(1) + " s. " + info.source + ".";
+  const box = $("rungs"); box.replaceChildren();
+  for (const r of data.rungs) {
+    if (r.missing) { box.appendChild(turnCard(r.label, r.what + " (run file not here)", {kind: "duplex", gap_ms: null})); continue; }
+    const t = Object.assign({kind: r.kind}, r.turns.find((x) => x.clip === clip));
+    const over = r.kind === "duplex" ? "answered " + r.answered + " of " + r.turns_in_run + "; gap p50 " + ms(r.gap_p50_ms)
+                                     : "first audio p50 " + ms(r.first_audio_p50_ms) + " over " + r.turns_in_run + " turns";
+    const card = turnCard(r.label, r.what, t);
+    card.appendChild(el("p", "soft", over + "  ·  " + r.machine + "  ·  commit " + r.commit + "  ·  " + r.file));
+    box.appendChild(card);
+  }
+}
+
+async function loadMeasured() {
+  data = await (await fetch("api/measured")).json();
+  $("note").textContent = data.note;
+  for (const c of data.clips) $("clip").appendChild(new Option(c.id + "  (" + c.seconds.toFixed(1) + " s)", c.id));
+  $("clip").onchange = showMeasured; showMeasured();
+}
+
+async function loadStatus() {
+  try {
+    const s = await (await fetch("api/status")).json();
+    $("status").textContent = "Rungs here: " + s.rungs.join(", ") + ", on " + s.machine + ". Today's budget: $" + s.budget_left.toFixed(2)
+      + " of $" + s.budget_cap.toFixed(2) + " left. Up to " + s.max_clip_s + " s a recording."
+      + (s.code_set ? "" : " No access code is configured, so the live part is closed.") + (s.open ? "" : " Today's budget is spent.");
+  } catch (e) { $("status").textContent = "The server did not answer."; }
+}
+
+let blob = null, recorder = null;
+function picked(b, what) { blob = b; $("picked").textContent = what; $("send").disabled = !b; $("error").textContent = ""; }
+$("file").onchange = (e) => { const f = e.target.files[0]; if (f) picked(f, f.name + ", " + Math.round(f.size / 1024) + " kB"); };
+$("record").onclick = async () => {
+  if (recorder) { recorder.stop(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio: true}), parts = [];
+    recorder = new MediaRecorder(stream);
+    recorder.ondataavailable = (e) => parts.push(e.data);
+    recorder.onstop = () => { stream.getTracks().forEach((t) => t.stop()); picked(new Blob(parts, {type: recorder.mimeType}), "recorded, "
+      + Math.round(parts.reduce((a, p) => a + p.size, 0) / 1024) + " kB"); recorder = null; $("record").textContent = "Record"; };
+    recorder.start(); $("record").textContent = "Stop";
+    setTimeout(() => { if (recorder) recorder.stop(); }, 15000);
+  } catch (e) { $("error").textContent = "The microphone is not available: choose a file."; }
+};
+$("send").onclick = async () => {
+  const form = new FormData(); form.append("audio", blob, "turn"); form.append("rungs", "");
+  $("send").disabled = true; $("error").textContent = ""; $("wait").hidden = false;
+  try {
+    const r = await fetch("api/live", {method: "POST", body: form, headers: {"X-Access-Code": $("code").value}});
+    const body = await r.json();
+    if (!r.ok) { $("error").textContent = body.detail || "It did not work."; return; }
+    const box = $("answers"); box.replaceChildren();
+    box.appendChild(el("p", "soft", "One turn of " + body.clip_s + " s, on " + body.machine + ". Charged to today's budget: $" + body.charged.toFixed(4) + "."));
+    for (const t of body.turns) box.appendChild(turnCard(t.label, t.rung, Object.assign({kind: "turn"}, t)));
+    loadStatus();
+  } catch (e) { $("error").textContent = "The server did not answer."; }
+  finally { $("wait").hidden = true; $("send").disabled = !blob; }
+};
+
+for (const name of ["measured", "live"]) $("tab-" + name).onclick = () => {
+  for (const n of ["measured", "live"]) { $(n).hidden = n !== name; $("tab-" + n).setAttribute("aria-selected", n === name); }
+  if (name === "live") loadStatus();
+};
+loadMeasured();
+</script>
+</body>
+</html>
