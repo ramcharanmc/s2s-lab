@@ -25,7 +25,9 @@ from .demo import (CLIPS, CODE_ENV, MAX_CLIP_S, MAX_UPLOAD_BYTES, MEASURED, MIN_
 def create_app(live: Live, budget: Budget, root=".", machine: str = "this machine", code_env: str = CODE_ENV, clock=time.time,
                clips=CLIPS, rows=MEASURED, about=None, **panel):
     """The FastAPI app: the page, the measured data and its clips, the status, and the live turn.
-    `live` is a Live or a Remote; `about` is a sentence a rung's card carries, by label."""
+    `live` is a Live, a Remote or a Several; `about` is a sentence a rung's card carries, by label."""
+    usual = list(getattr(live, "default", live.offered))           # what answers a recording when nothing is asked for
+    asked_for = dict(getattr(live, "optional", {}))                # label -> the machine it wakes
     root = pathlib.Path(root)
     one_at_a_time = threading.Lock()                               # one recording on the rungs at a time
     door = Door(budget.store)
@@ -51,7 +53,10 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
     def api_status():
         now = clock()
         code = os.environ.get(code_env)
-        return {"machine": machine, "rungs": list(live.offered), "code_needed": True, "code_set": code_usable(code),
+        return {"machine": machine, "rungs": usual, "code_needed": True, "code_set": code_usable(code),
+                "optional": [{"label": label, "machine": live.says[name], "wake_s": budget.store.get(f"wake_s:{name}"),
+                              "dollars": round(budget.machines[name][0] * budget.machines[name][1] / 3600, 2)}   # its idle window alone
+                             for label, name in asked_for.items()],
                 "code_short": bool(code) and not code_usable(code), "min_code_len": MIN_CODE_LEN, "locked_s": round(door.locked_s(now)),
                 "budget_left": round(budget.left(now), 3), "budget_cap": budget.cap, "open": budget.allows(now),
                 "about": about or {}, "wake_s": budget.store.get("wake_s"),
@@ -68,7 +73,7 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
             raise HTTPException(401, "the live part needs an access code")
         if not budget.allows(start):
             raise HTTPException(429, f"today's budget of ${budget.cap:.2f} is spent; the measured part is still here")
-        wanted = [r for r in rungs.split(",") if r] or list(live.offered)
+        wanted = [r for r in rungs.split(",") if r] or usual
         unknown = [r for r in wanted if r not in live.offered]
         if unknown:
             raise HTTPException(400, f"no rung {', '.join(unknown)} here")
@@ -89,12 +94,23 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
             budget.charge(start, clock())                          # a machine that woke and failed was still up
             raise HTTPException(503, "the rungs did not answer; the measured part is still here") from None
         end = clock()
-        dollars = budget.charge(start, end)
-        if out.get("cold"):                                        # what the wait held beside the turns themselves
-            busy_s = sum(t.get("total_ms", 0.0) for t in out["turns"]) / 1000
-            budget.store["wake_s"] = round(max(0.0, end - start - busy_s), 1)
+        woken = []
+        if "used" in out:                                          # more than one machine: each charged for its own time
+            dollars = 0.0
+            for u in out["used"]:
+                dollars += budget.charge(u["start"], u["end"], u["machine"])
+                if u["cold"]:
+                    key = f"wake_s:{u['machine']}" if u["machine"] else "wake_s"
+                    budget.store[key] = round(max(0.0, u["end"] - u["start"] - u["busy_s"]), 1)
+                    woken.append({"machine": u["says"] or machine, "wake_s": budget.store[key]})
+        else:
+            dollars = budget.charge(start, end)
+            if out.get("cold"):                                    # what the wait held beside the turns themselves
+                busy_s = sum(t.get("total_ms", 0.0) for t in out["turns"]) / 1000
+                budget.store["wake_s"] = round(max(0.0, end - start - busy_s), 1)
+                woken.append({"machine": out.get("machine") or machine, "wake_s": budget.store["wake_s"]})
         return JSONResponse({"machine": out.get("machine") or machine, "clip_s": round(len(clip) / SR, 2), "turns": out["turns"],
-                             "voice": carried,
+                             "voice": carried, "woken": woken,
                              "cold": bool(out.get("cold")), "wake_s": budget.store.get("wake_s") if out.get("cold") else None,
                              "load_s": out.get("load_s"), "charged": round(dollars, 4), "budget_left": round(budget.left(clock()), 3)})
 

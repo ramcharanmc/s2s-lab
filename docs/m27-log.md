@@ -23,7 +23,9 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 15 | 09-28 | `modal serve`, by the author, a code of ten characters or more | two live turns through four rungs on a T4: one that woke it (the wake 47 s) and one with it up (3.1 s for all four); Modal's warning gone; the recorder used with a real microphone | — | 430c522 |
 | 16 | 09-28 | the tests and the page in a browser, laptop, scratch | prosody in the demo: a measured panel from PR-006's run, and a live card of the visitor's pitch and range beside the words the rungs received | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | cdb890b |
 | 17 | 09-28 | `modal serve`, by the author, his own voice | the voice card and the prosody panel on Modal; two live turns, and **both woke the T4**: it had gone to sleep in between | — | 2661338 |
-| 18 | 09-28 | the tests, laptop, scratch | the T4's window 300 s, the author's choice after entry 17 | `modal_app/demo.py`, `demo_page.html`, a test | this commit |
+| 18 | 09-28 | the tests, laptop, scratch | the T4's window 300 s, the author's choice after entry 17 | `modal_app/demo.py`, `demo_page.html`, a test | 87ba16c |
+| 19 | 09-28 | the plan for the rest of the demo | seven decisions by the author; R5 as a conversation and barge-in live left out, and why | — | — |
+| 20 | 09-28 | the tests and the page in a browser, laptop, scratch | R3 and R4 live, each on a machine of its own that wakes only when asked; one cap over three machines | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | this commit |
 
 ## 1. The design
 
@@ -644,3 +646,78 @@ It is kept in every batch run. The demo is the one place where the next call com
 **Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite,
 852 passed, 5 skipped (the skipped ones for audio the scratch copy does not hold). **Not run:** on Modal. The author's next `modal serve`: a second turn, sent after
 listening to the first one's replies, should take seconds and not a minute.
+
+## 19. The plan for the rest of the demo
+
+The author, 2026-09-28: "Lets get everything related to demo part get done". What was left, and
+what he decided:
+
+| Commit | What | GPU |
+|---|---|---|
+| 9 | R3 and R4 live, each asked for by the visitor | A10, L40S |
+| 10 | R5 on the visitor's recording: Moshi answers it as it answered the eval clips | A10 |
+| 11 | measured panels for the rest: barge-in (PR-003), FT-1, severity, quantization | none |
+| 12 | `modal deploy`, and what is owed before a public link | none |
+
+| Decision | Chosen |
+|---|---|
+| Do the bigger GPUs wake on every turn? | no: each is asked for, and the page says what it wakes |
+| One cap or one for each machine? | one, \$1 a day, each machine charged at its own rate |
+| The window of the A10 and the L40S | 120 s, not the T4's 300: their idle time costs two and three times as much |
+| R3's "upset?" score for a visitor's voice | not shown: an uncalibrated label on a real person. It stays in the measured panel |
+| R5: a conversation, or on a recording | on a recording first: `duplex.py`'s tested protocol |
+| Barge-in live | a measured panel in its place |
+| PersonaPlex beside Moshi | not now: its own image, gated weights |
+
+**Left out, and said so.** A conversation with R5, and barge-in while a reply plays, both need
+the microphone open while the machine speaks: a streaming client in the browser, a WebSocket
+through Modal, and headphones at the visitor's end. Nothing in the repo has tested any of it.
+They can follow the list above. (In the hand-over the numbering ran 9 to 13, with R3 and R4 apart;
+they are built as one commit, being one pattern.)
+
+## 20. Commit 9: R3 and R4 live
+
+**What was missing.** The live part had the three cascades. The rung that hears the audio (R3)
+and the one that speaks the reply itself (R4) were on the measured tab only.
+
+- `modal_app/demo.py`: two more classes, `Hears` (R3, an A10) and `Speaks` (R4, an L40S: 22.5 GB
+  does not fit an A10), their images pinned as `r3_probe.py` and `r4_bench.py` pin theirs.
+- `demo.py`: `Several`, the live part over more than one machine. The first answers every
+  recording; the others only what is asked of them. They are asked at the same time, so the wait
+  is the longest of theirs and not the sum. `Budget` charges each machine at its own rate, with
+  its own window, under the one cap.
+- `demoweb.py`: a recording with nothing asked for goes to the T4's four rungs, as before. Each
+  machine is charged for its own time, and its wake is measured and kept.
+- `demo_page.html`: "Also ask:" with a box for each; the box says which machine wakes, how long
+  it took the last time, and what its idle window costs.
+
+**A change in what a visitor sees when a machine fails.** Before, a T4 that did not answer was
+a 503 and no cards. Now every machine that does not answer is a sentence on its rungs' cards,
+and the rest answer, with the voice card above them. It is still charged: it was up.
+
+**What a burst costs**, as arithmetic from list rates, a wake of a minute and one turn; none
+measured:
+
+| Asked for | Machines | About |
+|---|---|---:|
+| nothing | T4 | \$0.06 |
+| R3 | T4, A10 | \$0.12 |
+| R4 | T4, L40S | \$0.16 |
+| both | all three | \$0.22 |
+
+So the day's dollar is four bursts with everything asked for, or about seventeen with nothing.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop:
+
+| What | Result |
+|---|---|
+| the full suite | 858 passed, 5 skipped, the skipped ones for audio the scratch copy does not hold |
+| the page in a browser, three made-up machines with stub rungs (wakes of 3 s and 5 s played) | "Also ask:" with R3 and R4, each saying its machine, "a minute or more", and what its idle window costs |
+| a recording sent with nothing ticked | two cards, from the first machine only; 0.2 s; charged for the T4's window |
+| the same recording with R3 and R4 ticked | four cards, R3's and R4's naming their machines; 5.9 s, the longest wake and not the sum of the two; "Sent 1 s ago" counting while it waited; both wakes said above the cards; the boxes still ticked, now saying "about 3 s the last time" |
+| errors in the browser's console | none |
+
+**Not run, and first run by the author:** the two image builds (16 GB and 22 GB of weights,
+fetched on CPUs); R3 and R4 loading in their containers; their wakes, which may be longer than
+the T4's; a request that waits past Modal's 150 s limit for a web request; the L40S's
+availability.

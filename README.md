@@ -6,7 +6,7 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-09-28** (commit `2661338`): rungs R0 to R5 built and measured; three fine-tunes run;
+**Status, 2026-09-28** (commit `87ba16c`): rungs R0 to R5 built and measured; three fine-tunes run;
 thirteen registrations, twelve of them reported, four with a supported claim. In progress: a demo
 that shows the measured turns and answers a live one (`docs/m27-log.md`); run on Modal with
 `modal serve`, live turns through four rungs on a T4 (about a second a rung; 47 to 72 s to wake),

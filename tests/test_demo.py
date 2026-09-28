@@ -446,3 +446,76 @@ def test_a_live_turn_carries_the_voices_measures_and_a_failed_measure_costs_no_t
     monkeypatch.setattr(demoweb, "voice", broken)
     again = send()
     assert again.status_code == 200 and again.json()["voice"] is None and "path" not in again.text
+
+
+# --------------------------------------------------------------------------- #
+# more than one machine
+# --------------------------------------------------------------------------- #
+def test_each_machine_is_billed_for_its_own_time_under_one_cap():
+    store = {}
+    b = demo.Budget(store, cap_dollars=1.0, dollars_per_hour=3600.0, window_s=300.0, cold_start_s=0.0, machines={"a10": (7200.0, 120.0)})
+    assert b.charge(DAY, DAY + 5) == pytest.approx(5 + 300)                       # the first machine: a dollar a second
+    assert b.charge(DAY, DAY + 60, "a10") == pytest.approx(2 * (60 + 120))        # the other: two, and its own window
+    assert b.charge(DAY + 70, DAY + 75, "a10") == pytest.approx(2 * 15)           # still up: only what it adds
+    assert b.charge(DAY + 70, DAY + 75) == pytest.approx(70)                      # and the first is on its own clock
+    assert b.spent(DAY) == pytest.approx(305 + 360 + 30 + 70) and set(store) >= {"billed_until", "billed_until:a10"}
+    with pytest.raises(KeyError):
+        b.charge(DAY, DAY + 1, "l40s")                                            # a machine nobody priced is not run
+
+
+def several(clock, broken=False):
+    first = demo.Live({"R0": "stub", "R1": "stub"}, get=lambda rung_id: StubRung())
+    far = demo.Live({"R3": "stub"}, get=lambda rung_id: StubRung())
+
+    def call(labels, samples):
+        clock["t"] += 40                                                          # the other machine takes its time
+        if broken:
+            raise RuntimeError("no capacity at /a/path/nobody/should/see")
+        return dict(demo.answer(far, labels, samples), machine="Modal NVIDIA A10G", load_s=12.0)
+
+    return demo.Several(first, {"a10": demo.Remote({"R3": "stub"}, call)}, says={"a10": "an A10"}, clock=lambda: clock["t"])
+
+
+def test_the_other_machines_answer_only_when_asked_and_beside_the_first():
+    clock = {"t": DAY}
+    live = several(clock)
+    assert (live.default, live.optional, list(live.offered)) == (["R0", "R1"], {"R3": "a10"}, ["R0", "R1", "R3"])
+    usual = live.turns(live.default, voice())
+    assert [t["label"] for t in usual["turns"]] == ["R0", "R1"] and [u["machine"] for u in usual["used"]] == [None] and clock["t"] == DAY
+    asked = live.turns(["R0", "R3", "R1"], voice())
+    assert [t["label"] for t in asked["turns"]] == ["R0", "R3", "R1"] and asked["turns"][1]["machine"] == "Modal NVIDIA A10G"
+    a10 = asked["used"][1]
+    assert (a10["machine"], a10["says"], a10["cold"], a10["load_s"]) == ("a10", "Modal NVIDIA A10G", True, 12.0) and a10["end"] - a10["start"] == 40
+    json.dumps(asked)
+
+
+def test_a_machine_that_does_not_answer_is_a_sentence_on_its_cards_and_the_rest_answer(capsys):
+    live = several({"t": DAY}, broken=True)
+    out = live.turns(["R0", "R3"], voice())
+    assert "error" not in out["turns"][0] and out["turns"][1] == {"label": "R3", "rung": "stub", "error": demo.NO_MACHINE, "machine": "an A10"}
+    assert "path" not in json.dumps(out) and "nobody/should/see" in capsys.readouterr().err and len(out["used"]) == 2   # it was up, so it is charged
+
+
+def test_the_page_asks_the_other_machines_only_for_what_is_ticked(tree, monkeypatch):
+    pytest.importorskip("fastapi")
+    from fastapi.testclient import TestClient
+
+    from s2slab import demoweb
+    monkeypatch.setenv("TEST_DEMO_CODE", "open sesame")
+    clock = {"t": DAY}
+    budget = demo.Budget({}, cap_dollars=1.0, dollars_per_hour=0.59, window_s=300.0, cold_start_s=0.0, machines={"a10": (1.10, 120.0)})
+    client = TestClient(demoweb.create_app(several(clock), budget, root=tree, machine="a test", code_env="TEST_DEMO_CODE",
+                                           clock=lambda: clock["t"], clips=PICK, rows=ROWS, verbatim_run="runs/none.json"))
+    status = client.get("/api/status").json()
+    assert status["rungs"] == ["R0", "R1"] and status["optional"] == [{"label": "R3", "machine": "an A10", "wake_s": None, "dollars": 0.04}]
+    send = lambda rungs: client.post("/api/live", files={"audio": ("turn", wav(2.0), "audio/wav")}, data={"rungs": rungs},
+                                     headers={"X-Access-Code": "open sesame"}).json()
+    usual = send("")
+    assert [t["label"] for t in usual["turns"]] == ["R0", "R1"] and usual["charged"] == pytest.approx(300 / 3600 * 0.59, abs=1e-3)
+    asked = send("R0,R1,R3")
+    assert [t["label"] for t in asked["turns"]] == ["R0", "R1", "R3"]
+    assert asked["charged"] == pytest.approx((40 + 120) / 3600 * 1.10, abs=8e-3)                         # the A10's turn and window; the T4 was up
+    assert asked["woken"] == [{"machine": "Modal NVIDIA A10G", "wake_s": 40.0}] and budget.store["wake_s:a10"] == 40.0
+    assert client.get("/api/status").json()["optional"][0]["wake_s"] == 40.0
+    page = client.get("/").text
+    assert "Also ask:" in page and "it wakes for this" in page

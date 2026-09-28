@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-09-28, at commit `2661338`.
+Last updated 2026-09-28, at commit `87ba16c`.
 
 ## Chosen next: M27, a live demo on Modal
 
@@ -23,10 +23,11 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | 1, commit 6 | the recorder shows that it is recording, the time and the limit, and plays the recording back; Send off while the live part is closed | done; used by the author with his microphone on Modal. The author: "recorder is clear now" |
 | 1, commit 7 | prosody: a measured panel from PR-006's run; a live card of the visitor's pitch, range and words a second, beside the words the rungs received | done; on Modal the card filled from the author's voice, twice (`docs/m27-log.md`, entry 17) |
 | 1, commit 8 | the T4's window 300 s, so a visitor's next turn finds it up | done on the laptop; not yet run on Modal |
-| 1, deploy | `modal deploy`, the URL that stays | the author's call |
-| 2 | live R3, on an A10: the rung that hears the audio, beside the cascades that do not | not started; a design note first |
-| 3 | live R4 and R5, on an L40S and an A10; R5 over WebSocket | not started |
-| 4 | barge-in in live playback | not started |
+| 2 and 3, commit 9 | R3 on an A10 and R4 on an L40S, live, each woken only when a visitor asks; one cap over three machines | done on the laptop, with functions in the machines' places; nothing of it has run on Modal |
+| 3, commit 10 | R5 on the visitor's recording: Moshi answers it as it answered the eval clips | next |
+| 4, commit 11 | measured panels for the rest: barge-in (PR-003), FT-1, severity, quantization | after it |
+| commit 12 | `modal deploy`, the URL that stays, and what is owed before a public link | the author's call |
+| left out | a conversation with R5, and barge-in while a reply plays: both need the microphone open while the machine speaks (`docs/m27-log.md`, entry 19) | can follow; not planned |
 
 ## Owed
 

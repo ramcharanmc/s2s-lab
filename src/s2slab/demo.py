@@ -49,6 +49,7 @@ MIN_CODE_LEN = 10                   # a shorter code is treated as none: it coul
 WRONG_CODES, LOCK_S = 5, 600.0      # this many wrong codes inside LOCK_S close the live part for LOCK_S
 NOT_LOADED = "This rung could not be loaded on this machine."
 NOT_ANSWERED = "This rung failed on this recording."
+NO_MACHINE = "The machine this rung runs on did not answer."
 PAGE = pathlib.Path(__file__).with_name("demo_page.html")
 
 # What the Measured part shows: one committed run per rung, and the same four clips for all of them.
@@ -164,11 +165,15 @@ class Budget:
     has passed. So the first request of a burst is charged its own time, the window, and the cold
     start; a request that arrives while the container is still up is charged only the time by
     which it extends the bill. `store` is any mapping with get() and item assignment (a dict here,
-    a modal.Dict in the deployment); the day is the UTC date."""
+    a modal.Dict in the deployment); the day is the UTC date.
 
-    def __init__(self, store, cap_dollars: float, dollars_per_hour: float, window_s: float = 60.0, cold_start_s: float = 45.0):
+    One cap, however many machines: `machines` names the ones beside the first, each with its own
+    rate and window, {"a10": (1.10, 120.0)}. Each is billed until its own window has passed."""
+
+    def __init__(self, store, cap_dollars: float, dollars_per_hour: float, window_s: float = 60.0, cold_start_s: float = 45.0,
+                 machines: dict | None = None):
         self.store, self.cap, self.rate = store, cap_dollars, dollars_per_hour
-        self.window_s, self.cold_start_s = window_s, cold_start_s
+        self.window_s, self.cold_start_s, self.machines = window_s, cold_start_s, dict(machines or {})
 
     @staticmethod
     def day(t: float) -> str:
@@ -183,15 +188,18 @@ class Budget:
     def allows(self, t: float) -> bool:
         return self.spent(t) < self.cap
 
-    def charge(self, start: float, end: float) -> float:
-        """Record one request, from `start` to `end` (epoch seconds). Returns the dollars it added."""
-        billed_until = float(self.store.get("billed_until", 0.0))
+    def charge(self, start: float, end: float, machine: str | None = None) -> float:
+        """Record one request to one machine (None: the first), from `start` to `end` (epoch
+        seconds). Returns the dollars it added."""
+        rate, window_s = self.machines[machine] if machine else (self.rate, self.window_s)
+        key = f"billed_until:{machine}" if machine else "billed_until"
+        billed_until = float(self.store.get(key, 0.0))
         if start > billed_until:                                  # the container had gone to sleep
-            seconds = self.cold_start_s + (end - start) + self.window_s
+            seconds = self.cold_start_s + (end - start) + window_s
         else:
-            seconds = max(0.0, end + self.window_s - billed_until)
-        dollars = seconds / 3600 * self.rate
-        self.store["billed_until"] = end + self.window_s
+            seconds = max(0.0, end + window_s - billed_until)
+        dollars = seconds / 3600 * rate
+        self.store[key] = end + window_s
         self.store[f"dollars:{self.day(end)}"] = self.spent(end) + dollars
         return dollars
 
@@ -407,3 +415,47 @@ class Remote:
 def answer(live: Live, labels, samples: bytes) -> dict:
     """The other end of a Remote."""
     return live.turns(labels, np.frombuffer(samples, dtype=np.float32))
+
+
+class Several:
+    """The live part over more than one machine. `first` answers every recording; each of the
+    `others` answers only when a visitor asks for one of its rungs, because it wakes a GPU of its
+    own. The machines are asked at the same time, so the wait is the longest of theirs and not
+    the sum. A machine that does not answer is a sentence on its rungs' cards; the rest answer.
+
+    `others` maps a machine's name (as in Budget.machines) to a Live or a Remote; `says` maps it
+    to what a visitor is told: {"a10": "an A10"}."""
+
+    def __init__(self, first, others: dict, says: dict | None = None, clock=time.time):
+        self.first, self.others, self._clock = first, dict(others), clock
+        self.says = {None: None, **{name: name for name in self.others}, **(says or {})}     # the first is named by whoever serves it
+        self.default = list(first.offered)
+        self.offered = dict(first.offered)
+        self.optional = {}
+        for name, machine in self.others.items():
+            self.offered.update(machine.offered)
+            self.optional.update({label: name for label in machine.offered})
+
+    def _ask(self, name, machine, labels, audio) -> tuple[dict, dict]:
+        start = self._clock()
+        try:
+            out = machine.turns(labels, audio)
+        except Exception as e:
+            print(f"{self.says[name] or 'the first machine'} did not answer: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
+            out = {"turns": [{"label": label, "rung": machine.offered[label], "error": NO_MACHINE} for label in labels], "cold": False}
+        used = {"machine": name, "says": out.get("machine") or self.says[name], "start": start, "end": self._clock(),
+                "cold": bool(out.get("cold")), "load_s": out.get("load_s"),
+                "busy_s": sum(t.get("total_ms", 0.0) for t in out["turns"]) / 1000}
+        return out, used
+
+    def turns(self, labels, audio: np.ndarray) -> dict:
+        from concurrent.futures import ThreadPoolExecutor
+        asked = [(name, machine, [label for label in labels if label in machine.offered])
+                 for name, machine in [(None, self.first), *self.others.items()]]
+        asked = [a for a in asked if a[2]]
+        with ThreadPoolExecutor(max_workers=max(1, len(asked))) as pool:
+            answers = list(pool.map(lambda a: self._ask(a[0], a[1], a[2], audio), asked))
+        by_label = {t["label"]: dict(t, machine=used["says"]) for out, used in answers for t in out["turns"]}
+        first = answers[0] if answers else ({}, {})
+        return {"turns": [by_label[label] for label in labels], "used": [used for _, used in answers],
+                "cold": any(used["cold"] for _, used in answers), "machine": first[1].get("says"), "load_s": first[0].get("load_s")}
