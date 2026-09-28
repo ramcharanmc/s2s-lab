@@ -6,7 +6,7 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-09-27** (commit `e29da85`): rungs R0 to R5 built and measured; three fine-tunes run;
+**Status, 2026-09-27** (commit `83a67e5`): rungs R0 to R5 built and measured; three fine-tunes run;
 thirteen registrations, twelve of them reported, four with a supported claim. In progress: a demo
 that shows the measured turns and answers a live one (`docs/m27-log.md`); on the laptop so far. About
 \$33 spent: \$8.73 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
@@ -73,6 +73,10 @@ The demo, on the laptop's CPU (`requirements/demo.txt`; the measured part needs 
 ```bash
 PYTHONPATH=src DEMO_ACCESS_CODE=... python -m uvicorn s2slab.demoweb:laptop --factory --port 8000
 ```
+
+The live part offers R0, R1 and R2, and R2 with PR-011's recognizer (`r2-verbatim`) where its
+export is: in `data/ft2/ct2`, or the folder `S2SLAB_FT2_CT2` names (`ft/README.md` says how to
+fetch it). A folder holding any other model is refused.
 
 On Modal (`requirements/modal.txt`, your own account; each command prints what it cost):
 

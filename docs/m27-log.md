@@ -9,7 +9,9 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 1 | 09-27, evening | — | the design, five decisions, four phases | — | — |
 | 2 | 09-27, evening | — | the root README and the backlog, owed since the first milestone | `README.md`, `docs/backlog.md` | 6037535 |
 | 3 | 09-27, evening | the pilot, laptop | browser audio decodes; no web framework installed; run files hold no reply audio | — | — |
-| 4 | 09-27, night | the demo on the laptop's CPU, scratch | the page, the measured part, and a live turn through three rungs | `src/s2slab/demo.py`, `demoweb.py`, `demo_page.html`, tests, `requirements/demo.txt` | this commit |
+| 4 | 09-27, night | the demo on the laptop's CPU, scratch | the page, the measured part, and a live turn through three rungs | `src/s2slab/demo.py`, `demoweb.py`, `demo_page.html`, tests, `requirements/demo.txt` | 83a67e5 |
+| 5 | 09-27, night | the demo on the laptop, by the author | the measured part loaded; the one live request was refused, 401; no live turn yet | — | — |
+| 6 | 09-27, night | FT-2's recognizer as a rung, laptop, scratch, on a stand-in model | the rung loads from a folder and answers; refuses a model that is not PR-011's | `src/s2slab/r2verbatim.py`, `rungs.py`, `demo.py`, `demoweb.py`, `demo_page.html`, tests | this commit |
 
 ## 1. The design
 
@@ -95,3 +97,71 @@ file); anything on Modal; any GPU.
 with `from __future__ import annotations` hands it strings it cannot resolve when the types are
 imported inside a function. The web app is its own module, without that import. It never ran
 wrong; it was split before its first test.
+
+## 5. The author's first try (after 83a67e5)
+
+837 tests passed on the author's machine. The server's log of the try:
+
+| Request | Answer |
+|---|---|
+| the page, `/api/measured`, `/api/status`, a clip | 200 |
+| `/favicon.ico` | 404: the page named no icon |
+| `POST /api/live`, once | **401**: the access code sent was not the one the server was started with |
+
+So on the author's machine the measured part is confirmed, and the live part is confirmed only to
+refuse. No live turn and no microphone recording has run there yet. Not a fault in the code as
+far as the log shows: the same route answered in the scratch run (entry 4). Still to do, by the
+author: one live turn with the code the server was started with, from the microphone.
+
+The icon: the page now names an empty one, so a browser asks for nothing.
+
+## 6. Commit 2: FT-2's recognizer as a rung
+
+**What was missing.** PR-011's model had been run once, through the recognizer class alone, on
+Modal. No rung loaded it, so nothing could put it in a conversation.
+
+- `src/s2slab/r2verbatim.py`: `r2-verbatim` (CPU, int8) and `r2-gpu-verbatim` (fp16). R2 with one
+  change, the recognizer: `VerbatimASR` loads the export from a folder (`S2SLAB_FT2_CT2`, or
+  `data/ft2/ct2`).
+- **The model is held to PR-011's.** The folder's `model.bin` must have the SHA-256 the
+  registration recorded (`b31833fe...a51cff`), checked before anything loads. A test holds the
+  constant to `runs/ft2/pr011.json`.
+- `demo.py`: the measured part gains a panel from `runs/ft2/pr011.json`: two disfluent clips, what
+  was said, what `small.en` wrote, what the LoRA wrote, and the cohort's numbers beside them.
+- `demoweb.py`: the laptop offers "R2 verbatim" only where PR-011's export is; the clips the page
+  may play are the four clean ones and the panel's two, and no other.
+
+**The two clips are chosen for the size of the difference, and the page says so.** The rule:
+the two disfluent clips where the LoRA removed the most raw errors (`pick_verbatim`, held by a
+test): `disfluent-29` and `disfluent-42`. They are the best cases, not typical ones, so the
+cohort's numbers stand beside them: raw WER 9.9% to 2.3% over 50 clips, fillers kept 1 of 29 and
+29 of 29. The page also carries PR-011's limit: one speaker, performing disfluency, trained on and
+tested on. Nothing measured says the model writes down a visitor's "um".
+
+The clips are DisfluencySpeech's test split, Apache-2.0, attributed on the page.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop's CPU. The export is on
+the Modal volume `ft2`, not on the laptop, so the loading route ran on a STAND-IN: the cached
+`small.en` folder, which has the same layout.
+
+| What | Result |
+|---|---|
+| the new tests (4 in `test_r2verbatim.py`, 3 in `test_demo.py`) and the rest of the suite | 839 passed, 5 skipped for audio the scratch copy does not hold |
+| `r2-verbatim` given the stand-in | refused: not PR-011's SHA-256 |
+| `r2-verbatim` given no export | refused, with where to put it |
+| the class told the stand-in's own hash | loaded from the folder; one turn on `disfluent-29`, recognizer 2.9 s, first audio 9.4 s |
+| the web app, no export; and another model in the export's place | three rungs offered; "R2 verbatim" refused, 400 |
+| the web app, the stand-in passed off as the export | four rungs offered; one upload answered by `r2` and `r2-verbatim` |
+| the panel, from the committed run file | two clips, the cohort's numbers, both clips served; `disfluent-47` not served |
+
+**Not run:** PR-011's model in a rung, anywhere. The stand-in is `small.en`, so what it heard says
+nothing about the LoRA. The model's first turn inside a rung will be on Modal (commit 3), or on
+the laptop if the author brings the export down (`ft/README.md`).
+
+**A fault found by the pilot, fixed before the hand-over.** The first version offered the tier
+wherever a `model.bin` was, and checked the hash only at load: with another model in the folder
+the page offered a tier that then failed, a 500. Now the tier is offered only where the hash
+matches. It never ran outside scratch.
+
+**Left for commit 3:** a rung that fails to load during a live turn still answers 500. The
+visitor sees no detail, but the page should say the rung is not available.

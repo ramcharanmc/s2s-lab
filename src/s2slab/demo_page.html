@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>s2s-lab: six speech-to-speech architectures, measured</title>
+<link rel="icon" href="data:,">
 <style>
   :root { --ink: #1c2330; --soft: #5b6678; --line: #d9dee7; --bg: #f7f8fa; --card: #fff; --accent: #1f5fbf; --warn: #9a5b00;
           --asr: #5b8def; --llm: #e0a02a; --tts: #4caf7a; --s2s: #a06cd5; }
@@ -50,6 +51,7 @@
       <div class="row"><label>Clip <select id="clip" class="btn"></select></label><audio id="clip-audio" controls preload="none"></audio></div>
       <p id="clip-ref" class="soft"></p></div>
     <div id="rungs"></div>
+    <div id="verbatim"></div>
   </section>
 
   <section id="live" hidden>
@@ -120,8 +122,31 @@ function showMeasured() {
   }
 }
 
+function showVerbatim(v) {
+  const box = $("verbatim"); box.replaceChildren();
+  if (!v) return;
+  box.appendChild(el("h2", null, "A recognizer that writes down what was said"));
+  const head = el("div", "card");
+  head.appendChild(el("p", null, "The slow tier's recognizer with a LoRA trained on verbatim transcripts (" + v.registration + ", supported). On the "
+    + v.cohort.clips + " disfluent clips: raw WER " + v.cohort.base_raw_wer + "% without it, " + v.cohort.lora_raw_wer + "% with it; fillers kept "
+    + v.cohort.base_kept + " of " + v.cohort.fillers + " without it, " + v.cohort.lora_kept + " with it."));
+  head.appendChild(el("p", "soft", v.note));
+  head.appendChild(el("p", "soft", v.machine + "  ·  commit " + v.commit + "  ·  " + v.file));
+  box.appendChild(head);
+  for (const c of v.clips) {
+    const card = el("div", "card");
+    card.appendChild(el("div", "row")).append(el("strong", null, c.id), el("span", "soft", c.seconds.toFixed(1) + " s. " + c.source + "."));
+    const a = el("audio"); a.controls = true; a.preload = "none"; a.src = "api/clip/" + c.id; card.appendChild(a);
+    for (const [who, text] of [["Said", c.reference], ["small.en heard", c.base], ["with the LoRA", c.lora]]) {
+      card.appendChild(el("p", "soft", who)); card.appendChild(el("blockquote", null, text));
+    }
+    box.appendChild(card);
+  }
+}
+
 async function loadMeasured() {
   data = await (await fetch("api/measured")).json();
+  showVerbatim(data.verbatim);
   $("note").textContent = data.note;
   for (const c of data.clips) $("clip").appendChild(new Option(c.id + "  (" + c.seconds.toFixed(1) + " s)", c.id));
   $("clip").onchange = showMeasured; showMeasured();

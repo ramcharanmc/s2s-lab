@@ -92,6 +92,13 @@ with a dollar cap on every function:
     modal run modal_app/ft2_train.py::export --adapter runs/<run>/adapters/step-000900
     modal volume get ft2 runs/<run> results/ft2/                            # the run's files, back here
 
+The export, for the rung `r2-verbatim` (`src/s2slab/r2verbatim.py`) on the laptop: about 0.5 GB,
+one file per call, into a folder that exists. The rung checks `model.bin` against PR-011's
+SHA-256 and refuses any other.
+
+    modal volume ls ft2 export/<name>/ct2                                   # the files to fetch
+    mkdir -p data/ft2/ct2 && modal volume get ft2 export/<name>/ct2/model.bin data/ft2/ct2/    # and so for each file
+
 ## FT-3 — a TTS with native pitch and duration control
 
 The severity render (`s2slab.severity`, P2c) edits Kokoro's speech in Praat after the fact; PR-009

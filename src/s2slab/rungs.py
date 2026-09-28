@@ -276,6 +276,8 @@ RUNGS = {
     "r2-turbo": "s2slab.r2:TwoTierCascadeTurbo",
     "r2-gpu": "s2slab.r2:TwoTierCascadeGPU",
     "r2-gpu-turbo": "s2slab.r2:TwoTierCascadeGPUTurbo",
+    "r2-verbatim": "s2slab.r2verbatim:TwoTierCascadeVerbatim",
+    "r2-gpu-verbatim": "s2slab.r2verbatim:TwoTierCascadeGPUVerbatim",
     "r3-gpu": "s2slab.r3:SpeechLLMCascade",
     "r4-gpu": "s2slab.r4:SpeechToSpeech",
 }

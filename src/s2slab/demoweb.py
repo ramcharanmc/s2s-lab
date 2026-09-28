@@ -18,12 +18,12 @@ from .demo import CLIPS, CODE_ENV, MAX_CLIP_S, MAX_UPLOAD_BYTES, MEASURED, PAGE,
 
 
 def create_app(live: Live, budget: Budget, root=".", machine: str = "this machine", code_env: str = CODE_ENV, clock=time.time,
-               clips=CLIPS, rows=MEASURED):
+               clips=CLIPS, rows=MEASURED, **panel):
     """The FastAPI app: the page, the measured data and its clips, the status, and the live turn."""
     root = pathlib.Path(root)
     app = FastAPI(title="s2s-lab demo", docs_url=None, redoc_url=None, openapi_url=None)
-    data = measured(root, clips, rows)
-    clips = {c["id"] for c in data["clips"]}
+    data = measured(root, clips, rows, **panel)
+    clips = set(data["audio"])
 
     @app.get("/", response_class=HTMLResponse)
     def page():
@@ -71,5 +71,9 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
 
 def laptop():
     """The demo on the laptop's CPU, for development: uvicorn's --factory calls this."""
-    return create_app(Live({"R0": "r0", "R1": "r1", "R2": "r2"}), Budget({}, cap_dollars=1.0, dollars_per_hour=0.0),
+    from . import r2verbatim                                    # here, not at the top: it imports the model classes
+    offered = {"R0": "r0", "R1": "r1", "R2": "r2"}
+    if r2verbatim.available():
+        offered["R2 verbatim"] = "r2-verbatim"
+    return create_app(Live(offered), Budget({}, cap_dollars=1.0, dollars_per_hour=0.0),
                       root=os.environ.get("DEMO_ROOT", "."), machine="a laptop CPU (development)")

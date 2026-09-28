@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-09-27, at commit `e29da85`.
+Last updated 2026-09-27, at commit `83a67e5`.
 
 ## Chosen next: M27, a live demo on Modal
 
@@ -15,8 +15,8 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | Phase | What | State |
 |---|---|---|
 | 1, commit 1 | the measured part and a live turn, on the laptop's CPU | done |
-| 1, commit 2 | FT-2's verbatim recognizer as a tier a visitor can choose | next |
-| 1, commit 3 | the Modal app: image, the access code as a secret, the spend counter | after it |
+| 1, commit 2 | FT-2's verbatim recognizer as a rung and a tier; its measured panel | done, on a stand-in model: PR-011's model has not run in a rung yet |
+| 1, commit 3 | the Modal app: image, the access code as a secret, the spend counter, the volume `ft2`; a rung that fails to load answered with a sentence, not a 500 | next |
 | 1, deploy | the author creates the secret and deploys; the cold start is measured | after it |
 | 2 | live R3, on an A10 | not started |
 | 3 | live R4 and R5, on an L40S and an A10; R5 over WebSocket | not started |
@@ -30,6 +30,7 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | A remote | the repo has never been pushed |
 | Local paths in committed files | six report files from M16 to M20 under `runs/` hold Modal's "Created mount" lines with the author's local path, and three comments in `src/s2slab/` (`policies.py`, `prosody.py`, `simulate.py`) hold a local command; every Modal report holds the workspace's URL. Checked for only from M25 on. Removing them from files is a commit; removing them from history is a rewrite, and evidence files are never overwritten: a decision for the author before any push |
 | `probes/README.md`, "Recording notes" | microphone and room are still to fill in |
+| A live turn on the author's machine, from the microphone | the author's one live request was refused, 401 (`docs/m27-log.md`, entry 5); the microphone path has run nowhere |
 
 ## Raised by PR-013, none started
 

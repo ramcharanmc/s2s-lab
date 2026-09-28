@@ -60,6 +60,18 @@ def tree(tmp_path):
                         "overlap": 0.1}
     (tmp_path / "runs" / "d.json").write_text(json.dumps({"machine": "Modal NVIDIA A10", "commit": "def5678",
                                                           "turns": {f"clean-{i:02d}": duplex(i) for i in range(6)}}))
+    said = {"dis-00": "And, uh, they have a, a policy.", "dis-01": "It is, um, fine.", "dis-02": "Yes."}
+    manifest = json.loads((tmp_path / "evalset" / "manifest.json").read_text())
+    manifest["items"] += [{"id": k, "cohort": "disfluent", "source_id": k, "text": v, "duration_s": 5.0} for k, v in said.items()]
+    (tmp_path / "evalset" / "manifest.json").write_text(json.dumps(manifest))
+    for k in said:
+        (tmp_path / "evalset" / "audio" / f"{k}.wav").write_bytes(wav(0.5, 16_000))
+    heard = {"dis-00": "And they have a policy.", "dis-01": "It is fine.", "dis-02": "Yes."}
+    turns = lambda texts: {k: {"cohort": "disfluent", "text": v, "asr_ms": 140.0} for k, v in texts.items()}
+    (tmp_path / "runs" / "v.json").write_text(json.dumps({
+        "registration": "PR-011", "machine": "Modal Tesla T4", "commit": "65c833c",
+        "criteria": {"n_target": 3, "s1": {"base_raw_wer": 0.099, "lora_raw_wer": 0.023}, "s2": {"fillers_in_refs": 29, "base_kept": 1, "lora_kept": 29}},
+        "models": {"small.en": {"turns": turns(heard)}, "ft2": {"turns": turns(said)}}}))
     return tmp_path
 
 
@@ -103,7 +115,7 @@ def test_the_budget_counts_the_time_the_gpu_is_up_not_the_time_a_request_takes()
 
 
 def test_the_measured_part_reads_the_run_files_and_lists_a_missing_one_as_missing(tree):
-    data = demo.measured(tree, clips=PICK, rows=ROWS)
+    data = demo.measured(tree, clips=PICK, rows=ROWS, verbatim_clips=("dis-00", "dis-01"), verbatim_run="runs/v.json")
     assert [c["id"] for c in data["clips"]] == list(PICK) and data["clips"][1]["reference"] == "Sentence number 1."
     assert "CC BY 4.0" in data["clips"][0]["source"] and "different GPUs" in data["note"]
     r0, r5, r9 = data["rungs"]
@@ -158,7 +170,7 @@ def web(tree, monkeypatch):
     budget = demo.Budget({}, cap_dollars=0.05, dollars_per_hour=0.59)
     live = demo.Live({"R0": "stub", "R1": "stub"}, get=lambda rung_id: StubRung())
     app = demoweb.create_app(live, budget, root=tree, machine="a test", code_env="TEST_DEMO_CODE", clock=lambda: clock["t"],
-                             clips=PICK, rows=ROWS)
+                             clips=PICK, rows=ROWS, verbatim_clips=("dis-00", "dis-01"), verbatim_run="runs/v.json")
     return TestClient(app), clock, budget
 
 
@@ -167,11 +179,13 @@ def test_the_page_the_measured_data_and_only_the_clips_it_shows(web):
     page = client.get("/")
     assert page.status_code == 200 and "Measured" in page.text and "Nothing is stored" in page.text
     assert "no clinical validity" in page.text and "http://" not in page.text and "https://" not in page.text   # nothing fetched from outside
+    assert 'rel="icon" href="data:,"' in page.text                                        # and no request for an icon
     data = client.get("/api/measured").json()
     assert [r["label"] for r in data["rungs"]] == ["R0", "R5", "R9"]
     clip = client.get("/api/clip/clean-01")
     assert clip.status_code == 200 and clip.headers["content-type"] == "audio/wav" and clip.content[:4] == b"RIFF"
-    for other in ("secret", "clean-05", "..%2F..%2Fmanifest", "clean-01.wav"):
+    assert client.get("/api/clip/dis-01").status_code == 200 and data["verbatim"]["clips"][0]["lora"] == "And, uh, they have a, a policy."
+    for other in ("secret", "clean-05", "dis-02", "..%2F..%2Fmanifest", "clean-01.wav"):
         assert client.get(f"/api/clip/{other}").status_code == 404
     assert client.get("/docs").status_code == 404 and client.get("/openapi.json").status_code == 404
 
@@ -199,3 +213,54 @@ def test_the_live_part_needs_the_code_answers_with_every_rung_and_charges_the_bu
     assert not client.get("/api/status").json()["open"]
     clock["t"] += 86_400
     assert send("open sesame").status_code == 200                                            # a new day
+
+
+# --------------------------------------------------------------------------- #
+# the verbatim panel, and the verbatim tier
+# --------------------------------------------------------------------------- #
+def test_the_verbatim_panel_is_pr011s_run_and_says_how_its_clips_were_chosen(tree):
+    data = demo.measured(tree, clips=PICK, rows=ROWS, verbatim_clips=("dis-00", "dis-01"), verbatim_run="runs/v.json")
+    v = data["verbatim"]
+    assert (v["registration"], v["commit"], v["file"]) == ("PR-011", "65c833c", "runs/v.json")
+    assert v["cohort"] == {"clips": 3, "base_raw_wer": 9.9, "lora_raw_wer": 2.3, "fillers": 29, "base_kept": 1, "lora_kept": 29}
+    assert "chosen for that" in v["note"] and "same-speaker" in v["note"]
+    first = v["clips"][0]
+    assert (first["id"], first["reference"], first["base"], first["lora"]) == ("dis-00", "And, uh, they have a, a policy.",
+                                                                               "And they have a policy.", "And, uh, they have a, a policy.")
+    assert "Apache-2.0" in first["source"] and data["audio"] == list(PICK) + ["dis-00", "dis-01"]
+    items = {i["id"]: i for i in json.loads((tree / "evalset" / "manifest.json").read_text())["items"]}
+    assert demo.pick_verbatim(json.loads((tree / "runs" / "v.json").read_text()), items) == ("dis-00", "dis-01")   # 2 and 1 errors removed; dis-02 none
+    gone = demo.measured(tree, clips=PICK, rows=ROWS, verbatim_run="runs/none.json")
+    assert gone["verbatim"] is None and gone["audio"] == list(PICK)
+
+
+def test_the_verbatim_clips_shown_are_the_ones_the_rule_picks_from_the_committed_run():
+    import pathlib
+    root = pathlib.Path(__file__).resolve().parents[1]
+    items = {i["id"]: i for i in json.loads((root / "evalset" / "manifest.json").read_text(encoding="utf-8"))["items"]}
+    run = json.loads((root / demo.VERBATIM_RUN).read_text(encoding="utf-8"))
+    assert demo.VERBATIM_CLIPS == demo.pick_verbatim(run, items)
+    from s2slab import r2verbatim
+    assert run["export_sha256"] == r2verbatim.EXPORT_SHA256 and run["export_name"] == r2verbatim.EXPORT_NAME
+
+
+def test_the_laptop_offers_the_verbatim_tier_only_where_the_export_is(tmp_path, monkeypatch, tree):
+    pytest.importorskip("fastapi")
+    from s2slab import demoweb, r2verbatim
+    monkeypatch.setenv("DEMO_ROOT", str(tree))
+    monkeypatch.setattr(demo, "CLIPS", PICK)
+    monkeypatch.setattr(demoweb, "CLIPS", PICK)
+    seen = {}
+    monkeypatch.setattr(demoweb, "create_app", lambda live, budget, **kw: seen.update(offered=dict(live.offered)))
+    monkeypatch.setenv(r2verbatim.EXPORT_ENV, str(tmp_path / "nowhere"))
+    demoweb.laptop()
+    assert seen["offered"] == {"R0": "r0", "R1": "r1", "R2": "r2"}
+    (tmp_path / "ct2").mkdir()
+    (tmp_path / "ct2" / "model.bin").write_bytes(b"a model")
+    monkeypatch.setenv(r2verbatim.EXPORT_ENV, str(tmp_path / "ct2"))
+    demoweb.laptop()
+    assert "R2 verbatim" not in seen["offered"]                                  # a model, but not PR-011's
+    import hashlib
+    monkeypatch.setattr(r2verbatim, "EXPORT_SHA256", hashlib.sha256(b"a model").hexdigest())
+    demoweb.laptop()
+    assert seen["offered"] == {"R0": "r0", "R1": "r1", "R2": "r2", "R2 verbatim": "r2-verbatim"}

@@ -54,6 +54,11 @@ MEASURED = (
     ("R5 PersonaPlex", "full duplex, with a role and a voice prompt before every call", "runs/r5-personaplex/evalset-modal-a10.json"),
 )
 CLIPS = ("clean-07", "clean-11", "clean-23", "clean-37")      # LibriSpeech test-clean, CC BY 4.0; set by pick_clips()
+# The verbatim panel: PR-011's run, small.en beside small.en + FT-2's LoRA, on two clips of the disfluent cohort.
+VERBATIM_RUN = "runs/ft2/pr011.json"
+VERBATIM_CLIPS = ("disfluent-29", "disfluent-42")             # DisfluencySpeech test split, Apache-2.0; set by pick_verbatim()
+VERBATIM_NOTE = ("These two clips are the ones where the difference is largest, chosen for that; the cohort's numbers are "
+                 "beside them. One speaker, performing disfluency, trained on and tested on: same-speaker adaptation.")
 READ_WITH_CARE = ("The rows come from different GPUs and different days, and the same rung measured 17% slower three days "
                   "apart: only rungs run in one container are comparable. R5's number is a response gap in stream time, "
                   "not a turn's latency.")
@@ -158,13 +163,41 @@ def pick_clips(manifest: dict, n: int = 4) -> tuple[str, ...]:
     return tuple(sorted(i["id"] for i in sorted(clean, key=lambda i: (i["duration_s"], i["id"]))[:n]))
 
 
-def measured(root=".", clips=CLIPS, rows=MEASURED) -> dict:
+def pick_verbatim(run: dict, items: dict, n: int = 2) -> tuple[str, ...]:
+    """The n disfluent clips where the LoRA removed the most raw errors: how VERBATIM_CLIPS was
+    chosen, kept so it can be checked. The page says they were chosen this way."""
+    from . import wer
+    base, lora = run["models"]["small.en"]["turns"], run["models"]["ft2"]["turns"]
+    gain = {c: wer.wer(items[c]["text"], base[c]["text"], wer.light).errors - wer.wer(items[c]["text"], t["text"], wer.light).errors
+            for c, t in lora.items() if t["cohort"] == "disfluent"}
+    return tuple(sorted(sorted(gain, key=lambda c: (-gain[c], c))[:n]))
+
+
+def verbatim(root, items: dict, clips=VERBATIM_CLIPS, rel: str = VERBATIM_RUN) -> dict | None:
+    """The verbatim panel's data from PR-011's run file; None if the file is not there."""
+    path = pathlib.Path(root) / rel
+    if not path.exists():
+        return None
+    run = json.loads(path.read_text(encoding="utf-8"))
+    c, base, lora = run["criteria"], run["models"]["small.en"]["turns"], run["models"]["ft2"]["turns"]
+    return {"file": rel, "registration": run["registration"], "machine": run["machine"], "commit": run["commit"], "note": VERBATIM_NOTE,
+            "cohort": {"clips": c["n_target"], "base_raw_wer": round(100 * c["s1"]["base_raw_wer"], 1),
+                       "lora_raw_wer": round(100 * c["s1"]["lora_raw_wer"], 1), "fillers": c["s2"]["fillers_in_refs"],
+                       "base_kept": c["s2"]["base_kept"], "lora_kept": c["s2"]["lora_kept"]},
+            "clips": [{"id": k, "seconds": items[k]["duration_s"], "reference": items[k]["text"], "base": base[k]["text"],
+                       "lora": lora[k]["text"], "base_ms": base[k]["asr_ms"], "lora_ms": lora[k]["asr_ms"],
+                       "source": "DisfluencySpeech, test split, Apache-2.0"} for k in clips]}
+
+
+def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS, verbatim_run=VERBATIM_RUN) -> dict:
     """The Measured part's data, from the committed run files under `root`. A rung whose file is
-    missing is listed as missing, not left out."""
+    missing is listed as missing, not left out. "audio" names every clip the page may play."""
     root = pathlib.Path(root)
     manifest = json.loads((root / "evalset" / "manifest.json").read_text(encoding="utf-8"))
     items = {i["id"]: i for i in manifest["items"]}
-    out = {"note": READ_WITH_CARE, "rungs": [],
+    panel = verbatim(root, items, verbatim_clips, verbatim_run)
+    out = {"note": READ_WITH_CARE, "rungs": [], "verbatim": panel,
+           "audio": list(clips) + [c["id"] for c in (panel or {"clips": []})["clips"]],
            "clips": [{"id": c, "seconds": items[c]["duration_s"], "reference": items[c]["text"].capitalize() + ".",
                       "source": f"LibriSpeech test-clean, utterance {items[c]['source_id']}, CC BY 4.0"} for c in clips]}
     for label, what, rel in rows:

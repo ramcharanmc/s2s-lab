@@ -30,6 +30,7 @@ two sizes of Tier B.
     r2             small.en         2.5x base.en's parameters, English only
     r2-turbo       large-v3-turbo   large-v3's encoder with a 4-layer decoder, multilingual
     r2-gpu, r2-gpu-turbo            the same two in fp16 on a CUDA GPU, beside r1-gpu
+    r2-verbatim, r2-gpu-verbatim    small.en with FT-2's LoRA, from its export: r2verbatim.py
 
     PYTHONPATH=src python -m s2slab.r0 probes/endpointing/audio/f02.wav r2   one turn, reply saved
     PYTHONPATH=src python -m s2slab.rungs r2                                 30 probe clips
