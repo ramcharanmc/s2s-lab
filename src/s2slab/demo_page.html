@@ -33,6 +33,12 @@
                                            background: var(--card); color: var(--ink); }
   audio { height: 34px; max-width: 100%; } label { display: inline-flex; gap: 6px; align-items: center; }
   .wide { overflow-x: auto; }
+  .btn.on { border-color: #c0392b; color: #c0392b; font-weight: 600; }
+  .rec { display: flex; gap: 8px; align-items: center; margin: 8px 0; } .rec[hidden] { display: none; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #c0392b; animation: blink 1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: .2; } }
+  .meter { flex: 1; max-width: 260px; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+  .meter span { display: block; height: 100%; width: 0; background: #c0392b; }
 </style>
 </head>
 <body>
@@ -65,7 +71,11 @@
         <label class="btn">or choose a file <input id="file" type="file" accept="audio/*" hidden></label>
         <button id="send" class="btn" disabled>Send</button>
       </div>
+      <p id="hint" class="soft">Press Record, speak, press Stop. It stops by itself just before the limit.</p>
+      <div id="rec" class="rec" role="status" hidden><span class="dot"></span><strong>Recording</strong>
+        <span id="rec-time" class="num">0 s</span><span id="rec-of" class="soft"></span><div class="meter"><span id="rec-bar"></span></div></div>
       <p id="picked" class="soft"></p>
+      <audio id="mine" controls hidden></audio>
       <p id="wait" class="warn" hidden>Waking the GPU. The first turn after a quiet spell takes the longest; the ones after it do not.</p>
       <p id="error" class="warn"></p>
     </div>
@@ -153,12 +163,13 @@ async function loadMeasured() {
   $("clip").onchange = showMeasured; showMeasured();
 }
 
-let about = {};
+let about = {}, liveOpen = false, maxS = 15, waitText = "";
 async function loadStatus() {
   try {
     const s = await (await fetch("api/status")).json();
-    about = s.about || {};
-    $("wait").textContent = "Sent. If the machine is asleep it has to wake and load the rungs first"
+    about = s.about || {}; maxS = s.max_clip_s; liveOpen = s.code_set && s.open && !(s.locked_s > 0);
+    $("status").className = liveOpen ? "soft" : "warn"; ready();
+    waitText = "If the machine is asleep it has to wake and load the rungs first"
       + (s.wake_s == null ? "" : ": about " + Math.round(s.wake_s) + " s the last time it was measured") + ". The turns after that do not wait.";
     $("status").textContent = "Rungs here: " + s.rungs.join(", ") + ", on " + s.machine + ". Today's budget: $" + s.budget_left.toFixed(2)
       + " of $" + s.budget_cap.toFixed(2) + " left. Up to " + s.max_clip_s + " s a recording."
@@ -169,24 +180,45 @@ async function loadStatus() {
   } catch (e) { $("status").textContent = "The server did not answer."; }
 }
 
-let blob = null, recorder = null;
-function picked(b, what) { blob = b; $("picked").textContent = what; $("send").disabled = !b; $("error").textContent = ""; }
-$("file").onchange = (e) => { const f = e.target.files[0]; if (f) picked(f, f.name + ", " + Math.round(f.size / 1024) + " kB"); };
+let blob = null, recorder = null, ticker = null, sending = false;
+function ready() { $("send").disabled = !blob || !liveOpen || !!recorder || sending; }
+const next = () => liveOpen ? " Listen, then send." : " Listen; it cannot be sent while the live part is closed.";
+function picked(b, what) {                     // the recording stays in this page: it is played from memory, and sent only by Send
+  blob = b; $("picked").textContent = what; $("error").textContent = "";
+  const mine = $("mine"); if (mine.src) URL.revokeObjectURL(mine.src);
+  mine.hidden = !b; if (b) mine.src = URL.createObjectURL(b); else mine.removeAttribute("src");
+  ready();
+}
+$("file").onchange = (e) => { const f = e.target.files[0]; if (f) picked(f, f.name + ", " + Math.round(f.size / 1024) + " kB." + next()); };
 $("record").onclick = async () => {
   if (recorder) { recorder.stop(); return; }
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({audio: true}), parts = [];
-    recorder = new MediaRecorder(stream);
-    recorder.ondataavailable = (e) => parts.push(e.data);
-    recorder.onstop = () => { stream.getTracks().forEach((t) => t.stop()); picked(new Blob(parts, {type: recorder.mimeType}), "recorded, "
-      + Math.round(parts.reduce((a, p) => a + p.size, 0) / 1024) + " kB"); recorder = null; $("record").textContent = "Record"; };
-    recorder.start(); $("record").textContent = "Stop";
-    setTimeout(() => { if (recorder) recorder.stop(); }, 15000);
-  } catch (e) { $("error").textContent = "The microphone is not available: choose a file."; }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({audio: true}); }
+  catch (e) { $("error").textContent = "The microphone is not available: choose a file."; return; }
+  const parts = [], limit = maxS - 0.5, t0 = performance.now();      // stopped half a second early: the server refuses more than the limit
+  const rec = recorder = new MediaRecorder(stream);
+  rec.ondataavailable = (e) => parts.push(e.data);
+  rec.onstop = () => {
+    const s = (performance.now() - t0) / 1000;
+    clearInterval(ticker); stream.getTracks().forEach((t) => t.stop()); recorder = null;
+    $("record").textContent = "Record again"; $("record").classList.remove("on"); $("rec").hidden = true;
+    picked(new Blob(parts, {type: rec.mimeType}), "Recorded " + s.toFixed(1) + " s, " + Math.round(parts.reduce((a, p) => a + p.size, 0) / 1024) + " kB"
+      + (s >= limit ? ": it was stopped at the limit" : "") + "." + next());
+  };
+  picked(null, ""); rec.start();
+  $("record").textContent = "Stop"; $("record").classList.add("on"); $("rec").hidden = false;
+  $("rec-time").textContent = "0 s"; $("rec-of").textContent = "of " + limit + " s"; $("rec-bar").style.width = "0";
+  ticker = setInterval(() => {
+    const s = (performance.now() - t0) / 1000;
+    $("rec-time").textContent = Math.floor(s) + " s"; $("rec-bar").style.width = Math.min(100, 100 * s / limit) + "%";
+    if (s >= limit && rec.state === "recording") rec.stop();
+  }, 100);
 };
 $("send").onclick = async () => {
   const form = new FormData(); form.append("audio", blob, "turn"); form.append("rungs", "");
-  $("send").disabled = true; $("error").textContent = ""; $("wait").hidden = false;
+  const sent = performance.now(), waiting = setInterval(() => {
+    $("wait").textContent = "Sent " + Math.round((performance.now() - sent) / 1000) + " s ago. " + waitText; }, 1000);
+  sending = true; ready(); $("error").textContent = ""; $("wait").textContent = "Sent. " + waitText; $("wait").hidden = false;
   try {
     const r = await fetch("api/live", {method: "POST", body: form, headers: {"X-Access-Code": $("code").value}});
     const body = await r.json();
@@ -198,7 +230,7 @@ $("send").onclick = async () => {
     for (const t of body.turns) box.appendChild(turnCard(t.label, t.rung + (about[t.label] ? "  ·  " + about[t.label] : ""), Object.assign({kind: "turn"}, t)));
     loadStatus();
   } catch (e) { $("error").textContent = "The server did not answer."; }
-  finally { $("wait").hidden = true; $("send").disabled = !blob; }
+  finally { clearInterval(waiting); $("wait").hidden = true; sending = false; ready(); }
 };
 
 for (const name of ["measured", "live"]) $("tab-" + name).onclick = () => {

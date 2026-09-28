@@ -17,7 +17,9 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 9 | 09-28 | `modal serve modal_app/demo.py`, by the author | both images built; the page and the measured part served from the CPU container; one live turn answered by all four rungs on a T4, PR-011's model among them; the wake 72 s | — | — |
 | 10 | 09-28 | the tests, laptop, scratch | Modal's warning in that run: the live handler was `async` and called the spend counter, which blocks. Mine: written and tested against a dict | `demoweb.py`, a test | ea1d37a |
 | 11 | 09-28 | a count over `runs/ft2/pr011.json`, laptop | on 100 read clips with no filler in the reference the LoRA wrote none; on 50 accented clips it wrote 20 to the references' 31, 3 of them not in the reference | — | bd529bc |
-| 12 | 09-28 | the tests, laptop, scratch | wrong codes are counted and close the door; a code under ten characters is no code | `demo.py`, `demoweb.py`, `demo_page.html`, tests | this commit |
+| 12 | 09-28 | the tests, laptop, scratch | wrong codes are counted and close the door; a code under ten characters is no code | `demo.py`, `demoweb.py`, `demo_page.html`, tests | c58e588 |
+| 13 | 09-28 | `modal serve`, by the author, with a new code | the new code was shorter than ten characters: the live part stayed closed and said so; the one live request refused, 401; no turn, the T4 never woke | — | — |
+| 14 | 09-28 | the page in a browser, laptop, scratch, a made-up microphone | the author: "I dont know when it started and stopped". The page now shows that it is recording, the time, the limit, and plays the recording back before it is sent | `demo_page.html`, a test | this commit |
 
 ## 1. The design
 
@@ -390,3 +392,65 @@ right code and opening again; the short code).
 
 **Not run:** the door on Modal, where its count is in the `modal.Dict`. **For the author:** a
 new code of ten characters or more, put in the secret with `--force`; the old one is refused now.
+
+## 13. The second session on Modal: the door held, and no turn ran (at c58e588)
+
+853 tests passed on the author's machine. A new code went into the secret with `--force`, which
+Modal accepted. Then `modal serve`.
+
+| What | Result |
+|---|---|
+| the images | not rebuilt: both came from the first run |
+| the page, the measured part, the status | served |
+| the status line | "The access code configured is shorter than 10 characters, so the live part is closed." |
+| `POST /api/live`, once | **401** |
+| the T4 | never woke: one container, the web one |
+| Modal's warning (entry 10) | not printed; but no turn ran, so the calls that raised it were not all reached. Not settled |
+
+**Commit 5 did what it was written for**, on Modal, the first time it ran there: a code too
+short was refused, and the page said why.
+
+**What the page did badly.** It let the author record and send although the live part was
+closed, and answered "the live part needs an access code" under a status line that had already
+said why. Entry 14 turns Send off while the live part is closed.
+
+**Counted by the door:** one wrong code. **Cost:** the web container's CPU for some minutes;
+no GPU. No ledger row: nothing was billed at a GPU's rate.
+
+**Still open:** the second live turn, with the T4 up. It needs a code of ten characters or more.
+
+## 14. Commit 6: the recorder says what it is doing
+
+**The author, after two sessions:** "The recording is very primitive - I dont know when it
+started and stopped". The page changed a button's word from Record to Stop and showed nothing
+else; at 15 s it stopped without a word (entry 7).
+
+| Before | Now |
+|---|---|
+| the button says Stop | the button turns red and says Stop; a line says **Recording**, with a blinking dot, the time running, the limit, and a bar filling |
+| it stops at 15 s, silently | the limit is said before recording; it stops half a second before the server's limit, and says "it was stopped at the limit" |
+| "recorded, 163 kB" | "Recorded 9.4 s, 163 kB. Listen, then send." and a player with the recording |
+| Send is on whenever a recording exists | Send is off while the live part is closed, while recording, and while a turn is out |
+| "Sent." for however long it takes | "Sent 12 s ago." counting |
+
+**Why half a second early:** the server refuses a recording longer than 15 s, and a recorder
+stopped at 15 s by a timer can hold a little more.
+
+**The visitor's recording is still not stored.** The player reads it from the page's memory;
+nothing is sent until Send.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop:
+
+| What | Result |
+|---|---|
+| the full suite | 848 passed, 5 skipped, the skipped ones for audio the scratch copy does not hold |
+| the page in a browser, from the scratch copy's server, the recorder fed a tone | while recording: the button red and "Stop", the line "Recording", the seconds counting, "of 14.5 s", the bar filling, Send off |
+| Stop pressed after 3.3 s | "Recorded 3.3 s, 42 kB. Listen, then send.", the player holding the recording, Send on, the button "Record again" |
+| left to run | stopped by itself: "Recorded 14.5 s, 227 kB: it was stopped at the limit." |
+| that 14.5 s recording sent, with a made-up code, to two stub rungs | answered: "One turn of 14.4 s", two cards; the server did not refuse it for length |
+| the same page with a code of five characters configured | the status line in the warning colour, saying why; a recording made; Send off |
+| errors in the browser's console | none |
+| "Sent 12 s ago", counting | not seen: the stub rungs answer at once |
+
+**Not run:** a real microphone: the browser I can drive has none, so the recorder was fed a made-up
+one (a tone). The author's microphone is the test.

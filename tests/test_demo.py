@@ -182,6 +182,9 @@ def test_the_page_the_measured_data_and_only_the_clips_it_shows(web):
     assert page.status_code == 200 and "Measured" in page.text and "Nothing is stored" in page.text
     assert "no clinical validity" in page.text and "http://" not in page.text and "https://" not in page.text   # nothing fetched from outside
     assert 'rel="icon" href="data:,"' in page.text                                        # and no request for an icon
+    for said in ('id="rec" class="rec" role="status" hidden', "stops by itself", "it was stopped at the limit", 'id="mine" controls hidden',
+                 "Listen, then send", "ago. "):                                           # the recorder says what it is doing
+        assert said in page.text, said
     data = client.get("/api/measured").json()
     assert [r["label"] for r in data["rungs"]] == ["R0", "R5", "R9"]
     clip = client.get("/api/clip/clean-01")
