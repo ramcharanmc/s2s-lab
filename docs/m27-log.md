@@ -32,7 +32,8 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 24 | 09-28 | the tests and the page in a browser, laptop, scratch | the measured panels for five more registrations, from their run files; the note on R3's card; a throwaway call when Moshi loads | `demo.py`, `demo_page.html`, `modal_app/demo.py`, tests | b4b4dd7 |
 | 25 | 09-28 | the plan for what is left | the author's questions (the portfolio; whether Moshi was tuned as a patient) and seven decisions | — | — |
 | 26 | 09-28 | the tests and the page in a browser, laptop, scratch | one request a machine: each machine's cards appear when it has answered | `demoweb.py`, `demo_page.html`, tests | 97e7af3 |
-| 27 | 09-28 | the tests, the render on the laptop's CPU, and the page in a browser; scratch | the severity render, to be heard: PR-009's sentences, voices and scores, and no other | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | this commit |
+| 27 | 09-28 | the tests, the render on the laptop's CPU, and the page in a browser; scratch | the severity render, to be heard: PR-009's sentences, voices and scores, and no other | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | fb601a5 |
+| 28 | 09-28 | `modal serve`, by the author | the seventh session: the severity render on the T4, one render; no live turn, the day's budget being nearly spent | — | — |
 
 ## 1. The design
 
@@ -1044,3 +1045,42 @@ and PR-009 tested only whether the render does what the mapping asks.
 
 **Not run:** on Modal: the T4's image with the two voices, Kokoro on the GPU speaking them,
 the render through the door there.
+
+## 28. The seventh session on Modal: the render, and nothing else (at fb601a5)
+
+874 tests passed on the author's machine. Then `modal serve`. Sent to me: one screenshot of the
+live tab. The terminal's output was not sent, for the third session running: not known are
+how long the T4's image took to rebuild, how long Kokoro took to load, how long the request took.
+
+**What ran: one severity render.** Depression, PHQ-9 10, `af_sarah`, sentence t1, on the T4.
+
+| | Asked for | Measured in this render | Measured in the registered run |
+|---|---:|---:|---:|
+| pitch, Hz | -12.41 | -9.69 | -10.52 |
+| pitch range, times | 0.78 | 0.78 | 0.78 |
+| rate, times | 0.81 | 0.81 | 0.81 |
+| pauses, times | 2.11 | 2.08 | 2.08 |
+
+Neutral 4.3 s, rendered 5.9 s. "Every target met in this render, within its tolerance": the
+pitch is 2.72 Hz from its target, inside the 3 Hz allowed, and further from it than the
+registered run's. Charged \$0.0584. No warning, as none is due at this score.
+
+So commit 13 is confirmed on Modal: the T4's image with PR-009's voices built, Kokoro spoke
+`af_sarah` on the GPU, Praat edited it, the door let the request in, the run file was read
+beside it.
+
+**What did not run, and why.** No recording was sent: the answers' place is empty, no box is
+ticked, and the wakes the boxes quote are the sixth session's. The budget stood at \$0.34 before
+the session and \$0.29 after it; a turn with every box ticked costs about that much. The author
+wrote "live turns done"; the screenshot shows a render done. Still unconfirmed on Modal:
+
+| Commit | What is unconfirmed |
+|---|---|
+| 11 | the five measured panels served from the CPU container; the note on R3's card; Moshi's speed after its throwaway call |
+| 12 | the cards filling as each machine answers, through Modal's own web layer |
+
+**How the render sounds is not recorded.** The rendered clip's player stands at its end, so
+it was played; the author has not said what he heard. I cannot hear it. Until he says, the
+demonstration he asked for (entry 25) is confirmed as numbers and not as sound.
+
+**Cost.** \$0.06 by the app's count: the T4 woken for one render, and its window of 300 s.

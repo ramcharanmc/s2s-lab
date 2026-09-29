@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-09-28, at commit `b4b4dd7`.
+Last updated 2026-09-28, at commit `fb601a5`.
 
 ## Chosen next: M27, a live demo on Modal
 
@@ -27,7 +27,7 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | 3, commit 10 | R5 on the visitor's recording: Moshi, on an A10 of its own, hears it as one side of a call | done; on Modal Moshi took a recording as a call, at 1.67 of real time, and did not answer it (`docs/m27-log.md`, entry 23) |
 | 4, commit 11 | measured panels for the rest: barge-in (PR-003), FT-1, the two severity renders, quantization; the note on R3's card; a throwaway call when Moshi loads | done on the laptop; not yet run on Modal |
 | commit 12 | answers arrive as they are ready: one request a machine, the door asked once | done on the laptop; not yet run on Modal |
-| commit 13 | a severity render that can be heard: a fixed sentence, a condition, one of the registered scores; neutral and rendered speech, targets against what was measured | done on the laptop, Kokoro on its CPU; not yet run on Modal |
+| commit 13 | a severity render that can be heard: a fixed sentence, a condition, one of the registered scores; neutral and rendered speech, targets against what was measured | done; on Modal one render, every target within its tolerance (`docs/m27-log.md`, entry 28). How it sounds: the author's to say |
 | commit 14 | `modal deploy`, a link from the author's portfolio, and what is owed before a public link | the author's call |
 | left out | a conversation with R5, and barge-in while a reply plays: both need the microphone open while the machine speaks (`docs/m27-log.md`, entry 19) | can follow; not planned |
 
@@ -39,6 +39,8 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | A remote | the repo has never been pushed |
 | Local paths in committed files | six report files from M16 to M20 under `runs/` hold Modal's "Created mount" lines with the author's local path, and three comments in `src/s2slab/` (`policies.py`, `prosody.py`, `simulate.py`) hold a local command; every Modal report holds the workspace's URL. Checked for only from M25 on. Removing them from files is a commit; removing them from history is a rewrite, and evidence files are never overwritten: a decision for the author before any push |
 | `probes/README.md`, "Recording notes" | microphone and room are still to fill in |
+| A session on Modal with a day's budget unspent | commits 11 and 12 are unconfirmed there: the measured panels, R3's note, Moshi's speed after its throwaway call, the cards filling machine by machine (`docs/m27-log.md`, entry 28) |
+| How the severity render sounds | played by the author on Modal; what he heard is not recorded |
 | One sentence said two ways, through the voice card | the card's comparison has been made between two different sentences only |
 | A live turn with a reference, for the verbatim tier | in the demo's first live turn it wrote "uh" twice and "wanna" where three other recognizers wrote none; what was said is not known. The committed data says it adds no filler to read speech (`docs/m27-log.md`, entry 11). Still open: a recording whose words are known, a script read once plainly and once with fillers put in |
 

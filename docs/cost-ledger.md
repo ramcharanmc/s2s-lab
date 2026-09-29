@@ -72,6 +72,8 @@ one. A failed run is still a row, since it was still billed.
 
 | 2026-09-28 | `7650d36` | `modal serve modal_app/demo.py` (the demo; one live turn, seven rungs, on four machines) | T4, A10, L40S, a second A10, and a CPU container for the page | — | — | ≈ \$0.28 (the app's count: \$0.2754) | **the demo's sixth session**: Moshi in the demo for the first time, the recording as one side of a call: 25.0 s of stream in 41.8 s (1.67 of real time, the first call after loading), not answered. The wakes 52 s (T4), 33 s (A10), 50 s (L40S), 82 s (the second A10). The terminal's output was not kept. No run file (`docs/m27-log.md`, entry 23) |
 
+| 2026-09-28 | `fb601a5` | `modal serve modal_app/demo.py` (the demo; one severity render) | T4, and a CPU container for the page | — | — | ≈ \$0.06 (the app's count: \$0.0584) | **the demo's seventh session**: the severity render on Modal for the first time: depression, PHQ-9 10, `af_sarah`, sentence t1; pitch -9.69 Hz against -12.41 asked for, range, rate and pauses on target; every target within its tolerance. No live turn: the day's budget stood at \$0.34. The terminal's output was not kept. No run file (`docs/m27-log.md`, entry 28) |
+
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
 
@@ -79,5 +81,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$9.374 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
+| Modal | \$9.432 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
 | Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |
