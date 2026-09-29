@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-09-29, at commit `ff405b4`.
+Last updated 2026-09-29, at commit `eb1974a`.
 
 ## Chosen next: M27, a live demo on Modal
 
@@ -29,7 +29,8 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | commit 12 | answers arrive as they are ready: one request a machine, the door asked once | done; on Modal four requests a turn, each back when its machine was done (`docs/m27-log.md`, entry 31) |
 | commit 13 | a severity render that can be heard: a fixed sentence, a condition, one of the registered scores; neutral and rendered speech, targets against what was measured | done; on Modal three renders, the two seen with every target within its tolerance (`docs/m27-log.md`, entries 28 and 30). The author: "Render sounded well" |
 | commit 14 | the MIT licence; the author's local path out of nine files | done |
-| after it | `modal deploy`, the push to a public remote, and a link in the portfolio's `index.html` | the author's, in that order. The session before them ran: every box ticked, twice (`docs/m27-log.md`, entry 31) |
+| deployed | `modal deploy`: https://ramcharanmc--s2s-lab-demo-web.modal.run | done, by the author (`docs/m27-log.md`, entry 32) |
+| after it | the push to a public remote, and a link in the portfolio's `index.html` (drafted in entry 32) | the author's, in that order |
 | left out | a conversation with R5, and barge-in while a reply plays: both need the microphone open while the machine speaks (`docs/m27-log.md`, entry 19) | can follow; not planned |
 
 ## Owed

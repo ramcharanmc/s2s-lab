@@ -36,7 +36,8 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 28 | 09-28 | `modal serve`, by the author | the seventh session: the severity render on the T4, one render; no live turn, the day's budget being nearly spent | — | 79c42eb |
 | 29 | 09-28 | the tests, laptop, scratch | before the repo is public: the MIT licence; the author's local path out of nine files; what stays in the history | `LICENSE`, six reports, three source files, `runs/README.md` | ff405b4 |
 | 30 | 09-29 UTC | `modal serve`, by the author | the eighth session: two severity renders, one that woke the T4 (50.5 s) and one with it up (1.77 s) | — | — |
-| 31 | 09-29 | `modal serve`, by the author | the ninth session: two live turns, every box ticked, on four machines; commits 11 and 12 confirmed on Modal; Moshi at 0.68 of real time after its throwaway call | — | this commit |
+| 31 | 09-29 | `modal serve`, by the author | the ninth session: two live turns, every box ticked, on four machines; commits 11 and 12 confirmed on Modal; Moshi at 0.68 of real time after its throwaway call | — | eb1974a |
+| 32 | 09-29 | `modal deploy`, by the author | the demo deployed at a lasting address; checked from a browser, no GPU woken; the portfolio's link drafted | — | this commit |
 
 ## 1. The design
 
@@ -1247,3 +1248,53 @@ bill is on its dashboard.
 
 **Left of the demo, all the author's:** `modal deploy`; the push; the link in the portfolio; one
 sentence said two ways; a listen at the scores that carry a warning.
+
+## 32. Deployed (at eb1974a)
+
+874 tests passed on the author's machine, and `eb1974a` was committed. Then `modal deploy
+modal_app/demo.py`, by the author: "App deployed in 2.823s". The address:
+
+https://ramcharanmc--s2s-lab-demo-web.modal.run
+
+It is `modal serve`'s address without `-dev`, and it stays up without the author's terminal.
+
+**Checked there, the same day, from a browser, with no GPU woken:** the page and the measured
+part (the seven rung rows, the five panels); `/api/status` (the code set, \$0.495 of the day's
+dollar left, nothing kept); one request to the door with no code, refused with 401 and not
+counted as a wrong code, since a request with no code is not a guess. The author's screenshot
+shows the live tab there, the three boxes quoting the ninth session's wakes (32, 67 and 51 s).
+
+**What it costs when nobody visits: nothing.** Every container scales to zero: the page's and the
+T4 300 s after their last request, the other three 120 s after theirs. A visit wakes the page's
+CPU container only. A GPU wakes only behind the door, and the app refuses a turn once \$1 of a
+UTC day is spent, by its own count. Not under that cap: the CPU container, woken by any visitor
+to the page, at CPU rates. To take the demo down: `modal app stop s2s-lab-demo`.
+
+**The portfolio's link, drafted, not committed**: the portfolio is the author's repository. A card
+in the style of its "Key Projects" cards (`project-card`, `project-tag`, `btn btn-secondary`),
+saying that the live tab needs a code, since a visitor who is not told would find a locked door:
+
+```html
+<div class="project-card">
+    <h3>s2s-lab: Speech-to-Speech, Measured</h3>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+        Six speech-to-speech architectures, from a naive ASR&rarr;LLM&rarr;TTS cascade to full-duplex
+        Moshi, measured on one frozen benchmark, every claim registered before its test. The live
+        demo shows the measured turns to anyone, and answers your own recording on up to four GPUs
+        (access code on request: see Contact).
+    </p>
+    <div style="margin-bottom: 1rem;">
+        <span class="project-tag">Whisper</span>
+        <span class="project-tag">Qwen2-Audio</span>
+        <span class="project-tag">Qwen2.5-Omni</span>
+        <span class="project-tag">Moshi</span>
+        <span class="project-tag">Modal</span>
+    </div>
+    <a href="https://ramcharanmc--s2s-lab-demo-web.modal.run" target="_blank" rel="noopener" class="btn btn-secondary">&#9654; Live demo</a>
+</div>
+```
+
+A link to the code goes beside it once the repository is public.
+
+**Left, the author's:** the push to a public remote; the link in the portfolio; one sentence said
+two ways; a listen at the scores that carry a warning.

@@ -6,13 +6,17 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-09-29** (commit `ff405b4`): rungs R0 to R5 built and measured; three fine-tunes run;
-thirteen registrations, twelve of them reported, four with a supported claim. In progress: a demo
-that shows the measured turns and answers a live one (`docs/m27-log.md`); run on Modal with
-`modal serve`, every part confirmed there: a recording answered by R0 to R5 on four machines (R3,
-R4 and R5 woken only when asked for; 32 to 82 s to wake), with what the visitor's voice carried
-beside the words the cascades received, and a severity score rendered onto synthetic speech, to
-be heard; not deployed. About \$34 spent: \$9.94 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+**Status, 2026-09-29** (commit `eb1974a`): rungs R0 to R5 built and measured; three fine-tunes run;
+thirteen registrations, twelve of them reported, four with a supported claim. A demo that shows
+the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
+
+**https://ramcharanmc--s2s-lab-demo-web.modal.run**
+
+A recording answered by R0 to R5 on four machines (R3, R4 and R5 woken only when asked for; 32 to
+82 s to wake), with what the visitor's voice carried beside the words the cascades received, and
+a severity score rendered onto synthetic speech, to be heard. The measured tab is open to anyone;
+the live tab needs an access code and stops at \$1 of GPU a day.
+About \$34 spent: \$9.94 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 
@@ -88,6 +92,8 @@ On Modal (`requirements/modal.txt`, your own account; each command prints what i
 ```bash
 modal run modal_app/r0_bench.py --rung r0-gpu           # a T4, about \$0.01
 modal serve modal_app/demo.py                           # the demo, at a temporary URL; needs the secret `s2s-lab-demo`
+modal deploy modal_app/demo.py                          # the demo, at a lasting URL: the one above without `-dev`
+modal app stop s2s-lab-demo                             # the deployed demo taken down
 ```
 
 `modal serve` prints two addresses. The demo is the one ending in `modal.run`, printed once near
