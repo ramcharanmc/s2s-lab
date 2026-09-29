@@ -2,14 +2,14 @@
 https://modal.com/apps/ramcharanmc/main/ap-rbc3UdBVSaZUjkeqpBXJee
 ✓ Created objects.
 ├── 🔨 Created mount 
-│   /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab/modal_app/r5_bench.py
+│   <repo>/modal_app/r5_bench.py
 ├── 🔨 Created mount 
-│   /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab/src/s2slab
+│   <repo>/src/s2slab
 ├── 🔨 Created function download_weights.
 ├── 🔨 Created function download_personaplex.
 ├── 🔨 Created mount 
-│   /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab/probes/endpointing
-├── 🔨 Created mount /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab/evalset
+│   <repo>/probes/endpointing
+├── 🔨 Created mount <repo>/evalset
 ├── 🔨 Created function smoke.
 ├── 🔨 Created function evaluate.
 ├── 🔨 Created function smoke_personaplex.

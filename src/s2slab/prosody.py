@@ -67,7 +67,7 @@ def pause_segments(audio: np.ndarray, sr: int, min_pause_s: float = 0.15,
             run_start = None
     return out
 
-# Tested:cd /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab && source .venv/bin/activate && python -c "
+# Tested:cd <repo> && source .venv/bin/activate && python -c "
 # import sys; sys.path.insert(0,'src')
 # import numpy as np
 # from s2slab.prosody import pause_segments
@@ -147,7 +147,7 @@ def count_syllable_nuclei(audio: np.ndarray, sr: int, silence_db: float = -25.0,
             voiced_peaks += 1
     return voiced_peaks
 
-# cd /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab && source .venv/bin/activate && python -c "
+# cd <repo> && source .venv/bin/activate && python -c "
 # import sys; sys.path.insert(0,'src')
 # import numpy as np
 # from s2slab.prosody import count_syllable_nuclei
@@ -205,7 +205,7 @@ def extract_prosody(audio: np.ndarray, sr: int,
         f0_std=float(voiced.std()) if voiced.size else float("nan"),
     )
 
-# cd /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab && source .venv/bin/activate && python -c "
+# cd <repo> && source .venv/bin/activate && python -c "
 # import sys; sys.path.insert(0,'src')
 # import numpy as np, parselmouth
 # from s2slab.prosody import extract_prosody

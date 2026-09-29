@@ -2,7 +2,7 @@
 https://modal.com/apps/ramcharanmc/main/ap-iNyHmVzEjwpUL5yw48aspV
 ✓ Created objects.
 ├── 🔨 Created mount 
-│   /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab/modal_app/r3_probe.py
+│   <repo>/modal_app/r3_probe.py
 ├── 🔨 Created function download_weights.
 └── 🔨 Created function probe.
 

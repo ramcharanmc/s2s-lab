@@ -319,7 +319,7 @@ def get(name: str) -> EndpointPolicy:
         raise KeyError(f"unknown policy {name!r}; have: {sorted(POLICIES)}")
     return POLICIES[name]
 
-# cd /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab && source .venv/bin/activate && python -c "
+# cd <repo> && source .venv/bin/activate && python -c "
 # import sys; sys.path.insert(0,'src')
 # from s2slab.policies import POLICIES, get
 # sp = [0.9]*30 + [0.1]*15 + [0.9]*20 + [0.1]*40      # speech, 300ms gap, speech, trail

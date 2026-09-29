@@ -279,7 +279,7 @@ def describe(cohorts: dict[str, list[Utterance]]) -> str:
                      f"{longest:.2f} | {COHORTS[name].replaces} |")
     return "\n".join(lines)
 
-# cd /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab && source .venv/bin/activate && python -c "
+# cd <repo> && source .venv/bin/activate && python -c "
 # import sys; sys.path.insert(0,'src')
 # import numpy as np
 # from s2slab.simulate import make_all, describe

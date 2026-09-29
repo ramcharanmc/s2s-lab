@@ -532,13 +532,13 @@ Built image im-iIGMjl3LCzMHpUTcmOzqQv in 2.56s
 
 ✓ Created objects.
 ├── 🔨 Created mount 
-│   /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab/modal_app/r4_bench.py
+│   <repo>/modal_app/r4_bench.py
 ├── 🔨 Created mount 
-│   /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab/src/s2slab
+│   <repo>/src/s2slab
 ├── 🔨 Created function download_weights.
 ├── 🔨 Created mount 
-│   /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab/probes/endpointing
-├── 🔨 Created mount /mnt/c/Users/ramch/Desktop/Ram/Resources/Audio/Code/s2s-lab/evalset
+│   <repo>/probes/endpointing
+├── 🔨 Created mount <repo>/evalset
 ├── 🔨 Created function bench.
 └── 🔨 Created function evaluate.
 

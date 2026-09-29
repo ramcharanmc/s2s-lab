@@ -33,7 +33,8 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 25 | 09-28 | the plan for what is left | the author's questions (the portfolio; whether Moshi was tuned as a patient) and seven decisions | — | — |
 | 26 | 09-28 | the tests and the page in a browser, laptop, scratch | one request a machine: each machine's cards appear when it has answered | `demoweb.py`, `demo_page.html`, tests | 97e7af3 |
 | 27 | 09-28 | the tests, the render on the laptop's CPU, and the page in a browser; scratch | the severity render, to be heard: PR-009's sentences, voices and scores, and no other | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | fb601a5 |
-| 28 | 09-28 | `modal serve`, by the author | the seventh session: the severity render on the T4, one render; no live turn, the day's budget being nearly spent | — | — |
+| 28 | 09-28 | `modal serve`, by the author | the seventh session: the severity render on the T4, one render; no live turn, the day's budget being nearly spent | — | 79c42eb |
+| 29 | 09-28 | the tests, laptop, scratch | before the repo is public: the MIT licence; the author's local path out of nine files; what stays in the history | `LICENSE`, six reports, three source files, `runs/README.md` | this commit |
 
 ## 1. The design
 
@@ -1079,8 +1080,46 @@ wrote "live turns done"; the screenshot shows a render done. Still unconfirmed o
 | 11 | the five measured panels served from the CPU container; the note on R3's card; Moshi's speed after its throwaway call |
 | 12 | the cards filling as each machine answers, through Modal's own web layer |
 
-**How the render sounds is not recorded.** The rendered clip's player stands at its end, so
-it was played; the author has not said what he heard. I cannot hear it. Until he says, the
-demonstration he asked for (entry 25) is confirmed as numbers and not as sound.
+**How the render sounds**: "Render sounded well", the author, asked afterwards. One render,
+depression at PHQ-9 10, one listener, the person who asked for it: not a listening test. I
+cannot hear it. No one has yet listened at the scores where the card warns that the edit may
+sound processed.
 
 **Cost.** \$0.06 by the app's count: the T4 woken for one render, and its window of 300 s.
+
+## 29. Commit 14: before the repo is public
+
+The author's decisions, 2026-09-28, on what was owed (`docs/backlog.md`):
+
+| Item | Chosen |
+|---|---|
+| One more session on Modal before deploying | yes, with a day's budget unspent: commits 11 and 12 are unconfirmed there |
+| `modal deploy` | after that session; the author runs it |
+| The portfolio | a link in its `index.html`; the author commits and pushes it |
+| A licence for the code | MIT |
+| A remote | a public repository, pushed by the author |
+| The local paths | out of the files, in a new commit; the history left as it is |
+| `probes/README.md`, the recording notes | the author's to write |
+
+**In this commit:**
+
+- `LICENSE`: MIT. The copyright line names the author's public handle, not his name: his to
+  change. Models and datasets keep their own licences, as the README says.
+- **The local path, out of nine files**: 17 places in six reports under `runs/` and 5 in the
+  comments of three source files, each now `<repo>`. Replaced as bytes, so nothing else in a
+  file moves. `runs/README.md` says it was done, as the one exception to "never overwritten":
+  a path is not a result, and the reports as printed are in the history.
+
+**What stays, and the author should know before he pushes:**
+
+| What | Where | Why it stays |
+|---|---|---|
+| the local path | the history: every commit before this one | to take it out is to rewrite every commit, and the log, the ledger, the registrations and the results pages cite commits by hash |
+| the author's name and e-mail address | every commit's author line | it is what git records; to change it is the same rewrite |
+| the Modal workspace's name | the first line of every Modal report | it is the author's public handle, and the demo's address holds it too |
+
+**Not done here, and the author's:** `modal deploy`; the push; the link in the portfolio; the
+recording notes.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite,
+869 passed, 5 skipped (the skipped ones for audio the scratch copy does not hold); a search of every tracked file for the local path: none left.

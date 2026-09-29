@@ -6,6 +6,13 @@ Notion results pages come from these files, and anyone can re-score them.
 **Rule:** a run lands here only if it covers the whole frozen set it names.
 Smoke tests, `--limit` runs and reply WAVs go to `results/`, which is ignored.
 
+**One exception to "never overwritten", made once and said here** (2026-09-28, M27 part 14). Six
+reports held Modal's "Created mount" lines with the author's local path: `prosody/pr006-report.md`,
+`prosody/ownvoice-r3-report.md`, and the reports of `r3-gpu`, `r4-gpu`, `r5-moshi` and
+`r5-personaplex`. In each, that path is now `<repo>`, 17 places in all, and nothing else: no
+number, no transcript, no line added or removed. The reports as they were printed are in the
+history, at the commits this table names. No JSON file was touched.
+
 | File | What | Commit | Machine | Notion |
 |---|---|---|---|---|
 | `turn-taking/sweep.json` | T0–T3 endpointing sweep, 250 per cohort, seed 1000 | `6a0741e` | laptop CPU | page 18 |
