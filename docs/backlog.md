@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-09-28, at commit `79c42eb`.
+Last updated 2026-09-29, at commit `ff405b4`.
 
 ## Chosen next: M27, a live demo on Modal
 
@@ -25,11 +25,11 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | 1, commit 8 | the T4's window 300 s, so a visitor's next turn finds it up | done; on Modal a second turn found the machines up (`docs/m27-log.md`, entry 21) |
 | 2 and 3, commit 9 | R3 on an A10 and R4 on an L40S, live, each woken only when a visitor asks; one cap over three machines | done; on Modal both answered, the wakes 37 s and 51 s (`docs/m27-log.md`, entry 21) |
 | 3, commit 10 | R5 on the visitor's recording: Moshi, on an A10 of its own, hears it as one side of a call | done; on Modal Moshi took a recording as a call, at 1.67 of real time, and did not answer it (`docs/m27-log.md`, entry 23) |
-| 4, commit 11 | measured panels for the rest: barge-in (PR-003), FT-1, the two severity renders, quantization; the note on R3's card; a throwaway call when Moshi loads | done on the laptop; not yet run on Modal |
-| commit 12 | answers arrive as they are ready: one request a machine, the door asked once | done on the laptop; not yet run on Modal |
-| commit 13 | a severity render that can be heard: a fixed sentence, a condition, one of the registered scores; neutral and rendered speech, targets against what was measured | done; on Modal one render, every target within its tolerance (`docs/m27-log.md`, entry 28). How it sounds: the author's to say |
+| 4, commit 11 | measured panels for the rest: barge-in (PR-003), FT-1, the two severity renders, quantization; the note on R3's card; a throwaway call when Moshi loads | done; on Modal the panels served, and Moshi ran at 0.68 of real time after its throwaway call (`docs/m27-log.md`, entry 31) |
+| commit 12 | answers arrive as they are ready: one request a machine, the door asked once | done; on Modal four requests a turn, each back when its machine was done (`docs/m27-log.md`, entry 31) |
+| commit 13 | a severity render that can be heard: a fixed sentence, a condition, one of the registered scores; neutral and rendered speech, targets against what was measured | done; on Modal three renders, the two seen with every target within its tolerance (`docs/m27-log.md`, entries 28 and 30). The author: "Render sounded well" |
 | commit 14 | the MIT licence; the author's local path out of nine files | done |
-| after it | a session on Modal with a day's budget unspent; then `modal deploy`, the push to a public remote, and a link in the portfolio's `index.html` | the author's, in that order |
+| after it | `modal deploy`, the push to a public remote, and a link in the portfolio's `index.html` | the author's, in that order. The session before them ran: every box ticked, twice (`docs/m27-log.md`, entry 31) |
 | left out | a conversation with R5, and barge-in while a reply plays: both need the microphone open while the machine speaks (`docs/m27-log.md`, entry 19) | can follow; not planned |
 
 ## Owed
@@ -38,7 +38,7 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 |---|---|
 | A remote | the repo has never been pushed. Public, by the author's decision. The history holds his local path, and every commit his name and e-mail address (`docs/m27-log.md`, entry 29) |
 | `probes/README.md`, "Recording notes" | microphone and room are still to fill in |
-| A session on Modal with a day's budget unspent | commits 11 and 12 are unconfirmed there: the measured panels, R3's note, Moshi's speed after its throwaway call, the cards filling machine by machine (`docs/m27-log.md`, entry 28) |
+| A warm turn's time outside the cards | with every machine up, R3's, R4's and R5's requests took 4 to 7.3 s more than their cards' times, the T4's 0.3 s (`docs/m27-log.md`, entry 31). Seen once; not looked into |
 | The severity render at the scores that carry a warning | the author heard depression at 10: "sounded well". Nobody has listened at depression from 20 or mania from 26 |
 | One sentence said two ways, through the voice card | the card's comparison has been made between two different sentences only |
 | A live turn with a reference, for the verbatim tier | in the demo's first live turn it wrote "uh" twice and "wanna" where three other recognizers wrote none; what was said is not known. The committed data says it adds no filler to read speech (`docs/m27-log.md`, entry 11). Still open: a recording whose words are known, a script read once plainly and once with fillers put in |

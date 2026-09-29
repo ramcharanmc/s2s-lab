@@ -34,7 +34,9 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 26 | 09-28 | the tests and the page in a browser, laptop, scratch | one request a machine: each machine's cards appear when it has answered | `demoweb.py`, `demo_page.html`, tests | 97e7af3 |
 | 27 | 09-28 | the tests, the render on the laptop's CPU, and the page in a browser; scratch | the severity render, to be heard: PR-009's sentences, voices and scores, and no other | `demo.py`, `demoweb.py`, `demo_page.html`, `modal_app/demo.py`, tests | fb601a5 |
 | 28 | 09-28 | `modal serve`, by the author | the seventh session: the severity render on the T4, one render; no live turn, the day's budget being nearly spent | — | 79c42eb |
-| 29 | 09-28 | the tests, laptop, scratch | before the repo is public: the MIT licence; the author's local path out of nine files; what stays in the history | `LICENSE`, six reports, three source files, `runs/README.md` | this commit |
+| 29 | 09-28 | the tests, laptop, scratch | before the repo is public: the MIT licence; the author's local path out of nine files; what stays in the history | `LICENSE`, six reports, three source files, `runs/README.md` | ff405b4 |
+| 30 | 09-29 UTC | `modal serve`, by the author | the eighth session: two severity renders, one that woke the T4 (50.5 s) and one with it up (1.77 s) | — | — |
+| 31 | 09-29 | `modal serve`, by the author | the ninth session: two live turns, every box ticked, on four machines; commits 11 and 12 confirmed on Modal; Moshi at 0.68 of real time after its throwaway call | — | this commit |
 
 ## 1. The design
 
@@ -1050,8 +1052,11 @@ the render through the door there.
 ## 28. The seventh session on Modal: the render, and nothing else (at fb601a5)
 
 874 tests passed on the author's machine. Then `modal serve`. Sent to me: one screenshot of the
-live tab. The terminal's output was not sent, for the third session running: not known are
-how long the T4's image took to rebuild, how long Kokoro took to load, how long the request took.
+live tab. The terminal's output came a day later, ahead of the eighth session's (entry 30); I had
+written here that it was not sent, which was true until then. It shows the T4's image rebuilt for
+PR-009's voices (its two new layers in 21.1 s and 2.3 s), two requests to render refused with 401
+before one was let in (two wrong codes, counted by the door), the four rungs and Kokoro loaded in
+42.9 s, and the render's request 57.3 s end to end, nearly all of it the wake.
 
 **What ran: one severity render.** Depression, PHQ-9 10, `af_sarah`, sentence t1, on the T4.
 
@@ -1123,3 +1128,122 @@ recording notes.
 
 **Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite,
 869 passed, 5 skipped (the skipped ones for audio the scratch copy does not hold); a search of every tracked file for the local path: none left.
+
+## 30. The eighth session on Modal: two renders (at fb601a5)
+
+The day's budget had reset at midnight UTC. Sent to me: the terminal's output, with the seventh
+session's ahead of it (entry 28), and one screenshot of the live tab.
+
+| | Took |
+|---|---:|
+| the four rungs and Kokoro, loaded on the T4 | 40.4 s |
+| the first render, the T4 asleep: its request end to end | 50.5 s |
+| the second render, the T4 up | 1.77 s |
+
+The screenshot is of the second render, with the seventh session's settings: depression, PHQ-9
+10, `af_sarah`, sentence t1. The first render's numbers are not in it.
+
+| | Asked for | This render | The seventh session's | The registered run |
+|---|---:|---:|---:|---:|
+| pitch, Hz | -12.41 | -10.84 | -9.69 | -10.52 |
+| pitch range, times | 0.78 | 0.78 | 0.78 | 0.78 |
+| rate, times | 0.81 | 0.81 | 0.81 | 0.81 |
+| pauses, times | 2.11 | 2.07 | 2.08 | 2.08 |
+
+"Every target met in this render." The same settings twice, and the pitch 1.57 Hz from its
+target this time, 2.72 Hz the time before: what the card says, that Kokoro does not say a
+sentence the same way twice, so each render starts from different neutral speech. With the T4
+up a render takes under 2 s; a cold one's 50 s is the wake.
+
+**Cost.** \$0.06 by the app's count: \$0.94 of the day's dollar left after it, the second render
+\$0.0027 of it.
+
+## 31. The ninth session on Modal: every box ticked, twice (at ff405b4)
+
+874 tests passed on the author's machine, and `ff405b4` was committed. Then `modal serve`. Sent
+to me: the terminal's output and four screenshots of the live tab. Two recordings, R3, R4 and R5
+ticked for both. While it was served I read `/api/status` at its address, which wakes no machine.
+
+**Turn 1, every machine asleep.** The recording was about 7.3 s: the page's line with its length
+is not in the screenshots, and this is Moshi's call, 20.2 s, less the 4.8 s before it and the
+8.1 s after.
+
+| Machine | Its wake, the app's count | Its model loaded in, the terminal | Its request, end to end |
+|---|---:|---:|---:|
+| T4: R0, R1, R2, R2 verbatim | 49.6 s | 41.8 s | 55.2 s |
+| A10: R3 | 31.8 s | 24.4 s | 36.6 s |
+| L40S: R4 | 66.5 s | 27.9 s | 77.6 s |
+| a second A10: R5 | 50.5 s | no line reached the terminal | 67.3 s |
+
+The terminal does not say which request was whose. Each is its machine's wake and replies plus
+2.6 to 3.0 s, and this pairing is the only one that fits. Most of the L40S's wake came before
+its model began to load: 66.5 s, of which 27.9 s loading.
+
+**Turn 2, 8.82 s, every machine up.** The page named no wake. The four requests came back at
+4.38, 7.89, 18.6 and 20.4 s. The T4's is the first: its four replies add up to 4.07 s. R3's is
+the second, its card 589 ms; R4's and R5's are the last two, their cards 14.6 s each. So R3,
+R4 and R5 each took 4 to 7.3 s more than the times on their cards, and the T4 0.3 s. The cards
+time the models; where the rest went, I do not know. Once; not looked into.
+
+| Rung | Turn 1: first audio | Whole reply | Turn 2: first audio | Whole reply |
+|---|---:|---:|---:|---:|
+| R0 | 806 ms | 806 ms | 573 ms | 573 ms |
+| R1 | 441 ms | 716 ms | 516 ms | 516 ms |
+| R2 | 461 ms | 750 ms | 966 ms | 2.38 s |
+| R2 verbatim | 634 ms | 634 ms | 599 ms | 599 ms |
+| R3 | 2.07 s | 2.07 s | 589 ms | 589 ms |
+| R4 | 8.53 s | 8.53 s | 14.60 s | 14.60 s |
+| R5, Moshi | not answered | a call of 20.2 s in 13.76 s | a gap of 100 ms | a call of 21.7 s in 14.59 s |
+
+**What this confirms:**
+
+| Commit | Confirmed on Modal |
+|---|---|
+| 11 | the five measured panels, read from the page at the session's address earlier on 09-29: all five, their tables, no error in the console; R3's note on its card; **Moshi at 0.68 and 0.67 of real time**, turn 1's the first call after its throwaway one (the sixth session's first call, with no throwaway before it: 1.67; the eval run's median: 0.69) |
+| 12 | four requests a turn, one a machine, each back when its machine was done: 36.6, 55.2, 67.3 and 77.6 s in turn 1, where one after another they would have taken 237 s. The longest is about half the 150 s a web request may take; Moshi's wake and call, 124 s in one request in the sixth session, are 67.3 s here |
+
+Nothing of the demo is left unconfirmed on Modal.
+
+**Moshi answered one call of two.** In turn 1 it opened the call and said nothing after the
+recording; in turn 2 it answered 100 ms after it. In the eval run it answered 96 of 200.
+
+**The words the cascades heard decided their replies.** Turn 2:
+
+| Rung | Heard |
+|---|---|
+| R0, R1 (`base.en`) | "Let's test on taking I won't help with GPS. Can you share where you are located?" |
+| R2 (`small.en`) | "Let's test turn taking I won't help with GPS. Can you share where you are located?" |
+| R2 verbatim | "Let's test the untaking. Uh, I want help with G P S. Can you share where you're located?" |
+
+The four cascades share one language model, Qwen2.5-0.5B-Instruct, greedy, with one system
+prompt: given the same words it gives the same reply. In turn 1 R0, R1 and R2 heard "How do you
+want to serve?" and replied "I'm here to help!"; the verbatim rung heard "Uh, ... How do you
+wanna serve?" and replied "I'm sorry, but I can't assist with that request." In turn 2 the same
+refusal came to R0, R1 and the verbatim rung, and R2's words got a long answer. Four of the
+eight cascade replies were that refusal, to harmless questions. It is the model the ladder
+measured, and the demo shows it as it is: a larger model would make the live rungs differ from
+the measured ones. Not changed.
+
+**Two models named a city.** Asked where it is, R3 said "I am currently located in New York
+City" and Moshi "Sure, I'm currently in the city of Paris"; R4 said it did not know. Nothing in
+the demo gives a model a place: both cities are made up, about the model itself.
+
+**The voice card**, both turns: 136 Hz, 7.6 semitones, 2.7 words a second, then 122 Hz
+(-1.8 semitones), 6.4 semitones (-1.2), 1.8 words a second (-0.9). Two different sentences
+again: one sentence said two ways is still owed.
+
+**In the terminal, and not failures.** "Unclosed connection: Channel('input-plane.us-east.modal.com', ...)"
+three times from the web container, each just before a request came back 200: printed by
+Modal's client; not looked into. Warnings from the libraries as they loaded (Moshi's loader,
+Qwen2.5-Omni's config) and CUDA's banner. No request failed; Modal's async warning did not come
+back.
+
+**Cost.** By the app's count the day's spend after the session was \$0.505 (\$0.495 left, read
+from `/api/status`). Less the eighth session's \$0.06: \$0.445 for this one, turn 1 about
+\$0.27 with four machines woken, turn 2 \$0.1785 (the page's line). Turn 2 woke nothing and
+cost two thirds of turn 1: each machine's window runs from its last answer, so the minutes
+between the turns were paid on four machines at once, \$4.74 an hour together. Modal's own
+bill is on its dashboard.
+
+**Left of the demo, all the author's:** `modal deploy`; the push; the link in the portfolio; one
+sentence said two ways; a listen at the scores that carry a warning.

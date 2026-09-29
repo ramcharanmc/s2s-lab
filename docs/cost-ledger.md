@@ -74,6 +74,10 @@ one. A failed run is still a row, since it was still billed.
 
 | 2026-09-28 | `fb601a5` | `modal serve modal_app/demo.py` (the demo; one severity render) | T4, and a CPU container for the page | — | — | ≈ \$0.06 (the app's count: \$0.0584) | **the demo's seventh session**: the severity render on Modal for the first time: depression, PHQ-9 10, `af_sarah`, sentence t1; pitch -9.69 Hz against -12.41 asked for, range, rate and pauses on target; every target within its tolerance. No live turn: the day's budget stood at \$0.34. The terminal's output was not kept. No run file (`docs/m27-log.md`, entry 28) |
 
+| 2026-09-29 | `fb601a5` | `modal serve modal_app/demo.py` (the demo; two severity renders) | T4, and a CPU container for the page | — | 50.5 s and 1.77 s | ≈ \$0.06 (the app's count: \$0.94 of the day's dollar left after it; the second render \$0.0027) | **the demo's eighth session**: the four rungs and Kokoro loaded in 40.4 s; a render that woke the T4 and one with it up; the second, depression PHQ-9 10: pitch -10.84 Hz against -12.41 asked for, every target met (`docs/m27-log.md`, entry 30) |
+
+| 2026-09-29 | `ff405b4` | `modal serve modal_app/demo.py` (the demo; two live turns, seven rungs each, on four machines) | T4, A10, L40S, a second A10, and a CPU container for the page | — | 77.6 s and 20.4 s (the slowest machine's request) | ≈ \$0.45 (the app's count: about \$0.27 and \$0.1785; the day's spend \$0.505) | **the demo's ninth session**: commits 11 and 12 confirmed on Modal; four requests a turn, each back when its machine was done; the wakes 50 s (T4), 32 s (A10), 67 s (L40S), 51 s (Moshi's A10); Moshi at 0.68 and 0.67 of real time, answering the second call only (`docs/m27-log.md`, entry 31) |
+
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
 
@@ -81,5 +85,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$9.432 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
+| Modal | \$9.937 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
 | Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |
