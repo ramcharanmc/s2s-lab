@@ -145,13 +145,15 @@ def test_the_r4_image_also_holds_r0_to_r2_so_the_ladder_runs_in_one_l40s_contain
 
 
 def test_a_tagged_l40s_run_is_refused_only_under_its_own_name(r4_bench):
-    """The untagged R3 and R4 L40S runs are recorded; a run tagged `ladder` must not be refused for them."""
+    """A tagged run is refused for its own name, not for the untagged run beside it. Both the untagged
+    run and M28's `ladder` run are recorded; a tag no run has used is free."""
     from s2slab.sidechannel import refuse_to_overwrite
-    assert r4_bench.results_path("r4-gpu").exists()
-    with pytest.raises(FileExistsError):
-        refuse_to_overwrite(r4_bench.results_path("r4-gpu"))
+    for recorded in (r4_bench.results_path("r4-gpu"), r4_bench.results_path("r4-gpu", tag="ladder")):
+        assert recorded.exists()
+        with pytest.raises(FileExistsError):
+            refuse_to_overwrite(recorded)
     assert r4_bench.results_path("r4-gpu", tag="ladder").name == "evalset-modal-l40s-ladder.json"
-    refuse_to_overwrite(r4_bench.results_path("r4-gpu", tag="ladder"))
+    refuse_to_overwrite(r4_bench.results_path("r4-gpu", tag="not-run-yet"))
 
 
 def test_the_l40s_run_is_saved_as_evidence_and_its_smoke_test_is_not(r4_bench):

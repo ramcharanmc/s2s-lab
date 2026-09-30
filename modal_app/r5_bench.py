@@ -1,17 +1,18 @@
 """
 R5 on Modal: full-duplex models on an A10, driven by s2slab.duplex.
 
-    modal run modal_app/r5_bench.py                                  30 probe clips: the smoke test (dev)
-    modal run modal_app/r5_bench.py --evalset --limit 8              eval-set smoke test -> results/
-    modal run modal_app/r5_bench.py --evalset                        the R5 row -> runs/r5-moshi/evalset-modal-a10.json
-    modal run modal_app/r5_bench.py --model r5-personaplex           the same three, for PersonaPlex
-    modal run modal_app/r5_bench.py --evalset --gpu l40s --tag ladder
+    modal run modal_app/r5_bench.py::main                            30 probe clips: the smoke test (dev)
+    modal run modal_app/r5_bench.py::main --evalset --limit 8        eval-set smoke test -> results/
+    modal run modal_app/r5_bench.py::main --evalset                  the R5 row -> runs/r5-moshi/evalset-modal-a10.json
+    modal run modal_app/r5_bench.py::main --model r5-personaplex     the same three, for PersonaPlex
+    modal run modal_app/r5_bench.py::main --evalset --gpu l40s --tag ladder
                                                                      M28: the R5 row on the L40S, the card that
                                                                      holds every rung (either model; eval set only)
     modal run modal_app/r5_bench.py::dialogues --limit 50            FT-1 dev: Moshi answering the user
                                                                      channel of DailyTalk dev dialogues
     modal run modal_app/r5_bench.py::pr010 --confirm PR-010          FT-1's registered test: base Moshi,
                                                                      then Moshi + LoRA, one L40S container
+The file has three entry points (main, dialogues, pr010), so Modal needs the one named.
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards

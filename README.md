@@ -6,7 +6,7 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-09-29** (commit `eb1974a`): rungs R0 to R5 built and measured; three fine-tunes run;
+**Status, 2026-09-30** (commit `13d40dc`): rungs R0 to R5 built and measured; three fine-tunes run;
 thirteen registrations, twelve of them reported, four with a supported claim. A demo that shows
 the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
 
@@ -16,7 +16,8 @@ A recording answered by R0 to R5 on four machines (R3, R4 and R5 woken only when
 82 s to wake), with what the visitor's voice carried beside the words the cascades received, and
 a severity score rendered onto synthetic speech, to be heard. The measured tab is open to anyone;
 the live tab needs an access code and stops at \$1 of GPU a day.
-About \$34 spent: \$9.94 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+Every rung was also measured on one card, the L40S, R0 to R4 in one
+container (M28, below). About \$38 spent: \$13.81 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 
@@ -37,6 +38,25 @@ rung measured 17% slower three days apart. Only rungs run in one container are c
 times R0 in theirs. R5's number is a response gap in stream time, not a turn's latency, and Moshi
 answered 96 of 200 callers. The full table, with every caveat, is `runs/README.md` and the results
 page it cites.
+
+**On one card** (M28, 2026-09-30): the same 200 clips, R0 to R4 in one L40S container, R5's two
+models on the L40S in containers of their own. The L40S is the one card on Modal that holds every
+rung; R4 does not fit an A10. `docs/m28-log.md` has every number.
+
+| Rung | Time to first audio, p50 | p90 | WER, normalized | Memory | \$ per 1,000 turns |
+|---|---:|---:|---:|---:|---:|
+| R0 | 0.30 s | 0.51 s | 11.9% | 1.8 GB | 0.18 |
+| R1 | 0.25 s | 0.36 s | 11.9% | 1.7 GB | 0.20 |
+| R2, small.en | 0.28 s | 0.40 s | 9.6% | 1.7 GB | 0.22 |
+| R2, large-v3-turbo | 0.28 s | 0.39 s | 8.6% | 1.7 GB | 0.23 |
+| R3 | 0.63 s | 1.20 s | none in the loop | 17.0 GB | 0.40 |
+| R4 | 6.86 s | 12.05 s | none in the loop | 22.6 GB | 4.03 |
+| R5, Moshi; PersonaPlex | 140 ms; 440 ms response gap | 980; 760 ms | none in the loop | 16.7; 18.1 GB | 4.95; 7.56 a 1,000 calls |
+
+Dollars are the mean processing time at the L40S's \$1.95 an hour, so every rung costs more here
+than on its cheapest card; the table above keeps the cascades' T4 numbers. Two containers of the
+same card differed by up to a quarter (R4: 0.73 of its earlier time on the same clips), so compare
+rows within this table, not with the one above. Moshi answered 93 callers, PersonaPlex 190.
 
 ## What was claimed, and what happened
 

@@ -37,7 +37,8 @@ Kept as events happen. Times are CDT. The earlier logs: `docs/ft1-log.md`, `docs
 | 29 | 09-28 | the tests, laptop, scratch | before the repo is public: the MIT licence; the author's local path out of nine files; what stays in the history | `LICENSE`, six reports, three source files, `runs/README.md` | ff405b4 |
 | 30 | 09-29 UTC | `modal serve`, by the author | the eighth session: two severity renders, one that woke the T4 (50.5 s) and one with it up (1.77 s) | — | — |
 | 31 | 09-29 | `modal serve`, by the author | the ninth session: two live turns, every box ticked, on four machines; commits 11 and 12 confirmed on Modal; Moshi at 0.68 of real time after its throwaway call | — | eb1974a |
-| 32 | 09-29 | `modal deploy`, by the author | the demo deployed at a lasting address; checked from a browser, no GPU woken; the portfolio's link drafted | — | this commit |
+| 32 | 09-29 | `modal deploy`, by the author | the demo deployed at a lasting address; checked from a browser, no GPU woken; the portfolio's link drafted | — | 2af8874 |
+| 33 | 09-29 | `git push`, by the author | the repository pushed to GitHub, private: the author's decision, and why | — | this commit |
 
 ## 1. The design
 
@@ -1298,3 +1299,27 @@ A link to the code goes beside it once the repository is public.
 
 **Left, the author's:** the push to a public remote; the link in the portfolio; one sentence said
 two ways; a listen at the scores that carry a warning.
+
+## 33. Pushed, private (at 2af8874)
+
+The author's decision, 2026-09-29: not public yet, because `docs/backlog.md` still lists
+experiments he may want to run first. It changes entry 29's "a public repository". What I
+recommended, and he took:
+
+| | Recommended | Why |
+|---|---|---|
+| A private repository, now | yes | until the push, the only copy of the history, the run files and the logs was the laptop's disk; public later is one setting and changes no commit |
+| The demo linked from the portfolio, now | yes | it runs from Modal, not from the repository, and the card has no link to the code |
+| The backlog trimmed before it is public | no | its earlier versions are in the history, and taking them out means rewriting every commit the logs, the ledger and Notion cite by hash. What is to be finished first is finished, not hidden |
+
+`git push -u origin main`, by the author: 1528 objects, 1.61 MiB, to `ramcharanmc/s2s-lab` on
+GitHub; `origin/main` is `2af8874`, the same as the laptop's. Checked from a browser signed in to
+no account: the repository's page is "Page not found", as a private repository's is.
+
+**Checked before the push**, over the 331 tracked files: no key, token or private key; no local
+path; no e-mail address; no audio and no model weights, the largest file a training log of
+504 KB. The author's name is in the five "Author" lines of `docs/preregistration.md`, as each
+claim was registered, and in every commit's author line.
+
+**Left, the author's:** the card in the portfolio; the repository made public, when he chooses;
+one sentence said two ways; a listen at the scores that carry a warning.

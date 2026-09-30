@@ -48,6 +48,14 @@ history, at the commits this table names. No JSON file was touched.
 | `ft1/training/` | FT-1's training evidence, as it came off the machine: the config run (both launches, identical), the training log (every step's loss), the script's log, the training list and SHA256SUMS. Not the adapter (740 MB, `data/ft1/`, ignored) | `4df9ef3` | Vast.ai, one H100 80 GB | page 20 §22 |
 | `ft2/pr011.json` · `pr011-report.md` | **PR-011, the registered run**: small.en, then small.en with FT-2's LoRA merged in, transcribing the frozen 200-clip eval set in one container -- every transcript, every clip's recognizer time, the criteria, the exported model's SHA-256. Supported | `65c833c` | Modal Tesla T4 | page 20 §23 |
 | `ft2/training/` · `ft2/dev-look/` · `ft2/summaries/` | FT-2's training evidence from the volume `ft2`: the six validations' transcripts and metrics, `metrics.csv`, the hyperparameters and hydra config; the two dev looks over the 250 validation clips (base, the LoRA); the training, export and smoke-test summaries. Not the adapter or the merged model (`ft2` volume) | `f37d0df` | Modal NVIDIA A10 | page 20 §23 |
+| `r0-gpu/evalset-modal-l40s-ladder.json` | **M28, the ladder on one card**: R0, first of six rungs in one L40S container | `13d40dc` | Modal NVIDIA L40S, one container: r0-gpu then r1-gpu then r2-gpu then r2-gpu-turbo then r3-gpu then r4-gpu | `docs/m28-log.md` |
+| `r1-gpu/evalset-modal-l40s-ladder.json` | M28: R1, the same container | `13d40dc` | Modal NVIDIA L40S, same container | `docs/m28-log.md` |
+| `r2-gpu/evalset-modal-l40s-ladder.json` | M28: R2 with small.en as the slow tier, the same container | `13d40dc` | Modal NVIDIA L40S, same container | `docs/m28-log.md` |
+| `r2-gpu-turbo/evalset-modal-l40s-ladder.json` | M28: R2 with large-v3-turbo as the slow tier, the same container | `13d40dc` | Modal NVIDIA L40S, same container | `docs/m28-log.md` |
+| `r3-gpu/evalset-modal-l40s-ladder.json` | M28: R3, the same container | `13d40dc` | Modal NVIDIA L40S, same container | `docs/m28-log.md` |
+| `r4-gpu/evalset-modal-l40s-ladder.json` | M28: R4, the same container; 0.73 of its earlier L40S run's time on the same clips | `13d40dc` | Modal NVIDIA L40S, same container | `docs/m28-log.md` |
+| `r5-moshi/evalset-modal-l40s-ladder.json` | M28: Moshi on the one card, the same driver as its A10 row | `13d40dc` | Modal NVIDIA L40S | `docs/m28-log.md` |
+| `r5-personaplex/evalset-modal-l40s-ladder.json` | M28: PersonaPlex on the one card, the same driver as its A10 row | `13d40dc` | Modal NVIDIA L40S | `docs/m28-log.md` |
 
 ## What an eval-set run holds
 

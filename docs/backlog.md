@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-09-29, at commit `eb1974a`.
+Last updated 2026-09-30, at commit `13d40dc`.
 
 ## Chosen next: M27, a live demo on Modal
 
@@ -30,14 +30,22 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | commit 13 | a severity render that can be heard: a fixed sentence, a condition, one of the registered scores; neutral and rendered speech, targets against what was measured | done; on Modal three renders, the two seen with every target within its tolerance (`docs/m27-log.md`, entries 28 and 30). The author: "Render sounded well" |
 | commit 14 | the MIT licence; the author's local path out of nine files | done |
 | deployed | `modal deploy`: https://ramcharanmc--s2s-lab-demo-web.modal.run | done, by the author (`docs/m27-log.md`, entry 32) |
-| after it | the push to a public remote, and a link in the portfolio's `index.html` (drafted in entry 32) | the author's, in that order |
+| pushed | a private repository on GitHub, `ramcharanmc/s2s-lab` | done, by the author (`docs/m27-log.md`, entry 33) |
+| after it | a link in the portfolio's `index.html` (drafted in entry 32); the repository made public when the author chooses | the author's |
 | left out | a conversation with R5, and barge-in while a reply plays: both need the microphone open while the machine speaks (`docs/m27-log.md`, entry 19) | can follow; not planned |
+
+## Done since: M28, the ladder on one card
+
+Asked for on 2026-09-29, for the author's presentation: every GPU rung on one card. The L40S, since
+R4 does not fit the A10; R0 to R4 in one container, R5's two models beside. Three runs, \$3.88, no
+failure (`docs/m28-log.md`). Found on the way: two containers of one card differ by up to a quarter;
+the earlier cost column mixed mean and median.
 
 ## Owed
 
 | What | Why |
 |---|---|
-| A remote | the repo has never been pushed. Public, by the author's decision. The history holds his local path, and every commit his name and e-mail address (`docs/m27-log.md`, entry 29) |
+| Making the repository public | pushed private on 2026-09-29: the author wants to choose first which of the experiments below to run. Making it public is one setting and changes no commit. The history holds his local path, and every commit his name and e-mail address (`docs/m27-log.md`, entries 29 and 33) |
 | `probes/README.md`, "Recording notes" | microphone and room are still to fill in |
 | A warm turn's time outside the cards | with every machine up, R3's, R4's and R5's requests took 4 to 7.3 s more than their cards' times, the T4's 0.3 s (`docs/m27-log.md`, entry 31). Seen once; not looked into |
 | The severity render at the scores that carry a warning | the author heard depression at 10: "sounded well". Nobody has listened at depression from 20 or mania from 26 |

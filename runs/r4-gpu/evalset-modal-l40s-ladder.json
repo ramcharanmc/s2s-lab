@@ -1,0 +1,4216 @@
+{
+  "rung": "r4-gpu",
+  "description": "R4 S2S half-duplex: Qwen2.5-Omni-7B hears the turn and speaks the reply itself; no transcript, no TTS (bf16, CUDA)",
+  "commit": "13d40dc",
+  "machine": "Modal NVIDIA L40S, 580.95.05, one container: r0-gpu then r1-gpu then r2-gpu then r2-gpu-turbo then r3-gpu then r4-gpu",
+  "ran": "2026-09-30",
+  "load_ms": 15615.7,
+  "peak_vram_mb": 22591,
+  "evalset": {
+    "built": "2026-09-15",
+    "seed": 20260915,
+    "turns": 200
+  },
+  "turns": {
+    "clean-00": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, it sounds like they had a really nice time at the parsonage during the Christmas holidays. It seems like that place was a great place for them to be. What do you think about it?",
+      "stages_ms": {
+        "s2s": 10021.8
+      },
+      "untimed_ms": 0.4,
+      "total_ms": 10022.3,
+      "reply_s": 10.68,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 10022.3,
+      "first_sound_ms": 10222.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          10022.3,
+          256320
+        ]
+      ]
+    },
+    "clean-01": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're asking about this. Can you tell me more?",
+      "stages_ms": {
+        "s2s": 4146.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4146.1,
+      "reply_s": 4.62,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4146.1,
+      "first_sound_ms": 4346.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4146.1,
+          110880
+        ]
+      ]
+    },
+    "clean-02": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, that's an interesting statement. What made you say that? It sounds like there was something really important or surprising that made someone stop and think.",
+      "stages_ms": {
+        "s2s": 8354.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8354.2,
+      "reply_s": 9.28,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 8354.2,
+      "first_sound_ms": 8574.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8354.2,
+          222720
+        ]
+      ]
+    },
+    "clean-03": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, it sounds like you're in a bit of a tricky situation. Maybe you can tell me a bit more about what's going on? It'll help me figure out how to assist you better.",
+      "stages_ms": {
+        "s2s": 8868.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8868.8,
+      "reply_s": 9.4,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 8868.8,
+      "first_sound_ms": 9068.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8868.8,
+          225600
+        ]
+      ]
+    },
+    "clean-04": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, it seems like you're talking about some old - fashioned stuff. But what exactly are you asking about? Is it related to the trial plant or the yield? Let me know so I can help better.",
+      "stages_ms": {
+        "s2s": 11159.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 11159.0,
+      "reply_s": 12.32,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 11159.0,
+      "first_sound_ms": 11359.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          11159.0,
+          295680
+        ]
+      ]
+    },
+    "clean-05": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Oh, that's interesting. So, Governor Robinson was on his way east and his steamboat stopped at Lexington, Missouri. What else do you want to know about this?",
+      "stages_ms": {
+        "s2s": 9996.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 9996.5,
+      "reply_s": 10.82,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 9996.5,
+      "first_sound_ms": 10196.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          9996.5,
+          259680
+        ]
+      ]
+    },
+    "clean-06": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, that's interesting. What's your question about this slang?",
+      "stages_ms": {
+        "s2s": 3922.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 3922.2,
+      "reply_s": 4.36,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3922.2,
+      "first_sound_ms": 4122.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3922.2,
+          104640
+        ]
+      ]
+    },
+    "clean-07": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "I'm sorry to hear that. What's the problem? Maybe I can help.",
+      "stages_ms": {
+        "s2s": 4387.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4387.8,
+      "reply_s": 5.04,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4387.8,
+      "first_sound_ms": 4587.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4387.8,
+          120960
+        ]
+      ]
+    },
+    "clean-08": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "That's a really beautiful line. It sounds like you're expressing a deep and sincere love. What made you say that?",
+      "stages_ms": {
+        "s2s": 7231.6
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7231.6,
+      "reply_s": 7.98,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 7231.6,
+      "first_sound_ms": 7451.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7231.6,
+          191520
+        ]
+      ]
+    },
+    "clean-09": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "That's a really nice thing to remember. It must have been a special moment for them. What do you think about that?",
+      "stages_ms": {
+        "s2s": 6279.7
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6279.7,
+      "reply_s": 6.92,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6279.7,
+      "first_sound_ms": 6499.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6279.7,
+          166080
+        ]
+      ]
+    },
+    "clean-10": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, that's a really interesting statement. It seems to be highlighting how Jesus' sacrifice shows the true nature of sin. What do you think about it?",
+      "stages_ms": {
+        "s2s": 9321.6
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 9321.7,
+      "reply_s": 10.06,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 9321.7,
+      "first_sound_ms": 9541.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          9321.7,
+          241440
+        ]
+      ]
+    },
+    "clean-11": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, that's interesting. What kind of talk are you hoping to have with him? Let's keep chatting about it.",
+      "stages_ms": {
+        "s2s": 7181.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7181.4,
+      "reply_s": 8.32,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7181.4,
+      "first_sound_ms": 7381.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7181.4,
+          199680
+        ]
+      ]
+    },
+    "clean-12": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Mrs. Griffin wants a bit more light. What can I do for you regarding this?",
+      "stages_ms": {
+        "s2s": 4210.5
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4210.5,
+      "reply_s": 4.64,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4210.5,
+      "first_sound_ms": 4410.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4210.5,
+          111360
+        ]
+      ]
+    },
+    "clean-13": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're asking about this. Can you tell me more? Maybe I can help you better.",
+      "stages_ms": {
+        "s2s": 5745.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5745.1,
+      "reply_s": 6.3,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5745.1,
+      "first_sound_ms": 5945.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5745.1,
+          151200
+        ]
+      ]
+    },
+    "clean-14": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "I'm not sure what you mean by that. Can you explain a bit more?",
+      "stages_ms": {
+        "s2s": 3823.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 3824.0,
+      "reply_s": 4.24,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3824.0,
+      "first_sound_ms": 4024.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3824.0,
+          101760
+        ]
+      ]
+    },
+    "clean-15": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're asking about this passage. Can you tell me more? Maybe what you want to know about it?",
+      "stages_ms": {
+        "s2s": 6619.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6619.9,
+      "reply_s": 7.14,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6619.9,
+      "first_sound_ms": 6819.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6619.9,
+          171360
+        ]
+      ]
+    },
+    "clean-16": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're asking about. Can you give me a bit more context? It'll help me understand better.",
+      "stages_ms": {
+        "s2s": 6393.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6394.0,
+      "reply_s": 7.12,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6394.0,
+      "first_sound_ms": 6594.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6394.0,
+          170880
+        ]
+      ]
+    },
+    "clean-17": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, it's understandable that you're worried about the dust. And it's great that you want to see the furniture clean. What's the plan to get rid of the dust?",
+      "stages_ms": {
+        "s2s": 9213.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 9213.4,
+      "reply_s": 9.66,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 9213.4,
+      "first_sound_ms": 9413.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          9213.4,
+          231840
+        ]
+      ]
+    },
+    "clean-18": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "That's great to hear! What's the reason for your satisfaction?",
+      "stages_ms": {
+        "s2s": 4183.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4183.2,
+      "reply_s": 4.66,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 4183.2,
+      "first_sound_ms": 4403.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4183.2,
+          111840
+        ]
+      ]
+    },
+    "clean-19": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, that's great! It sounds like you're growing well. What else can I help you with?",
+      "stages_ms": {
+        "s2s": 5404.5
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5404.5,
+      "reply_s": 5.86,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5404.5,
+      "first_sound_ms": 5604.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5404.5,
+          140640
+        ]
+      ]
+    },
+    "clean-20": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, that's interesting. What do you think about that?",
+      "stages_ms": {
+        "s2s": 3881.6
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3881.7,
+      "reply_s": 4.28,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3881.7,
+      "first_sound_ms": 4081.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3881.7,
+          102720
+        ]
+      ]
+    },
+    "clean-21": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, it sounds like he has a pretty laid - back way of getting things done. He doesn't seem to be in a rush at all. What do you think about that?",
+      "stages_ms": {
+        "s2s": 8121.7
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8121.8,
+      "reply_s": 8.5,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 8121.8,
+      "first_sound_ms": 8321.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8121.8,
+          204000
+        ]
+      ]
+    },
+    "clean-22": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "I'm sorry to hear that. What was it that shocked you so much?",
+      "stages_ms": {
+        "s2s": 4136.6
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 4136.6,
+      "reply_s": 4.56,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4136.6,
+      "first_sound_ms": 4336.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4136.6,
+          109440
+        ]
+      ]
+    },
+    "clean-23": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, that's a good point. It's interesting how we can see the absurdity in things. What made you think about this?",
+      "stages_ms": {
+        "s2s": 7219.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7220.0,
+      "reply_s": 8.08,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7220.0,
+      "first_sound_ms": 7420.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7220.0,
+          193920
+        ]
+      ]
+    },
+    "clean-24": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Sure, Will Stutley. It's nice to meet you. So, what brings you to be in touch?",
+      "stages_ms": {
+        "s2s": 5568.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5568.1,
+      "reply_s": 6.16,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5568.1,
+      "first_sound_ms": 5768.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5568.1,
+          147840
+        ]
+      ]
+    },
+    "clean-25": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Yeah, it sure did. What made you say that?",
+      "stages_ms": {
+        "s2s": 3437.0
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3437.1,
+      "reply_s": 3.86,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3437.1,
+      "first_sound_ms": 3637.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3437.1,
+          92640
+        ]
+      ]
+    },
+    "clean-26": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, that's a really interesting statement. It seems to be about following Christ as a divine teacher. What made you say that?",
+      "stages_ms": {
+        "s2s": 7675.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7675.0,
+      "reply_s": 8.48,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 7675.0,
+      "first_sound_ms": 7895.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7675.0,
+          203520
+        ]
+      ]
+    },
+    "clean-27": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "That's a really sweet thing to say. It shows you're grateful for the love you've received. What made you want to say that?",
+      "stages_ms": {
+        "s2s": 6624.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6624.4,
+      "reply_s": 7.28,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6624.4,
+      "first_sound_ms": 6824.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6624.4,
+          174720
+        ]
+      ]
+    },
+    "clean-28": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "What's on your mind?",
+      "stages_ms": {
+        "s2s": 1827.6
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 1827.7,
+      "reply_s": 1.6,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 1827.7,
+      "first_sound_ms": 2027.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          1827.7,
+          38400
+        ]
+      ]
+    },
+    "clean-29": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "That sounds really tough. It must be hard to be in that situation. Do you want to talk more about it?",
+      "stages_ms": {
+        "s2s": 6432.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6432.2,
+      "reply_s": 7.2,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6432.2,
+      "first_sound_ms": 6652.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6432.2,
+          172800
+        ]
+      ]
+    },
+    "clean-30": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, I'm not sure what you mean by that. Can you tell me more?",
+      "stages_ms": {
+        "s2s": 3912.8
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3912.8,
+      "reply_s": 4.24,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3912.8,
+      "first_sound_ms": 4112.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3912.8,
+          101760
+        ]
+      ]
+    },
+    "clean-31": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're asking about this quote. Can you tell me more about it? Maybe what you want to know about it?",
+      "stages_ms": {
+        "s2s": 6223.5
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6223.6,
+      "reply_s": 6.62,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6223.6,
+      "first_sound_ms": 6423.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6223.6,
+          158880
+        ]
+      ]
+    },
+    "clean-32": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're asking about this quote. Can you give me a bit more context? Maybe what you want to do with it?",
+      "stages_ms": {
+        "s2s": 6816.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6816.4,
+      "reply_s": 7.26,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6816.4,
+      "first_sound_ms": 7016.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6816.4,
+          174240
+        ]
+      ]
+    },
+    "clean-33": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "I'm sorry you've been wronged. What can I do to help you?",
+      "stages_ms": {
+        "s2s": 3907.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 3907.5,
+      "reply_s": 4.14,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3907.5,
+      "first_sound_ms": 4107.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3907.5,
+          99360
+        ]
+      ]
+    },
+    "clean-34": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, it seems like you're talking about a farm and a Viking. Maybe you're planning something related to them? Can you tell me more?",
+      "stages_ms": {
+        "s2s": 8097.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8097.1,
+      "reply_s": 8.54,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 8097.1,
+      "first_sound_ms": 8317.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8097.1,
+          204960
+        ]
+      ]
+    },
+    "clean-35": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, it's a shame you don't have someone like that. Maybe you should look for a new friend or sister. What's been going on in your life lately?",
+      "stages_ms": {
+        "s2s": 8474.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8474.9,
+      "reply_s": 8.94,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 8474.9,
+      "first_sound_ms": 8674.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8474.9,
+          214560
+        ]
+      ]
+    },
+    "clean-36": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "I'm not sure who \"she\" is in this context. Can you give me a bit more information? It'll help me answer better.",
+      "stages_ms": {
+        "s2s": 6220.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6220.9,
+      "reply_s": 6.62,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6220.9,
+      "first_sound_ms": 6420.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6220.9,
+          158880
+        ]
+      ]
+    },
+    "clean-37": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "That's a small amount. Is there something specific you want to know about grams?",
+      "stages_ms": {
+        "s2s": 4374.7
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 4374.8,
+      "reply_s": 4.82,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 4374.8,
+      "first_sound_ms": 4594.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4374.8,
+          115680
+        ]
+      ]
+    },
+    "clean-38": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, I'm just glad to be able to talk. You know, it's nice to have someone to chat with. So, what's on your mind?",
+      "stages_ms": {
+        "s2s": 7672.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7672.4,
+      "reply_s": 8.22,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7672.4,
+      "first_sound_ms": 7872.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7672.4,
+          197280
+        ]
+      ]
+    },
+    "clean-39": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Sure, that sounds like a great idea. It'll be nice to see him around the old house. What's the occasion?",
+      "stages_ms": {
+        "s2s": 7239.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7239.8,
+      "reply_s": 7.86,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7239.8,
+      "first_sound_ms": 7439.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7239.8,
+          188640
+        ]
+      ]
+    },
+    "clean-40": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're trying to say here. Can you explain a bit more? It seems like you're talking about something that's really bothering you.",
+      "stages_ms": {
+        "s2s": 7417.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7417.2,
+      "reply_s": 7.9,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7417.2,
+      "first_sound_ms": 7617.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7417.2,
+          189600
+        ]
+      ]
+    },
+    "clean-41": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "What's your question about this? Are you looking for a recipe or something related? Let me know so I can help you better.",
+      "stages_ms": {
+        "s2s": 6668.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6668.5,
+      "reply_s": 7.16,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6668.5,
+      "first_sound_ms": 6868.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6668.5,
+          171840
+        ]
+      ]
+    },
+    "clean-42": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "What about Dorcas? Is there something specific you want to know or talk about?",
+      "stages_ms": {
+        "s2s": 4247.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4247.8,
+      "reply_s": 4.66,
+      "leading_silence_ms": 180.0,
+      "first_audio_ms": 4247.8,
+      "first_sound_ms": 4427.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4247.8,
+          111840
+        ]
+      ]
+    },
+    "clean-43": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Oh, that's quite a surprising moment! What happened next?",
+      "stages_ms": {
+        "s2s": 3892.6
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3892.6,
+      "reply_s": 4.3,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3892.6,
+      "first_sound_ms": 4092.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3892.6,
+          103200
+        ]
+      ]
+    },
+    "clean-44": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, that's a bit of a strange thing to say. What do you mean by \"made themselves small and invisible\"? It sounds like they might be hiding or trying to avoid something. Can you tell me more?",
+      "stages_ms": {
+        "s2s": 10972.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 10972.2,
+      "reply_s": 11.3,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 10972.2,
+      "first_sound_ms": 11172.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          10972.2,
+          271200
+        ]
+      ]
+    },
+    "clean-45": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, it's true. When it's so dry, it's hard to expect much rain. But you never know, a storm could come up suddenly. So, what's your plan for this dry day?",
+      "stages_ms": {
+        "s2s": 10541.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 10541.2,
+      "reply_s": 11.36,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 10541.2,
+      "first_sound_ms": 10761.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          10541.2,
+          272640
+        ]
+      ]
+    },
+    "clean-46": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, that's a good point. But you know, memory can be a bit unreliable sometimes. So, it's important for the behaviorist to be really careful and maybe use some other methods to double - check. What do you think about this?",
+      "stages_ms": {
+        "s2s": 14522.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 14522.3,
+      "reply_s": 15.68,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 14522.3,
+      "first_sound_ms": 14722.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          14522.3,
+          376320
+        ]
+      ]
+    },
+    "clean-47": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, if he does learn medicine, that's great. It could open up a lot of opportunities for him. What made you think about this?",
+      "stages_ms": {
+        "s2s": 7236.7
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7236.7,
+      "reply_s": 8.08,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 7236.7,
+      "first_sound_ms": 7456.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7236.7,
+          193920
+        ]
+      ]
+    },
+    "clean-48": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, that's quite a description! It sounds like she was really into whatever she was talking about. What do you think about it?",
+      "stages_ms": {
+        "s2s": 7240.7
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7240.8,
+      "reply_s": 8.16,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7240.8,
+      "first_sound_ms": 7440.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7240.8,
+          195840
+        ]
+      ]
+    },
+    "clean-49": {
+      "cohort": "clean",
+      "transcript": null,
+      "reply_text": "Well, it seems like the clergy are showing their appreciation for a prince who was into their passions and helped out their interests. What do you think about this?",
+      "stages_ms": {
+        "s2s": 7685.5
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7685.6,
+      "reply_s": 8.48,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7685.6,
+      "first_sound_ms": 7885.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7685.6,
+          203520
+        ]
+      ]
+    },
+    "accented-00": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Oh, that's okay. If you need help with anything else, just let me know.",
+      "stages_ms": {
+        "s2s": 4199.6
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4199.6,
+      "reply_s": 4.52,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4199.6,
+      "first_sound_ms": 4399.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4199.6,
+          108480
+        ]
+      ]
+    },
+    "accented-01": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, it sounds like you might have seen it. What made you think that?",
+      "stages_ms": {
+        "s2s": 4293.5
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 4293.6,
+      "reply_s": 4.88,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4293.6,
+      "first_sound_ms": 4493.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4293.6,
+          117120
+        ]
+      ]
+    },
+    "accented-02": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Sure, 16 minutes is a good amount of time. If you need to talk more, just let me know.",
+      "stages_ms": {
+        "s2s": 6126.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6127.0,
+      "reply_s": 6.6,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6127.0,
+      "first_sound_ms": 6327.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6127.0,
+          158400
+        ]
+      ]
+    },
+    "accented-03": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, it seems like you're having trouble with coordination for a game. Maybe you could try some practice exercises or just take a break and come back to it later? What game are you playing?",
+      "stages_ms": {
+        "s2s": 9584.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 9584.9,
+      "reply_s": 10.72,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 9584.9,
+      "first_sound_ms": 9784.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          9584.9,
+          257280
+        ]
+      ]
+    },
+    "accented-04": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Yeah, I did have a big day. Got a lot of work to do. How about you? Anything exciting going on?",
+      "stages_ms": {
+        "s2s": 7244.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7244.4,
+      "reply_s": 7.9,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7244.4,
+      "first_sound_ms": 7444.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7244.4,
+          189600
+        ]
+      ]
+    },
+    "accented-05": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Yeah, we do climb trees and make up things. It's pretty fun. What about you? Do you like to do those kinds of things?",
+      "stages_ms": {
+        "s2s": 7186.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7186.2,
+      "reply_s": 7.66,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7186.2,
+      "first_sound_ms": 7386.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7186.2,
+          183840
+        ]
+      ]
+    },
+    "accented-06": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, if you think a different question would be better, go ahead and ask it. I'm here to help you out.",
+      "stages_ms": {
+        "s2s": 5330.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5330.9,
+      "reply_s": 5.62,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5330.9,
+      "first_sound_ms": 5530.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5330.9,
+          134880
+        ]
+      ]
+    },
+    "accented-07": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Alright, great. What can I help you with today?",
+      "stages_ms": {
+        "s2s": 4047.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4047.3,
+      "reply_s": 4.52,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4047.3,
+      "first_sound_ms": 4247.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4047.3,
+          108480
+        ]
+      ]
+    },
+    "accented-08": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, that's interesting. Maybe it's because you're more used to hearing the accent in the movie or recording? Or perhaps the way they speak in the movie is more distinct. It could also be that you're not as familiar with their accent in real life. What do you think?",
+      "stages_ms": {
+        "s2s": 15520.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 15520.1,
+      "reply_s": 15.64,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 15520.1,
+      "first_sound_ms": 15720.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          15520.1,
+          375360
+        ]
+      ]
+    },
+    "accented-09": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "That's great! Where are you thinking of going? It'd be cool to hear your ideas.",
+      "stages_ms": {
+        "s2s": 4960.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4960.3,
+      "reply_s": 5.52,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 4960.3,
+      "first_sound_ms": 5180.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4960.3,
+          132480
+        ]
+      ]
+    },
+    "accented-10": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, when I was a kid, I used to play hide and seek a lot. There was this one time when we were playing in the park, and I was the seeker. I remember it really well. How about you? What kind of games did you play as a kid?",
+      "stages_ms": {
+        "s2s": 14346.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 14346.5,
+      "reply_s": 14.26,
+      "leading_silence_ms": 180.0,
+      "first_audio_ms": 14346.5,
+      "first_sound_ms": 14526.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          14346.5,
+          342240
+        ]
+      ]
+    },
+    "accented-11": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "I'm not sure what you mean by \"The idea was to be more more obstacles to more more work.\" Can you clarify? It sounds a bit confusing.",
+      "stages_ms": {
+        "s2s": 8968.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8968.1,
+      "reply_s": 10.24,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 8968.1,
+      "first_sound_ms": 9168.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8968.1,
+          245760
+        ]
+      ]
+    },
+    "accented-12": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Hello! Your participant number is FC35P2. Is there anything else you need help with?",
+      "stages_ms": {
+        "s2s": 7014.0
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 7014.0,
+      "reply_s": 7.74,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 7014.0,
+      "first_sound_ms": 7234.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7014.0,
+          185760
+        ]
+      ]
+    },
+    "accented-13": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, I think that's true. Japanese food can be a bit pricier compared to some other cuisines. But it's also really delicious. So, yeah, I agree. What do you think?",
+      "stages_ms": {
+        "s2s": 11974.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 11974.1,
+      "reply_s": 12.34,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 11974.1,
+      "first_sound_ms": 12174.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          11974.1,
+          296160
+        ]
+      ]
+    },
+    "accented-14": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, if the recording time is finished, you might want to check if there's a way to extend it or if there's a backup recording available. What do you think you'll do next?",
+      "stages_ms": {
+        "s2s": 11614.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 11614.2,
+      "reply_s": 12.12,
+      "leading_silence_ms": 180.0,
+      "first_audio_ms": 11614.2,
+      "first_sound_ms": 11794.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          11614.2,
+          290880
+        ]
+      ]
+    },
+    "accented-15": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, different English can mean different accents, vocabulary, or grammar. It's like how people in different places might say \"hello\" in their own special way. So, what do you think about different English?",
+      "stages_ms": {
+        "s2s": 11878.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 11878.3,
+      "reply_s": 13.04,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 11878.3,
+      "first_sound_ms": 12098.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          11878.3,
+          312960
+        ]
+      ]
+    },
+    "accented-16": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "I understand how you feel. It's really tough when you're worried about having a place to stay. But don't worry too much, there are usually some options out there. If you need help finding a place, we can look into it together.",
+      "stages_ms": {
+        "s2s": 13944.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 13944.1,
+      "reply_s": 14.14,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 13944.1,
+      "first_sound_ms": 14144.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          13944.1,
+          339360
+        ]
+      ]
+    },
+    "accented-17": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Yeah, Edinburgh's ambulances are pretty loud. It's a bit of a shock when you first hear them. But it's just their way of getting to the scene quickly. Have you been to Edinburgh often?",
+      "stages_ms": {
+        "s2s": 10348.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 10348.5,
+      "reply_s": 10.82,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 10348.5,
+      "first_sound_ms": 10548.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          10348.5,
+          259680
+        ]
+      ]
+    },
+    "accented-18": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, it's good that it molds them into who they are at this point in time. What do you think about that?",
+      "stages_ms": {
+        "s2s": 6619.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6619.8,
+      "reply_s": 7.1,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6619.8,
+      "first_sound_ms": 6839.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6619.8,
+          170400
+        ]
+      ]
+    },
+    "accented-19": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Glad to hear from you too. How can I assist you further?",
+      "stages_ms": {
+        "s2s": 3630.4
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3630.5,
+      "reply_s": 3.88,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3630.5,
+      "first_sound_ms": 3830.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3630.5,
+          93120
+        ]
+      ]
+    },
+    "accented-20": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "No, I don't eat spicy food. It's not really my thing. How about you? Do you like spicy food?",
+      "stages_ms": {
+        "s2s": 7880.6
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7880.6,
+      "reply_s": 8.46,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7880.6,
+      "first_sound_ms": 8080.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7880.6,
+          203040
+        ]
+      ]
+    },
+    "accented-21": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "That's great! What did you think of the first few chapters?",
+      "stages_ms": {
+        "s2s": 3694.9
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3695.0,
+      "reply_s": 4.04,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 3695.0,
+      "first_sound_ms": 3915.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3695.0,
+          96960
+        ]
+      ]
+    },
+    "accented-22": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, it's been three months since they told you he was in Ireland. What's the update on that? Are you still waiting for him?",
+      "stages_ms": {
+        "s2s": 7223.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7223.5,
+      "reply_s": 7.78,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 7223.5,
+      "first_sound_ms": 7443.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7223.5,
+          186720
+        ]
+      ]
+    },
+    "accented-23": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, if it's not an exchange, what exactly is it? Let's figure this out together.",
+      "stages_ms": {
+        "s2s": 5672.8
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 5672.8,
+      "reply_s": 6.32,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5672.8,
+      "first_sound_ms": 5872.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5672.8,
+          151680
+        ]
+      ]
+    },
+    "accented-24": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, it's interesting to think about. Sometimes things can be a bit confusing like that. So, what else are you curious about?",
+      "stages_ms": {
+        "s2s": 7543.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7543.1,
+      "reply_s": 8.2,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7543.1,
+      "first_sound_ms": 7743.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7543.1,
+          196800
+        ]
+      ]
+    },
+    "accented-25": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Thanks! I'm glad to hear that. If you need any more help, just let me know.",
+      "stages_ms": {
+        "s2s": 4345.4
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 4345.5,
+      "reply_s": 4.72,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4345.5,
+      "first_sound_ms": 4545.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4345.5,
+          113280
+        ]
+      ]
+    },
+    "accented-26": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Sure, that's a reasonable amount. What's the item you're buying?",
+      "stages_ms": {
+        "s2s": 4112.5
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 4112.5,
+      "reply_s": 4.5,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4112.5,
+      "first_sound_ms": 4312.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4112.5,
+          108000
+        ]
+      ]
+    },
+    "accented-27": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Hello! It's nice to meet you. How can I assist you today?",
+      "stages_ms": {
+        "s2s": 4005.3
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 4005.4,
+      "reply_s": 4.38,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 4005.4,
+      "first_sound_ms": 4225.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4005.4,
+          105120
+        ]
+      ]
+    },
+    "accented-28": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Oh, that's a bummer. But hey, it's never too late to catch up on it. Maybe we can talk about some of the cool characters or the cool powers they have?",
+      "stages_ms": {
+        "s2s": 9231.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 9231.1,
+      "reply_s": 9.72,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 9231.1,
+      "first_sound_ms": 9431.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          9231.1,
+          233280
+        ]
+      ]
+    },
+    "accented-29": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, it could be a lot of things. Maybe you're not getting enough sleep, or you've been working too much. Or it could be that you're stressed out. What do you think it might be?",
+      "stages_ms": {
+        "s2s": 10144.5
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 10144.6,
+      "reply_s": 11.04,
+      "leading_silence_ms": 180.0,
+      "first_audio_ms": 10144.6,
+      "first_sound_ms": 10324.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          10144.6,
+          264960
+        ]
+      ]
+    },
+    "accented-30": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, things are going okay. The family is doing well, you know. Life in general is just normal, with all the usual stuff. How about you? How's your end?",
+      "stages_ms": {
+        "s2s": 11279.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 11279.1,
+      "reply_s": 12.4,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 11279.1,
+      "first_sound_ms": 11479.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          11279.1,
+          297600
+        ]
+      ]
+    },
+    "accented-31": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "That's great to hear! It's always good to have a positive outlook. What are you thankful for today?",
+      "stages_ms": {
+        "s2s": 6125.2
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 6125.3,
+      "reply_s": 6.62,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6125.3,
+      "first_sound_ms": 6345.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6125.3,
+          158880
+        ]
+      ]
+    },
+    "accented-32": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, that's good to hear. It shows that the person is at least aware of your involvement in the project. So, what's next for you in this project?",
+      "stages_ms": {
+        "s2s": 7861.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7861.9,
+      "reply_s": 8.56,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 7861.9,
+      "first_sound_ms": 8081.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7861.9,
+          205440
+        ]
+      ]
+    },
+    "accented-33": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Yeah, it's an exchange. So, what's on your mind about it?",
+      "stages_ms": {
+        "s2s": 3991.1
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3991.1,
+      "reply_s": 4.3,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3991.1,
+      "first_sound_ms": 4191.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3991.1,
+          103200
+        ]
+      ]
+    },
+    "accented-34": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Sure, I can tell you what I want. I want a bowl of noodles. What about you?",
+      "stages_ms": {
+        "s2s": 4804.6
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 4804.6,
+      "reply_s": 5.28,
+      "leading_silence_ms": 180.0,
+      "first_audio_ms": 4804.6,
+      "first_sound_ms": 4984.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4804.6,
+          126720
+        ]
+      ]
+    },
+    "accented-35": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, that's not really true. England does have bad weather. It can be rainy, windy, and cold at times. But it's not like they can't have bad weather because of car insurance. So, don't worry about that. If you have more questions about England or anything else",
+      "stages_ms": {
+        "s2s": 18762.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 18762.2,
+      "reply_s": 18.28,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 18762.2,
+      "first_sound_ms": 18962.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          18762.2,
+          438720
+        ]
+      ]
+    },
+    "accented-36": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Hello! Your participant number is FC32B1. Is there anything else you need help with?",
+      "stages_ms": {
+        "s2s": 6609.1
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 6609.1,
+      "reply_s": 7.44,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6609.1,
+      "first_sound_ms": 6829.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6609.1,
+          178560
+        ]
+      ]
+    },
+    "accented-37": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "That's cool! What did you do with them? Did you take them home or just left them where you found them?",
+      "stages_ms": {
+        "s2s": 6184.5
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6184.5,
+      "reply_s": 6.68,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6184.5,
+      "first_sound_ms": 6404.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6184.5,
+          160320
+        ]
+      ]
+    },
+    "accented-38": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, that's a bummer. Maybe you can try looking for it again or ask someone else if they have a copy. What's the book about?",
+      "stages_ms": {
+        "s2s": 7102.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7102.5,
+      "reply_s": 7.76,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7102.5,
+      "first_sound_ms": 7302.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7102.5,
+          186240
+        ]
+      ]
+    },
+    "accented-39": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, you could start by looking up some basic recipes online. There are tons of websites with simple recipes for different dishes. Or you could check out some cookbooks at the library. They usually have a wide variety of recipes to choose from. So, what kind of food are you thinking of making",
+      "stages_ms": {
+        "s2s": 15885.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 15886.0,
+      "reply_s": 15.88,
+      "leading_silence_ms": 180.0,
+      "first_audio_ms": 15886.0,
+      "first_sound_ms": 16066.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          15886.0,
+          381120
+        ]
+      ]
+    },
+    "accented-40": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "That's great to hear! Traveling can be so much fun. What kind of places are you thinking of going?",
+      "stages_ms": {
+        "s2s": 6285.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6285.5,
+      "reply_s": 6.86,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6285.5,
+      "first_sound_ms": 6505.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6285.5,
+          164640
+        ]
+      ]
+    },
+    "accented-41": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Oh, Percy Jackson: Heroes of Olympus? Yeah, that's a really cool sequel series. It's got a lot of action and adventure. Have you read any of the books?",
+      "stages_ms": {
+        "s2s": 11267.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 11267.0,
+      "reply_s": 11.7,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 11267.0,
+      "first_sound_ms": 11467.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          11267.0,
+          280800
+        ]
+      ]
+    },
+    "accented-42": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "I'm sorry, I don't understand what you mean by \"a first my ear about it.\" Can you please rephrase or give me more details?",
+      "stages_ms": {
+        "s2s": 6802.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6802.3,
+      "reply_s": 7.24,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6802.3,
+      "first_sound_ms": 7002.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6802.3,
+          173760
+        ]
+      ]
+    },
+    "accented-43": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Oh, that's a long time. What's the problem with it?",
+      "stages_ms": {
+        "s2s": 3649.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 3649.2,
+      "reply_s": 3.94,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3649.2,
+      "first_sound_ms": 3849.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3649.2,
+          94560
+        ]
+      ]
+    },
+    "accented-44": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Yeah, it's been great talking to you too. So, what's next on your mind?",
+      "stages_ms": {
+        "s2s": 5271.6
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 5271.6,
+      "reply_s": 5.84,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5271.6,
+      "first_sound_ms": 5471.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5271.6,
+          140160
+        ]
+      ]
+    },
+    "accented-45": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Yeah, it can be really tiring. But it's also important work. How can I help you today?",
+      "stages_ms": {
+        "s2s": 5819.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5819.9,
+      "reply_s": 6.48,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5819.9,
+      "first_sound_ms": 6019.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5819.9,
+          155520
+        ]
+      ]
+    },
+    "accented-46": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Oh, that's great! So, what's the show or movie you're interested in?",
+      "stages_ms": {
+        "s2s": 4897.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4898.0,
+      "reply_s": 5.4,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4898.0,
+      "first_sound_ms": 5098.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4898.0,
+          129600
+        ]
+      ]
+    },
+    "accented-47": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "That's understandable. It's nice to treat yourself on special occasions. Do you have a favorite Japanese dish?",
+      "stages_ms": {
+        "s2s": 6780.6
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6780.6,
+      "reply_s": 7.4,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6780.6,
+      "first_sound_ms": 7000.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6780.6,
+          177600
+        ]
+      ]
+    },
+    "accented-48": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Well, you know, I was just really focused on the task at hand. I practiced a lot and got better over time. And I had a great team to support me. So, yeah, I managed to do it. How about you? Have you ever done something really challenging?",
+      "stages_ms": {
+        "s2s": 15885.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 15885.3,
+      "reply_s": 15.9,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 15885.3,
+      "first_sound_ms": 16085.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          15885.3,
+          381600
+        ]
+      ]
+    },
+    "accented-49": {
+      "cohort": "accented",
+      "transcript": null,
+      "reply_text": "Hello! Your participant number is FC35 - P1. Is there anything else you need help with?",
+      "stages_ms": {
+        "s2s": 6918.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6918.2,
+      "reply_s": 7.5,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6918.2,
+      "first_sound_ms": 7138.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6918.2,
+          180000
+        ]
+      ]
+    },
+    "disfluent-00": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's okay. Just keep trying to walk more often. It's good for you. If you need any tips on how to do that, just let me know.",
+      "stages_ms": {
+        "s2s": 7074.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7074.3,
+      "reply_s": 7.4,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 7074.3,
+      "first_sound_ms": 7294.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7074.3,
+          177600
+        ]
+      ]
+    },
+    "disfluent-01": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "No, I haven't been to Washington D.C. What about you? Have you been there?",
+      "stages_ms": {
+        "s2s": 5859.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5859.1,
+      "reply_s": 6.56,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5859.1,
+      "first_sound_ms": 6059.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5859.1,
+          157440
+        ]
+      ]
+    },
+    "disfluent-02": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's understandable. It's good that you keep things tidy. What else can I help you with?",
+      "stages_ms": {
+        "s2s": 5713.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5713.4,
+      "reply_s": 6.3,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5713.4,
+      "first_sound_ms": 5913.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5713.4,
+          151200
+        ]
+      ]
+    },
+    "disfluent-03": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's great! Aerobics can be really fun with a group. Do you think you might want to try it again?",
+      "stages_ms": {
+        "s2s": 5830.4
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 5830.4,
+      "reply_s": 6.3,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 5830.4,
+      "first_sound_ms": 6050.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5830.4,
+          151200
+        ]
+      ]
+    },
+    "disfluent-04": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, that's great to hear. It sounds like she's really into her work. So, what's your question about her?",
+      "stages_ms": {
+        "s2s": 6464.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6464.9,
+      "reply_s": 6.98,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6464.9,
+      "first_sound_ms": 6664.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6464.9,
+          167520
+        ]
+      ]
+    },
+    "disfluent-05": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "I'm a virtual agent, so I don't have an age. But I'm here to help you with any questions you might have. What can I assist you with today?",
+      "stages_ms": {
+        "s2s": 8434.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8434.8,
+      "reply_s": 8.9,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 8434.8,
+      "first_sound_ms": 8634.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8434.8,
+          213600
+        ]
+      ]
+    },
+    "disfluent-06": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Yeah, that's a good way to look at it. Just figure out which one's more of a headache for you. So, what are the two problems?",
+      "stages_ms": {
+        "s2s": 7236.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7236.8,
+      "reply_s": 7.72,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7236.8,
+      "first_sound_ms": 7436.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7236.8,
+          185280
+        ]
+      ]
+    },
+    "disfluent-07": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Yeah, Sams does have a pretty good lasagna. It's one of their popular dishes. Have you thought about going back to try it again?",
+      "stages_ms": {
+        "s2s": 7544.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7544.9,
+      "reply_s": 8.12,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7544.9,
+      "first_sound_ms": 7744.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7544.9,
+          194880
+        ]
+      ]
+    },
+    "disfluent-08": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Oh, that's interesting. So, what's the next step? Are you planning to use the sand for a project or something? Let me know more.",
+      "stages_ms": {
+        "s2s": 8628.7
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8628.7,
+      "reply_s": 9.22,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 8628.7,
+      "first_sound_ms": 8828.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8628.7,
+          221280
+        ]
+      ]
+    },
+    "disfluent-09": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's good to know. So, what else do you want to ask about this testing policy?",
+      "stages_ms": {
+        "s2s": 4595.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4595.4,
+      "reply_s": 5.06,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4595.4,
+      "first_sound_ms": 4795.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4595.4,
+          121440
+        ]
+      ]
+    },
+    "disfluent-10": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's great! It's nice to have a reliable source of news. What kind of news do you usually find on T News?",
+      "stages_ms": {
+        "s2s": 6402.5
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6402.5,
+      "reply_s": 6.9,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6402.5,
+      "first_sound_ms": 6622.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6402.5,
+          165600
+        ]
+      ]
+    },
+    "disfluent-11": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's okay. Just be careful not to overdo it. If you need any more advice or have other questions, feel free to ask.",
+      "stages_ms": {
+        "s2s": 7428.5
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7428.6,
+      "reply_s": 8.06,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7428.6,
+      "first_sound_ms": 7628.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7428.6,
+          193440
+        ]
+      ]
+    },
+    "disfluent-12": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, that's true. Someone has to take on the task and do it well. So, what's the task you're talking about?",
+      "stages_ms": {
+        "s2s": 7455.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7455.0,
+      "reply_s": 8.06,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7455.0,
+      "first_sound_ms": 7655.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7455.0,
+          193440
+        ]
+      ]
+    },
+    "disfluent-13": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That sounds like you had a good time. What did you pick off the bottom?",
+      "stages_ms": {
+        "s2s": 3773.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 3773.4,
+      "reply_s": 4.04,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3773.4,
+      "first_sound_ms": 3973.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3773.4,
+          96960
+        ]
+      ]
+    },
+    "disfluent-14": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, it depends on the situation. If it's something simple like a grocery list, it's usually not too hard to keep track. But if it's a complex project with lots of details, it can be a bit of a struggle. But overall, with a bit of organization, it usually",
+      "stages_ms": {
+        "s2s": 17852.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 17852.5,
+      "reply_s": 17.46,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 17852.5,
+      "first_sound_ms": 18052.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          17852.5,
+          419040
+        ]
+      ]
+    },
+    "disfluent-15": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's good to hear. What else can I help you with?",
+      "stages_ms": {
+        "s2s": 3033.5
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3033.5,
+      "reply_s": 3.14,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 3033.5,
+      "first_sound_ms": 3253.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3033.5,
+          75360
+        ]
+      ]
+    },
+    "disfluent-16": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, I understand what you're saying. It's true that a punishment phase can be a bit of a hassle. But it's important for the criminal and the victim's family. Maybe we can find a way to make it less of a burden. What do you think?",
+      "stages_ms": {
+        "s2s": 15307.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 15307.9,
+      "reply_s": 15.34,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 15307.9,
+      "first_sound_ms": 15507.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          15307.9,
+          368160
+        ]
+      ]
+    },
+    "disfluent-17": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, it's tough to say what you'd do in that situation. It really depends on a lot of factors like your values, your goals, and how much time you have to think about it. But it's good that you're thinking about it. What do you think you might have done",
+      "stages_ms": {
+        "s2s": 15359.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 15360.0,
+      "reply_s": 15.3,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 15360.0,
+      "first_sound_ms": 15560.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          15360.0,
+          367200
+        ]
+      ]
+    },
+    "disfluent-18": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "I see. So, what can I do to help you with this situation?",
+      "stages_ms": {
+        "s2s": 4237.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4237.2,
+      "reply_s": 4.72,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4237.2,
+      "first_sound_ms": 4437.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4237.2,
+          113280
+        ]
+      ]
+    },
+    "disfluent-19": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Yeah, that's true. Limited editions often hold value over time. So, if you're thinking about getting one, it could be a good idea. What kind of limited edition are you interested in?",
+      "stages_ms": {
+        "s2s": 12766.7
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 12766.7,
+      "reply_s": 13.14,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 12766.7,
+      "first_sound_ms": 12966.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          12766.7,
+          315360
+        ]
+      ]
+    },
+    "disfluent-20": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Oh, that's interesting. So, what's the next step?",
+      "stages_ms": {
+        "s2s": 3918.8
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3918.8,
+      "reply_s": 4.28,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3918.8,
+      "first_sound_ms": 4118.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3918.8,
+          102720
+        ]
+      ]
+    },
+    "disfluent-21": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, that's good to know. So, what's the problem you're having with it?",
+      "stages_ms": {
+        "s2s": 4725.5
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 4725.6,
+      "reply_s": 5.14,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 4725.6,
+      "first_sound_ms": 4945.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4725.6,
+          123360
+        ]
+      ]
+    },
+    "disfluent-22": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, it seems like you're trying to clarify something about Hussein. If you want to talk more about it, feel free to ask me more questions.",
+      "stages_ms": {
+        "s2s": 8137.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8137.2,
+      "reply_s": 8.66,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 8137.2,
+      "first_sound_ms": 8337.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8137.2,
+          207840
+        ]
+      ]
+    },
+    "disfluent-23": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "I see. So, you're saying that the acute hospitals are sending patients out quicker than they should be? That's a bit concerning. What do you think about this?",
+      "stages_ms": {
+        "s2s": 9693.5
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 9693.6,
+      "reply_s": 10.36,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 9693.6,
+      "first_sound_ms": 9893.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          9693.6,
+          248640
+        ]
+      ]
+    },
+    "disfluent-24": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's great to hear! If you need any more help or just want to chat about something else, feel free to let me know.",
+      "stages_ms": {
+        "s2s": 5899.6
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5899.7,
+      "reply_s": 6.4,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 5899.7,
+      "first_sound_ms": 6119.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5899.7,
+          153600
+        ]
+      ]
+    },
+    "disfluent-25": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That sounds really cool. What kind of society are you thinking about? It'd be great to hear more.",
+      "stages_ms": {
+        "s2s": 6081.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6081.4,
+      "reply_s": 6.62,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6081.4,
+      "first_sound_ms": 6301.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6081.4,
+          158880
+        ]
+      ]
+    },
+    "disfluent-26": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's a big decision. Have you thought about how it might affect the team's morale? And what kind of support will you offer to the remaining administrators?",
+      "stages_ms": {
+        "s2s": 8398.7
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8398.8,
+      "reply_s": 8.98,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 8398.8,
+      "first_sound_ms": 8618.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8398.8,
+          215520
+        ]
+      ]
+    },
+    "disfluent-27": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Yeah, it sure has been. The heat and sun are really something else. How are you handling it?",
+      "stages_ms": {
+        "s2s": 5447.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5447.1,
+      "reply_s": 5.86,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 5447.1,
+      "first_sound_ms": 5667.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5447.1,
+          140640
+        ]
+      ]
+    },
+    "disfluent-28": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, it's understandable to feel guilty when you're driving. Maybe you're worried about something? Let's talk more about it.",
+      "stages_ms": {
+        "s2s": 7256.6
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7256.6,
+      "reply_s": 7.86,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7256.6,
+      "first_sound_ms": 7456.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7256.6,
+          188640
+        ]
+      ]
+    },
+    "disfluent-29": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Yeah, it's really easy to get there from both places. If you're coming from the south of Baltimore, you can just follow the signs. And for the Orioles from Washington DC, it's also a breeze. So, what else do you want to know about it?",
+      "stages_ms": {
+        "s2s": 13209.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 13209.8,
+      "reply_s": 13.26,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 13209.8,
+      "first_sound_ms": 13409.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          13209.8,
+          318240
+        ]
+      ]
+    },
+    "disfluent-30": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's cool! Rock and roll videos are really fun to watch. What kind of videos do you like the most?",
+      "stages_ms": {
+        "s2s": 5864.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5864.8,
+      "reply_s": 6.48,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 5864.8,
+      "first_sound_ms": 6084.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5864.8,
+          155520
+        ]
+      ]
+    },
+    "disfluent-31": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's great! How can I assist you today?",
+      "stages_ms": {
+        "s2s": 3122.3
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3122.3,
+      "reply_s": 3.34,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 3122.3,
+      "first_sound_ms": 3342.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3122.3,
+          80160
+        ]
+      ]
+    },
+    "disfluent-32": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Oh, that's tough. Maybe she's tired or hungry? You could try giving her a snack or a nap. What do you think?",
+      "stages_ms": {
+        "s2s": 9413.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 9413.1,
+      "reply_s": 10.18,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 9413.1,
+      "first_sound_ms": 9613.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          9413.1,
+          244320
+        ]
+      ]
+    },
+    "disfluent-33": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's tough. You should look into getting some training or improving your skills. Maybe talk to your boss about what you can do better. What kind of job are you in?",
+      "stages_ms": {
+        "s2s": 8887.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8887.1,
+      "reply_s": 9.38,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 8887.1,
+      "first_sound_ms": 9087.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8887.1,
+          225120
+        ]
+      ]
+    },
+    "disfluent-34": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, it really depends on what you think you should be getting for your tax money. Some people might say they're paying too much because they feel like they're not getting enough in return for things like good schools, clean roads, and safe communities. But others might think they're getting their money",
+      "stages_ms": {
+        "s2s": 15605.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 15605.9,
+      "reply_s": 15.56,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 15605.9,
+      "first_sound_ms": 15805.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          15605.9,
+          373440
+        ]
+      ]
+    },
+    "disfluent-35": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's great! It's nice to hear that you all still keep in touch. How often do you get together?",
+      "stages_ms": {
+        "s2s": 5286.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5286.5,
+      "reply_s": 5.62,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5286.5,
+      "first_sound_ms": 5486.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5286.5,
+          134880
+        ]
+      ]
+    },
+    "disfluent-36": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Yeah, that sounds right. Just make sure the oven is preheated to the right temperature first. If you have any other questions about the recipe or cooking process, feel free to ask.",
+      "stages_ms": {
+        "s2s": 10100.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 10100.1,
+      "reply_s": 10.66,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 10100.1,
+      "first_sound_ms": 10300.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          10100.1,
+          255840
+        ]
+      ]
+    },
+    "disfluent-37": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, it's not really off the subject. It's a great idea to find a job where you can learn to support yourself. It's important to gain those skills. So, what kind of jobs are you thinking about?",
+      "stages_ms": {
+        "s2s": 10988.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 10988.3,
+      "reply_s": 11.84,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 10988.3,
+      "first_sound_ms": 11188.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          10988.3,
+          284160
+        ]
+      ]
+    },
+    "disfluent-38": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "I see. So, what else is going on? Maybe I can help you figure out a solution.",
+      "stages_ms": {
+        "s2s": 5748.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5749.0,
+      "reply_s": 6.22,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5749.0,
+      "first_sound_ms": 5949.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5749.0,
+          149280
+        ]
+      ]
+    },
+    "disfluent-39": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, it's a tough situation. But it's important that the kids learn from their mistakes. Maybe there could be a way to find a middle ground, like a community service instead of just cutting into their playtime. What do you think?",
+      "stages_ms": {
+        "s2s": 14393.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 14393.9,
+      "reply_s": 14.44,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 14393.9,
+      "first_sound_ms": 14593.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          14393.9,
+          346560
+        ]
+      ]
+    },
+    "disfluent-40": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's great! So, what's next on your mind?",
+      "stages_ms": {
+        "s2s": 3439.9
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3440.0,
+      "reply_s": 3.76,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 3440.0,
+      "first_sound_ms": 3660.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3440.0,
+          90240
+        ]
+      ]
+    },
+    "disfluent-41": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's great! Box turtles are really interesting pets. What made you like them so much?",
+      "stages_ms": {
+        "s2s": 5851.7
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5851.8,
+      "reply_s": 6.42,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 5851.8,
+      "first_sound_ms": 6071.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5851.8,
+          154080
+        ]
+      ]
+    },
+    "disfluent-42": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Yeah, it's nice to be out and about when the weather's good. It really does help with the cabin fever. So, what's your plan for the day?",
+      "stages_ms": {
+        "s2s": 7521.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7521.3,
+      "reply_s": 8.32,
+      "leading_silence_ms": 180.0,
+      "first_audio_ms": 7521.3,
+      "first_sound_ms": 7701.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7521.3,
+          199680
+        ]
+      ]
+    },
+    "disfluent-43": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, it's not that strange. Maybe they just happened to be in Maryland at the time. Or they could be a temporary worker there. You know, it could be for a project or something. So, don't worry too much about it. If you have more questions, feel free to",
+      "stages_ms": {
+        "s2s": 18942.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 18942.3,
+      "reply_s": 18.52,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 18942.3,
+      "first_sound_ms": 19142.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          18942.3,
+          444480
+        ]
+      ]
+    },
+    "disfluent-44": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's interesting. So, what's your sister's simstress expertise? And what's yours?",
+      "stages_ms": {
+        "s2s": 7075.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7075.0,
+      "reply_s": 7.88,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 7075.0,
+      "first_sound_ms": 7295.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7075.0,
+          189120
+        ]
+      ]
+    },
+    "disfluent-45": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Oh, baked potato dinners are great! They're super easy to make and can be really filling. What do you like to add to them?",
+      "stages_ms": {
+        "s2s": 6790.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6790.3,
+      "reply_s": 7.3,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6790.3,
+      "first_sound_ms": 6990.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6790.3,
+          175200
+        ]
+      ]
+    },
+    "disfluent-46": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "That's great! Panama sounds like a really cool place. Have you been there before?",
+      "stages_ms": {
+        "s2s": 4882.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4882.4,
+      "reply_s": 5.42,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4882.4,
+      "first_sound_ms": 5082.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4882.4,
+          130080
+        ]
+      ]
+    },
+    "disfluent-47": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Oh, you mean the blonde - haired girl from New Heart? Yeah, I remember her. What about her?",
+      "stages_ms": {
+        "s2s": 6796.8
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 6796.9,
+      "reply_s": 7.4,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6796.9,
+      "first_sound_ms": 6996.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6796.9,
+          177600
+        ]
+      ]
+    },
+    "disfluent-48": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, that's true. But they might still be able to do some things. What exactly are you worried about?",
+      "stages_ms": {
+        "s2s": 6929.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6929.1,
+      "reply_s": 7.48,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6929.1,
+      "first_sound_ms": 7129.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6929.1,
+          179520
+        ]
+      ]
+    },
+    "disfluent-49": {
+      "cohort": "disfluent",
+      "transcript": null,
+      "reply_text": "Well, that's interesting. So, what kind of movies do you like? Are they all action or do you have a favorite genre?",
+      "stages_ms": {
+        "s2s": 7174.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7174.9,
+      "reply_s": 8.0,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7174.9,
+      "first_sound_ms": 7374.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7174.9,
+          192000
+        ]
+      ]
+    },
+    "slow-00": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, it sounds like they had a really nice time at the parsonage during the Christmas holidays. It seems like that place was a special place for them. What do you think about it?",
+      "stages_ms": {
+        "s2s": 10015.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 10015.2,
+      "reply_s": 10.58,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 10015.2,
+      "first_sound_ms": 10215.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          10015.2,
+          253920
+        ]
+      ]
+    },
+    "slow-01": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're asking about this. Can you tell me more?",
+      "stages_ms": {
+        "s2s": 4094.6
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 4094.6,
+      "reply_s": 4.44,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4094.6,
+      "first_sound_ms": 4294.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4094.6,
+          106560
+        ]
+      ]
+    },
+    "slow-02": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's an interesting statement. What made you say that? It sounds like there's a story behind it.",
+      "stages_ms": {
+        "s2s": 6138.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6138.3,
+      "reply_s": 6.62,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6138.3,
+      "first_sound_ms": 6338.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6138.3,
+          158880
+        ]
+      ]
+    },
+    "slow-03": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, it does sound like you're in a bit of a tough spot. Maybe you could tell me a bit more about what's going on? It'll help me figure out how to assist you better.",
+      "stages_ms": {
+        "s2s": 9287.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 9287.3,
+      "reply_s": 10.24,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 9287.3,
+      "first_sound_ms": 9487.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          9287.3,
+          245760
+        ]
+      ]
+    },
+    "slow-04": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, it seems like you're talking about some old - fashioned stuff. But what exactly are you asking about? Is it related to the trial plant or the yield? Let me know so I can help better.",
+      "stages_ms": {
+        "s2s": 11320.7
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 11320.8,
+      "reply_s": 11.7,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 11320.8,
+      "first_sound_ms": 11520.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          11320.8,
+          280800
+        ]
+      ]
+    },
+    "slow-05": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's interesting. Governor Robinson was on his way east and his steamboat stopped at Lexington, Missouri. What else do you want to know about this?",
+      "stages_ms": {
+        "s2s": 8661.6
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8661.7,
+      "reply_s": 9.24,
+      "leading_silence_ms": 180.0,
+      "first_audio_ms": 8661.7,
+      "first_sound_ms": 8841.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8661.7,
+          221760
+        ]
+      ]
+    },
+    "slow-06": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's interesting. What's your question about this slang?",
+      "stages_ms": {
+        "s2s": 4018.5
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4018.5,
+      "reply_s": 4.46,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4018.5,
+      "first_sound_ms": 4218.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4018.5,
+          107040
+        ]
+      ]
+    },
+    "slow-07": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "I'm sorry to hear that. What happened? Maybe I can help you figure out how to avoid it in the future.",
+      "stages_ms": {
+        "s2s": 5902.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5902.3,
+      "reply_s": 6.48,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5902.3,
+      "first_sound_ms": 6102.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5902.3,
+          155520
+        ]
+      ]
+    },
+    "slow-08": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "That's a really beautiful line. It sounds like you're expressing a deep and sincere love. What made you say that?",
+      "stages_ms": {
+        "s2s": 6681.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6681.2,
+      "reply_s": 7.44,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6681.2,
+      "first_sound_ms": 6901.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6681.2,
+          178560
+        ]
+      ]
+    },
+    "slow-09": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "That's a really sweet thing to remember. It must have been a special moment for them. What do you think about that?",
+      "stages_ms": {
+        "s2s": 8021.7
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8021.8,
+      "reply_s": 8.66,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 8021.8,
+      "first_sound_ms": 8241.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8021.8,
+          207840
+        ]
+      ]
+    },
+    "slow-10": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's a really deep question. It's about how the words \"who gave himself for our sins\" show the viciousness of sin. It's like, it highlights how bad sin is by contrasting it with the sacrifice. So, what do you think about this?",
+      "stages_ms": {
+        "s2s": 16073.6
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 16073.6,
+      "reply_s": 16.04,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 16073.6,
+      "first_sound_ms": 16273.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          16073.6,
+          384960
+        ]
+      ]
+    },
+    "slow-11": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's great. What do you want to talk about?",
+      "stages_ms": {
+        "s2s": 3240.5
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3240.5,
+      "reply_s": 3.44,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3240.5,
+      "first_sound_ms": 3440.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3240.5,
+          82560
+        ]
+      ]
+    },
+    "slow-12": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's interesting. Maybe she could try opening a window or turning on some more lamps. What do you think?",
+      "stages_ms": {
+        "s2s": 6901.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6901.9,
+      "reply_s": 7.5,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6901.9,
+      "first_sound_ms": 7101.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6901.9,
+          180000
+        ]
+      ]
+    },
+    "slow-13": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, it seems like Judge LeCompte is trying to stop some damaging exposure of the ex - governor by issuing a writ on a charge of contempt. What do you think about this?",
+      "stages_ms": {
+        "s2s": 9469.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 9469.0,
+      "reply_s": 10.04,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 9469.0,
+      "first_sound_ms": 9669.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          9469.0,
+          240960
+        ]
+      ]
+    },
+    "slow-14": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're trying to say here. Can you explain a bit more?",
+      "stages_ms": {
+        "s2s": 3754.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 3754.2,
+      "reply_s": 4.0,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3754.2,
+      "first_sound_ms": 3954.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3754.2,
+          96000
+        ]
+      ]
+    },
+    "slow-15": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're asking about this passage. Can you tell me more? Maybe what you want to do with it?",
+      "stages_ms": {
+        "s2s": 6237.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6237.9,
+      "reply_s": 6.88,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6237.9,
+      "first_sound_ms": 6437.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6237.9,
+          165120
+        ]
+      ]
+    },
+    "slow-16": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're asking about. Can you give me a bit more context? It'll help me understand and answer better.",
+      "stages_ms": {
+        "s2s": 7047.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7047.4,
+      "reply_s": 7.5,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7047.4,
+      "first_sound_ms": 7247.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7047.4,
+          180000
+        ]
+      ]
+    },
+    "slow-17": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, it's a good idea to clean the furniture. It'll look much better. And it's true that a lot of dust can make it look old and worn out. So, you should definitely go ahead and clean it. If you need any tips on how to do it, just let",
+      "stages_ms": {
+        "s2s": 14014.7
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 14014.7,
+      "reply_s": 14.8,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 14014.7,
+      "first_sound_ms": 14214.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          14014.7,
+          355200
+        ]
+      ]
+    },
+    "slow-18": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "That's great to hear! What's the issue you need help with?",
+      "stages_ms": {
+        "s2s": 3513.6
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 3513.6,
+      "reply_s": 3.74,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3513.6,
+      "first_sound_ms": 3713.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3513.6,
+          89760
+        ]
+      ]
+    },
+    "slow-19": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's great to hear! It sounds like you're growing and thriving. If you have any more updates or questions, feel free to share.",
+      "stages_ms": {
+        "s2s": 8020.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8020.2,
+      "reply_s": 8.5,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 8020.2,
+      "first_sound_ms": 8240.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8020.2,
+          204000
+        ]
+      ]
+    },
+    "slow-20": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's interesting. What made you think that? It sounds like you've got some unique ideas.",
+      "stages_ms": {
+        "s2s": 5420.7
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5420.8,
+      "reply_s": 5.92,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5420.8,
+      "first_sound_ms": 5620.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5420.8,
+          142080
+        ]
+      ]
+    },
+    "slow-21": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, it sounds like this person has a laid - back way of doing things. They like to take their time on the beach and also enjoy the view from the top of a cliff. It's nice to be able to relax like that. So, what's your question about this?",
+      "stages_ms": {
+        "s2s": 14504.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 14504.1,
+      "reply_s": 14.44,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 14504.1,
+      "first_sound_ms": 14704.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          14504.1,
+          346560
+        ]
+      ]
+    },
+    "slow-22": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "I'm sorry to hear that. What was it that shocked you so much?",
+      "stages_ms": {
+        "s2s": 3683.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 3683.1,
+      "reply_s": 3.94,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3683.1,
+      "first_sound_ms": 3883.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3683.1,
+          94560
+        ]
+      ]
+    },
+    "slow-23": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's an interesting perspective. What do you think makes it absurd?",
+      "stages_ms": {
+        "s2s": 4471.6
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4471.7,
+      "reply_s": 5.02,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4471.7,
+      "first_sound_ms": 4671.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4471.7,
+          120480
+        ]
+      ]
+    },
+    "slow-24": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's a funny idea. But I'm not sure if I can be a rat. I'm just a phone agent here. What about you? Are you thinking of becoming a rat too?",
+      "stages_ms": {
+        "s2s": 9589.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 9589.0,
+      "reply_s": 10.04,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 9589.0,
+      "first_sound_ms": 9789.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          9589.0,
+          240960
+        ]
+      ]
+    },
+    "slow-25": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Yeah, it sure did. What made you say that?",
+      "stages_ms": {
+        "s2s": 3545.4
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3545.5,
+      "reply_s": 3.88,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 3545.5,
+      "first_sound_ms": 3765.5,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3545.5,
+          93120
+        ]
+      ]
+    },
+    "slow-26": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "That's a really interesting statement. What made you say that?",
+      "stages_ms": {
+        "s2s": 3490.1
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3490.2,
+      "reply_s": 3.78,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 3490.2,
+      "first_sound_ms": 3710.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3490.2,
+          90720
+        ]
+      ]
+    },
+    "slow-27": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "That's a really nice thing to say. It shows you're grateful for the love you've received. What made you say that?",
+      "stages_ms": {
+        "s2s": 6482.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6482.3,
+      "reply_s": 7.02,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6482.3,
+      "first_sound_ms": 6702.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6482.3,
+          168480
+        ]
+      ]
+    },
+    "slow-28": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "I'm not sure what you mean by that. Can you tell me more?",
+      "stages_ms": {
+        "s2s": 3420.7
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 3420.7,
+      "reply_s": 3.6,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3420.7,
+      "first_sound_ms": 3620.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3420.7,
+          86400
+        ]
+      ]
+    },
+    "slow-29": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "That sounds really tough. How are you feeling about it?",
+      "stages_ms": {
+        "s2s": 3322.6
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3322.7,
+      "reply_s": 3.6,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3322.7,
+      "first_sound_ms": 3522.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3322.7,
+          86400
+        ]
+      ]
+    },
+    "slow-30": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, I'm not sure what you mean by \"views and prospects\" in this context. Can you tell me more? It'll help me understand better.",
+      "stages_ms": {
+        "s2s": 8162.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 8162.4,
+      "reply_s": 8.66,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 8162.4,
+      "first_sound_ms": 8362.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          8162.4,
+          207840
+        ]
+      ]
+    },
+    "slow-31": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're asking about this quote. Can you tell me more about it? Maybe what you want to do with it?",
+      "stages_ms": {
+        "s2s": 6242.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6242.2,
+      "reply_s": 6.66,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6242.2,
+      "first_sound_ms": 6442.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6242.2,
+          159840
+        ]
+      ]
+    },
+    "slow-32": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're asking about this quote. Can you give me a bit more context? Maybe what you want to do with it?",
+      "stages_ms": {
+        "s2s": 6663.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6663.4,
+      "reply_s": 7.08,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6663.4,
+      "first_sound_ms": 6863.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6663.4,
+          169920
+        ]
+      ]
+    },
+    "slow-33": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "I'm really sorry you feel that way. Can you tell me more about what happened? It'd be great if you could share so we can try to help.",
+      "stages_ms": {
+        "s2s": 7209.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7209.8,
+      "reply_s": 7.64,
+      "leading_silence_ms": 180.0,
+      "first_audio_ms": 7209.8,
+      "first_sound_ms": 7389.8,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7209.8,
+          183360
+        ]
+      ]
+    },
+    "slow-34": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's interesting. So, what's your question about the farm?",
+      "stages_ms": {
+        "s2s": 4549.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 4549.4,
+      "reply_s": 5.1,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 4549.4,
+      "first_sound_ms": 4749.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          4549.4,
+          122400
+        ]
+      ]
+    },
+    "slow-35": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, it's a bit sad that you don't have someone like that. Maybe you should look for a new friend or sister? What do you think?",
+      "stages_ms": {
+        "s2s": 7752.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7752.2,
+      "reply_s": 8.3,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7752.2,
+      "first_sound_ms": 7952.2,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7752.2,
+          199200
+        ]
+      ]
+    },
+    "slow-36": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "I'm not sure who \"she\" is. Can you tell me more about the context? It'll help me answer better.",
+      "stages_ms": {
+        "s2s": 5619.1
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5619.1,
+      "reply_s": 6.02,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5619.1,
+      "first_sound_ms": 5819.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5619.1,
+          144480
+        ]
+      ]
+    },
+    "slow-37": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "A gram is about 1/28th of an ounce. If you have more questions about weights or anything else, feel free to ask.",
+      "stages_ms": {
+        "s2s": 7380.3
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7380.3,
+      "reply_s": 7.9,
+      "leading_silence_ms": 180.0,
+      "first_audio_ms": 7380.3,
+      "first_sound_ms": 7560.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7380.3,
+          189600
+        ]
+      ]
+    },
+    "slow-38": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, you're quite the talkative one too. So, what's on your mind?",
+      "stages_ms": {
+        "s2s": 5943.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 5943.9,
+      "reply_s": 6.54,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 5943.9,
+      "first_sound_ms": 6143.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          5943.9,
+          156960
+        ]
+      ]
+    },
+    "slow-39": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Sure, that sounds like a great idea. It must be nice to see him around the old house. If you have any other plans or need more help, just let me know.",
+      "stages_ms": {
+        "s2s": 9274.5
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 9274.6,
+      "reply_s": 9.82,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 9274.6,
+      "first_sound_ms": 9474.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          9274.6,
+          235680
+        ]
+      ]
+    },
+    "slow-40": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "I'm not sure what you're trying to say here. Can you explain a bit more? It seems like you're quoting something.",
+      "stages_ms": {
+        "s2s": 6426.5
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6426.6,
+      "reply_s": 6.9,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 6426.6,
+      "first_sound_ms": 6626.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6426.6,
+          165600
+        ]
+      ]
+    },
+    "slow-41": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "What's your question about this? Are you looking for a recipe that uses these ingredients? Or maybe you're curious about the setting it describes? Let me know so I can help you better.",
+      "stages_ms": {
+        "s2s": 9287.6
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 9287.7,
+      "reply_s": 10.24,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 9287.7,
+      "first_sound_ms": 9487.7,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          9287.7,
+          245760
+        ]
+      ]
+    },
+    "slow-42": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "What about Dorcas? Is there something specific you want to know about her?",
+      "stages_ms": {
+        "s2s": 3594.9
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 3595.0,
+      "reply_s": 3.82,
+      "leading_silence_ms": 180.0,
+      "first_audio_ms": 3595.0,
+      "first_sound_ms": 3775.0,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3595.0,
+          91680
+        ]
+      ]
+    },
+    "slow-43": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Oh, that's a funny story! What happened next?",
+      "stages_ms": {
+        "s2s": 3802.3
+      },
+      "untimed_ms": 0.0,
+      "total_ms": 3802.4,
+      "reply_s": 4.2,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 3802.4,
+      "first_sound_ms": 4002.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          3802.4,
+          100800
+        ]
+      ]
+    },
+    "slow-44": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's a bit strange. What made you say that? Is there something specific about the young girls that made you think they were small and invisible? Let's talk more about it.",
+      "stages_ms": {
+        "s2s": 10021.4
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 10021.4,
+      "reply_s": 11.04,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 10021.4,
+      "first_sound_ms": 10221.4,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          10021.4,
+          264960
+        ]
+      ]
+    },
+    "slow-45": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, it's true. When it's so dry, it's really hard to expect much rain. What else are you thinking about this dry day?",
+      "stages_ms": {
+        "s2s": 6977.2
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6977.3,
+      "reply_s": 7.6,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6977.3,
+      "first_sound_ms": 7197.3,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6977.3,
+          182400
+        ]
+      ]
+    },
+    "slow-46": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's a good point. But you know, memory can be a bit unreliable sometimes. So, it's important for behaviorists to also use other methods like observations and experiments to double - check their records. What do you think about that?",
+      "stages_ms": {
+        "s2s": 13673.6
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 13673.6,
+      "reply_s": 14.72,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 13673.6,
+      "first_sound_ms": 13873.6,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          13673.6,
+          353280
+        ]
+      ]
+    },
+    "slow-47": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, if he does learn medicine, that's great. It could open up a lot of opportunities for him. What made you think about this?",
+      "stages_ms": {
+        "s2s": 7003.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 7003.9,
+      "reply_s": 7.68,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 7003.9,
+      "first_sound_ms": 7203.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          7003.9,
+          184320
+        ]
+      ]
+    },
+    "slow-48": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, that's quite a description! It sounds like she was really into whatever she was talking about. What do you think about it?",
+      "stages_ms": {
+        "s2s": 6905.8
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 6905.9,
+      "reply_s": 7.68,
+      "leading_silence_ms": 220.0,
+      "first_audio_ms": 6905.9,
+      "first_sound_ms": 7125.9,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          6905.9,
+          184320
+        ]
+      ]
+    },
+    "slow-49": {
+      "cohort": "slow",
+      "transcript": null,
+      "reply_text": "Well, it seems like you're sharing a bit of a historical or literary quote. What's your question about it? Are you trying to understand the meaning? Or maybe you want to discuss the context? Let me know so I can help you better.",
+      "stages_ms": {
+        "s2s": 12792.0
+      },
+      "untimed_ms": 0.1,
+      "total_ms": 12792.1,
+      "reply_s": 13.0,
+      "leading_silence_ms": 200.0,
+      "first_audio_ms": 12792.1,
+      "first_sound_ms": 12992.1,
+      "stall_ms": 0.0,
+      "chunks": [
+        [
+          12792.1,
+          312000
+        ]
+      ]
+    }
+  }
+}

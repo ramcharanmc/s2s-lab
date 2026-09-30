@@ -1,12 +1,13 @@
 """
 R4 on Modal: the S2S rung on an L40S, with R3 beside it in the same container.
 
-    modal run modal_app/r4_bench.py --rung r4-gpu                            30 probe clips: the smoke test
-    modal run modal_app/r4_bench.py --rung r3-gpu,r4-gpu --evalset --limit 8
-    modal run modal_app/r4_bench.py --rung r3-gpu,r4-gpu --evalset           the R4 row, saved to runs/<rung>/evalset-modal-l40s.json
+    modal run modal_app/r4_bench.py::main --rung r4-gpu                      30 probe clips: the smoke test
+    modal run modal_app/r4_bench.py::main --rung r3-gpu,r4-gpu --evalset --limit 8
+    modal run modal_app/r4_bench.py::main --rung r3-gpu,r4-gpu --evalset     the R4 row, saved to runs/<rung>/evalset-modal-l40s.json
     modal run modal_app/r4_bench.py::pairs --split dev                       PR-008's development: both rungs answer the 21 dev prosody pairs
-    modal run modal_app/r4_bench.py --rung r0-gpu,r1-gpu,r2-gpu,r2-gpu-turbo,r3-gpu,r4-gpu --evalset --tag ladder
+    modal run modal_app/r4_bench.py::main --rung r0-gpu,r1-gpu,r2-gpu,r2-gpu-turbo,r3-gpu,r4-gpu --evalset --tag ladder
                                                                              M28: the ladder, R0 to R4, in ONE L40S container
+The file has two entry points (main, pairs), so Modal needs the one named: ::main or ::pairs.
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards

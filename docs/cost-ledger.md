@@ -78,6 +78,14 @@ one. A failed run is still a row, since it was still billed.
 
 | 2026-09-29 | `ff405b4` | `modal serve modal_app/demo.py` (the demo; two live turns, seven rungs each, on four machines) | T4, A10, L40S, a second A10, and a CPU container for the page | — | 77.6 s and 20.4 s (the slowest machine's request) | ≈ \$0.45 (the app's count: about \$0.27 and \$0.1785; the day's spend \$0.505) | **the demo's ninth session**: commits 11 and 12 confirmed on Modal; four requests a turn, each back when its machine was done; the wakes 50 s (T4), 32 s (A10), 67 s (L40S), 51 s (Moshi's A10); Moshi at 0.68 and 0.67 of real time, answering the second call only (`docs/m27-log.md`, entry 31) |
 
+| 2026-09-29 | `13d40dc` | `modal run modal_app/r4_bench.py::main --rung r0-gpu,r1-gpu,r2-gpu,r2-gpu-turbo,r3-gpu,r4-gpu --evalset --limit 8 --tag ladder` | L40S | 195 s | 205 s | \$0.111 | M28, run A's smoke test: the new image layer and six rungs in one container on 8 clips; the same replies as the earlier runs. Not evidence (`docs/m28-log.md`, entry 4) |
+
+| 2026-09-29 | `13d40dc` | `modal run modal_app/r5_bench.py::main --model r5-moshi --evalset --gpu l40s --tag ladder` | L40S | 1,860 s | 1,865 s | \$1.010 | **M28, run B: Moshi on the one card**: 93 of 200 answered, gap p50 140 ms; RTF 0.45 (0.69 on the A10); 16.7 GB (`runs/r5-moshi/evalset-modal-l40s-ladder.json`) |
+
+| 2026-09-29 | `13d40dc` | `modal run modal_app/r5_bench.py::main --model r5-personaplex --evalset --gpu l40s --tag ladder` | L40S | 2,843 s | 2,848 s | \$1.543 | **M28, run C: PersonaPlex on the one card**: 190 of 200 answered, gap p50 440 / p90 760 ms; RTF 0.50; set-up 3.84 s a call (5.95 on the A10); 18.1 GB (`runs/r5-personaplex/`) |
+
+| 2026-09-29 | `13d40dc` | `modal run modal_app/r4_bench.py::main --rung r0-gpu,r1-gpu,r2-gpu,r2-gpu-turbo,r3-gpu,r4-gpu --evalset --tag ladder` | L40S | 2,195 s | 2,237 s | \$1.212 | **M28, run A: R0 to R4 in one L40S container**, 200 clips each: first audio p50 R0 300, R1 245, R2 279, R2 turbo 275, R3 632, R4 6,859 ms; WER unchanged; the container 27% faster than R4's earlier one (`docs/m28-log.md`, entry 5) |
+
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
 
@@ -85,5 +93,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$9.937 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
+| Modal | \$13.813 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
 | Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |
