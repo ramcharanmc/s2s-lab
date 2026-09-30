@@ -5,17 +5,21 @@ R4 on Modal: the S2S rung on an L40S, with R3 beside it in the same container.
     modal run modal_app/r4_bench.py --rung r3-gpu,r4-gpu --evalset --limit 8
     modal run modal_app/r4_bench.py --rung r3-gpu,r4-gpu --evalset           the R4 row, saved to runs/<rung>/evalset-modal-l40s.json
     modal run modal_app/r4_bench.py::pairs --split dev                       PR-008's development: both rungs answer the 21 dev prosody pairs
+    modal run modal_app/r4_bench.py --rung r0-gpu,r1-gpu,r2-gpu,r2-gpu-turbo,r3-gpu,r4-gpu --evalset --tag ladder
+                                                                             M28: the ladder, R0 to R4, in ONE L40S container
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
            saves the run's JSON and prints the report (scoring needs no GPU)
   image    CUDA 12.6, Python 3.12, torch, transformers, R0's model libraries
            (Kokoro for R3), and the weights: Qwen2.5-Omni-7B (about 22 GB),
-           Qwen2-Audio-7B-Instruct and Kokoro for the R3 comparator -- all
-           fetched on CPU at build time
+           Qwen2-Audio-7B-Instruct and Kokoro for the R3 comparator, and R0 to
+           R2's recognizers and LLM (M28) -- all fetched on CPU at build time
   L40S     48 GB: Omni's ~20 GB of bf16 weights plus the activations of a
            15 s clip do not fit the A10, which is why R4 lives on this card and
-           R3 is re-measured here rather than read off its A10 row (M13's rule)
+           R3 is re-measured here rather than read off its A10 row (M13's rule).
+           It is the one card that holds every rung, so M28 runs the whole
+           ladder here: R0 to R4 in one container, R5 in r5_bench --gpu l40s
 
 The same guardrails as r0_bench: explicit timeout, no container kept warm,
 scale down 60 s after the call, HF_HUB_OFFLINE=1, one container per run, the
@@ -40,11 +44,27 @@ MODELS = {
     "hexgrad/Kokoro-82M": ["config.json", "kokoro-v1_0.pth", "voices/af_heart.pt"],   # R3's voice
 }
 
+# M28: R0 to R2 in the same container as R3 and R4. Their voice is Kokoro's af_heart, above.
+# A layer of its own, after the others, so the cached layers above are not rebuilt.
+LADDER_MODELS = {
+    "Systran/faster-whisper-base.en": None,                     # R0, R1, R2's live tier
+    "Systran/faster-whisper-small.en": None,                    # R2's slow tier
+    "mobiuslabsgmbh/faster-whisper-large-v3-turbo": None,       # R2 turbo's slow tier
+    "Qwen/Qwen2.5-0.5B-Instruct": None,                         # R0 to R2's LLM
+}
+
 
 def download_weights() -> None:
     """Runs once, inside the image build, on CPU."""
     from huggingface_hub import snapshot_download
     for repo, files in MODELS.items():
+        snapshot_download(repo, allow_patterns=files)
+
+
+def download_ladder() -> None:
+    """R0 to R2's weights (M28), once, inside the image build, on CPU."""
+    from huggingface_hub import snapshot_download
+    for repo, files in LADDER_MODELS.items():
         snapshot_download(repo, allow_patterns=files)
 
 
@@ -63,6 +83,7 @@ image = (
     .pip_install("torch==2.14.0", "torchvision==0.29.0", index_url="https://download.pytorch.org/whl/cu126")
     .pip_install("pillow==11.3.0")
     .apt_install("gcc")                     # torch 2.14's Triton helpers compile a C stub on first use
+    .run_function(download_ladder)
     .env({"HF_HUB_OFFLINE": "1"})
     .add_local_dir(REPO / "src" / "s2slab", "/root/s2slab", ignore=["**/__pycache__"])
     .add_local_dir(REPO / "probes" / "endpointing", "/root/probes/endpointing")
@@ -108,7 +129,8 @@ def bench(rung_ids: list[str]) -> dict:
     return {"gpu": _gpu_name(), "versions": _versions(), "tables": tables, "seconds": time.perf_counter() - t0}
 
 
-@app.function(gpu="L40S", timeout=90 * 60, scaledown_window=60)   # R4 at ~8 s a turn: 200 turns ~30 min, R3 ~4
+# R4 at ~8 s a turn: 200 turns ~30 min, R3 ~4; with R0 to R2 before them (M28) about 50 min in all.
+@app.function(gpu="L40S", timeout=120 * 60, scaledown_window=60)
 def evaluate(rung_ids: list[str], commit: str, limit: int = 0) -> dict:
     """Each rung over the frozen eval set, one container (r0_bench.evaluate, on the L40S)."""
     import os
@@ -165,7 +187,7 @@ def main(rung: str = "r4-gpu", evalset: bool = False, limit: int = 0, tag: str =
     rung_ids = [r.strip() for r in rung.split(",") if r.strip()]
     if evalset and not limit:
         for r in rung_ids:
-            refuse_to_overwrite(results_path(r))
+            refuse_to_overwrite(results_path(r, tag=tag))      # the name this run will save under
     commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
                             capture_output=True, text=True).stdout.strip()
     t0 = time.time()

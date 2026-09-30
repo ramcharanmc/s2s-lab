@@ -134,6 +134,26 @@ def test_the_r4_image_holds_every_model_the_rungs_it_runs_load(r4_bench):
     assert r4_bench.L40S_DOLLARS_PER_HOUR == 1.95
 
 
+@pytest.mark.parametrize("rung_id", ["r0-gpu", "r1-gpu", "r2-gpu", "r2-gpu-turbo"])
+def test_the_r4_image_also_holds_r0_to_r2_so_the_ladder_runs_in_one_l40s_container(r0_bench, r4_bench, rung_id):
+    """M28: offline, a model missing from the image fails at load, on the L40S's meter."""
+    held = {**r4_bench.MODELS, **r4_bench.LADDER_MODELS}
+    rung = get(rung_id)
+    assert r0_bench.whisper_repo(rung.asr.model_name) in held          # R2's is its slow tier
+    assert rung.llm.model_name in held
+    assert f"voices/{rung.tts.voice}.pt" in r4_bench.MODELS["hexgrad/Kokoro-82M"]
+
+
+def test_a_tagged_l40s_run_is_refused_only_under_its_own_name(r4_bench):
+    """The untagged R3 and R4 L40S runs are recorded; a run tagged `ladder` must not be refused for them."""
+    from s2slab.sidechannel import refuse_to_overwrite
+    assert r4_bench.results_path("r4-gpu").exists()
+    with pytest.raises(FileExistsError):
+        refuse_to_overwrite(r4_bench.results_path("r4-gpu"))
+    assert r4_bench.results_path("r4-gpu", tag="ladder").name == "evalset-modal-l40s-ladder.json"
+    refuse_to_overwrite(r4_bench.results_path("r4-gpu", tag="ladder"))
+
+
 def test_the_l40s_run_is_saved_as_evidence_and_its_smoke_test_is_not(r4_bench):
     assert r4_bench.results_path("r4-gpu").relative_to(ROOT).parts == ("runs", "r4-gpu", "evalset-modal-l40s.json")
     assert r4_bench.results_path("r3-gpu", tag="m20").name == "evalset-modal-l40s-m20.json"
@@ -175,6 +195,17 @@ def test_the_personaplex_image_pins_the_adapters_weights_and_runs_on_functions_o
     assert hasattr(r5_bench.smoke_personaplex, "remote") and hasattr(r5_bench.evaluate_personaplex, "remote")
     with pytest.raises(KeyError):
         r5_bench.functions("r5-nothing")
+
+
+def test_on_the_l40s_r5_runs_the_eval_set_on_each_models_own_image_under_its_own_name(r5_bench):
+    """M28: the R5 row on the card that holds every rung; the A10 run's name is untouched."""
+    assert r5_bench.functions("r5-moshi", "l40s") == (None, r5_bench.evaluate_l40s)
+    assert r5_bench.functions("r5-personaplex", "l40s") == (None, r5_bench.evaluate_personaplex_l40s)
+    assert r5_bench.results_path("r5-moshi", True, tag="ladder", gpu="l40s").relative_to(ROOT).parts == \
+        ("runs", "r5-moshi", "evalset-modal-l40s-ladder.json")
+    assert r5_bench.results_path("r5-personaplex", True, limit=8, tag="ladder", gpu="l40s").relative_to(ROOT).parts[0] == "results"
+    assert r5_bench.results_path("r5-moshi", True).name == "evalset-modal-a10.json"
+    assert r5_bench.RATES == {"a10": ("A10", 1.10), "l40s": ("L40S", 1.95)}
 
 
 

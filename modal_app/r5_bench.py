@@ -5,6 +5,9 @@ R5 on Modal: full-duplex models on an A10, driven by s2slab.duplex.
     modal run modal_app/r5_bench.py --evalset --limit 8              eval-set smoke test -> results/
     modal run modal_app/r5_bench.py --evalset                        the R5 row -> runs/r5-moshi/evalset-modal-a10.json
     modal run modal_app/r5_bench.py --model r5-personaplex           the same three, for PersonaPlex
+    modal run modal_app/r5_bench.py --evalset --gpu l40s --tag ladder
+                                                                     M28: the R5 row on the L40S, the card that
+                                                                     holds every rung (either model; eval set only)
     modal run modal_app/r5_bench.py::dialogues --limit 50            FT-1 dev: Moshi answering the user
                                                                      channel of DailyTalk dev dialogues
     modal run modal_app/r5_bench.py::pr010 --confirm PR-010          FT-1's registered test: base Moshi,
@@ -218,6 +221,17 @@ def evaluate_personaplex(model_id: str, commit: str, limit: int = 0) -> dict:
     return _evaluate(model_id, commit, limit)
 
 
+# M28: the same eval-set run on the L40S, the one card that holds every rung (R4 does not fit the A10).
+@app.function(gpu="L40S", timeout=120 * 60, scaledown_window=60)
+def evaluate_l40s(model_id: str, commit: str, limit: int = 0) -> dict:
+    return _evaluate(model_id, commit, limit)
+
+
+@app.function(gpu="L40S", timeout=120 * 60, scaledown_window=60, image=personaplex_image)
+def evaluate_personaplex_l40s(model_id: str, commit: str, limit: int = 0) -> dict:
+    return _evaluate(model_id, commit, limit)
+
+
 # --------------------------------------------------------------------------- #
 # FT-1: Moshi answering the user channel of DailyTalk dialogues (dev fold only)
 # --------------------------------------------------------------------------- #
@@ -393,29 +407,39 @@ def pr010(confirm: str = "", listen: int = 3):
           f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
 
 
-def functions(model_id: str):
-    """(smoke, evaluate) on the image that carries this model's package."""
-    return {"r5-moshi": (smoke, evaluate), "r5-personaplex": (smoke_personaplex, evaluate_personaplex)}[model_id]
+def functions(model_id: str, gpu: str = "a10"):
+    """(smoke, evaluate) on the image that carries this model's package, on the named card.
+    On the L40S there is no probe smoke test: the eval set with --limit is the smoke test."""
+    return {("r5-moshi", "a10"): (smoke, evaluate), ("r5-personaplex", "a10"): (smoke_personaplex, evaluate_personaplex),
+            ("r5-moshi", "l40s"): (None, evaluate_l40s),
+            ("r5-personaplex", "l40s"): (None, evaluate_personaplex_l40s)}[(model_id, gpu)]
 
 
-def results_path(model_id: str, evalset: bool, limit: int = 0, tag: str = "") -> pathlib.Path:
-    """runs/<model>/evalset-modal-a10[-tag].json for the full eval set (committed evidence);
+RATES = {"a10": ("A10", A10_DOLLARS_PER_HOUR), "l40s": ("L40S", L40S_DOLLARS_PER_HOUR)}
+
+
+def results_path(model_id: str, evalset: bool, limit: int = 0, tag: str = "", gpu: str = "a10") -> pathlib.Path:
+    """runs/<model>/evalset-modal-<gpu>[-tag].json for the full eval set (committed evidence);
     results/<model>/... for a smoke test or a --limit run (ignored)."""
     suffix = f"-{tag}" if tag else ""
     if not evalset:
-        return REPO / "results" / model_id / f"probes-modal-a10{suffix}.json"
+        return REPO / "results" / model_id / f"probes-modal-{gpu}{suffix}.json"
     if limit:
-        return REPO / "results" / model_id / f"evalset-modal-a10{suffix}-limit{limit}.json"
-    return REPO / "runs" / model_id / f"evalset-modal-a10{suffix}.json"
+        return REPO / "results" / model_id / f"evalset-modal-{gpu}{suffix}-limit{limit}.json"
+    return REPO / "runs" / model_id / f"evalset-modal-{gpu}{suffix}.json"
 
 
 @app.local_entrypoint()
-def main(model: str = "r5-moshi", evalset: bool = False, limit: int = 0, tag: str = ""):
+def main(model: str = "r5-moshi", evalset: bool = False, limit: int = 0, tag: str = "", gpu: str = "a10"):
     from s2slab.duplex import report, save
     from s2slab.sidechannel import refuse_to_overwrite
 
-    run_smoke, run_evaluate = functions(model)
-    path = results_path(model, evalset, limit, tag)
+    if gpu not in RATES:
+        raise SystemExit(f"--gpu is a10 or l40s, not {gpu}")
+    if gpu != "a10" and not evalset:
+        raise SystemExit("on the L40S only the eval set runs: add --evalset (with --limit 8 for a smoke test)")
+    run_smoke, run_evaluate = functions(model, gpu)
+    path = results_path(model, evalset, limit, tag, gpu)
     if (REPO / "runs") in path.parents:
         refuse_to_overwrite(path)
     commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
@@ -436,5 +460,6 @@ def main(model: str = "r5-moshi", evalset: bool = False, limit: int = 0, tag: st
     if out.get("listen"):
         print(f"listen: results/{model}/listen/ -- caller on the left, {model} on the right")
     print(results.get("versions", ""))
+    card, rate = RATES[gpu]
     print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
-          f"about ${wall / 3600 * A10_DOLLARS_PER_HOUR:.3f} at the A10 rate. Modal's dashboard has the exact bill.")
+          f"about ${wall / 3600 * rate:.3f} at the {card} rate. Modal's dashboard has the exact bill.")
