@@ -48,10 +48,11 @@ MAX_TURN_S = 60.0             # ~25 prompt tokens a second of audio, plus ~110 o
 EOS = (8292, 8294)            # the Talker's end codes (generate's talker_eos_token_id)
 SAMPLES_PER_CODE = 480        # 24 kHz at 50 codes a second (measured in step 1: 480 on every reply)
 XFADE_CODES = 1               # neighbouring blocks overlap by one code, 20 ms, and are crossfaded
-# The stream's settings, in codes: set on the probe clips by streamdev (docs/m31-log.md), then frozen.
+# The stream's setting, frozen for PR-015: on the 30 probe clips (runs/r4-gpu/stream-dev-l40s.json), the
+# lowest first-sound p50 among the settings and start buffers with no stalled turn (docs/m31-log.md, step 2).
 FIRST_CODES = 24
 BLOCK_CODES = 96
-START_BUFFER_S = 0.0
+START_BUFFER_S = 0.5
 
 
 class FastOmni:

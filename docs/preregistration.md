@@ -29,6 +29,7 @@ Rules, from the v1 Research plan (§8):
 | PR-012 | On eight sentences neither voice has spoken, do renders made by giving page 09's severity targets to FastPitch as its own inputs meet PR-009's five criteria, over the base LJSpeech voice and a 5-minute fine-tune together? | `89edd05` | **Reported: not supported** (all five criteria failed, as predicted: S1 92 of 96, S2 14 of 32, S3 357 of 384, S4 109 of 192, 56.8%, S5 115 of 192, 59.9%; rate on target in 192 of 192; the base voice 67 and 78 of 96 on S4 and S5, the 5-minute fine-tune 42 and 37) |
 | PR-013 | On two voices and 24 sentences no copy has spoken: when Kokoro-82M is quantized to 8 bits, has its pitch left PR-009's guardrail by more than the package's own noise while its words have stayed (Claim A), and is the fp16 copy a usable rung on a CPU (Claim B)? | `192dd8a` | **Reported: Claim A supported** (the 8-bit copy's pitch is lower than fp32's on 48 of 48 renders, by 3.96 Hz, interval -4.36 to -3.58, the noise floor 1.44; within 3 Hz on 12 of 48; its normalized WER +0.24 points, 10 errors against 8 in 820 words); **Claim B not supported** (fp16 returned no audio for 6 of 48 renders) |
 | PR-014 | On real speech, does an endpointer that ends the turn when a voice-activity-projection model (VAP) projects the system to speak next cut off fewer disfluent turns than T1b, without making clean speakers wait longer? | `ac3a932` | **Reported: not run: no θ met the registered rule on DEV, with a silent partner or with the system's prompt; VAP rated the speaker's own pauses above the end of the turn** |
+| PR-015 | On the eval set, does R4 streamed let the caller hear its reply sooner than R4, without stalling, a much longer turn or garbled words? | The commit that adds this entry | Open |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -3409,3 +3410,130 @@ audio, does not mark the end of these turns in time, with or without a spoken pr
 show that VAP fails on dialogue: the DEV recordings are one speaker reading and dictating with long
 deliberate pauses, not answering a question in conversation; and nothing here was tested on the eval
 set.
+
+---
+
+## PR-015 — R4 streamed: the reply heard sooner, without stalls
+
+**Registered:** 2026-10-04, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+R4 (Qwen2.5-Omni-7B, which hears the turn and speaks its own reply) waited 6,859 ms for its first audio
+on the eval set (M28), every other rung under 700 ms. M31 found why (`docs/m31-log.md`): its Thinker,
+Talker and token2wav each run to the end before the next begins, and the Talker, 75% of the time, runs
+at real time. Two rungs were built on R4's model, prompt, greedy text, voice and seed:
+`r4-gpu-fast` (the Talker's layers compiled, the reply decoded whole) and `r4-gpu-stream` (the same
+Talker, its codes decoded a block at a time by the compiled DiT and handed out as they are made).
+
+On the 30 probe clips (`runs/r4-gpu/stream-dev-l40s.json`, development): with no start buffer, the
+stream's first sound came at 1,629 ms (p50) but every turn stalled, its first 0.46 s of audio
+followed 1.65 s later by the next block; holding playback for 0.5 s of audio, 3,284 ms against R4's
+5,865, and no turn stalled. Its codes were the fast rung's on 30 of 30 turns; Whisper heard 9 errors in
+622 words against R4's 6; the author listened to three replies of each and heard nothing at the edges.
+
+### Question
+
+On the frozen eval set, does the streamed R4 let the caller hear its reply sooner than R4, at the
+median and in the tail, without stalling, without a much longer turn, and without garbling the words?
+
+### The rungs
+
+- **`r4-gpu`**, R4 as measured since M20, run again in the same container.
+- **`r4-gpu-stream`**, as frozen in this commit (`src/s2slab/r4stream.py`): the first block 24 codes,
+  then blocks of 96, each decoded in a window two DiT blocks back and one ahead and crossfaded over one
+  code; playback held until 0.5 s of audio exists. **The setting was chosen on the development run, by a
+  rule written after that run was seen**: the lowest first-sound p50 among the settings and start
+  buffers with no stalled turn. (24, 96) at 0.5 s: 3,284 ms; (48, 96) needed 1 s (3,592); (24, 192)
+  0.5 s (4,641).
+- **`r4-gpu-fast`**, in the same run, reported and not tested: it separates what compiling the Talker
+  buys from what streaming buys.
+
+### Test data
+
+The frozen eval set, 200 clips, 50 each of clean, accented, disfluent and slow. R4 has answered them
+before (M20, M28); `r4-gpu-fast` and `r4-gpu-stream` never have.
+
+### Validity requirements
+
+- **V1 · The same words.** The stream's reply text is R4's on at least 190 of 200 turns. The Thinker is
+  untouched and greedy; development: 30 of 30.
+- **V2 · The same Talker.** The stream's codes are `r4-gpu-fast`'s on at least 190 of 200 turns, so the
+  block decoding did not change what the Talker said; development: 30 of 30.
+- **V3 · Fixed before data.** This entry, the frozen setting, `src/s2slab/pr015.py` and the command are
+  committed before the run; the run records its commit.
+- **V4 · Once.** The run is refused without `--confirm PR-015`, if its file exists, or from a tree with
+  uncommitted changes.
+
+If V1 or V2 fails, the result is **not a valid test** and is reported as such. If V3 or V4 fails, it is
+reported as **exploratory**.
+
+### Primary outcome
+
+First sound (`rungs.Turn.first_sound_ms`: when the caller would hear the first voiced sample), the
+stream against R4, on the same clip.
+
+### Success criteria — all five must hold
+
+| | Criterion |
+|---|---|
+| **S1 · Median** | The stream's first-sound p50 ≤ **0.70** of R4's. |
+| **S2 · Tail** | The stream's first-sound p90 ≤ **0.55** of R4's. |
+| **S3 · Speed guardrail** | The stream's total p50 ≤ **1.40** of R4's. |
+| **S4 · Stall guardrail** | At most **20 of 200** stream turns stall at all (`stall_ms > 0`), and at most **10 of 200** for more than 200 ms. |
+| **S5 · Words** | Whisper small.en's word error rate on the stream's reply audio, against the Thinker's text, at most R4's **+ 2.0 points**. |
+
+**Confidence.** For S1 to S3 the statistic is a ratio of percentiles; a paired bootstrap resamples the
+200 clip ids with replacement (10,000 resamples, seed 0, percentile interval), recomputing both rungs'
+percentiles on each resample, as PR-002's did. The criterion holds only if the **upper end of the 95%
+interval** is at or below the bar. S4 is a count and S5 a pooled rate, both taken as observed. No
+multiplicity correction: success needs all five at once.
+
+**Why these bars.** On development: S1 0.56 (95% interval 0.46 to 0.61), S2 0.34 (0.31 to 0.43),
+S3 1.22 (1.08 to 1.24). The eval set's replies are longer than the probe clips' (R4's p50 7.4 s against
+6.2), and the stream's first sound waits for its second block whatever the reply's length, so S1 and S2
+should fall on the eval set; both bars sit above the development intervals. S3 is a guardrail on GPU
+time a turn, not a target: the stream's samples run longer and its windows overlap. S4 keeps PR-002's
+tolerance: no development turn stalled, but the smallest margin before a stall was 102 ms (median
+725). S5: development 1.4% against 1.0%.
+
+**PR-002's third criterion is not used.** The stream's first sound still grows with the reply's length
+(r = 0.98 on development): the Thinker writes its whole text before the Talker begins. A stream that
+starts from the Thinker's first words is not built; it is recorded under *What this cannot show*.
+
+### Predictions, recorded but not criteria
+
+- S1 about 0.50, S2 about 0.33, S3 about 1.2, a few stalls at most, the word error rates within a point.
+- `r4-gpu-fast`'s total within 10% of R4's on a container as fast as the development one; well under it
+  on a slower one (the eager Talker took 13 to 20 ms a code across containers, compiled about 13).
+
+### Reported alongside, descriptively
+
+`r4-gpu-fast` against R4 (total, its word error rate); first sound and total by cohort; every stall;
+reply lengths; the run's cost.
+
+### What this cannot show
+
+- **Processing time only**: no endpointer wait, no network, no audio device. Stalls are modelled from
+  when each piece existed.
+- **One container**: same-card containers differed by up to 27% (M28). The three rungs share one.
+- **The Thinker still comes first**: the stream starts when the Talker has written its first blocks,
+  after the whole text.
+- **Whisper is the listener**: a word error rate on the reply audio, not a listening test; the author
+  listened to three development replies of each rung.
+- **The fast rung's gain depends on the host** (step 1b and the development run), and is not tested.
+
+### Analysis plan
+
+1. Commit this entry, the frozen setting, `src/s2slab/pr015.py` and the command (V3).
+2. The one run: `modal run modal_app/r4_bench.py::pr015 --confirm PR-015`.
+3. The results below, verbatim; then, labelled exploratory, the stalls and the cohorts.
+
+### Deviations
+
+*None.*
+
+### Results
+
+*Not yet run.*

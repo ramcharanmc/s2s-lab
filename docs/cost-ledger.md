@@ -74,6 +74,7 @@ one. A failed run is still a row, since it was still billed.
 | 2026-10-04 | `911fea3` | `modal run modal_app/r4_bench.py::profile` | L40S | 506 s | 513 s | \$0.278 | **M31, step 1: R4's stages timed** on the 30 probe clips: the Talker 75% of the time at real time (19.8 ms a code); token2wav about 890 ms for any block of 25 to 100 codes (`docs/m31-log.md`, entry 3) |
 | 2026-10-04 | `f7e8d99` | `modal run modal_app/r4_bench.py::speed` | L40S | 298 s | 303 s | \$0.164 | **M31, step 1b, first run**: the DiT compiled 4.2, 3.2 and 2.1 times faster on 25, 50 and 100 codes; both static Talker variants failed (`TypeError`, `int` minus `dict`; `docs/m31-log.md`, entries 5 and 6) |
 | 2026-10-04 | `567e7f2` | `modal run modal_app/r4_bench.py::speed --tag mask` | L40S | 521 s | 530 s | \$0.287 | **M31, step 1b, second run**: the Talker with its layers compiled, 12.7 ms a code (0.63 of real time; eager 20.2); its codes part from eager's on 10 of 10; the DiT as before (`docs/m31-log.md`, entry 7) |
+| 2026-10-04 | `ceae735` | `modal run modal_app/r4_bench.py::streamdev` | L40S | 1,256 s | 1,264 s | \$0.685 | **M31, step 2, development**: R4, `r4-gpu-fast` and the stream at three settings on the 30 probe clips: first sound 1,629 ms with every turn stalling, 3,284 held to 0.5 s with none, against R4's 5,865 (`docs/m31-log.md`, entry 9) |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -82,5 +83,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$14.542 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
+| Modal | \$15.227 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
 | Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |

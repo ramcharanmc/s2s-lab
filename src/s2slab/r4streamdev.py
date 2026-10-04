@@ -108,10 +108,13 @@ class _CodeTap:
         del self.t2w.forward
 
 
-def run(clips: dict, sr: int, asr=None, base=None, settings=SETTINGS, make_fast=None) -> dict:
+def run(clips: dict, sr: int, asr=None, base=None, settings=SETTINGS, make_fast=None,
+        start_buffer_s: float = 0.0, listen: int = LISTEN) -> dict:
     """R4, r4-gpu-fast and r4-gpu-stream at each setting, every clip, one set of weights (see the docstring).
     asr: anything with load() and transcribe(audio at 16 kHz) -> str (default Whisper small.en on CUDA);
-    make_fast(base) -> the fast model on R4's weights (default FastOmni(base))."""
+    make_fast(base) -> the fast model on R4's weights (default FastOmni(base)); start_buffer_s: the
+    stream's own start buffer (development: 0, and the buffers computed afterwards; PR-015: frozen);
+    listen: replies of each rung kept as WAVs."""
     from .r0 import WhisperASR
     from .r4 import OmniS2S, SpeechToSpeech
     from .r4stream import FastOmni, FastSpeechToSpeech, StreamingSpeechToSpeech, check_blocks
@@ -119,7 +122,8 @@ def run(clips: dict, sr: int, asr=None, base=None, settings=SETTINGS, make_fast=
     asr.load()
     base = base or OmniS2S()
     rungs: dict = {}
-    listen: dict = {}
+    listened: dict = {}
+    keep = listen
     fast_codes: dict = {}
 
     def through(name, rung, codes_of):
@@ -133,8 +137,8 @@ def run(clips: dict, sr: int, asr=None, base=None, settings=SETTINGS, make_fast=
                 fast_codes[clip] = codes
             elif name.startswith("r4-gpu-stream") and codes is not None and clip in fast_codes:
                 rows[clip]["codes_as_fast"] = codes == fast_codes[clip]
-            if i < LISTEN:
-                listen[f"{name}/{clip}.wav"] = wav_bytes(turn.audio)
+            if i < keep:
+                listened[f"{name}/{clip}.wav"] = wav_bytes(turn.audio)
         rungs[name] = {"load_ms": round(load_ms, 1), "turns": rows}
 
     r4 = SpeechToSpeech(base)
@@ -150,14 +154,14 @@ def run(clips: dict, sr: int, asr=None, base=None, settings=SETTINGS, make_fast=
     finally:
         tap.close()
     for first, block in settings:
-        rung = StreamingSpeechToSpeech(fast, first=first, block=block)
+        rung = StreamingSpeechToSpeech(fast, first=first, block=block, start_buffer_s=start_buffer_s)
         through(f"r4-gpu-stream/{first}+{block}", rung, lambda r=rung: r.last_codes)
     for name, r in rungs.items():
-        if name.startswith("r4-gpu-stream"):
+        if name.startswith("r4-gpu-stream") and start_buffer_s == 0:
             r["buffers"] = {f"{b:g}": {clip: buffered(t["chunks"], OUT_SR, b, t["leading_silence_ms"])
                                        for clip, t in r["turns"].items()} for b in BUFFERS_S}
     return {"clips": list(clips), "settings": [list(s) for s in settings], "buffers_s": list(BUFFERS_S),
-            "rungs": rungs, "listen": listen}
+            "rungs": rungs, "listen": listened}
 
 
 def _pct(values, p):

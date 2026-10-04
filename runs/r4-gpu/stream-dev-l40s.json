@@ -1,0 +1,6953 @@
+{
+ "run": "M31, step 2: R4, r4-gpu-fast and r4-gpu-stream on the 30 probe clips (development)",
+ "commit": "ceae735",
+ "machine": "Modal NVIDIA L40S, 580.95.05",
+ "versions": "torch 2.14.0+cu126, torchvision 0.29.0+cu126, transformers 5.17.0",
+ "clips": [
+  "f01",
+  "f02",
+  "f03",
+  "f04",
+  "f05",
+  "f06",
+  "f07",
+  "f08",
+  "f09",
+  "f10",
+  "f11",
+  "f12",
+  "c01",
+  "c02",
+  "c03",
+  "c04",
+  "c05",
+  "c06",
+  "c07",
+  "c08",
+  "c09",
+  "c10",
+  "c11",
+  "c12",
+  "n01",
+  "n02",
+  "n03",
+  "n04",
+  "n05",
+  "n06"
+ ],
+ "settings": [
+  [
+   24,
+   96
+  ],
+  [
+   24,
+   192
+  ],
+  [
+   48,
+   96
+  ]
+ ],
+ "buffers_s": [
+  0.0,
+  0.5,
+  1.0,
+  1.5,
+  2.0,
+  3.0
+ ],
+ "rungs": {
+  "r4-gpu": {
+   "load_ms": 0.0,
+   "turns": {
+    "f01": {
+     "total_ms": 5189.0,
+     "first_audio_ms": 5189.0,
+     "first_sound_ms": 5389.0,
+     "stall_ms": 0.0,
+     "reply_s": 5.52,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       5189.0,
+       132480
+      ]
+     ],
+     "reply_text": "Sure, I can help with that. Just let me know the new address and I'll update it for you.",
+     "heard": "Sure, I can help with that. Just let me know the new address and I'll update it for you.",
+     "words": 19,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "f02": {
+     "total_ms": 6816.0,
+     "first_audio_ms": 6816.0,
+     "first_sound_ms": 7036.0,
+     "stall_ms": 0.0,
+     "reply_s": 7.52,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       6816.0,
+       180480
+      ]
+     ],
+     "reply_text": "Got it. The appointment is on the 14th at half past two. Is there anything else you need to know about it?",
+     "heard": "Got it! The appointment is on the 14th at half-past two. Is there anything else you need to know about it?",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "f03": {
+     "total_ms": 3915.2,
+     "first_audio_ms": 3915.2,
+     "first_sound_ms": 4135.2,
+     "stall_ms": 0.0,
+     "reply_s": 4.42,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       3915.2,
+       106080
+      ]
+     ],
+     "reply_text": "That's a great date! When was your last birthday celebration?",
+     "heard": "That's a great date. When was your last birthday celebration?",
+     "words": 10,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "f04": {
+     "total_ms": 3942.9,
+     "first_audio_ms": 3942.9,
+     "first_sound_ms": 4142.9,
+     "stall_ms": 0.0,
+     "reply_s": 4.32,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       3942.9,
+       103680
+      ]
+     ],
+     "reply_text": "Sure thing. Just let me know your work email address so I can send it there.",
+     "heard": "Sure thing. Just let me know your work email address so I can send it there.",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "f05": {
+     "total_ms": 5376.7,
+     "first_audio_ms": 5376.7,
+     "first_sound_ms": 5576.7,
+     "stall_ms": 0.0,
+     "reply_s": 5.8,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       5376.7,
+       139200
+      ]
+     ],
+     "reply_text": "I see. What's the duplicate charge for? And how much are you expecting to be refunded?",
+     "heard": "I see. What's the duplicate charge for, and how much are you expecting to be refunded?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "f06": {
+     "total_ms": 11154.7,
+     "first_audio_ms": 11154.7,
+     "first_sound_ms": 11334.7,
+     "stall_ms": 0.0,
+     "reply_s": 11.48,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       11154.7,
+       275520
+      ]
+     ],
+     "reply_text": "Oh, that's a common medication. Just make sure you take it at the right times and follow your doctor's instructions carefully. If you have any questions about it, feel free to ask me more.",
+     "heard": "Oh, that's a common medication. Just make sure you take it at the right times and follow your doctor's instructions carefully. If you have any questions about it, feel free to ask me more.",
+     "words": 34,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "f07": {
+     "total_ms": 5472.5,
+     "first_audio_ms": 5472.5,
+     "first_sound_ms": 5672.5,
+     "stall_ms": 0.0,
+     "reply_s": 5.82,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       5472.5,
+       139680
+      ]
+     ],
+     "reply_text": "I'm sorry to hear that. It's been a while since you've been waiting. Have you tried calling them again?",
+     "heard": "I'm sorry to hear that. It's been a while since you've been waiting. Have you tried calling them again?",
+     "words": 19,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "f08": {
+     "total_ms": 16744.6,
+     "first_audio_ms": 16744.6,
+     "first_sound_ms": 16944.6,
+     "stall_ms": 0.0,
+     "reply_s": 16.66,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       16744.6,
+       399840
+      ]
+     ],
+     "reply_text": "Well, that can be a bit annoying. Have you checked if there are any error messages on the router's display? And also, make sure all the cables are properly connected. If that doesn't work, you might want to try resetting the router. So, what do you think? Any other",
+     "heard": "Well, that can be a bit annoying. Have you checked if there are any error messages on the router's display? And also, make sure all the cables are properly connected. If that doesn't work, you might want to try resetting the router. So, what do you think? Any?",
+     "words": 49,
+     "word_errors": 1,
+     "n_codes": null
+    },
+    "f09": {
+     "total_ms": 10575.0,
+     "first_audio_ms": 10575.0,
+     "first_sound_ms": 10775.0,
+     "stall_ms": 0.0,
+     "reply_s": 11.44,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       10575.0,
+       274560
+      ]
+     ],
+     "reply_text": "Well, that's great. So, what's the account about? Is it a bank account, a social media account, or something else? Let me know so we can figure out how to add you both.",
+     "heard": "Well, that's great. So, what's the account about? Is it a bank account, a social media account, or something else? Let me know so we can figure out how to add you both.",
+     "words": 33,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "f10": {
+     "total_ms": 5520.1,
+     "first_audio_ms": 5520.1,
+     "first_sound_ms": 5720.1,
+     "stall_ms": 0.0,
+     "reply_s": 6.1,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       5520.1,
+       146400
+      ]
+     ],
+     "reply_text": "Sure, I can help with that. Who would you like to speak to about your mother's prescription?",
+     "heard": "Sure, I can help with that. Who would you like to speak to about your mother's prescription?",
+     "words": 17,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "f11": {
+     "total_ms": 7218.7,
+     "first_audio_ms": 7218.7,
+     "first_sound_ms": 7418.7,
+     "stall_ms": 0.0,
+     "reply_s": 7.78,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       7218.7,
+       186720
+      ]
+     ],
+     "reply_text": "Oh, that sounds rough. Did you hurt yourself badly? If you need to talk more about it, feel free to share.",
+     "heard": "Oh, that sounds rough. Did you hurt yourself badly? If you need to talk more about it, feel free to share.",
+     "words": 21,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "f12": {
+     "total_ms": 4225.8,
+     "first_audio_ms": 4225.8,
+     "first_sound_ms": 4425.8,
+     "stall_ms": 0.0,
+     "reply_s": 4.64,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       4225.8,
+       111360
+      ]
+     ],
+     "reply_text": "Sure, we can try to fit you in the morning. When would you like to come?",
+     "heard": "Sure, we can try to fit you in the morning. When would you like to come?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "c01": {
+     "total_ms": 4824.7,
+     "first_audio_ms": 4824.7,
+     "first_sound_ms": 5044.7,
+     "stall_ms": 0.0,
+     "reply_s": 5.3,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       4824.7,
+       127200
+      ]
+     ],
+     "reply_text": "That's a long account number. Is there something specific you want to know about it?",
+     "heard": "That's a long account number. Is there something specific you want to know about it?",
+     "words": 15,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "c02": {
+     "total_ms": 4201.3,
+     "first_audio_ms": 4201.3,
+     "first_sound_ms": 4421.3,
+     "stall_ms": 0.0,
+     "reply_s": 4.6,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       4201.3,
+       110400
+      ]
+     ],
+     "reply_text": "That's a great phone number. Is there anything I can assist you with regarding it?",
+     "heard": "That's a great phone number. Is there anything I can assist you with regarding it?",
+     "words": 15,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "c03": {
+     "total_ms": 5119.6,
+     "first_audio_ms": 5119.6,
+     "first_sound_ms": 5319.6,
+     "stall_ms": 0.0,
+     "reply_s": 5.52,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       5119.6,
+       132480
+      ]
+     ],
+     "reply_text": "Oh, that's a nice place. Is there something you need help with regarding Ashford Road in Croydon?",
+     "heard": "Oh, that's a nice place. Is there something you need help with regarding Ashford Road in Croydon?",
+     "words": 17,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "c04": {
+     "total_ms": 9259.7,
+     "first_audio_ms": 9259.7,
+     "first_sound_ms": 9459.7,
+     "stall_ms": 0.0,
+     "reply_s": 9.82,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       9259.7,
+       235680
+      ]
+     ],
+     "reply_text": "Metformin 500 mg is a common medication. It's often used to treat type 2 diabetes. If you have any questions about it, feel free to ask.",
+     "heard": "Metformin 500 milligram is a common medication. It's often used to treat type 2 diabetes. If you have any questions about it, feel free to ask.",
+     "words": 26,
+     "word_errors": 1,
+     "n_codes": null
+    },
+    "c05": {
+     "total_ms": 3784.3,
+     "first_audio_ms": 3784.3,
+     "first_sound_ms": 3984.3,
+     "stall_ms": 0.0,
+     "reply_s": 4.2,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       3784.3,
+       100800
+      ]
+     ],
+     "reply_text": "Oh, that's great. What did David say about the bill?",
+     "heard": "Oh, that's great. What did David say about the bill?",
+     "words": 10,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "c06": {
+     "total_ms": 4126.8,
+     "first_audio_ms": 4126.8,
+     "first_sound_ms": 4326.8,
+     "stall_ms": 0.0,
+     "reply_s": 4.54,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       4126.8,
+       108960
+      ]
+     ],
+     "reply_text": "That's great! What can I help you with regarding Emily Roberts?",
+     "heard": "That's great! What can I help you with regarding Emily Roberts?",
+     "words": 11,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "c07": {
+     "total_ms": 4447.0,
+     "first_audio_ms": 4447.0,
+     "first_sound_ms": 4647.0,
+     "stall_ms": 0.0,
+     "reply_s": 4.88,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       4447.0,
+       117120
+      ]
+     ],
+     "reply_text": "Got it. When's the order due? Let's make sure we can get it done on time.",
+     "heard": "Got it. When's the order due? Let's make sure we can get it done on time.",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "c08": {
+     "total_ms": 7754.7,
+     "first_audio_ms": 7754.7,
+     "first_sound_ms": 7934.7,
+     "stall_ms": 0.0,
+     "reply_s": 8.34,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       7754.7,
+       200160
+      ]
+     ],
+     "reply_text": "Well, that's not good. Maybe you could check your internet connection? Or try restarting your device? Let me know if that helps.",
+     "heard": "Well, that's not good. Maybe you could check your internet connection, or try restarting your device. Let me know if that helps.",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "c09": {
+     "total_ms": 8227.5,
+     "first_audio_ms": 8227.5,
+     "first_sound_ms": 8427.5,
+     "stall_ms": 0.0,
+     "reply_s": 9.04,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       8227.5,
+       216960
+      ]
+     ],
+     "reply_text": "I'm sorry to hear that. You should probably see a doctor soon. They can give you a proper checkup and treatment. How's your cough affecting your daily life?",
+     "heard": "I'm sorry to hear that. You should probably see a doctor soon. They can give you a proper checkup and treatment. How's your cough affecting your daily life?",
+     "words": 28,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "c10": {
+     "total_ms": 6607.0,
+     "first_audio_ms": 6607.0,
+     "first_sound_ms": 6807.0,
+     "stall_ms": 0.0,
+     "reply_s": 7.24,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       6607.0,
+       173760
+      ]
+     ],
+     "reply_text": "Oh, Victor 278? That's a flight number. Is there anything else you need to know about it?",
+     "heard": "Oh, Victor 278? That's a flight number. Is there anything else you need to know about it?",
+     "words": 17,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "c11": {
+     "total_ms": 7456.6,
+     "first_audio_ms": 7456.6,
+     "first_sound_ms": 7656.6,
+     "stall_ms": 0.0,
+     "reply_s": 8.1,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       7456.6,
+       194400
+      ]
+     ],
+     "reply_text": "Oh, I see. So, you're looking for a new charger for your silver laptop. What kind of charger are you thinking of getting?",
+     "heard": "Oh, I see. So you are looking for a new charger for your silver laptop. What kind of charger are you thinking of getting?",
+     "words": 23,
+     "word_errors": 2,
+     "n_codes": null
+    },
+    "c12": {
+     "total_ms": 6168.5,
+     "first_audio_ms": 6168.5,
+     "first_sound_ms": 6368.5,
+     "stall_ms": 0.0,
+     "reply_s": 6.72,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       6168.5,
+       161280
+      ]
+     ],
+     "reply_text": "That's a total of \u00a384.50. If you need to know how to pay or what to do next, just let me know.",
+     "heard": "That's a total of \u00a384.50. If you need to know how to pay or what to do next, just let me know.",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "n01": {
+     "total_ms": 11878.7,
+     "first_audio_ms": 11878.7,
+     "first_sound_ms": 12078.7,
+     "stall_ms": 0.0,
+     "reply_s": 12.14,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       11878.7,
+       291360
+      ]
+     ],
+     "reply_text": "Oh, you're looking for 742 Evergreen Terrace in Springfield, Oregon? That's a great place. If you need more info about it, like what's around there or if it's a good neighborhood, just let me know.",
+     "heard": "Oh, you are looking for 742 Evergreen Terrace in Springfield, Oregon? That's a great place. If you need more info about it, like what's around there or if it's a good neighborhood, just let me know.",
+     "words": 35,
+     "word_errors": 2,
+     "n_codes": null
+    },
+    "n02": {
+     "total_ms": 5511.0,
+     "first_audio_ms": 5511.0,
+     "first_sound_ms": 5711.0,
+     "stall_ms": 0.0,
+     "reply_s": 5.96,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       5511.0,
+       143040
+      ]
+     ],
+     "reply_text": "I'm sorry, I don't understand what you're trying to say. Can you please repeat or clarify?",
+     "heard": "I'm sorry, I don't understand what you're trying to say. Can you please repeat or clarify?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "n03": {
+     "total_ms": 5829.1,
+     "first_audio_ms": 5829.1,
+     "first_sound_ms": 6009.1,
+     "stall_ms": 0.0,
+     "reply_s": 6.4,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       5829.1,
+       153600
+      ]
+     ],
+     "reply_text": "I'm sorry to hear your package is overdue. Let me check the system for you. It might take a moment.",
+     "heard": "I'm sorry to hear your package is overdue. Let me check the system for you. It might take a moment.",
+     "words": 20,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "n04": {
+     "total_ms": 6212.6,
+     "first_audio_ms": 6212.6,
+     "first_sound_ms": 6432.6,
+     "stall_ms": 0.0,
+     "reply_s": 6.8,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       6212.6,
+       163200
+      ]
+     ],
+     "reply_text": "That sounds really bad. Have you seen a doctor about it yet? It might be something that needs medical attention.",
+     "heard": "That sounds really bad. Have you seen a doctor about it yet? It might be something that needs medical attention.",
+     "words": 20,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "n05": {
+     "total_ms": 4502.1,
+     "first_audio_ms": 4502.1,
+     "first_sound_ms": 4702.1,
+     "stall_ms": 0.0,
+     "reply_s": 5.06,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       4502.1,
+       121440
+      ]
+     ],
+     "reply_text": "Oh, that's interesting. So, what's your question about this?",
+     "heard": "Oh, that's interesting. So, what's your question about this?",
+     "words": 9,
+     "word_errors": 0,
+     "n_codes": null
+    },
+    "n06": {
+     "total_ms": 8123.4,
+     "first_audio_ms": 8123.4,
+     "first_sound_ms": 8343.4,
+     "stall_ms": 0.0,
+     "reply_s": 9.04,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       8123.4,
+       216960
+      ]
+     ],
+     "reply_text": "What about these? Are you looking for information on them? Or do you have a question related to them? Let me know so I can help you better.",
+     "heard": "What about these? Are you looking for information on them? Or do you have a question related to them? Let me know so I can help you better.",
+     "words": 28,
+     "word_errors": 0,
+     "n_codes": null
+    }
+   }
+  },
+  "r4-gpu-fast": {
+   "load_ms": 0.0,
+   "turns": {
+    "f01": {
+     "total_ms": 5131.1,
+     "first_audio_ms": 5131.1,
+     "first_sound_ms": 5331.1,
+     "stall_ms": 0.0,
+     "reply_s": 5.54,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       5131.1,
+       132960
+      ]
+     ],
+     "reply_text": "Sure, I can help with that. Just let me know the new address and I'll update it for you.",
+     "heard": "Sure, I can help with that. Just let me know the new address and I'll update it for you.",
+     "words": 19,
+     "word_errors": 0,
+     "n_codes": 277
+    },
+    "f02": {
+     "total_ms": 6852.7,
+     "first_audio_ms": 6852.7,
+     "first_sound_ms": 7072.7,
+     "stall_ms": 0.0,
+     "reply_s": 7.46,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       6852.7,
+       179040
+      ]
+     ],
+     "reply_text": "Got it. The appointment is on the 14th at half past two. Is there anything else you need to know about it?",
+     "heard": "Got it! The appointment is on the 14th at half-past two. Is there anything else you need to know about it?",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": 373
+    },
+    "f03": {
+     "total_ms": 3841.1,
+     "first_audio_ms": 3841.1,
+     "first_sound_ms": 4041.1,
+     "stall_ms": 0.0,
+     "reply_s": 4.28,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       3841.1,
+       102720
+      ]
+     ],
+     "reply_text": "That's a great date! When was your last birthday celebration?",
+     "heard": "That's a great date. When was your last birthday celebration?",
+     "words": 10,
+     "word_errors": 0,
+     "n_codes": 214
+    },
+    "f04": {
+     "total_ms": 4141.5,
+     "first_audio_ms": 4141.5,
+     "first_sound_ms": 4341.5,
+     "stall_ms": 0.0,
+     "reply_s": 4.54,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       4141.5,
+       108960
+      ]
+     ],
+     "reply_text": "Sure thing. Just let me know your work email address so I can send it there.",
+     "heard": "Sure thing. Just let me know your work email address so I can send it there.",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 227
+    },
+    "f05": {
+     "total_ms": 5452.7,
+     "first_audio_ms": 5452.7,
+     "first_sound_ms": 5652.7,
+     "stall_ms": 0.0,
+     "reply_s": 6.04,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       5452.7,
+       144960
+      ]
+     ],
+     "reply_text": "I see. What's the duplicate charge for? And how much are you expecting to be refunded?",
+     "heard": "I see. What's the duplicate charge for? And how much are you expecting to be refunded?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 302
+    },
+    "f06": {
+     "total_ms": 10931.8,
+     "first_audio_ms": 10931.8,
+     "first_sound_ms": 11111.8,
+     "stall_ms": 0.0,
+     "reply_s": 11.42,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       10931.8,
+       274080
+      ]
+     ],
+     "reply_text": "Oh, that's a common medication. Just make sure you take it at the right times and follow your doctor's instructions carefully. If you have any questions about it, feel free to ask me more.",
+     "heard": "Oh, that's a common medication. Just make sure you take it at the right times and follow your doctor's instructions carefully. If you have any questions about it, feel free to ask me more.",
+     "words": 34,
+     "word_errors": 0,
+     "n_codes": 571
+    },
+    "f07": {
+     "total_ms": 5828.3,
+     "first_audio_ms": 5828.3,
+     "first_sound_ms": 6028.3,
+     "stall_ms": 0.0,
+     "reply_s": 6.48,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       5828.3,
+       155520
+      ]
+     ],
+     "reply_text": "I'm sorry to hear that. It's been a while since you've been waiting. Have you tried calling them again?",
+     "heard": "I'm sorry to hear that. It's been a while since you've been waiting. Have you tried calling them again?",
+     "words": 19,
+     "word_errors": 0,
+     "n_codes": 324
+    },
+    "f08": {
+     "total_ms": 14976.4,
+     "first_audio_ms": 14976.4,
+     "first_sound_ms": 15176.4,
+     "stall_ms": 0.0,
+     "reply_s": 16.16,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       14976.4,
+       387840
+      ]
+     ],
+     "reply_text": "Well, that can be a bit annoying. Have you checked if there are any error messages on the router's display? And also, make sure all the cables are properly connected. If that doesn't work, you might want to try resetting the router. So, what do you think? Any other",
+     "heard": "Well, that can be a bit annoying. Have you checked if there are any error messages on the router's display? And also, make sure all the cables are properly connected. If that doesn't work, you might want to try resetting the router. So what do you think?",
+     "words": 49,
+     "word_errors": 2,
+     "n_codes": 808
+    },
+    "f09": {
+     "total_ms": 9998.5,
+     "first_audio_ms": 9998.5,
+     "first_sound_ms": 10198.5,
+     "stall_ms": 0.0,
+     "reply_s": 10.62,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       9998.5,
+       254880
+      ]
+     ],
+     "reply_text": "Well, that's great. So, what's the account about? Is it a bank account, a social media account, or something else? Let me know so we can figure out how to add you both.",
+     "heard": "Well, that's great. So, what's the account about? Is it a bank account, a social media account, or something else? Let me know so we can figure out how to add you both.",
+     "words": 33,
+     "word_errors": 0,
+     "n_codes": 531
+    },
+    "f10": {
+     "total_ms": 5616.2,
+     "first_audio_ms": 5616.2,
+     "first_sound_ms": 5816.2,
+     "stall_ms": 0.0,
+     "reply_s": 6.22,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       5616.2,
+       149280
+      ]
+     ],
+     "reply_text": "Sure, I can help with that. Who would you like to speak to about your mother's prescription?",
+     "heard": "Sure, I can help with that. Who would you like to speak to about your mother's prescription?",
+     "words": 17,
+     "word_errors": 0,
+     "n_codes": 311
+    },
+    "f11": {
+     "total_ms": 6505.4,
+     "first_audio_ms": 6505.4,
+     "first_sound_ms": 6705.4,
+     "stall_ms": 0.0,
+     "reply_s": 7.36,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       6505.4,
+       176640
+      ]
+     ],
+     "reply_text": "Oh, that sounds rough. Did you hurt yourself badly? If you need to talk more about it, feel free to share.",
+     "heard": "Oh, that sounds rough. Did you hurt yourself badly? If you need to talk more about it, feel free to share.",
+     "words": 21,
+     "word_errors": 0,
+     "n_codes": 368
+    },
+    "f12": {
+     "total_ms": 4139.6,
+     "first_audio_ms": 4139.6,
+     "first_sound_ms": 4339.6,
+     "stall_ms": 0.0,
+     "reply_s": 4.52,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       4139.6,
+       108480
+      ]
+     ],
+     "reply_text": "Sure, we can try to fit you in the morning. When would you like to come?",
+     "heard": "Sure, we can try to fit you in the morning. When would you like to come?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 226
+    },
+    "c01": {
+     "total_ms": 4240.8,
+     "first_audio_ms": 4240.8,
+     "first_sound_ms": 4460.8,
+     "stall_ms": 0.0,
+     "reply_s": 4.68,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       4240.8,
+       112320
+      ]
+     ],
+     "reply_text": "That's a long account number. Is there something specific you want to know about it?",
+     "heard": "That's a long account number. Is there something specific you want to know about it?",
+     "words": 15,
+     "word_errors": 0,
+     "n_codes": 234
+    },
+    "c02": {
+     "total_ms": 4136.8,
+     "first_audio_ms": 4136.8,
+     "first_sound_ms": 4336.8,
+     "stall_ms": 0.0,
+     "reply_s": 4.54,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       4136.8,
+       108960
+      ]
+     ],
+     "reply_text": "That's a great phone number. Is there anything I can assist you with regarding it?",
+     "heard": "That's a great phone number. Is there anything I can assist you with regarding it?",
+     "words": 15,
+     "word_errors": 0,
+     "n_codes": 227
+    },
+    "c03": {
+     "total_ms": 5487.9,
+     "first_audio_ms": 5487.9,
+     "first_sound_ms": 5687.9,
+     "stall_ms": 0.0,
+     "reply_s": 5.98,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       5487.9,
+       143520
+      ]
+     ],
+     "reply_text": "Oh, that's a nice place. Is there something you need help with regarding Ashford Road in Croydon?",
+     "heard": "Oh, that's a nice place. Is there something you need help with regarding Ashford Road in Croydon?",
+     "words": 17,
+     "word_errors": 0,
+     "n_codes": 299
+    },
+    "c04": {
+     "total_ms": 8963.7,
+     "first_audio_ms": 8963.7,
+     "first_sound_ms": 9163.7,
+     "stall_ms": 0.0,
+     "reply_s": 9.58,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       8963.7,
+       229920
+      ]
+     ],
+     "reply_text": "Metformin 500 mg is a common medication. It's often used to treat type 2 diabetes. If you have any questions about it, feel free to ask.",
+     "heard": "Metformin 500 mg is a common medication. It's often used to treat type 2 diabetes. If you have any questions about it, feel free to ask.",
+     "words": 26,
+     "word_errors": 0,
+     "n_codes": 479
+    },
+    "c05": {
+     "total_ms": 3551.8,
+     "first_audio_ms": 3551.8,
+     "first_sound_ms": 3751.8,
+     "stall_ms": 0.0,
+     "reply_s": 3.86,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       3551.8,
+       92640
+      ]
+     ],
+     "reply_text": "Oh, that's great. What did David say about the bill?",
+     "heard": "Oh, that's great. What did David say about Gebil?",
+     "words": 10,
+     "word_errors": 2,
+     "n_codes": 193
+    },
+    "c06": {
+     "total_ms": 3809.9,
+     "first_audio_ms": 3809.9,
+     "first_sound_ms": 4009.9,
+     "stall_ms": 0.0,
+     "reply_s": 4.2,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       3809.9,
+       100800
+      ]
+     ],
+     "reply_text": "That's great! What can I help you with regarding Emily Roberts?",
+     "heard": "That's great. What can I help you with regarding Emily Roberts?",
+     "words": 11,
+     "word_errors": 0,
+     "n_codes": 210
+    },
+    "c07": {
+     "total_ms": 5116.1,
+     "first_audio_ms": 5116.1,
+     "first_sound_ms": 5316.1,
+     "stall_ms": 0.0,
+     "reply_s": 5.56,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       5116.1,
+       133440
+      ]
+     ],
+     "reply_text": "Got it. When's the order due? Let's make sure we can get it done on time.",
+     "heard": "Got it. When's the order due? Let's make sure we can get it done on time.",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 278
+    },
+    "c08": {
+     "total_ms": 7744.1,
+     "first_audio_ms": 7744.1,
+     "first_sound_ms": 7924.1,
+     "stall_ms": 0.0,
+     "reply_s": 8.34,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       7744.1,
+       200160
+      ]
+     ],
+     "reply_text": "Well, that's not good. Maybe you could check your internet connection? Or try restarting your device? Let me know if that helps.",
+     "heard": "Well, that's not good. Maybe you could check your internet connection, or try restarting your device. Let me know if that helps.",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": 417
+    },
+    "c09": {
+     "total_ms": 8789.9,
+     "first_audio_ms": 8789.9,
+     "first_sound_ms": 9009.9,
+     "stall_ms": 0.0,
+     "reply_s": 9.42,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       8789.9,
+       226080
+      ]
+     ],
+     "reply_text": "I'm sorry to hear that. You should probably see a doctor soon. They can give you a proper checkup and treatment. How's your cough affecting your daily life?",
+     "heard": "I'm sorry to hear that. You should probably see a doctor soon. They can give you a proper checkup and treatment. How's your cough affecting your daily life?",
+     "words": 28,
+     "word_errors": 0,
+     "n_codes": 471
+    },
+    "c10": {
+     "total_ms": 6307.2,
+     "first_audio_ms": 6307.2,
+     "first_sound_ms": 6507.2,
+     "stall_ms": 0.0,
+     "reply_s": 6.92,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       6307.2,
+       166080
+      ]
+     ],
+     "reply_text": "Oh, Victor 278? That's a flight number. Is there anything else you need to know about it?",
+     "heard": "Oh, Victor 27-8? That's a flight number. Is there anything else you need to know about it?",
+     "words": 17,
+     "word_errors": 2,
+     "n_codes": 346
+    },
+    "c11": {
+     "total_ms": 8199.2,
+     "first_audio_ms": 8199.2,
+     "first_sound_ms": 8399.2,
+     "stall_ms": 0.0,
+     "reply_s": 8.92,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       8199.2,
+       214080
+      ]
+     ],
+     "reply_text": "Oh, I see. So, you're looking for a new charger for your silver laptop. What kind of charger are you thinking of getting?",
+     "heard": "Oh, I see. So, you are looking for a new charger for your silver laptop. What kind of charger are you thinking of getting?",
+     "words": 23,
+     "word_errors": 2,
+     "n_codes": 446
+    },
+    "c12": {
+     "total_ms": 6789.1,
+     "first_audio_ms": 6789.1,
+     "first_sound_ms": 6989.1,
+     "stall_ms": 0.0,
+     "reply_s": 7.32,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       6789.1,
+       175680
+      ]
+     ],
+     "reply_text": "That's a total of \u00a384.50. If you need to know how to pay or what to do next, just let me know.",
+     "heard": "That's a total of \u00a384.50. If you need to know how to pay or what to do next, just let me know.",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": 366
+    },
+    "n01": {
+     "total_ms": 11538.9,
+     "first_audio_ms": 11538.9,
+     "first_sound_ms": 11718.9,
+     "stall_ms": 0.0,
+     "reply_s": 11.82,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       11538.9,
+       283680
+      ]
+     ],
+     "reply_text": "Oh, you're looking for 742 Evergreen Terrace in Springfield, Oregon? That's a great place. If you need more info about it, like what's around there or if it's a good neighborhood, just let me know.",
+     "heard": "Oh, you are looking for 742 Evergreen Terrace in Springfield, Oregon? That's a great place. If you need more info about it, like what's around there or if it's a good neighborhood, just let me know.",
+     "words": 35,
+     "word_errors": 2,
+     "n_codes": 591
+    },
+    "n02": {
+     "total_ms": 5327.7,
+     "first_audio_ms": 5327.7,
+     "first_sound_ms": 5527.7,
+     "stall_ms": 0.0,
+     "reply_s": 5.8,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       5327.7,
+       139200
+      ]
+     ],
+     "reply_text": "I'm sorry, I don't understand what you're trying to say. Can you please repeat or clarify?",
+     "heard": "I'm sorry, I don't understand what you're trying to say. Can you please repeat or clarify?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 290
+    },
+    "n03": {
+     "total_ms": 6366.9,
+     "first_audio_ms": 6366.9,
+     "first_sound_ms": 6566.9,
+     "stall_ms": 0.0,
+     "reply_s": 6.98,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       6366.9,
+       167520
+      ]
+     ],
+     "reply_text": "I'm sorry to hear your package is overdue. Let me check the system for you. It might take a moment.",
+     "heard": "I'm sorry to hear your package is overdue. Let me check the system for you. It might take a moment.",
+     "words": 20,
+     "word_errors": 0,
+     "n_codes": 349
+    },
+    "n04": {
+     "total_ms": 6183.1,
+     "first_audio_ms": 6183.1,
+     "first_sound_ms": 6403.1,
+     "stall_ms": 0.0,
+     "reply_s": 6.8,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       6183.1,
+       163200
+      ]
+     ],
+     "reply_text": "That sounds really bad. Have you seen a doctor about it yet? It might be something that needs medical attention.",
+     "heard": "That sounds really bad. Have you seen a doctor about it yet? It might be something that needs medical attention.",
+     "words": 20,
+     "word_errors": 0,
+     "n_codes": 340
+    },
+    "n05": {
+     "total_ms": 4436.4,
+     "first_audio_ms": 4436.4,
+     "first_sound_ms": 4636.4,
+     "stall_ms": 0.0,
+     "reply_s": 5.12,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       4436.4,
+       122880
+      ]
+     ],
+     "reply_text": "Oh, that's interesting. So, what's your question about this?",
+     "heard": "Oh, that's interesting. So, what's your question about this?",
+     "words": 9,
+     "word_errors": 0,
+     "n_codes": 256
+    },
+    "n06": {
+     "total_ms": 7240.4,
+     "first_audio_ms": 7240.4,
+     "first_sound_ms": 7460.4,
+     "stall_ms": 0.0,
+     "reply_s": 8.0,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       7240.4,
+       192000
+      ]
+     ],
+     "reply_text": "What about these? Are you looking for information on them? Or do you have a question related to them? Let me know so I can help you better.",
+     "heard": "What about these? Are you looking for information on them? Or do you have a question related to them? Let me know so I can help you better.",
+     "words": 28,
+     "word_errors": 0,
+     "n_codes": 400
+    }
+   }
+  },
+  "r4-gpu-stream/24+96": {
+   "load_ms": 60638.6,
+   "turns": {
+    "f01": {
+     "total_ms": 5885.2,
+     "first_audio_ms": 1398.6,
+     "first_sound_ms": 1618.6,
+     "stall_ms": 1199.0,
+     "reply_s": 5.54,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1398.6,
+       11040
+      ],
+      [
+       3057.5,
+       46080
+      ],
+      [
+       4718.4,
+       46080
+      ],
+      [
+       5885.2,
+       29760
+      ]
+     ],
+     "reply_text": "Sure, I can help with that. Just let me know the new address and I'll update it for you.",
+     "heard": "Sure, I can help with that. Just let me know the new address and I'll update it for you.",
+     "words": 19,
+     "word_errors": 0,
+     "n_codes": 277,
+     "codes_as_fast": true
+    },
+    "f02": {
+     "total_ms": 7593.5,
+     "first_audio_ms": 1497.9,
+     "first_sound_ms": 1717.9,
+     "stall_ms": 1192.9,
+     "reply_s": 7.46,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1497.9,
+       11040
+      ],
+      [
+       3150.9,
+       46080
+      ],
+      [
+       4802.1,
+       46080
+      ],
+      [
+       6455.2,
+       46080
+      ],
+      [
+       7593.5,
+       29760
+      ]
+     ],
+     "reply_text": "Got it. The appointment is on the 14th at half past two. Is there anything else you need to know about it?",
+     "heard": "Got it! The appointment is on the 14th at half-past two. Is there anything else you need to know about it?",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": 373,
+     "codes_as_fast": true
+    },
+    "f03": {
+     "total_ms": 4375.6,
+     "first_audio_ms": 1162.7,
+     "first_sound_ms": 1382.7,
+     "stall_ms": 1199.3,
+     "reply_s": 4.28,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1162.7,
+       11040
+      ],
+      [
+       2822.0,
+       46080
+      ],
+      [
+       4375.5,
+       45600
+      ]
+     ],
+     "reply_text": "That's a great date! When was your last birthday celebration?",
+     "heard": "That's a great date! When was your last birthday celebration?",
+     "words": 10,
+     "word_errors": 0,
+     "n_codes": 214,
+     "codes_as_fast": true
+    },
+    "f04": {
+     "total_ms": 5210.2,
+     "first_audio_ms": 1276.3,
+     "first_sound_ms": 1496.3,
+     "stall_ms": 1553.8,
+     "reply_s": 4.54,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1276.3,
+       11040
+      ],
+      [
+       2932.2,
+       46080
+      ],
+      [
+       5210.1,
+       46080
+      ],
+      [
+       5210.1,
+       5760
+      ]
+     ],
+     "reply_text": "Sure thing. Just let me know your work email address so I can send it there.",
+     "heard": "Sure thing. Just let me know your work email address so I can send it there.",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 227,
+     "codes_as_fast": true
+    },
+    "f05": {
+     "total_ms": 6079.3,
+     "first_audio_ms": 1317.3,
+     "first_sound_ms": 1517.3,
+     "stall_ms": 1196.5,
+     "reply_s": 6.04,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1317.3,
+       11040
+      ],
+      [
+       2973.8,
+       46080
+      ],
+      [
+       4629.5,
+       46080
+      ],
+      [
+       6079.3,
+       41760
+      ]
+     ],
+     "reply_text": "I see. What's the duplicate charge for? And how much are you expecting to be refunded?",
+     "heard": "I see. What's the duplicate charge for? And how much are you expecting to be refunded?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 302,
+     "codes_as_fast": true
+    },
+    "f06": {
+     "total_ms": 11289.4,
+     "first_audio_ms": 1797.6,
+     "first_sound_ms": 1997.6,
+     "stall_ms": 1192.1,
+     "reply_s": 11.42,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1797.6,
+       11040
+      ],
+      [
+       3449.7,
+       46080
+      ],
+      [
+       5104.4,
+       46080
+      ],
+      [
+       6758.0,
+       46080
+      ],
+      [
+       8409.7,
+       46080
+      ],
+      [
+       10063.1,
+       46080
+      ],
+      [
+       11289.3,
+       32640
+      ]
+     ],
+     "reply_text": "Oh, that's a common medication. Just make sure you take it at the right times and follow your doctor's instructions carefully. If you have any questions about it, feel free to ask me more.",
+     "heard": "Oh, that's a common medication. Just make sure you take it at the right times and follow your doctor's instructions carefully. If you have any questions about it, feel free to ask me more.",
+     "words": 34,
+     "word_errors": 0,
+     "n_codes": 571,
+     "codes_as_fast": true
+    },
+    "f07": {
+     "total_ms": 6636.3,
+     "first_audio_ms": 1425.1,
+     "first_sound_ms": 1625.1,
+     "stall_ms": 1194.4,
+     "reply_s": 6.48,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1425.1,
+       11040
+      ],
+      [
+       3079.5,
+       46080
+      ],
+      [
+       4734.8,
+       46080
+      ],
+      [
+       6387.5,
+       46080
+      ],
+      [
+       6636.3,
+       6240
+      ]
+     ],
+     "reply_text": "I'm sorry to hear that. It's been a while since you've been waiting. Have you tried calling them again?",
+     "heard": "I'm sorry to hear that. It's been a while since you've been waiting. Have you tried calling them again?",
+     "words": 19,
+     "word_errors": 0,
+     "n_codes": 324,
+     "codes_as_fast": true
+    },
+    "f08": {
+     "total_ms": 16050.5,
+     "first_audio_ms": 2210.7,
+     "first_sound_ms": 2410.7,
+     "stall_ms": 1194.9,
+     "reply_s": 16.16,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       2210.7,
+       11040
+      ],
+      [
+       3865.6,
+       46080
+      ],
+      [
+       5518.6,
+       46080
+      ],
+      [
+       7172.5,
+       46080
+      ],
+      [
+       8826.2,
+       46080
+      ],
+      [
+       10480.9,
+       46080
+      ],
+      [
+       12134.2,
+       46080
+      ],
+      [
+       13789.8,
+       46080
+      ],
+      [
+       15444.2,
+       46080
+      ],
+      [
+       16050.4,
+       8160
+      ]
+     ],
+     "reply_text": "Well, that can be a bit annoying. Have you checked if there are any error messages on the router's display? And also, make sure all the cables are properly connected. If that doesn't work, you might want to try resetting the router. So, what do you think? Any other",
+     "heard": "Well, that can be a bit annoying. Have you checked if there are any error messages on the router's display? And also, make sure all the cables are properly connected. If that doesn't work, you might want to try resetting the router. So what do you think?",
+     "words": 49,
+     "word_errors": 2,
+     "n_codes": 808,
+     "codes_as_fast": true
+    },
+    "f09": {
+     "total_ms": 10846.4,
+     "first_audio_ms": 1838.8,
+     "first_sound_ms": 2038.8,
+     "stall_ms": 1193.3,
+     "reply_s": 10.62,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1838.8,
+       11040
+      ],
+      [
+       3492.1,
+       46080
+      ],
+      [
+       5146.2,
+       46080
+      ],
+      [
+       6797.9,
+       46080
+      ],
+      [
+       8450.4,
+       46080
+      ],
+      [
+       10104.0,
+       46080
+      ],
+      [
+       10846.4,
+       13440
+      ]
+     ],
+     "reply_text": "Well, that's great. So, what's the account about? Is it a bank account, a social media account, or something else? Let me know so we can figure out how to add you both.",
+     "heard": "Well, that's great. So, what's the account about? Is it a bank account, a social media account, or something else? Let me know so we can figure out how to add you both.",
+     "words": 33,
+     "word_errors": 0,
+     "n_codes": 531,
+     "codes_as_fast": true
+    },
+    "f10": {
+     "total_ms": 6214.0,
+     "first_audio_ms": 1345.1,
+     "first_sound_ms": 1545.1,
+     "stall_ms": 1193.7,
+     "reply_s": 6.22,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1345.1,
+       11040
+      ],
+      [
+       2998.8,
+       46080
+      ],
+      [
+       4651.6,
+       46080
+      ],
+      [
+       6214.0,
+       46080
+      ]
+     ],
+     "reply_text": "Sure, I can help with that. Who would you like to speak to about your mother's prescription?",
+     "heard": "Sure, I can help with that. Who would you like to speak to about your mother's prescription?",
+     "words": 17,
+     "word_errors": 0,
+     "n_codes": 311,
+     "codes_as_fast": true
+    },
+    "f11": {
+     "total_ms": 7500.5,
+     "first_audio_ms": 1452.2,
+     "first_sound_ms": 1652.2,
+     "stall_ms": 1192.5,
+     "reply_s": 7.36,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1452.2,
+       11040
+      ],
+      [
+       3104.7,
+       46080
+      ],
+      [
+       4759.5,
+       46080
+      ],
+      [
+       6414.9,
+       46080
+      ],
+      [
+       7500.4,
+       27360
+      ]
+     ],
+     "reply_text": "Oh, that sounds rough. Did you hurt yourself badly? If you need to talk more about it, feel free to share.",
+     "heard": "Oh, that sounds rough. Did you hurt yourself badly? If you need to talk more about it, feel free to share.",
+     "words": 21,
+     "word_errors": 0,
+     "n_codes": 368,
+     "codes_as_fast": true
+    },
+    "f12": {
+     "total_ms": 5231.1,
+     "first_audio_ms": 1307.5,
+     "first_sound_ms": 1507.5,
+     "stall_ms": 1543.5,
+     "reply_s": 4.52,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1307.5,
+       11040
+      ],
+      [
+       2962.8,
+       46080
+      ],
+      [
+       5231.0,
+       46080
+      ],
+      [
+       5231.0,
+       5280
+      ]
+     ],
+     "reply_text": "Sure, we can try to fit you in the morning. When would you like to come?",
+     "heard": "Sure, we can try to fit you in the morning. When would you like to come?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 226,
+     "codes_as_fast": true
+    },
+    "c01": {
+     "total_ms": 5218.9,
+     "first_audio_ms": 1283.1,
+     "first_sound_ms": 1503.1,
+     "stall_ms": 1198.3,
+     "reply_s": 4.68,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1283.1,
+       11040
+      ],
+      [
+       2941.4,
+       46080
+      ],
+      [
+       4599.0,
+       46080
+      ],
+      [
+       5218.9,
+       9120
+      ]
+     ],
+     "reply_text": "That's a long account number. Is there something specific you want to know about it?",
+     "heard": "That's a long account number. Is there something specific you want to know about it?",
+     "words": 15,
+     "word_errors": 0,
+     "n_codes": 234,
+     "codes_as_fast": true
+    },
+    "c02": {
+     "total_ms": 5194.4,
+     "first_audio_ms": 1272.3,
+     "first_sound_ms": 1492.3,
+     "stall_ms": 1542.1,
+     "reply_s": 4.54,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1272.3,
+       11040
+      ],
+      [
+       2932.6,
+       46080
+      ],
+      [
+       5194.4,
+       46080
+      ],
+      [
+       5194.4,
+       5760
+      ]
+     ],
+     "reply_text": "That's a great phone number. Is there anything I can assist you with regarding it?",
+     "heard": "That's a great phone number. Is there anything I can assist you with regarding it?",
+     "words": 15,
+     "word_errors": 0,
+     "n_codes": 227,
+     "codes_as_fast": true
+    },
+    "c03": {
+     "total_ms": 6141.7,
+     "first_audio_ms": 1414.6,
+     "first_sound_ms": 1614.6,
+     "stall_ms": 1197.6,
+     "reply_s": 5.98,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1414.6,
+       11040
+      ],
+      [
+       3072.3,
+       46080
+      ],
+      [
+       4727.6,
+       46080
+      ],
+      [
+       6141.6,
+       40320
+      ]
+     ],
+     "reply_text": "Oh, that's a nice place. Is there something you need help with regarding Ashford Road in Croydon?",
+     "heard": "Oh, that's a nice place. Is there something you need help with regarding Ashford Road in Croydon?",
+     "words": 17,
+     "word_errors": 0,
+     "n_codes": 299,
+     "codes_as_fast": true
+    },
+    "c04": {
+     "total_ms": 9612.1,
+     "first_audio_ms": 1714.6,
+     "first_sound_ms": 1894.6,
+     "stall_ms": 1200.2,
+     "reply_s": 9.58,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       1714.6,
+       11040
+      ],
+      [
+       3374.8,
+       46080
+      ],
+      [
+       5032.7,
+       46080
+      ],
+      [
+       6688.9,
+       46080
+      ],
+      [
+       8348.4,
+       46080
+      ],
+      [
+       9612.0,
+       34560
+      ]
+     ],
+     "reply_text": "Metformin 500 mg is a common medication. It's often used to treat type 2 diabetes. If you have any questions about it, feel free to ask.",
+     "heard": "Metformin 500 milligram is a common medication. It's often used to treat type 2 diabetes. If you have any questions about it, feel free to ask.",
+     "words": 26,
+     "word_errors": 1,
+     "n_codes": 479,
+     "codes_as_fast": true
+    },
+    "c05": {
+     "total_ms": 4137.5,
+     "first_audio_ms": 1180.4,
+     "first_sound_ms": 1380.4,
+     "stall_ms": 1197.2,
+     "reply_s": 3.86,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1180.4,
+       11040
+      ],
+      [
+       2837.6,
+       46080
+      ],
+      [
+       4137.5,
+       35520
+      ]
+     ],
+     "reply_text": "Oh, that's great. What did David say about the bill?",
+     "heard": "Oh, that's great. What did David say about the bill?",
+     "words": 10,
+     "word_errors": 0,
+     "n_codes": 193,
+     "codes_as_fast": true
+    },
+    "c06": {
+     "total_ms": 4334.9,
+     "first_audio_ms": 1178.2,
+     "first_sound_ms": 1398.2,
+     "stall_ms": 1193.7,
+     "reply_s": 4.2,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1178.2,
+       11040
+      ],
+      [
+       2831.9,
+       46080
+      ],
+      [
+       4334.9,
+       43680
+      ]
+     ],
+     "reply_text": "That's great! What can I help you with regarding Emily Roberts?",
+     "heard": "That's great. What can I help you with regarding Emily Roberts?",
+     "words": 11,
+     "word_errors": 0,
+     "n_codes": 210,
+     "codes_as_fast": true
+    },
+    "c07": {
+     "total_ms": 5799.4,
+     "first_audio_ms": 1337.0,
+     "first_sound_ms": 1537.0,
+     "stall_ms": 1191.3,
+     "reply_s": 5.56,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1337.0,
+       11040
+      ],
+      [
+       2988.3,
+       46080
+      ],
+      [
+       4640.9,
+       46080
+      ],
+      [
+       5799.4,
+       30240
+      ]
+     ],
+     "reply_text": "Got it. When's the order due? Let's make sure we can get it done on time.",
+     "heard": "Got it. When's the order due? Let's make sure we can get it done on time.",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 278,
+     "codes_as_fast": true
+    },
+    "c08": {
+     "total_ms": 8698.2,
+     "first_audio_ms": 1494.1,
+     "first_sound_ms": 1674.1,
+     "stall_ms": 1193.0,
+     "reply_s": 8.34,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       1494.1,
+       11040
+      ],
+      [
+       3147.1,
+       46080
+      ],
+      [
+       4799.1,
+       46080
+      ],
+      [
+       6451.0,
+       46080
+      ],
+      [
+       8698.1,
+       46080
+      ],
+      [
+       8698.1,
+       4800
+      ]
+     ],
+     "reply_text": "Well, that's not good. Maybe you could check your internet connection? Or try restarting your device? Let me know if that helps.",
+     "heard": "Well, that's not good. Maybe you could check your internet connection, or try restarting your device. Let me know if that helps.",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": 417,
+     "codes_as_fast": true
+    },
+    "c09": {
+     "total_ms": 9460.8,
+     "first_audio_ms": 1657.3,
+     "first_sound_ms": 1857.3,
+     "stall_ms": 1198.6,
+     "reply_s": 9.42,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1657.3,
+       11040
+      ],
+      [
+       3315.9,
+       46080
+      ],
+      [
+       4973.7,
+       46080
+      ],
+      [
+       6632.3,
+       46080
+      ],
+      [
+       8288.6,
+       46080
+      ],
+      [
+       9460.8,
+       30720
+      ]
+     ],
+     "reply_text": "I'm sorry to hear that. You should probably see a doctor soon. They can give you a proper checkup and treatment. How's your cough affecting your daily life?",
+     "heard": "I'm sorry to hear that. You should probably see a doctor soon. They can give you a proper checkup and treatment. How's your cough affecting your daily life?",
+     "words": 28,
+     "word_errors": 0,
+     "n_codes": 471,
+     "codes_as_fast": true
+    },
+    "c10": {
+     "total_ms": 7225.5,
+     "first_audio_ms": 1432.2,
+     "first_sound_ms": 1632.2,
+     "stall_ms": 1196.1,
+     "reply_s": 6.92,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1432.2,
+       11040
+      ],
+      [
+       3088.2,
+       46080
+      ],
+      [
+       4745.1,
+       46080
+      ],
+      [
+       6406.0,
+       46080
+      ],
+      [
+       7225.5,
+       16800
+      ]
+     ],
+     "reply_text": "Oh, Victor 278? That's a flight number. Is there anything else you need to know about it?",
+     "heard": "Oh, Victor 27-8? That's a flight number. Is there anything else you need to know about it?",
+     "words": 17,
+     "word_errors": 2,
+     "n_codes": 346,
+     "codes_as_fast": true
+    },
+    "c11": {
+     "total_ms": 9041.1,
+     "first_audio_ms": 1525.8,
+     "first_sound_ms": 1725.8,
+     "stall_ms": 1196.8,
+     "reply_s": 8.92,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1525.8,
+       11040
+      ],
+      [
+       3182.6,
+       46080
+      ],
+      [
+       4839.3,
+       46080
+      ],
+      [
+       6499.8,
+       46080
+      ],
+      [
+       8158.7,
+       46080
+      ],
+      [
+       9041.1,
+       18720
+      ]
+     ],
+     "reply_text": "Oh, I see. So, you're looking for a new charger for your silver laptop. What kind of charger are you thinking of getting?",
+     "heard": "Oh, I see. So, you are looking for a new charger for your silver laptop. What kind of charger are you thinking of getting?",
+     "words": 23,
+     "word_errors": 2,
+     "n_codes": 446,
+     "codes_as_fast": true
+    },
+    "c12": {
+     "total_ms": 7613.1,
+     "first_audio_ms": 1565.6,
+     "first_sound_ms": 1765.6,
+     "stall_ms": 1197.0,
+     "reply_s": 7.32,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1565.6,
+       11040
+      ],
+      [
+       3222.6,
+       46080
+      ],
+      [
+       4880.0,
+       46080
+      ],
+      [
+       6539.2,
+       46080
+      ],
+      [
+       7613.0,
+       26400
+      ]
+     ],
+     "reply_text": "That's a total of \u00a384.50. If you need to know how to pay or what to do next, just let me know.",
+     "heard": "That's a total of \u00a384.50. If you need to know how to pay or what to do next, just let me know.",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": 366,
+     "codes_as_fast": true
+    },
+    "n01": {
+     "total_ms": 11731.0,
+     "first_audio_ms": 2006.4,
+     "first_sound_ms": 2186.4,
+     "stall_ms": 1192.3,
+     "reply_s": 11.82,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       2006.4,
+       11040
+      ],
+      [
+       3658.7,
+       46080
+      ],
+      [
+       5311.3,
+       46080
+      ],
+      [
+       6963.1,
+       46080
+      ],
+      [
+       8615.8,
+       46080
+      ],
+      [
+       10269.6,
+       46080
+      ],
+      [
+       11731.0,
+       42240
+      ]
+     ],
+     "reply_text": "Oh, you're looking for 742 Evergreen Terrace in Springfield, Oregon? That's a great place. If you need more info about it, like what's around there or if it's a good neighborhood, just let me know.",
+     "heard": "Oh, you are looking for 742 Evergreen Terrace in Springfield, Oregon? That's a great place. If you need more info about it, like what's around there or if it's a good neighborhood, just let me know.",
+     "words": 35,
+     "word_errors": 2,
+     "n_codes": 591,
+     "codes_as_fast": true
+    },
+    "n02": {
+     "total_ms": 5972.7,
+     "first_audio_ms": 1362.5,
+     "first_sound_ms": 1562.5,
+     "stall_ms": 1190.8,
+     "reply_s": 5.8,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1362.5,
+       11040
+      ],
+      [
+       3013.4,
+       46080
+      ],
+      [
+       4666.5,
+       46080
+      ],
+      [
+       5972.6,
+       36000
+      ]
+     ],
+     "reply_text": "I'm sorry, I don't understand what you're trying to say. Can you please repeat or clarify?",
+     "heard": "I'm sorry, I don't understand what you're trying to say. Can you please repeat or clarify?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 290,
+     "codes_as_fast": true
+    },
+    "n03": {
+     "total_ms": 7273.6,
+     "first_audio_ms": 1450.4,
+     "first_sound_ms": 1650.4,
+     "stall_ms": 1190.5,
+     "reply_s": 6.98,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1450.4,
+       11040
+      ],
+      [
+       3100.9,
+       46080
+      ],
+      [
+       4752.3,
+       46080
+      ],
+      [
+       6403.7,
+       46080
+      ],
+      [
+       7273.6,
+       18240
+      ]
+     ],
+     "reply_text": "I'm sorry to hear your package is overdue. Let me check the system for you. It might take a moment.",
+     "heard": "I'm sorry to hear your package is overdue. Let me check the system for you. It might take a moment.",
+     "words": 20,
+     "word_errors": 0,
+     "n_codes": 349,
+     "codes_as_fast": true
+    },
+    "n04": {
+     "total_ms": 7235.2,
+     "first_audio_ms": 1529.3,
+     "first_sound_ms": 1749.3,
+     "stall_ms": 1192.4,
+     "reply_s": 6.8,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1529.3,
+       11040
+      ],
+      [
+       3181.7,
+       46080
+      ],
+      [
+       4837.6,
+       46080
+      ],
+      [
+       6493.0,
+       46080
+      ],
+      [
+       7235.1,
+       13920
+      ]
+     ],
+     "reply_text": "That sounds really bad. Have you seen a doctor about it yet? It might be something that needs medical attention.",
+     "heard": "That sounds really bad. Have you seen a doctor about it yet? It might be something that needs medical attention.",
+     "words": 20,
+     "word_errors": 0,
+     "n_codes": 340,
+     "codes_as_fast": true
+    },
+    "n05": {
+     "total_ms": 5420.8,
+     "first_audio_ms": 1225.1,
+     "first_sound_ms": 1425.1,
+     "stall_ms": 1191.8,
+     "reply_s": 5.12,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1225.1,
+       11040
+      ],
+      [
+       2876.9,
+       46080
+      ],
+      [
+       4530.9,
+       46080
+      ],
+      [
+       5420.8,
+       19680
+      ]
+     ],
+     "reply_text": "Oh, that's interesting. So, what's your question about this?",
+     "heard": "Oh, that's interesting. So, what's your question about this?",
+     "words": 9,
+     "word_errors": 0,
+     "n_codes": 256,
+     "codes_as_fast": true
+    },
+    "n06": {
+     "total_ms": 8024.5,
+     "first_audio_ms": 1600.4,
+     "first_sound_ms": 1820.4,
+     "stall_ms": 1196.3,
+     "reply_s": 8.0,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1600.4,
+       11040
+      ],
+      [
+       3256.7,
+       46080
+      ],
+      [
+       4914.6,
+       46080
+      ],
+      [
+       6567.1,
+       46080
+      ],
+      [
+       8024.5,
+       42720
+      ]
+     ],
+     "reply_text": "What about these? Are you looking for information on them? Or do you have a question related to them? Let me know so I can help you better.",
+     "heard": "What about these? Are you looking for information on them? Or do you have a question related to them? Let me know so I can help you better.",
+     "words": 28,
+     "word_errors": 0,
+     "n_codes": 400,
+     "codes_as_fast": true
+    }
+   },
+   "buffers": {
+    "0": {
+     "f01": {
+      "first_audio_ms": 1398.6,
+      "first_sound_ms": 1618.6,
+      "stall_ms": 1198.9
+     },
+     "f02": {
+      "first_audio_ms": 1497.9,
+      "first_sound_ms": 1717.9,
+      "stall_ms": 1193.0
+     },
+     "f03": {
+      "first_audio_ms": 1162.7,
+      "first_sound_ms": 1382.7,
+      "stall_ms": 1199.3
+     },
+     "f04": {
+      "first_audio_ms": 1276.3,
+      "first_sound_ms": 1496.3,
+      "stall_ms": 1553.8000000000004
+     },
+     "f05": {
+      "first_audio_ms": 1317.3,
+      "first_sound_ms": 1517.3,
+      "stall_ms": 1196.5000000000002
+     },
+     "f06": {
+      "first_audio_ms": 1797.6,
+      "first_sound_ms": 1997.6,
+      "stall_ms": 1192.1
+     },
+     "f07": {
+      "first_audio_ms": 1425.1,
+      "first_sound_ms": 1625.1,
+      "stall_ms": 1194.4
+     },
+     "f08": {
+      "first_audio_ms": 2210.7,
+      "first_sound_ms": 2410.7,
+      "stall_ms": 1194.9
+     },
+     "f09": {
+      "first_audio_ms": 1838.8,
+      "first_sound_ms": 2038.8,
+      "stall_ms": 1193.2999999999997
+     },
+     "f10": {
+      "first_audio_ms": 1345.1,
+      "first_sound_ms": 1545.1,
+      "stall_ms": 1193.7000000000003
+     },
+     "f11": {
+      "first_audio_ms": 1452.2,
+      "first_sound_ms": 1652.2,
+      "stall_ms": 1192.4999999999998
+     },
+     "f12": {
+      "first_audio_ms": 1307.5,
+      "first_sound_ms": 1507.5,
+      "stall_ms": 1543.5
+     },
+     "c01": {
+      "first_audio_ms": 1283.1,
+      "first_sound_ms": 1503.1,
+      "stall_ms": 1198.3000000000002
+     },
+     "c02": {
+      "first_audio_ms": 1272.3,
+      "first_sound_ms": 1492.3,
+      "stall_ms": 1542.0999999999992
+     },
+     "c03": {
+      "first_audio_ms": 1414.6,
+      "first_sound_ms": 1614.6,
+      "stall_ms": 1197.7000000000003
+     },
+     "c04": {
+      "first_audio_ms": 1714.6,
+      "first_sound_ms": 1894.6,
+      "stall_ms": 1200.2000000000003
+     },
+     "c05": {
+      "first_audio_ms": 1180.4,
+      "first_sound_ms": 1380.4,
+      "stall_ms": 1197.1999999999998
+     },
+     "c06": {
+      "first_audio_ms": 1178.2,
+      "first_sound_ms": 1398.2,
+      "stall_ms": 1193.7
+     },
+     "c07": {
+      "first_audio_ms": 1337.0,
+      "first_sound_ms": 1537.0,
+      "stall_ms": 1191.3000000000002
+     },
+     "c08": {
+      "first_audio_ms": 1494.1,
+      "first_sound_ms": 1674.1,
+      "stall_ms": 1193.0
+     },
+     "c09": {
+      "first_audio_ms": 1657.3,
+      "first_sound_ms": 1857.3,
+      "stall_ms": 1198.6
+     },
+     "c10": {
+      "first_audio_ms": 1432.2,
+      "first_sound_ms": 1632.2,
+      "stall_ms": 1195.9999999999998
+     },
+     "c11": {
+      "first_audio_ms": 1525.8,
+      "first_sound_ms": 1725.8,
+      "stall_ms": 1196.8
+     },
+     "c12": {
+      "first_audio_ms": 1565.6,
+      "first_sound_ms": 1765.6,
+      "stall_ms": 1197.0
+     },
+     "n01": {
+      "first_audio_ms": 2006.4,
+      "first_sound_ms": 2186.4,
+      "stall_ms": 1192.2999999999997
+     },
+     "n02": {
+      "first_audio_ms": 1362.5,
+      "first_sound_ms": 1562.5,
+      "stall_ms": 1190.9
+     },
+     "n03": {
+      "first_audio_ms": 1450.4,
+      "first_sound_ms": 1650.4,
+      "stall_ms": 1190.5
+     },
+     "n04": {
+      "first_audio_ms": 1529.3,
+      "first_sound_ms": 1749.3,
+      "stall_ms": 1192.3999999999999
+     },
+     "n05": {
+      "first_audio_ms": 1225.1,
+      "first_sound_ms": 1425.1,
+      "stall_ms": 1191.8000000000002
+     },
+     "n06": {
+      "first_audio_ms": 1600.4,
+      "first_sound_ms": 1820.4,
+      "stall_ms": 1196.2999999999997
+     }
+    },
+    "0.5": {
+     "f01": {
+      "first_audio_ms": 3057.5,
+      "first_sound_ms": 3277.5,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 3150.9,
+      "first_sound_ms": 3370.9,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 2822.0,
+      "first_sound_ms": 3042.0,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 2932.2,
+      "first_sound_ms": 3152.2,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 2973.8,
+      "first_sound_ms": 3173.8,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 3449.7,
+      "first_sound_ms": 3649.7,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 3079.5,
+      "first_sound_ms": 3279.5,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 3865.6,
+      "first_sound_ms": 4065.6,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 3492.1,
+      "first_sound_ms": 3692.1,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 2998.8,
+      "first_sound_ms": 3198.8,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 3104.7,
+      "first_sound_ms": 3304.7,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 2962.8,
+      "first_sound_ms": 3162.8,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 2941.4,
+      "first_sound_ms": 3161.4,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 2932.6,
+      "first_sound_ms": 3152.6,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 3072.3,
+      "first_sound_ms": 3272.3,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 3374.8,
+      "first_sound_ms": 3554.8,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 2837.6,
+      "first_sound_ms": 3037.6,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 2831.9,
+      "first_sound_ms": 3051.9,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 2988.3,
+      "first_sound_ms": 3188.3,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 3147.1,
+      "first_sound_ms": 3327.1,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 3315.9,
+      "first_sound_ms": 3515.9,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 3088.2,
+      "first_sound_ms": 3288.2,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 3182.6,
+      "first_sound_ms": 3382.6,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 3222.6,
+      "first_sound_ms": 3422.6,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 3658.7,
+      "first_sound_ms": 3838.7,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 3013.4,
+      "first_sound_ms": 3213.4,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 3100.9,
+      "first_sound_ms": 3300.9,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 3181.7,
+      "first_sound_ms": 3401.7,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 2876.9,
+      "first_sound_ms": 3076.9,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 3256.7,
+      "first_sound_ms": 3476.7,
+      "stall_ms": 0.0
+     }
+    },
+    "1": {
+     "f01": {
+      "first_audio_ms": 3057.5,
+      "first_sound_ms": 3277.5,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 3150.9,
+      "first_sound_ms": 3370.9,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 2822.0,
+      "first_sound_ms": 3042.0,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 2932.2,
+      "first_sound_ms": 3152.2,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 2973.8,
+      "first_sound_ms": 3173.8,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 3449.7,
+      "first_sound_ms": 3649.7,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 3079.5,
+      "first_sound_ms": 3279.5,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 3865.6,
+      "first_sound_ms": 4065.6,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 3492.1,
+      "first_sound_ms": 3692.1,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 2998.8,
+      "first_sound_ms": 3198.8,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 3104.7,
+      "first_sound_ms": 3304.7,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 2962.8,
+      "first_sound_ms": 3162.8,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 2941.4,
+      "first_sound_ms": 3161.4,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 2932.6,
+      "first_sound_ms": 3152.6,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 3072.3,
+      "first_sound_ms": 3272.3,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 3374.8,
+      "first_sound_ms": 3554.8,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 2837.6,
+      "first_sound_ms": 3037.6,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 2831.9,
+      "first_sound_ms": 3051.9,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 2988.3,
+      "first_sound_ms": 3188.3,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 3147.1,
+      "first_sound_ms": 3327.1,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 3315.9,
+      "first_sound_ms": 3515.9,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 3088.2,
+      "first_sound_ms": 3288.2,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 3182.6,
+      "first_sound_ms": 3382.6,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 3222.6,
+      "first_sound_ms": 3422.6,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 3658.7,
+      "first_sound_ms": 3838.7,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 3013.4,
+      "first_sound_ms": 3213.4,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 3100.9,
+      "first_sound_ms": 3300.9,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 3181.7,
+      "first_sound_ms": 3401.7,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 2876.9,
+      "first_sound_ms": 3076.9,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 3256.7,
+      "first_sound_ms": 3476.7,
+      "stall_ms": 0.0
+     }
+    },
+    "1.5": {
+     "f01": {
+      "first_audio_ms": 3057.5,
+      "first_sound_ms": 3277.5,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 3150.9,
+      "first_sound_ms": 3370.9,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 2822.0,
+      "first_sound_ms": 3042.0,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 2932.2,
+      "first_sound_ms": 3152.2,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 2973.8,
+      "first_sound_ms": 3173.8,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 3449.7,
+      "first_sound_ms": 3649.7,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 3079.5,
+      "first_sound_ms": 3279.5,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 3865.6,
+      "first_sound_ms": 4065.6,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 3492.1,
+      "first_sound_ms": 3692.1,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 2998.8,
+      "first_sound_ms": 3198.8,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 3104.7,
+      "first_sound_ms": 3304.7,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 2962.8,
+      "first_sound_ms": 3162.8,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 2941.4,
+      "first_sound_ms": 3161.4,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 2932.6,
+      "first_sound_ms": 3152.6,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 3072.3,
+      "first_sound_ms": 3272.3,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 3374.8,
+      "first_sound_ms": 3554.8,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 2837.6,
+      "first_sound_ms": 3037.6,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 2831.9,
+      "first_sound_ms": 3051.9,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 2988.3,
+      "first_sound_ms": 3188.3,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 3147.1,
+      "first_sound_ms": 3327.1,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 3315.9,
+      "first_sound_ms": 3515.9,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 3088.2,
+      "first_sound_ms": 3288.2,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 3182.6,
+      "first_sound_ms": 3382.6,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 3222.6,
+      "first_sound_ms": 3422.6,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 3658.7,
+      "first_sound_ms": 3838.7,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 3013.4,
+      "first_sound_ms": 3213.4,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 3100.9,
+      "first_sound_ms": 3300.9,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 3181.7,
+      "first_sound_ms": 3401.7,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 2876.9,
+      "first_sound_ms": 3076.9,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 3256.7,
+      "first_sound_ms": 3476.7,
+      "stall_ms": 0.0
+     }
+    },
+    "2": {
+     "f01": {
+      "first_audio_ms": 3057.5,
+      "first_sound_ms": 3277.5,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 3150.9,
+      "first_sound_ms": 3370.9,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 2822.0,
+      "first_sound_ms": 3042.0,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 2932.2,
+      "first_sound_ms": 3152.2,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 2973.8,
+      "first_sound_ms": 3173.8,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 3449.7,
+      "first_sound_ms": 3649.7,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 3079.5,
+      "first_sound_ms": 3279.5,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 3865.6,
+      "first_sound_ms": 4065.6,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 3492.1,
+      "first_sound_ms": 3692.1,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 2998.8,
+      "first_sound_ms": 3198.8,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 3104.7,
+      "first_sound_ms": 3304.7,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 2962.8,
+      "first_sound_ms": 3162.8,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 2941.4,
+      "first_sound_ms": 3161.4,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 2932.6,
+      "first_sound_ms": 3152.6,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 3072.3,
+      "first_sound_ms": 3272.3,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 3374.8,
+      "first_sound_ms": 3554.8,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 2837.6,
+      "first_sound_ms": 3037.6,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 2831.9,
+      "first_sound_ms": 3051.9,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 2988.3,
+      "first_sound_ms": 3188.3,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 3147.1,
+      "first_sound_ms": 3327.1,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 3315.9,
+      "first_sound_ms": 3515.9,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 3088.2,
+      "first_sound_ms": 3288.2,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 3182.6,
+      "first_sound_ms": 3382.6,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 3222.6,
+      "first_sound_ms": 3422.6,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 3658.7,
+      "first_sound_ms": 3838.7,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 3013.4,
+      "first_sound_ms": 3213.4,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 3100.9,
+      "first_sound_ms": 3300.9,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 3181.7,
+      "first_sound_ms": 3401.7,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 2876.9,
+      "first_sound_ms": 3076.9,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 3256.7,
+      "first_sound_ms": 3476.7,
+      "stall_ms": 0.0
+     }
+    },
+    "3": {
+     "f01": {
+      "first_audio_ms": 4718.4,
+      "first_sound_ms": 4938.4,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 4802.1,
+      "first_sound_ms": 5022.1,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 4375.5,
+      "first_sound_ms": 4595.5,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 5210.1,
+      "first_sound_ms": 5430.1,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 4629.5,
+      "first_sound_ms": 4829.5,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 5104.4,
+      "first_sound_ms": 5304.4,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 4734.8,
+      "first_sound_ms": 4934.8,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 5518.6,
+      "first_sound_ms": 5718.6,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 5146.2,
+      "first_sound_ms": 5346.2,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 4651.6,
+      "first_sound_ms": 4851.6,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 4759.5,
+      "first_sound_ms": 4959.5,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 5231.0,
+      "first_sound_ms": 5431.0,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 4599.0,
+      "first_sound_ms": 4819.0,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 5194.4,
+      "first_sound_ms": 5414.4,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 4727.6,
+      "first_sound_ms": 4927.6,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 5032.7,
+      "first_sound_ms": 5212.7,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 4137.5,
+      "first_sound_ms": 4337.5,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 4334.9,
+      "first_sound_ms": 4554.9,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 4640.9,
+      "first_sound_ms": 4840.9,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 4799.1,
+      "first_sound_ms": 4979.1,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 4973.7,
+      "first_sound_ms": 5173.7,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 4745.1,
+      "first_sound_ms": 4945.1,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 4839.3,
+      "first_sound_ms": 5039.3,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 4880.0,
+      "first_sound_ms": 5080.0,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 5311.3,
+      "first_sound_ms": 5491.3,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 4666.5,
+      "first_sound_ms": 4866.5,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 4752.3,
+      "first_sound_ms": 4952.3,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 4837.6,
+      "first_sound_ms": 5057.6,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 4530.9,
+      "first_sound_ms": 4730.9,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 4914.6,
+      "first_sound_ms": 5134.6,
+      "stall_ms": 0.0
+     }
+    }
+   }
+  },
+  "r4-gpu-stream/24+192": {
+   "load_ms": 31376.2,
+   "turns": {
+    "f01": {
+     "total_ms": 5544.4,
+     "first_audio_ms": 1409.7,
+     "first_sound_ms": 1629.7,
+     "stall_ms": 2525.5,
+     "reply_s": 5.54,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1409.7,
+       11040
+      ],
+      [
+       4395.2,
+       92160
+      ],
+      [
+       5544.4,
+       29760
+      ]
+     ],
+     "reply_text": "Sure, I can help with that. Just let me know the new address and I'll update it for you.",
+     "heard": "Sure, I can help with that. Just let me know the new address and I'll update it for you.",
+     "words": 19,
+     "word_errors": 0,
+     "n_codes": 277,
+     "codes_as_fast": true
+    },
+    "f02": {
+     "total_ms": 6901.4,
+     "first_audio_ms": 1500.2,
+     "first_sound_ms": 1720.2,
+     "stall_ms": 2511.6,
+     "reply_s": 7.46,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1500.2,
+       11040
+      ],
+      [
+       4471.8,
+       92160
+      ],
+      [
+       6901.4,
+       75840
+      ]
+     ],
+     "reply_text": "Got it. The appointment is on the 14th at half past two. Is there anything else you need to know about it?",
+     "heard": "Got it! The appointment is on the 14th at half-past two. Is there anything else you need to know about it?",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": 373,
+     "codes_as_fast": true
+    },
+    "f03": {
+     "total_ms": 4070.6,
+     "first_audio_ms": 1164.4,
+     "first_sound_ms": 1384.4,
+     "stall_ms": 2446.2,
+     "reply_s": 4.28,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1164.4,
+       11040
+      ],
+      [
+       4070.6,
+       91680
+      ]
+     ],
+     "reply_text": "That's a great date! When was your last birthday celebration?",
+     "heard": "That's a great date. When was your last birthday celebration?",
+     "words": 10,
+     "word_errors": 0,
+     "n_codes": 214,
+     "codes_as_fast": true
+    },
+    "f04": {
+     "total_ms": 4915.0,
+     "first_audio_ms": 1267.0,
+     "first_sound_ms": 1487.0,
+     "stall_ms": 3188.0,
+     "reply_s": 4.54,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1267.0,
+       11040
+      ],
+      [
+       4915.0,
+       92160
+      ],
+      [
+       4915.0,
+       5760
+      ]
+     ],
+     "reply_text": "Sure thing. Just let me know your work email address so I can send it there.",
+     "heard": "Sure thing. Just let me know your work email address so I can send it there.",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 227,
+     "codes_as_fast": true
+    },
+    "f05": {
+     "total_ms": 5734.7,
+     "first_audio_ms": 1313.6,
+     "first_sound_ms": 1513.6,
+     "stall_ms": 2514.8,
+     "reply_s": 6.04,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1313.6,
+       11040
+      ],
+      [
+       4288.4,
+       92160
+      ],
+      [
+       5734.6,
+       41760
+      ]
+     ],
+     "reply_text": "I see. What's the duplicate charge for? And how much are you expecting to be refunded?",
+     "heard": "I see. What's the duplicate charge for? And how much are you expecting to be refunded?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 302,
+     "codes_as_fast": true
+    },
+    "f06": {
+     "total_ms": 10245.4,
+     "first_audio_ms": 1795.9,
+     "first_sound_ms": 1995.9,
+     "stall_ms": 2514.0,
+     "reply_s": 11.42,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1795.9,
+       11040
+      ],
+      [
+       4769.9,
+       92160
+      ],
+      [
+       7742.3,
+       92160
+      ],
+      [
+       10245.4,
+       78720
+      ]
+     ],
+     "reply_text": "Oh, that's a common medication. Just make sure you take it at the right times and follow your doctor's instructions carefully. If you have any questions about it, feel free to ask me more.",
+     "heard": "Oh, that's a common medication. Just make sure you take it at the right times and follow your doctor's instructions carefully. If you have any questions about it, feel free to ask me more.",
+     "words": 34,
+     "word_errors": 0,
+     "n_codes": 571,
+     "codes_as_fast": true
+    },
+    "f07": {
+     "total_ms": 6072.6,
+     "first_audio_ms": 1431.6,
+     "first_sound_ms": 1631.6,
+     "stall_ms": 2512.6,
+     "reply_s": 6.48,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1431.6,
+       11040
+      ],
+      [
+       4404.2,
+       92160
+      ],
+      [
+       6072.6,
+       52320
+      ]
+     ],
+     "reply_text": "I'm sorry to hear that. It's been a while since you've been waiting. Have you tried calling them again?",
+     "heard": "I'm sorry to hear that. It's been a while since you've been waiting. Have you tried calling them again?",
+     "words": 19,
+     "word_errors": 0,
+     "n_codes": 324,
+     "codes_as_fast": true
+    },
+    "f08": {
+     "total_ms": 14745.6,
+     "first_audio_ms": 2209.5,
+     "first_sound_ms": 2409.5,
+     "stall_ms": 2512.8,
+     "reply_s": 16.16,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       2209.5,
+       11040
+      ],
+      [
+       5182.3,
+       92160
+      ],
+      [
+       8157.6,
+       92160
+      ],
+      [
+       11149.1,
+       92160
+      ],
+      [
+       14137.1,
+       92160
+      ],
+      [
+       14745.5,
+       8160
+      ]
+     ],
+     "reply_text": "Well, that can be a bit annoying. Have you checked if there are any error messages on the router's display? And also, make sure all the cables are properly connected. If that doesn't work, you might want to try resetting the router. So, what do you think? Any other",
+     "heard": "Well, that can be a bit annoying. Have you checked if there are any error messages on the router's display? And also, make sure all the cables are properly connected. If that doesn't work, you might want to try resetting the router. So what do you think?",
+     "words": 49,
+     "word_errors": 2,
+     "n_codes": 808,
+     "codes_as_fast": true
+    },
+    "f09": {
+     "total_ms": 9733.2,
+     "first_audio_ms": 1851.3,
+     "first_sound_ms": 2051.3,
+     "stall_ms": 2515.2,
+     "reply_s": 10.62,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1851.3,
+       11040
+      ],
+      [
+       4826.5,
+       92160
+      ],
+      [
+       7805.8,
+       92160
+      ],
+      [
+       9733.1,
+       59520
+      ]
+     ],
+     "reply_text": "Well, that's great. So, what's the account about? Is it a bank account, a social media account, or something else? Let me know so we can figure out how to add you both.",
+     "heard": "Well, that's great. So, what's the account about? Is it a bank account, a social media account, or something else? Let me know so we can figure out how to add you both.",
+     "words": 33,
+     "word_errors": 0,
+     "n_codes": 531,
+     "codes_as_fast": true
+    },
+    "f10": {
+     "total_ms": 5856.7,
+     "first_audio_ms": 1338.7,
+     "first_sound_ms": 1538.7,
+     "stall_ms": 2514.6,
+     "reply_s": 6.22,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1338.7,
+       11040
+      ],
+      [
+       4313.3,
+       92160
+      ],
+      [
+       5856.6,
+       46080
+      ]
+     ],
+     "reply_text": "Sure, I can help with that. Who would you like to speak to about your mother's prescription?",
+     "heard": "Sure, I can help with that. Who would you like to speak to about your mother's prescription?",
+     "words": 17,
+     "word_errors": 0,
+     "n_codes": 311,
+     "codes_as_fast": true
+    },
+    "f11": {
+     "total_ms": 6722.1,
+     "first_audio_ms": 1448.8,
+     "first_sound_ms": 1648.8,
+     "stall_ms": 2510.7,
+     "reply_s": 7.36,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1448.8,
+       11040
+      ],
+      [
+       4419.5,
+       92160
+      ],
+      [
+       6722.0,
+       73440
+      ]
+     ],
+     "reply_text": "Oh, that sounds rough. Did you hurt yourself badly? If you need to talk more about it, feel free to share.",
+     "heard": "Oh, that sounds rough. Did you hurt yourself badly? If you need to talk more about it, feel free to share.",
+     "words": 21,
+     "word_errors": 0,
+     "n_codes": 368,
+     "codes_as_fast": true
+    },
+    "f12": {
+     "total_ms": 4931.9,
+     "first_audio_ms": 1289.8,
+     "first_sound_ms": 1489.8,
+     "stall_ms": 3182.1,
+     "reply_s": 4.52,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1289.8,
+       11040
+      ],
+      [
+       4931.9,
+       92160
+      ],
+      [
+       4931.9,
+       5280
+      ]
+     ],
+     "reply_text": "Sure, we can try to fit you in the morning. When would you like to come?",
+     "heard": "Sure, we can try to fit you in the morning. When would you like to come?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 226,
+     "codes_as_fast": true
+    },
+    "c01": {
+     "total_ms": 4873.0,
+     "first_audio_ms": 1272.1,
+     "first_sound_ms": 1492.1,
+     "stall_ms": 2518.5,
+     "reply_s": 4.68,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1272.1,
+       11040
+      ],
+      [
+       4250.6,
+       92160
+      ],
+      [
+       4872.9,
+       9120
+      ]
+     ],
+     "reply_text": "That's a long account number. Is there something specific you want to know about it?",
+     "heard": "That's a long account number. Is there something specific you want to know about it?",
+     "words": 15,
+     "word_errors": 0,
+     "n_codes": 234,
+     "codes_as_fast": true
+    },
+    "c02": {
+     "total_ms": 4920.2,
+     "first_audio_ms": 1278.6,
+     "first_sound_ms": 1498.6,
+     "stall_ms": 3181.6,
+     "reply_s": 4.54,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1278.6,
+       11040
+      ],
+      [
+       4920.2,
+       92160
+      ],
+      [
+       4920.2,
+       5760
+      ]
+     ],
+     "reply_text": "That's a great phone number. Is there anything I can assist you with regarding it?",
+     "heard": "That's a great phone number. Is there anything I can assist you with regarding it?",
+     "words": 15,
+     "word_errors": 0,
+     "n_codes": 227,
+     "codes_as_fast": true
+    },
+    "c03": {
+     "total_ms": 5779.8,
+     "first_audio_ms": 1407.4,
+     "first_sound_ms": 1607.4,
+     "stall_ms": 2502.1,
+     "reply_s": 5.98,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1407.4,
+       11040
+      ],
+      [
+       4369.4,
+       92160
+      ],
+      [
+       5779.7,
+       40320
+      ]
+     ],
+     "reply_text": "Oh, that's a nice place. Is there something you need help with regarding Ashford Road in Croydon?",
+     "heard": "Oh, that's a nice place. Is there something you need help with regarding Ashford Road in Croydon?",
+     "words": 17,
+     "word_errors": 0,
+     "n_codes": 299,
+     "codes_as_fast": true
+    },
+    "c04": {
+     "total_ms": 8916.5,
+     "first_audio_ms": 1702.9,
+     "first_sound_ms": 1882.9,
+     "stall_ms": 2508.2,
+     "reply_s": 9.58,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       1702.9,
+       11040
+      ],
+      [
+       4671.2,
+       92160
+      ],
+      [
+       7648.9,
+       92160
+      ],
+      [
+       8916.5,
+       34560
+      ]
+     ],
+     "reply_text": "Metformin 500 mg is a common medication. It's often used to treat type 2 diabetes. If you have any questions about it, feel free to ask.",
+     "heard": "Metformin 500 milligram is a common medication. It's often used to treat type 2 diabetes. If you have any questions about it, feel free to ask.",
+     "words": 26,
+     "word_errors": 1,
+     "n_codes": 479,
+     "codes_as_fast": true
+    },
+    "c05": {
+     "total_ms": 3764.5,
+     "first_audio_ms": 1179.8,
+     "first_sound_ms": 1379.8,
+     "stall_ms": 2124.7,
+     "reply_s": 3.86,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1179.8,
+       11040
+      ],
+      [
+       3764.5,
+       81600
+      ]
+     ],
+     "reply_text": "Oh, that's great. What did David say about the bill?",
+     "heard": "Oh, that's great. What did David say about the bill?",
+     "words": 10,
+     "word_errors": 0,
+     "n_codes": 193,
+     "codes_as_fast": true
+    },
+    "c06": {
+     "total_ms": 4023.8,
+     "first_audio_ms": 1179.1,
+     "first_sound_ms": 1399.1,
+     "stall_ms": 2384.7,
+     "reply_s": 4.2,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1179.1,
+       11040
+      ],
+      [
+       4023.8,
+       89760
+      ]
+     ],
+     "reply_text": "That's great! What can I help you with regarding Emily Roberts?",
+     "heard": "That's great. What can I help you with regarding Emily Roberts?",
+     "words": 11,
+     "word_errors": 0,
+     "n_codes": 210,
+     "codes_as_fast": true
+    },
+    "c07": {
+     "total_ms": 5475.3,
+     "first_audio_ms": 1339.8,
+     "first_sound_ms": 1539.8,
+     "stall_ms": 2514.6,
+     "reply_s": 5.56,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1339.8,
+       11040
+      ],
+      [
+       4314.4,
+       92160
+      ],
+      [
+       5475.3,
+       30240
+      ]
+     ],
+     "reply_text": "Got it. When's the order due? Let's make sure we can get it done on time.",
+     "heard": "Got it. When's the order due? Let's make sure we can get it done on time.",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 278,
+     "codes_as_fast": true
+    },
+    "c08": {
+     "total_ms": 8092.9,
+     "first_audio_ms": 1500.3,
+     "first_sound_ms": 1680.3,
+     "stall_ms": 2510.7,
+     "reply_s": 8.34,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       1500.3,
+       11040
+      ],
+      [
+       4471.1,
+       92160
+      ],
+      [
+       8092.8,
+       92160
+      ],
+      [
+       8092.8,
+       4800
+      ]
+     ],
+     "reply_text": "Well, that's not good. Maybe you could check your internet connection? Or try restarting your device? Let me know if that helps.",
+     "heard": "Well, that's not good. Maybe you could check your internet connection, or try restarting your device. Let me know if that helps.",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": 417,
+     "codes_as_fast": true
+    },
+    "c09": {
+     "total_ms": 8788.8,
+     "first_audio_ms": 1661.6,
+     "first_sound_ms": 1881.6,
+     "stall_ms": 2518.5,
+     "reply_s": 9.42,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1661.6,
+       11040
+      ],
+      [
+       4640.1,
+       92160
+      ],
+      [
+       7615.9,
+       92160
+      ],
+      [
+       8788.8,
+       30720
+      ]
+     ],
+     "reply_text": "I'm sorry to hear that. You should probably see a doctor soon. They can give you a proper checkup and treatment. How's your cough affecting your daily life?",
+     "heard": "I'm sorry to hear that. You should probably see a doctor soon. They can give you a proper checkup and treatment. How's your cough affecting your daily life?",
+     "words": 28,
+     "word_errors": 0,
+     "n_codes": 471,
+     "codes_as_fast": true
+    },
+    "c10": {
+     "total_ms": 6426.3,
+     "first_audio_ms": 1432.2,
+     "first_sound_ms": 1632.2,
+     "stall_ms": 2515.1,
+     "reply_s": 6.92,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1432.2,
+       11040
+      ],
+      [
+       4407.2,
+       92160
+      ],
+      [
+       6426.3,
+       62880
+      ]
+     ],
+     "reply_text": "Oh, Victor 278? That's a flight number. Is there anything else you need to know about it?",
+     "heard": "Oh, Victor 27-8? That's a flight number. Is there anything else you need to know about it?",
+     "words": 17,
+     "word_errors": 2,
+     "n_codes": 346,
+     "codes_as_fast": true
+    },
+    "c11": {
+     "total_ms": 8348.0,
+     "first_audio_ms": 1523.8,
+     "first_sound_ms": 1723.8,
+     "stall_ms": 2518.9,
+     "reply_s": 8.92,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1523.8,
+       11040
+      ],
+      [
+       4502.7,
+       92160
+      ],
+      [
+       7473.9,
+       92160
+      ],
+      [
+       8348.0,
+       18720
+      ]
+     ],
+     "reply_text": "Oh, I see. So, you're looking for a new charger for your silver laptop. What kind of charger are you thinking of getting?",
+     "heard": "Oh, I see. So, you are looking for a new charger for your silver laptop. What kind of charger are you thinking of getting?",
+     "words": 23,
+     "word_errors": 2,
+     "n_codes": 446,
+     "codes_as_fast": true
+    },
+    "c12": {
+     "total_ms": 6859.4,
+     "first_audio_ms": 1567.7,
+     "first_sound_ms": 1767.7,
+     "stall_ms": 2519.8,
+     "reply_s": 7.32,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1567.7,
+       11040
+      ],
+      [
+       4547.5,
+       92160
+      ],
+      [
+       6859.3,
+       72480
+      ]
+     ],
+     "reply_text": "That's a total of \u00a384.50. If you need to know how to pay or what to do next, just let me know.",
+     "heard": "That's a total of \u00a384.50. If you need to know how to pay or what to do next, just let me know.",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": 366,
+     "codes_as_fast": true
+    },
+    "n01": {
+     "total_ms": 10784.5,
+     "first_audio_ms": 2012.1,
+     "first_sound_ms": 2192.1,
+     "stall_ms": 2532.8,
+     "reply_s": 11.82,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       2012.1,
+       11040
+      ],
+      [
+       5004.9,
+       92160
+      ],
+      [
+       7990.2,
+       92160
+      ],
+      [
+       10784.4,
+       88320
+      ]
+     ],
+     "reply_text": "Oh, you're looking for 742 Evergreen Terrace in Springfield, Oregon? That's a great place. If you need more info about it, like what's around there or if it's a good neighborhood, just let me know.",
+     "heard": "Oh, you are looking for 742 Evergreen Terrace in Springfield, Oregon? That's a great place. If you need more info about it, like what's around there or if it's a good neighborhood, just let me know.",
+     "words": 35,
+     "word_errors": 2,
+     "n_codes": 591,
+     "codes_as_fast": true
+    },
+    "n02": {
+     "total_ms": 5659.1,
+     "first_audio_ms": 1376.3,
+     "first_sound_ms": 1576.3,
+     "stall_ms": 2524.0,
+     "reply_s": 5.8,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1376.3,
+       11040
+      ],
+      [
+       4360.3,
+       92160
+      ],
+      [
+       5659.1,
+       36000
+      ]
+     ],
+     "reply_text": "I'm sorry, I don't understand what you're trying to say. Can you please repeat or clarify?",
+     "heard": "I'm sorry, I don't understand what you're trying to say. Can you please repeat or clarify?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 290,
+     "codes_as_fast": true
+    },
+    "n03": {
+     "total_ms": 6495.5,
+     "first_audio_ms": 1453.2,
+     "first_sound_ms": 1653.2,
+     "stall_ms": 2518.2,
+     "reply_s": 6.98,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1453.2,
+       11040
+      ],
+      [
+       4431.4,
+       92160
+      ],
+      [
+       6495.4,
+       64320
+      ]
+     ],
+     "reply_text": "I'm sorry to hear your package is overdue. Let me check the system for you. It might take a moment.",
+     "heard": "I'm sorry to hear your package is overdue. Let me check the system for you. It might take a moment.",
+     "words": 20,
+     "word_errors": 0,
+     "n_codes": 349,
+     "codes_as_fast": true
+    },
+    "n04": {
+     "total_ms": 6446.1,
+     "first_audio_ms": 1530.0,
+     "first_sound_ms": 1750.0,
+     "stall_ms": 2522.2,
+     "reply_s": 6.8,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1530.0,
+       11040
+      ],
+      [
+       4512.2,
+       92160
+      ],
+      [
+       6446.0,
+       60000
+      ]
+     ],
+     "reply_text": "That sounds really bad. Have you seen a doctor about it yet? It might be something that needs medical attention.",
+     "heard": "That sounds really bad. Have you seen a doctor about it yet? It might be something that needs medical attention.",
+     "words": 20,
+     "word_errors": 0,
+     "n_codes": 340,
+     "codes_as_fast": true
+    },
+    "n05": {
+     "total_ms": 5089.7,
+     "first_audio_ms": 1231.6,
+     "first_sound_ms": 1431.6,
+     "stall_ms": 2523.9,
+     "reply_s": 5.12,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1231.6,
+       11040
+      ],
+      [
+       4215.6,
+       92160
+      ],
+      [
+       5089.7,
+       19680
+      ]
+     ],
+     "reply_text": "Oh, that's interesting. So, what's your question about this?",
+     "heard": "Oh, that's interesting. So, what's your question about this?",
+     "words": 9,
+     "word_errors": 0,
+     "n_codes": 256,
+     "codes_as_fast": true
+    },
+    "n06": {
+     "total_ms": 7366.7,
+     "first_audio_ms": 1608.5,
+     "first_sound_ms": 1828.5,
+     "stall_ms": 2528.3,
+     "reply_s": 8.0,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1608.5,
+       11040
+      ],
+      [
+       4596.8,
+       92160
+      ],
+      [
+       7366.6,
+       88800
+      ]
+     ],
+     "reply_text": "What about these? Are you looking for information on them? Or do you have a question related to them? Let me know so I can help you better.",
+     "heard": "What about these? Are you looking for information on them? Or do you have a question related to them? Let me know so I can help you better.",
+     "words": 28,
+     "word_errors": 0,
+     "n_codes": 400,
+     "codes_as_fast": true
+    }
+   },
+   "buffers": {
+    "0": {
+     "f01": {
+      "first_audio_ms": 1409.7,
+      "first_sound_ms": 1629.7,
+      "stall_ms": 2525.5
+     },
+     "f02": {
+      "first_audio_ms": 1500.2,
+      "first_sound_ms": 1720.2,
+      "stall_ms": 2511.6000000000004
+     },
+     "f03": {
+      "first_audio_ms": 1164.4,
+      "first_sound_ms": 1384.4,
+      "stall_ms": 2446.2
+     },
+     "f04": {
+      "first_audio_ms": 1267.0,
+      "first_sound_ms": 1487.0,
+      "stall_ms": 3188.0
+     },
+     "f05": {
+      "first_audio_ms": 1313.6,
+      "first_sound_ms": 1513.6,
+      "stall_ms": 2514.7999999999997
+     },
+     "f06": {
+      "first_audio_ms": 1795.9,
+      "first_sound_ms": 1995.9,
+      "stall_ms": 2513.9999999999995
+     },
+     "f07": {
+      "first_audio_ms": 1431.6,
+      "first_sound_ms": 1631.6,
+      "stall_ms": 2512.6
+     },
+     "f08": {
+      "first_audio_ms": 2209.5,
+      "first_sound_ms": 2409.5,
+      "stall_ms": 2512.8
+     },
+     "f09": {
+      "first_audio_ms": 1851.3,
+      "first_sound_ms": 2051.3,
+      "stall_ms": 2515.2
+     },
+     "f10": {
+      "first_audio_ms": 1338.7,
+      "first_sound_ms": 1538.7,
+      "stall_ms": 2514.6000000000004
+     },
+     "f11": {
+      "first_audio_ms": 1448.8,
+      "first_sound_ms": 1648.8,
+      "stall_ms": 2510.7
+     },
+     "f12": {
+      "first_audio_ms": 1289.8,
+      "first_sound_ms": 1489.8,
+      "stall_ms": 3182.0999999999995
+     },
+     "c01": {
+      "first_audio_ms": 1272.1,
+      "first_sound_ms": 1492.1,
+      "stall_ms": 2518.5000000000005
+     },
+     "c02": {
+      "first_audio_ms": 1278.6,
+      "first_sound_ms": 1498.6,
+      "stall_ms": 3181.6
+     },
+     "c03": {
+      "first_audio_ms": 1407.4,
+      "first_sound_ms": 1607.4,
+      "stall_ms": 2501.9999999999995
+     },
+     "c04": {
+      "first_audio_ms": 1702.9,
+      "first_sound_ms": 1882.9,
+      "stall_ms": 2508.2999999999997
+     },
+     "c05": {
+      "first_audio_ms": 1179.8,
+      "first_sound_ms": 1379.8,
+      "stall_ms": 2124.7
+     },
+     "c06": {
+      "first_audio_ms": 1179.1,
+      "first_sound_ms": 1399.1,
+      "stall_ms": 2384.7000000000003
+     },
+     "c07": {
+      "first_audio_ms": 1339.8,
+      "first_sound_ms": 1539.8,
+      "stall_ms": 2514.5999999999995
+     },
+     "c08": {
+      "first_audio_ms": 1500.3,
+      "first_sound_ms": 1680.3,
+      "stall_ms": 2510.8
+     },
+     "c09": {
+      "first_audio_ms": 1661.6,
+      "first_sound_ms": 1881.6,
+      "stall_ms": 2518.5000000000005
+     },
+     "c10": {
+      "first_audio_ms": 1432.2,
+      "first_sound_ms": 1632.2,
+      "stall_ms": 2515.0
+     },
+     "c11": {
+      "first_audio_ms": 1523.8,
+      "first_sound_ms": 1723.8,
+      "stall_ms": 2518.8999999999996
+     },
+     "c12": {
+      "first_audio_ms": 1567.7,
+      "first_sound_ms": 1767.7,
+      "stall_ms": 2519.8
+     },
+     "n01": {
+      "first_audio_ms": 2012.1,
+      "first_sound_ms": 2192.1,
+      "stall_ms": 2532.7999999999997
+     },
+     "n02": {
+      "first_audio_ms": 1376.3,
+      "first_sound_ms": 1576.3,
+      "stall_ms": 2524.0
+     },
+     "n03": {
+      "first_audio_ms": 1453.2,
+      "first_sound_ms": 1653.2,
+      "stall_ms": 2518.2
+     },
+     "n04": {
+      "first_audio_ms": 1530.0,
+      "first_sound_ms": 1750.0,
+      "stall_ms": 2522.2
+     },
+     "n05": {
+      "first_audio_ms": 1231.6,
+      "first_sound_ms": 1431.6,
+      "stall_ms": 2524.0000000000005
+     },
+     "n06": {
+      "first_audio_ms": 1608.5,
+      "first_sound_ms": 1828.5,
+      "stall_ms": 2528.3
+     }
+    },
+    "0.5": {
+     "f01": {
+      "first_audio_ms": 4395.2,
+      "first_sound_ms": 4615.2,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 4471.8,
+      "first_sound_ms": 4691.8,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 4070.6,
+      "first_sound_ms": 4290.6,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 4915.0,
+      "first_sound_ms": 5135.0,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 4288.4,
+      "first_sound_ms": 4488.4,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 4769.9,
+      "first_sound_ms": 4969.9,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 4404.2,
+      "first_sound_ms": 4604.2,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 5182.3,
+      "first_sound_ms": 5382.3,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 4826.5,
+      "first_sound_ms": 5026.5,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 4313.3,
+      "first_sound_ms": 4513.3,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 4419.5,
+      "first_sound_ms": 4619.5,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 4931.9,
+      "first_sound_ms": 5131.9,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 4250.6,
+      "first_sound_ms": 4470.6,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 4920.2,
+      "first_sound_ms": 5140.2,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 4369.4,
+      "first_sound_ms": 4569.4,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 4671.2,
+      "first_sound_ms": 4851.2,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 3764.5,
+      "first_sound_ms": 3964.5,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 4023.8,
+      "first_sound_ms": 4243.8,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 4314.4,
+      "first_sound_ms": 4514.4,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 4471.1,
+      "first_sound_ms": 4651.1,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 4640.1,
+      "first_sound_ms": 4860.1,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 4407.2,
+      "first_sound_ms": 4607.2,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 4502.7,
+      "first_sound_ms": 4702.7,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 4547.5,
+      "first_sound_ms": 4747.5,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 5004.9,
+      "first_sound_ms": 5184.9,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 4360.3,
+      "first_sound_ms": 4560.3,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 4431.4,
+      "first_sound_ms": 4631.4,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 4512.2,
+      "first_sound_ms": 4732.2,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 4215.6,
+      "first_sound_ms": 4415.6,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 4596.8,
+      "first_sound_ms": 4816.8,
+      "stall_ms": 0.0
+     }
+    },
+    "1": {
+     "f01": {
+      "first_audio_ms": 4395.2,
+      "first_sound_ms": 4615.2,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 4471.8,
+      "first_sound_ms": 4691.8,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 4070.6,
+      "first_sound_ms": 4290.6,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 4915.0,
+      "first_sound_ms": 5135.0,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 4288.4,
+      "first_sound_ms": 4488.4,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 4769.9,
+      "first_sound_ms": 4969.9,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 4404.2,
+      "first_sound_ms": 4604.2,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 5182.3,
+      "first_sound_ms": 5382.3,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 4826.5,
+      "first_sound_ms": 5026.5,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 4313.3,
+      "first_sound_ms": 4513.3,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 4419.5,
+      "first_sound_ms": 4619.5,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 4931.9,
+      "first_sound_ms": 5131.9,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 4250.6,
+      "first_sound_ms": 4470.6,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 4920.2,
+      "first_sound_ms": 5140.2,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 4369.4,
+      "first_sound_ms": 4569.4,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 4671.2,
+      "first_sound_ms": 4851.2,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 3764.5,
+      "first_sound_ms": 3964.5,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 4023.8,
+      "first_sound_ms": 4243.8,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 4314.4,
+      "first_sound_ms": 4514.4,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 4471.1,
+      "first_sound_ms": 4651.1,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 4640.1,
+      "first_sound_ms": 4860.1,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 4407.2,
+      "first_sound_ms": 4607.2,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 4502.7,
+      "first_sound_ms": 4702.7,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 4547.5,
+      "first_sound_ms": 4747.5,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 5004.9,
+      "first_sound_ms": 5184.9,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 4360.3,
+      "first_sound_ms": 4560.3,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 4431.4,
+      "first_sound_ms": 4631.4,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 4512.2,
+      "first_sound_ms": 4732.2,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 4215.6,
+      "first_sound_ms": 4415.6,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 4596.8,
+      "first_sound_ms": 4816.8,
+      "stall_ms": 0.0
+     }
+    },
+    "1.5": {
+     "f01": {
+      "first_audio_ms": 4395.2,
+      "first_sound_ms": 4615.2,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 4471.8,
+      "first_sound_ms": 4691.8,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 4070.6,
+      "first_sound_ms": 4290.6,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 4915.0,
+      "first_sound_ms": 5135.0,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 4288.4,
+      "first_sound_ms": 4488.4,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 4769.9,
+      "first_sound_ms": 4969.9,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 4404.2,
+      "first_sound_ms": 4604.2,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 5182.3,
+      "first_sound_ms": 5382.3,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 4826.5,
+      "first_sound_ms": 5026.5,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 4313.3,
+      "first_sound_ms": 4513.3,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 4419.5,
+      "first_sound_ms": 4619.5,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 4931.9,
+      "first_sound_ms": 5131.9,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 4250.6,
+      "first_sound_ms": 4470.6,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 4920.2,
+      "first_sound_ms": 5140.2,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 4369.4,
+      "first_sound_ms": 4569.4,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 4671.2,
+      "first_sound_ms": 4851.2,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 3764.5,
+      "first_sound_ms": 3964.5,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 4023.8,
+      "first_sound_ms": 4243.8,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 4314.4,
+      "first_sound_ms": 4514.4,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 4471.1,
+      "first_sound_ms": 4651.1,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 4640.1,
+      "first_sound_ms": 4860.1,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 4407.2,
+      "first_sound_ms": 4607.2,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 4502.7,
+      "first_sound_ms": 4702.7,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 4547.5,
+      "first_sound_ms": 4747.5,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 5004.9,
+      "first_sound_ms": 5184.9,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 4360.3,
+      "first_sound_ms": 4560.3,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 4431.4,
+      "first_sound_ms": 4631.4,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 4512.2,
+      "first_sound_ms": 4732.2,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 4215.6,
+      "first_sound_ms": 4415.6,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 4596.8,
+      "first_sound_ms": 4816.8,
+      "stall_ms": 0.0
+     }
+    },
+    "2": {
+     "f01": {
+      "first_audio_ms": 4395.2,
+      "first_sound_ms": 4615.2,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 4471.8,
+      "first_sound_ms": 4691.8,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 4070.6,
+      "first_sound_ms": 4290.6,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 4915.0,
+      "first_sound_ms": 5135.0,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 4288.4,
+      "first_sound_ms": 4488.4,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 4769.9,
+      "first_sound_ms": 4969.9,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 4404.2,
+      "first_sound_ms": 4604.2,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 5182.3,
+      "first_sound_ms": 5382.3,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 4826.5,
+      "first_sound_ms": 5026.5,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 4313.3,
+      "first_sound_ms": 4513.3,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 4419.5,
+      "first_sound_ms": 4619.5,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 4931.9,
+      "first_sound_ms": 5131.9,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 4250.6,
+      "first_sound_ms": 4470.6,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 4920.2,
+      "first_sound_ms": 5140.2,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 4369.4,
+      "first_sound_ms": 4569.4,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 4671.2,
+      "first_sound_ms": 4851.2,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 3764.5,
+      "first_sound_ms": 3964.5,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 4023.8,
+      "first_sound_ms": 4243.8,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 4314.4,
+      "first_sound_ms": 4514.4,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 4471.1,
+      "first_sound_ms": 4651.1,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 4640.1,
+      "first_sound_ms": 4860.1,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 4407.2,
+      "first_sound_ms": 4607.2,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 4502.7,
+      "first_sound_ms": 4702.7,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 4547.5,
+      "first_sound_ms": 4747.5,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 5004.9,
+      "first_sound_ms": 5184.9,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 4360.3,
+      "first_sound_ms": 4560.3,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 4431.4,
+      "first_sound_ms": 4631.4,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 4512.2,
+      "first_sound_ms": 4732.2,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 4215.6,
+      "first_sound_ms": 4415.6,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 4596.8,
+      "first_sound_ms": 4816.8,
+      "stall_ms": 0.0
+     }
+    },
+    "3": {
+     "f01": {
+      "first_audio_ms": 4395.2,
+      "first_sound_ms": 4615.2,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 4471.8,
+      "first_sound_ms": 4691.8,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 4070.6,
+      "first_sound_ms": 4290.6,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 4915.0,
+      "first_sound_ms": 5135.0,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 4288.4,
+      "first_sound_ms": 4488.4,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 4769.9,
+      "first_sound_ms": 4969.9,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 4404.2,
+      "first_sound_ms": 4604.2,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 5182.3,
+      "first_sound_ms": 5382.3,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 4826.5,
+      "first_sound_ms": 5026.5,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 4313.3,
+      "first_sound_ms": 4513.3,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 4419.5,
+      "first_sound_ms": 4619.5,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 4931.9,
+      "first_sound_ms": 5131.9,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 4250.6,
+      "first_sound_ms": 4470.6,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 4920.2,
+      "first_sound_ms": 5140.2,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 4369.4,
+      "first_sound_ms": 4569.4,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 4671.2,
+      "first_sound_ms": 4851.2,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 3764.5,
+      "first_sound_ms": 3964.5,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 4023.8,
+      "first_sound_ms": 4243.8,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 4314.4,
+      "first_sound_ms": 4514.4,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 4471.1,
+      "first_sound_ms": 4651.1,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 4640.1,
+      "first_sound_ms": 4860.1,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 4407.2,
+      "first_sound_ms": 4607.2,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 4502.7,
+      "first_sound_ms": 4702.7,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 4547.5,
+      "first_sound_ms": 4747.5,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 5004.9,
+      "first_sound_ms": 5184.9,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 4360.3,
+      "first_sound_ms": 4560.3,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 4431.4,
+      "first_sound_ms": 4631.4,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 4512.2,
+      "first_sound_ms": 4732.2,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 4215.6,
+      "first_sound_ms": 4415.6,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 4596.8,
+      "first_sound_ms": 4816.8,
+      "stall_ms": 0.0
+     }
+    }
+   }
+  },
+  "r4-gpu-stream/48+96": {
+   "load_ms": 31308.1,
+   "turns": {
+    "f01": {
+     "total_ms": 5915.2,
+     "first_audio_ms": 1729.7,
+     "first_sound_ms": 1929.7,
+     "stall_ms": 726.8,
+     "reply_s": 5.54,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1729.7,
+       22560
+      ],
+      [
+       3396.5,
+       46080
+      ],
+      [
+       5064.2,
+       46080
+      ],
+      [
+       5915.2,
+       18240
+      ]
+     ],
+     "reply_text": "Sure, I can help with that. Just let me know the new address and I'll update it for you.",
+     "heard": "Sure, I can help with that. Just let me know the new address and I'll update it for you.",
+     "words": 19,
+     "word_errors": 0,
+     "n_codes": 277,
+     "codes_as_fast": true
+    },
+    "f02": {
+     "total_ms": 7691.0,
+     "first_audio_ms": 1830.3,
+     "first_sound_ms": 2030.3,
+     "stall_ms": 724.4,
+     "reply_s": 7.46,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1830.3,
+       22560
+      ],
+      [
+       3494.7,
+       46080
+      ],
+      [
+       5160.8,
+       46080
+      ],
+      [
+       6826.6,
+       46080
+      ],
+      [
+       7690.9,
+       18240
+      ]
+     ],
+     "reply_text": "Got it. The appointment is on the 14th at half past two. Is there anything else you need to know about it?",
+     "heard": "Got it! The appointment is on the 14th at half-past two. Is there anything else you need to know about it?",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": 373,
+     "codes_as_fast": true
+    },
+    "f03": {
+     "total_ms": 4435.2,
+     "first_audio_ms": 1494.0,
+     "first_sound_ms": 1694.0,
+     "stall_ms": 728.8,
+     "reply_s": 4.28,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1494.0,
+       22560
+      ],
+      [
+       3162.8,
+       46080
+      ],
+      [
+       4435.1,
+       34080
+      ]
+     ],
+     "reply_text": "That's a great date! When was your last birthday celebration?",
+     "heard": "That's a great date! When was your last birthday celebration?",
+     "words": 10,
+     "word_errors": 0,
+     "n_codes": 214,
+     "codes_as_fast": true
+    },
+    "f04": {
+     "total_ms": 4658.2,
+     "first_audio_ms": 1594.6,
+     "first_sound_ms": 1794.6,
+     "stall_ms": 716.4,
+     "reply_s": 4.54,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1594.6,
+       22560
+      ],
+      [
+       3251.0,
+       46080
+      ],
+      [
+       4658.2,
+       40320
+      ]
+     ],
+     "reply_text": "Sure thing. Just let me know your work email address so I can send it there.",
+     "heard": "Sure thing. Just let me know your work email address so I can send it there.",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 227,
+     "codes_as_fast": true
+    },
+    "f05": {
+     "total_ms": 6094.9,
+     "first_audio_ms": 1627.6,
+     "first_sound_ms": 1827.6,
+     "stall_ms": 717.9,
+     "reply_s": 6.04,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1627.6,
+       22560
+      ],
+      [
+       3285.5,
+       46080
+      ],
+      [
+       4945.3,
+       46080
+      ],
+      [
+       6094.8,
+       30240
+      ]
+     ],
+     "reply_text": "I see. What's the duplicate charge for? And how much are you expecting to be refunded?",
+     "heard": "I see. What's the duplicate charge for? And how much are you expecting to be refunded?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 302,
+     "codes_as_fast": true
+    },
+    "f06": {
+     "total_ms": 11315.9,
+     "first_audio_ms": 2119.7,
+     "first_sound_ms": 2299.7,
+     "stall_ms": 722.3,
+     "reply_s": 11.42,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       2119.7,
+       22560
+      ],
+      [
+       3781.9,
+       46080
+      ],
+      [
+       5437.0,
+       46080
+      ],
+      [
+       7090.5,
+       46080
+      ],
+      [
+       8737.5,
+       46080
+      ],
+      [
+       10383.8,
+       46080
+      ],
+      [
+       11315.9,
+       21120
+      ]
+     ],
+     "reply_text": "Oh, that's a common medication. Just make sure you take it at the right times and follow your doctor's instructions carefully. If you have any questions about it, feel free to ask me more.",
+     "heard": "Oh, that's a common medication. Just make sure you take it at the right times and follow your doctor's instructions carefully. If you have any questions about it, feel free to ask me more.",
+     "words": 34,
+     "word_errors": 0,
+     "n_codes": 571,
+     "codes_as_fast": true
+    },
+    "f07": {
+     "total_ms": 6460.8,
+     "first_audio_ms": 1737.5,
+     "first_sound_ms": 1937.5,
+     "stall_ms": 713.2,
+     "reply_s": 6.48,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1737.5,
+       22560
+      ],
+      [
+       3390.7,
+       46080
+      ],
+      [
+       5044.2,
+       46080
+      ],
+      [
+       6460.8,
+       40800
+      ]
+     ],
+     "reply_text": "I'm sorry to hear that. It's been a while since you've been waiting. Have you tried calling them again?",
+     "heard": "I'm sorry to hear that. It's been a while since you've been waiting. Have you tried calling them again?",
+     "words": 19,
+     "word_errors": 0,
+     "n_codes": 324,
+     "codes_as_fast": true
+    },
+    "f08": {
+     "total_ms": 15546.4,
+     "first_audio_ms": 2516.2,
+     "first_sound_ms": 2716.2,
+     "stall_ms": 712.9,
+     "reply_s": 16.16,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       2516.2,
+       22560
+      ],
+      [
+       4169.1,
+       46080
+      ],
+      [
+       5822.7,
+       46080
+      ],
+      [
+       7475.6,
+       46080
+      ],
+      [
+       9129.0,
+       46080
+      ],
+      [
+       10782.0,
+       46080
+      ],
+      [
+       12435.8,
+       46080
+      ],
+      [
+       14090.6,
+       46080
+      ],
+      [
+       15546.4,
+       42720
+      ]
+     ],
+     "reply_text": "Well, that can be a bit annoying. Have you checked if there are any error messages on the router's display? And also, make sure all the cables are properly connected. If that doesn't work, you might want to try resetting the router. So, what do you think? Any other",
+     "heard": "Well, that can be a bit annoying. Have you checked if there are any error messages on the router's display? And also, make sure all the cables are properly connected. If that doesn't work, you might want to try resetting the router. So what do you think?",
+     "words": 49,
+     "word_errors": 2,
+     "n_codes": 808,
+     "codes_as_fast": true
+    },
+    "f09": {
+     "total_ms": 11056.9,
+     "first_audio_ms": 2149.0,
+     "first_sound_ms": 2349.0,
+     "stall_ms": 707.2,
+     "reply_s": 10.62,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       2149.0,
+       22560
+      ],
+      [
+       3796.2,
+       46080
+      ],
+      [
+       5452.7,
+       46080
+      ],
+      [
+       7109.2,
+       46080
+      ],
+      [
+       8763.2,
+       46080
+      ],
+      [
+       11056.8,
+       46080
+      ],
+      [
+       11056.8,
+       1920
+      ]
+     ],
+     "reply_text": "Well, that's great. So, what's the account about? Is it a bank account, a social media account, or something else? Let me know so we can figure out how to add you both.",
+     "heard": "Well, that's great. So, what's the account about? Is it a bank account, a social media account, or something else? Let me know so we can figure out how to add you both.",
+     "words": 33,
+     "word_errors": 0,
+     "n_codes": 531,
+     "codes_as_fast": true
+    },
+    "f10": {
+     "total_ms": 6215.3,
+     "first_audio_ms": 1655.6,
+     "first_sound_ms": 1855.6,
+     "stall_ms": 714.8,
+     "reply_s": 6.22,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1655.6,
+       22560
+      ],
+      [
+       3310.4,
+       46080
+      ],
+      [
+       4959.3,
+       46080
+      ],
+      [
+       6215.3,
+       34560
+      ]
+     ],
+     "reply_text": "Sure, I can help with that. Who would you like to speak to about your mother's prescription?",
+     "heard": "Sure, I can help with that. Who would you like to speak to about your mother's prescription?",
+     "words": 17,
+     "word_errors": 0,
+     "n_codes": 311,
+     "codes_as_fast": true
+    },
+    "f11": {
+     "total_ms": 7501.1,
+     "first_audio_ms": 1757.6,
+     "first_sound_ms": 1957.6,
+     "stall_ms": 715.4,
+     "reply_s": 7.36,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1757.6,
+       22560
+      ],
+      [
+       3413.0,
+       46080
+      ],
+      [
+       5060.8,
+       46080
+      ],
+      [
+       6709.7,
+       46080
+      ],
+      [
+       7501.1,
+       15840
+      ]
+     ],
+     "reply_text": "Oh, that sounds rough. Did you hurt yourself badly? If you need to talk more about it, feel free to share.",
+     "heard": "Oh, that sounds rough. Did you hurt yourself badly? If you need to talk more about it, feel free to share.",
+     "words": 21,
+     "word_errors": 0,
+     "n_codes": 368,
+     "codes_as_fast": true
+    },
+    "f12": {
+     "total_ms": 4648.8,
+     "first_audio_ms": 1602.4,
+     "first_sound_ms": 1802.4,
+     "stall_ms": 707.9,
+     "reply_s": 4.52,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1602.4,
+       22560
+      ],
+      [
+       3250.3,
+       46080
+      ],
+      [
+       4648.7,
+       39840
+      ]
+     ],
+     "reply_text": "Sure, we can try to fit you in the morning. When would you like to come?",
+     "heard": "Sure, we can try to fit you in the morning. When would you like to come?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 226,
+     "codes_as_fast": true
+    },
+    "c01": {
+     "total_ms": 4725.8,
+     "first_audio_ms": 1585.0,
+     "first_sound_ms": 1805.0,
+     "stall_ms": 708.2,
+     "reply_s": 4.68,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1585.0,
+       22560
+      ],
+      [
+       3233.3,
+       46080
+      ],
+      [
+       4725.7,
+       43680
+      ]
+     ],
+     "reply_text": "That's a long account number. Is there something specific you want to know about it?",
+     "heard": "That's a long account number. Is there something specific you want to know about it?",
+     "words": 15,
+     "word_errors": 0,
+     "n_codes": 234,
+     "codes_as_fast": true
+    },
+    "c02": {
+     "total_ms": 4643.7,
+     "first_audio_ms": 1581.8,
+     "first_sound_ms": 1781.8,
+     "stall_ms": 714.7,
+     "reply_s": 4.54,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1581.8,
+       22560
+      ],
+      [
+       3236.6,
+       46080
+      ],
+      [
+       4643.7,
+       40320
+      ]
+     ],
+     "reply_text": "That's a great phone number. Is there anything I can assist you with regarding it?",
+     "heard": "That's a great phone number. Is there anything I can assist you with regarding it?",
+     "words": 15,
+     "word_errors": 0,
+     "n_codes": 227,
+     "codes_as_fast": true
+    },
+    "c03": {
+     "total_ms": 6142.2,
+     "first_audio_ms": 1717.3,
+     "first_sound_ms": 1917.3,
+     "stall_ms": 708.4,
+     "reply_s": 5.98,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1717.3,
+       22560
+      ],
+      [
+       3365.7,
+       46080
+      ],
+      [
+       5014.2,
+       46080
+      ],
+      [
+       6142.1,
+       28800
+      ]
+     ],
+     "reply_text": "Oh, that's a nice place. Is there something you need help with regarding Ashford Road in Croydon?",
+     "heard": "Oh, that's a nice place. Is there something you need help with regarding Ashford Road in Croydon?",
+     "words": 17,
+     "word_errors": 0,
+     "n_codes": 299,
+     "codes_as_fast": true
+    },
+    "c04": {
+     "total_ms": 9599.1,
+     "first_audio_ms": 2021.8,
+     "first_sound_ms": 2221.8,
+     "stall_ms": 707.6,
+     "reply_s": 9.58,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       2021.8,
+       22560
+      ],
+      [
+       3669.5,
+       46080
+      ],
+      [
+       5317.6,
+       46080
+      ],
+      [
+       6965.5,
+       46080
+      ],
+      [
+       8612.8,
+       46080
+      ],
+      [
+       9599.1,
+       23040
+      ]
+     ],
+     "reply_text": "Metformin 500 mg is a common medication. It's often used to treat type 2 diabetes. If you have any questions about it, feel free to ask.",
+     "heard": "Metformin 500 mg is a common medication. It's often used to treat type 2 diabetes. If you have any questions about it, feel free to ask.",
+     "words": 26,
+     "word_errors": 0,
+     "n_codes": 479,
+     "codes_as_fast": true
+    },
+    "c05": {
+     "total_ms": 4149.5,
+     "first_audio_ms": 1490.9,
+     "first_sound_ms": 1690.9,
+     "stall_ms": 707.5,
+     "reply_s": 3.86,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1490.9,
+       22560
+      ],
+      [
+       3138.3,
+       46080
+      ],
+      [
+       4149.4,
+       24000
+      ]
+     ],
+     "reply_text": "Oh, that's great. What did David say about the bill?",
+     "heard": "Oh, that's great. What did David say about the bill?",
+     "words": 10,
+     "word_errors": 0,
+     "n_codes": 193,
+     "codes_as_fast": true
+    },
+    "c06": {
+     "total_ms": 4346.9,
+     "first_audio_ms": 1485.7,
+     "first_sound_ms": 1685.7,
+     "stall_ms": 707.9,
+     "reply_s": 4.2,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1485.7,
+       22560
+      ],
+      [
+       3133.6,
+       46080
+      ],
+      [
+       4346.9,
+       32160
+      ]
+     ],
+     "reply_text": "That's great! What can I help you with regarding Emily Roberts?",
+     "heard": "That's great. What can I help you with regarding Emily Roberts?",
+     "words": 11,
+     "word_errors": 0,
+     "n_codes": 210,
+     "codes_as_fast": true
+    },
+    "c07": {
+     "total_ms": 5812.8,
+     "first_audio_ms": 1647.6,
+     "first_sound_ms": 1847.6,
+     "stall_ms": 708.0,
+     "reply_s": 5.56,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1647.6,
+       22560
+      ],
+      [
+       3295.6,
+       46080
+      ],
+      [
+       4943.2,
+       46080
+      ],
+      [
+       5812.8,
+       18720
+      ]
+     ],
+     "reply_text": "Got it. When's the order due? Let's make sure we can get it done on time.",
+     "heard": "Got it. When's the order due? Let's make sure we can get it done on time.",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 278,
+     "codes_as_fast": true
+    },
+    "c08": {
+     "total_ms": 8146.3,
+     "first_audio_ms": 1802.5,
+     "first_sound_ms": 2002.5,
+     "stall_ms": 711.1,
+     "reply_s": 8.34,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1802.5,
+       22560
+      ],
+      [
+       3453.6,
+       46080
+      ],
+      [
+       5108.5,
+       46080
+      ],
+      [
+       6754.4,
+       46080
+      ],
+      [
+       8146.3,
+       39360
+      ]
+     ],
+     "reply_text": "Well, that's not good. Maybe you could check your internet connection? Or try restarting your device? Let me know if that helps.",
+     "heard": "Well, that's not good. Maybe you could check your internet connection, or try restarting your device. Let me know if that helps.",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": 417,
+     "codes_as_fast": true
+    },
+    "c09": {
+     "total_ms": 9443.3,
+     "first_audio_ms": 1964.4,
+     "first_sound_ms": 2164.4,
+     "stall_ms": 707.2,
+     "reply_s": 9.42,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1964.4,
+       22560
+      ],
+      [
+       3611.6,
+       46080
+      ],
+      [
+       5259.4,
+       46080
+      ],
+      [
+       6905.6,
+       46080
+      ],
+      [
+       8552.5,
+       46080
+      ],
+      [
+       9443.2,
+       19200
+      ]
+     ],
+     "reply_text": "I'm sorry to hear that. You should probably see a doctor soon. They can give you a proper checkup and treatment. How's your cough affecting your daily life?",
+     "heard": "I'm sorry to hear that. You should probably see a doctor soon. They can give you a proper checkup and treatment. How's your cough affecting your daily life?",
+     "words": 28,
+     "word_errors": 0,
+     "n_codes": 471,
+     "codes_as_fast": true
+    },
+    "c10": {
+     "total_ms": 7277.4,
+     "first_audio_ms": 1739.6,
+     "first_sound_ms": 1939.6,
+     "stall_ms": 757.7,
+     "reply_s": 6.92,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1739.6,
+       22560
+      ],
+      [
+       3387.5,
+       46080
+      ],
+      [
+       5035.0,
+       46080
+      ],
+      [
+       7277.3,
+       46080
+      ],
+      [
+       7277.3,
+       5280
+      ]
+     ],
+     "reply_text": "Oh, Victor 278? That's a flight number. Is there anything else you need to know about it?",
+     "heard": "Oh, Victor 27-8? That's a flight number. Is there anything else you need to know about it?",
+     "words": 17,
+     "word_errors": 2,
+     "n_codes": 346,
+     "codes_as_fast": true
+    },
+    "c11": {
+     "total_ms": 9021.6,
+     "first_audio_ms": 1827.1,
+     "first_sound_ms": 2027.1,
+     "stall_ms": 709.9,
+     "reply_s": 8.92,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1827.1,
+       22560
+      ],
+      [
+       3477.0,
+       46080
+      ],
+      [
+       5123.8,
+       46080
+      ],
+      [
+       6773.8,
+       46080
+      ],
+      [
+       8422.2,
+       46080
+      ],
+      [
+       9021.5,
+       7200
+      ]
+     ],
+     "reply_text": "Oh, I see. So, you're looking for a new charger for your silver laptop. What kind of charger are you thinking of getting?",
+     "heard": "Oh, I see. So, you are looking for a new charger for your silver laptop. What kind of charger are you thinking of getting?",
+     "words": 23,
+     "word_errors": 2,
+     "n_codes": 446,
+     "codes_as_fast": true
+    },
+    "c12": {
+     "total_ms": 7587.4,
+     "first_audio_ms": 1870.9,
+     "first_sound_ms": 2070.9,
+     "stall_ms": 707.8,
+     "reply_s": 7.32,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1870.9,
+       22560
+      ],
+      [
+       3518.7,
+       46080
+      ],
+      [
+       5166.9,
+       46080
+      ],
+      [
+       6814.0,
+       46080
+      ],
+      [
+       7587.3,
+       14880
+      ]
+     ],
+     "reply_text": "That's a total of \u00a384.50. If you need to know how to pay or what to do next, just let me know.",
+     "heard": "That's a total of \u00a384.50. If you need to know how to pay or what to do next, just let me know.",
+     "words": 22,
+     "word_errors": 0,
+     "n_codes": 366,
+     "codes_as_fast": true
+    },
+    "n01": {
+     "total_ms": 11715.1,
+     "first_audio_ms": 2310.4,
+     "first_sound_ms": 2490.4,
+     "stall_ms": 707.1,
+     "reply_s": 11.82,
+     "leading_silence_ms": 180.0,
+     "chunks": [
+      [
+       2310.4,
+       22560
+      ],
+      [
+       3957.5,
+       46080
+      ],
+      [
+       5605.2,
+       46080
+      ],
+      [
+       7251.1,
+       46080
+      ],
+      [
+       8899.8,
+       46080
+      ],
+      [
+       10547.4,
+       46080
+      ],
+      [
+       11715.0,
+       30720
+      ]
+     ],
+     "reply_text": "Oh, you're looking for 742 Evergreen Terrace in Springfield, Oregon? That's a great place. If you need more info about it, like what's around there or if it's a good neighborhood, just let me know.",
+     "heard": "Oh, you are looking for 742 Evergreen Terrace in Springfield, Oregon? That's a great place. If you need more info about it, like what's around there or if it's a good neighborhood, just let me know.",
+     "words": 35,
+     "word_errors": 2,
+     "n_codes": 591,
+     "codes_as_fast": true
+    },
+    "n02": {
+     "total_ms": 5991.7,
+     "first_audio_ms": 1675.0,
+     "first_sound_ms": 1875.0,
+     "stall_ms": 709.0,
+     "reply_s": 5.8,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1675.0,
+       22560
+      ],
+      [
+       3324.0,
+       46080
+      ],
+      [
+       4971.8,
+       46080
+      ],
+      [
+       5991.7,
+       24480
+      ]
+     ],
+     "reply_text": "I'm sorry, I don't understand what you're trying to say. Can you please repeat or clarify?",
+     "heard": "I'm sorry, I don't understand what you're trying to say. Can you please repeat or clarify?",
+     "words": 16,
+     "word_errors": 0,
+     "n_codes": 290,
+     "codes_as_fast": true
+    },
+    "n03": {
+     "total_ms": 7273.3,
+     "first_audio_ms": 1743.2,
+     "first_sound_ms": 1943.2,
+     "stall_ms": 709.6,
+     "reply_s": 6.98,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1743.2,
+       22560
+      ],
+      [
+       3392.9,
+       46080
+      ],
+      [
+       5042.8,
+       46080
+      ],
+      [
+       6691.5,
+       46080
+      ],
+      [
+       7273.3,
+       6720
+      ]
+     ],
+     "reply_text": "I'm sorry to hear your package is overdue. Let me check the system for you. It might take a moment.",
+     "heard": "I'm sorry to hear your package is overdue. Let me check the system for you. It might take a moment.",
+     "words": 20,
+     "word_errors": 0,
+     "n_codes": 349,
+     "codes_as_fast": true
+    },
+    "n04": {
+     "total_ms": 7260.0,
+     "first_audio_ms": 1812.1,
+     "first_sound_ms": 2032.1,
+     "stall_ms": 708.5,
+     "reply_s": 6.8,
+     "leading_silence_ms": 220.0,
+     "chunks": [
+      [
+       1812.1,
+       22560
+      ],
+      [
+       3460.6,
+       46080
+      ],
+      [
+       5109.0,
+       46080
+      ],
+      [
+       7260.0,
+       46080
+      ],
+      [
+       7260.0,
+       2400
+      ]
+     ],
+     "reply_text": "That sounds really bad. Have you seen a doctor about it yet? It might be something that needs medical attention.",
+     "heard": "That sounds really bad. Have you seen a doctor about it yet? It might be something that needs medical attention.",
+     "words": 20,
+     "word_errors": 0,
+     "n_codes": 340,
+     "codes_as_fast": true
+    },
+    "n05": {
+     "total_ms": 5414.5,
+     "first_audio_ms": 1509.7,
+     "first_sound_ms": 1709.7,
+     "stall_ms": 710.4,
+     "reply_s": 5.12,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1509.7,
+       22560
+      ],
+      [
+       3160.0,
+       46080
+      ],
+      [
+       4813.8,
+       46080
+      ],
+      [
+       5414.5,
+       8160
+      ]
+     ],
+     "reply_text": "Oh, that's interesting. So, what's your question about this?",
+     "heard": "Oh, that's interesting. So, what's your question about this?",
+     "words": 9,
+     "word_errors": 0,
+     "n_codes": 256,
+     "codes_as_fast": true
+    },
+    "n06": {
+     "total_ms": 8017.6,
+     "first_audio_ms": 1886.3,
+     "first_sound_ms": 2086.3,
+     "stall_ms": 714.1,
+     "reply_s": 8.0,
+     "leading_silence_ms": 200.0,
+     "chunks": [
+      [
+       1886.3,
+       22560
+      ],
+      [
+       3540.4,
+       46080
+      ],
+      [
+       5194.6,
+       46080
+      ],
+      [
+       6843.3,
+       46080
+      ],
+      [
+       8017.6,
+       31200
+      ]
+     ],
+     "reply_text": "What about these? Are you looking for information on them? Or do you have a question related to them? Let me know so I can help you better.",
+     "heard": "What about these? Are you looking for information on them? Or do you have a question related to them? Let me know so I can help you better.",
+     "words": 28,
+     "word_errors": 0,
+     "n_codes": 400,
+     "codes_as_fast": true
+    }
+   },
+   "buffers": {
+    "0": {
+     "f01": {
+      "first_audio_ms": 1729.7,
+      "first_sound_ms": 1929.7,
+      "stall_ms": 726.8000000000002
+     },
+     "f02": {
+      "first_audio_ms": 1830.3,
+      "first_sound_ms": 2030.3,
+      "stall_ms": 724.3999999999996
+     },
+     "f03": {
+      "first_audio_ms": 1494.0,
+      "first_sound_ms": 1694.0,
+      "stall_ms": 728.8000000000002
+     },
+     "f04": {
+      "first_audio_ms": 1594.6,
+      "first_sound_ms": 1794.6,
+      "stall_ms": 716.4000000000001
+     },
+     "f05": {
+      "first_audio_ms": 1627.6,
+      "first_sound_ms": 1827.6,
+      "stall_ms": 717.9000000000001
+     },
+     "f06": {
+      "first_audio_ms": 2119.7,
+      "first_sound_ms": 2299.7,
+      "stall_ms": 722.2000000000003
+     },
+     "f07": {
+      "first_audio_ms": 1737.5,
+      "first_sound_ms": 1937.5,
+      "stall_ms": 713.1999999999998
+     },
+     "f08": {
+      "first_audio_ms": 2516.2,
+      "first_sound_ms": 2716.2,
+      "stall_ms": 712.9000000000005
+     },
+     "f09": {
+      "first_audio_ms": 2149.0,
+      "first_sound_ms": 2349.0,
+      "stall_ms": 707.1999999999998
+     },
+     "f10": {
+      "first_audio_ms": 1655.6,
+      "first_sound_ms": 1855.6,
+      "stall_ms": 714.8000000000002
+     },
+     "f11": {
+      "first_audio_ms": 1757.6,
+      "first_sound_ms": 1957.6,
+      "stall_ms": 715.4000000000001
+     },
+     "f12": {
+      "first_audio_ms": 1602.4,
+      "first_sound_ms": 1802.4,
+      "stall_ms": 707.9000000000001
+     },
+     "c01": {
+      "first_audio_ms": 1585.0,
+      "first_sound_ms": 1805.0,
+      "stall_ms": 708.3000000000002
+     },
+     "c02": {
+      "first_audio_ms": 1581.8,
+      "first_sound_ms": 1781.8,
+      "stall_ms": 714.7999999999997
+     },
+     "c03": {
+      "first_audio_ms": 1717.3,
+      "first_sound_ms": 1917.3,
+      "stall_ms": 708.3999999999996
+     },
+     "c04": {
+      "first_audio_ms": 2021.8,
+      "first_sound_ms": 2221.8,
+      "stall_ms": 707.6999999999998
+     },
+     "c05": {
+      "first_audio_ms": 1490.9,
+      "first_sound_ms": 1690.9,
+      "stall_ms": 707.4000000000001
+     },
+     "c06": {
+      "first_audio_ms": 1485.7,
+      "first_sound_ms": 1685.7,
+      "stall_ms": 707.9000000000001
+     },
+     "c07": {
+      "first_audio_ms": 1647.6,
+      "first_sound_ms": 1847.6,
+      "stall_ms": 708.0
+     },
+     "c08": {
+      "first_audio_ms": 1802.5,
+      "first_sound_ms": 2002.5,
+      "stall_ms": 711.0999999999999
+     },
+     "c09": {
+      "first_audio_ms": 1964.4,
+      "first_sound_ms": 2164.4,
+      "stall_ms": 707.1999999999998
+     },
+     "c10": {
+      "first_audio_ms": 1739.6,
+      "first_sound_ms": 1939.6,
+      "stall_ms": 757.7000000000003
+     },
+     "c11": {
+      "first_audio_ms": 1827.1,
+      "first_sound_ms": 2027.1,
+      "stall_ms": 709.9000000000001
+     },
+     "c12": {
+      "first_audio_ms": 1870.9,
+      "first_sound_ms": 2070.9,
+      "stall_ms": 707.7999999999997
+     },
+     "n01": {
+      "first_audio_ms": 2310.4,
+      "first_sound_ms": 2490.4,
+      "stall_ms": 707.0999999999999
+     },
+     "n02": {
+      "first_audio_ms": 1675.0,
+      "first_sound_ms": 1875.0,
+      "stall_ms": 709.0
+     },
+     "n03": {
+      "first_audio_ms": 1743.2,
+      "first_sound_ms": 1943.2,
+      "stall_ms": 709.7000000000003
+     },
+     "n04": {
+      "first_audio_ms": 1812.1,
+      "first_sound_ms": 2032.1,
+      "stall_ms": 708.5
+     },
+     "n05": {
+      "first_audio_ms": 1509.7,
+      "first_sound_ms": 1709.7,
+      "stall_ms": 710.3000000000002
+     },
+     "n06": {
+      "first_audio_ms": 1886.3,
+      "first_sound_ms": 2086.3,
+      "stall_ms": 714.0999999999999
+     }
+    },
+    "0.5": {
+     "f01": {
+      "first_audio_ms": 1729.7,
+      "first_sound_ms": 1929.7,
+      "stall_ms": 726.8000000000002
+     },
+     "f02": {
+      "first_audio_ms": 1830.3,
+      "first_sound_ms": 2030.3,
+      "stall_ms": 724.3999999999996
+     },
+     "f03": {
+      "first_audio_ms": 1494.0,
+      "first_sound_ms": 1694.0,
+      "stall_ms": 728.8000000000002
+     },
+     "f04": {
+      "first_audio_ms": 1594.6,
+      "first_sound_ms": 1794.6,
+      "stall_ms": 716.4000000000001
+     },
+     "f05": {
+      "first_audio_ms": 1627.6,
+      "first_sound_ms": 1827.6,
+      "stall_ms": 717.9000000000001
+     },
+     "f06": {
+      "first_audio_ms": 2119.7,
+      "first_sound_ms": 2299.7,
+      "stall_ms": 722.2000000000003
+     },
+     "f07": {
+      "first_audio_ms": 1737.5,
+      "first_sound_ms": 1937.5,
+      "stall_ms": 713.1999999999998
+     },
+     "f08": {
+      "first_audio_ms": 2516.2,
+      "first_sound_ms": 2716.2,
+      "stall_ms": 712.9000000000005
+     },
+     "f09": {
+      "first_audio_ms": 2149.0,
+      "first_sound_ms": 2349.0,
+      "stall_ms": 707.1999999999998
+     },
+     "f10": {
+      "first_audio_ms": 1655.6,
+      "first_sound_ms": 1855.6,
+      "stall_ms": 714.8000000000002
+     },
+     "f11": {
+      "first_audio_ms": 1757.6,
+      "first_sound_ms": 1957.6,
+      "stall_ms": 715.4000000000001
+     },
+     "f12": {
+      "first_audio_ms": 1602.4,
+      "first_sound_ms": 1802.4,
+      "stall_ms": 707.9000000000001
+     },
+     "c01": {
+      "first_audio_ms": 1585.0,
+      "first_sound_ms": 1805.0,
+      "stall_ms": 708.3000000000002
+     },
+     "c02": {
+      "first_audio_ms": 1581.8,
+      "first_sound_ms": 1781.8,
+      "stall_ms": 714.7999999999997
+     },
+     "c03": {
+      "first_audio_ms": 1717.3,
+      "first_sound_ms": 1917.3,
+      "stall_ms": 708.3999999999996
+     },
+     "c04": {
+      "first_audio_ms": 2021.8,
+      "first_sound_ms": 2221.8,
+      "stall_ms": 707.6999999999998
+     },
+     "c05": {
+      "first_audio_ms": 1490.9,
+      "first_sound_ms": 1690.9,
+      "stall_ms": 707.4000000000001
+     },
+     "c06": {
+      "first_audio_ms": 1485.7,
+      "first_sound_ms": 1685.7,
+      "stall_ms": 707.9000000000001
+     },
+     "c07": {
+      "first_audio_ms": 1647.6,
+      "first_sound_ms": 1847.6,
+      "stall_ms": 708.0
+     },
+     "c08": {
+      "first_audio_ms": 1802.5,
+      "first_sound_ms": 2002.5,
+      "stall_ms": 711.0999999999999
+     },
+     "c09": {
+      "first_audio_ms": 1964.4,
+      "first_sound_ms": 2164.4,
+      "stall_ms": 707.1999999999998
+     },
+     "c10": {
+      "first_audio_ms": 1739.6,
+      "first_sound_ms": 1939.6,
+      "stall_ms": 757.7000000000003
+     },
+     "c11": {
+      "first_audio_ms": 1827.1,
+      "first_sound_ms": 2027.1,
+      "stall_ms": 709.9000000000001
+     },
+     "c12": {
+      "first_audio_ms": 1870.9,
+      "first_sound_ms": 2070.9,
+      "stall_ms": 707.7999999999997
+     },
+     "n01": {
+      "first_audio_ms": 2310.4,
+      "first_sound_ms": 2490.4,
+      "stall_ms": 707.0999999999999
+     },
+     "n02": {
+      "first_audio_ms": 1675.0,
+      "first_sound_ms": 1875.0,
+      "stall_ms": 709.0
+     },
+     "n03": {
+      "first_audio_ms": 1743.2,
+      "first_sound_ms": 1943.2,
+      "stall_ms": 709.7000000000003
+     },
+     "n04": {
+      "first_audio_ms": 1812.1,
+      "first_sound_ms": 2032.1,
+      "stall_ms": 708.5
+     },
+     "n05": {
+      "first_audio_ms": 1509.7,
+      "first_sound_ms": 1709.7,
+      "stall_ms": 710.3000000000002
+     },
+     "n06": {
+      "first_audio_ms": 1886.3,
+      "first_sound_ms": 2086.3,
+      "stall_ms": 714.0999999999999
+     }
+    },
+    "1": {
+     "f01": {
+      "first_audio_ms": 3396.5,
+      "first_sound_ms": 3596.5,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 3494.7,
+      "first_sound_ms": 3694.7,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 3162.8,
+      "first_sound_ms": 3362.8,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 3251.0,
+      "first_sound_ms": 3451.0,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 3285.5,
+      "first_sound_ms": 3485.5,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 3781.9,
+      "first_sound_ms": 3961.9,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 3390.7,
+      "first_sound_ms": 3590.7,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 4169.1,
+      "first_sound_ms": 4369.1,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 3796.2,
+      "first_sound_ms": 3996.2,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 3310.4,
+      "first_sound_ms": 3510.4,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 3413.0,
+      "first_sound_ms": 3613.0,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 3250.3,
+      "first_sound_ms": 3450.3,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 3233.3,
+      "first_sound_ms": 3453.3,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 3236.6,
+      "first_sound_ms": 3436.6,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 3365.7,
+      "first_sound_ms": 3565.7,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 3669.5,
+      "first_sound_ms": 3869.5,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 3138.3,
+      "first_sound_ms": 3338.3,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 3133.6,
+      "first_sound_ms": 3333.6,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 3295.6,
+      "first_sound_ms": 3495.6,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 3453.6,
+      "first_sound_ms": 3653.6,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 3611.6,
+      "first_sound_ms": 3811.6,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 3387.5,
+      "first_sound_ms": 3587.5,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 3477.0,
+      "first_sound_ms": 3677.0,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 3518.7,
+      "first_sound_ms": 3718.7,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 3957.5,
+      "first_sound_ms": 4137.5,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 3324.0,
+      "first_sound_ms": 3524.0,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 3392.9,
+      "first_sound_ms": 3592.9,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 3460.6,
+      "first_sound_ms": 3680.6,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 3160.0,
+      "first_sound_ms": 3360.0,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 3540.4,
+      "first_sound_ms": 3740.4,
+      "stall_ms": 0.0
+     }
+    },
+    "1.5": {
+     "f01": {
+      "first_audio_ms": 3396.5,
+      "first_sound_ms": 3596.5,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 3494.7,
+      "first_sound_ms": 3694.7,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 3162.8,
+      "first_sound_ms": 3362.8,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 3251.0,
+      "first_sound_ms": 3451.0,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 3285.5,
+      "first_sound_ms": 3485.5,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 3781.9,
+      "first_sound_ms": 3961.9,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 3390.7,
+      "first_sound_ms": 3590.7,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 4169.1,
+      "first_sound_ms": 4369.1,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 3796.2,
+      "first_sound_ms": 3996.2,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 3310.4,
+      "first_sound_ms": 3510.4,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 3413.0,
+      "first_sound_ms": 3613.0,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 3250.3,
+      "first_sound_ms": 3450.3,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 3233.3,
+      "first_sound_ms": 3453.3,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 3236.6,
+      "first_sound_ms": 3436.6,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 3365.7,
+      "first_sound_ms": 3565.7,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 3669.5,
+      "first_sound_ms": 3869.5,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 3138.3,
+      "first_sound_ms": 3338.3,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 3133.6,
+      "first_sound_ms": 3333.6,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 3295.6,
+      "first_sound_ms": 3495.6,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 3453.6,
+      "first_sound_ms": 3653.6,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 3611.6,
+      "first_sound_ms": 3811.6,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 3387.5,
+      "first_sound_ms": 3587.5,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 3477.0,
+      "first_sound_ms": 3677.0,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 3518.7,
+      "first_sound_ms": 3718.7,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 3957.5,
+      "first_sound_ms": 4137.5,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 3324.0,
+      "first_sound_ms": 3524.0,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 3392.9,
+      "first_sound_ms": 3592.9,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 3460.6,
+      "first_sound_ms": 3680.6,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 3160.0,
+      "first_sound_ms": 3360.0,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 3540.4,
+      "first_sound_ms": 3740.4,
+      "stall_ms": 0.0
+     }
+    },
+    "2": {
+     "f01": {
+      "first_audio_ms": 3396.5,
+      "first_sound_ms": 3596.5,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 3494.7,
+      "first_sound_ms": 3694.7,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 3162.8,
+      "first_sound_ms": 3362.8,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 3251.0,
+      "first_sound_ms": 3451.0,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 3285.5,
+      "first_sound_ms": 3485.5,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 3781.9,
+      "first_sound_ms": 3961.9,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 3390.7,
+      "first_sound_ms": 3590.7,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 4169.1,
+      "first_sound_ms": 4369.1,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 3796.2,
+      "first_sound_ms": 3996.2,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 3310.4,
+      "first_sound_ms": 3510.4,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 3413.0,
+      "first_sound_ms": 3613.0,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 3250.3,
+      "first_sound_ms": 3450.3,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 3233.3,
+      "first_sound_ms": 3453.3,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 3236.6,
+      "first_sound_ms": 3436.6,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 3365.7,
+      "first_sound_ms": 3565.7,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 3669.5,
+      "first_sound_ms": 3869.5,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 3138.3,
+      "first_sound_ms": 3338.3,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 3133.6,
+      "first_sound_ms": 3333.6,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 3295.6,
+      "first_sound_ms": 3495.6,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 3453.6,
+      "first_sound_ms": 3653.6,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 3611.6,
+      "first_sound_ms": 3811.6,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 3387.5,
+      "first_sound_ms": 3587.5,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 3477.0,
+      "first_sound_ms": 3677.0,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 3518.7,
+      "first_sound_ms": 3718.7,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 3957.5,
+      "first_sound_ms": 4137.5,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 3324.0,
+      "first_sound_ms": 3524.0,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 3392.9,
+      "first_sound_ms": 3592.9,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 3460.6,
+      "first_sound_ms": 3680.6,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 3160.0,
+      "first_sound_ms": 3360.0,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 3540.4,
+      "first_sound_ms": 3740.4,
+      "stall_ms": 0.0
+     }
+    },
+    "3": {
+     "f01": {
+      "first_audio_ms": 5064.2,
+      "first_sound_ms": 5264.2,
+      "stall_ms": 0.0
+     },
+     "f02": {
+      "first_audio_ms": 5160.8,
+      "first_sound_ms": 5360.8,
+      "stall_ms": 0.0
+     },
+     "f03": {
+      "first_audio_ms": 4435.1,
+      "first_sound_ms": 4635.1,
+      "stall_ms": 0.0
+     },
+     "f04": {
+      "first_audio_ms": 4658.2,
+      "first_sound_ms": 4858.2,
+      "stall_ms": 0.0
+     },
+     "f05": {
+      "first_audio_ms": 4945.3,
+      "first_sound_ms": 5145.3,
+      "stall_ms": 0.0
+     },
+     "f06": {
+      "first_audio_ms": 5437.0,
+      "first_sound_ms": 5617.0,
+      "stall_ms": 0.0
+     },
+     "f07": {
+      "first_audio_ms": 5044.2,
+      "first_sound_ms": 5244.2,
+      "stall_ms": 0.0
+     },
+     "f08": {
+      "first_audio_ms": 5822.7,
+      "first_sound_ms": 6022.7,
+      "stall_ms": 0.0
+     },
+     "f09": {
+      "first_audio_ms": 5452.7,
+      "first_sound_ms": 5652.7,
+      "stall_ms": 0.0
+     },
+     "f10": {
+      "first_audio_ms": 4959.3,
+      "first_sound_ms": 5159.3,
+      "stall_ms": 0.0
+     },
+     "f11": {
+      "first_audio_ms": 5060.8,
+      "first_sound_ms": 5260.8,
+      "stall_ms": 0.0
+     },
+     "f12": {
+      "first_audio_ms": 4648.7,
+      "first_sound_ms": 4848.7,
+      "stall_ms": 0.0
+     },
+     "c01": {
+      "first_audio_ms": 4725.7,
+      "first_sound_ms": 4945.7,
+      "stall_ms": 0.0
+     },
+     "c02": {
+      "first_audio_ms": 4643.7,
+      "first_sound_ms": 4843.7,
+      "stall_ms": 0.0
+     },
+     "c03": {
+      "first_audio_ms": 5014.2,
+      "first_sound_ms": 5214.2,
+      "stall_ms": 0.0
+     },
+     "c04": {
+      "first_audio_ms": 5317.6,
+      "first_sound_ms": 5517.6,
+      "stall_ms": 0.0
+     },
+     "c05": {
+      "first_audio_ms": 4149.4,
+      "first_sound_ms": 4349.4,
+      "stall_ms": 0.0
+     },
+     "c06": {
+      "first_audio_ms": 4346.9,
+      "first_sound_ms": 4546.9,
+      "stall_ms": 0.0
+     },
+     "c07": {
+      "first_audio_ms": 4943.2,
+      "first_sound_ms": 5143.2,
+      "stall_ms": 0.0
+     },
+     "c08": {
+      "first_audio_ms": 5108.5,
+      "first_sound_ms": 5308.5,
+      "stall_ms": 0.0
+     },
+     "c09": {
+      "first_audio_ms": 5259.4,
+      "first_sound_ms": 5459.4,
+      "stall_ms": 0.0
+     },
+     "c10": {
+      "first_audio_ms": 5035.0,
+      "first_sound_ms": 5235.0,
+      "stall_ms": 0.0
+     },
+     "c11": {
+      "first_audio_ms": 5123.8,
+      "first_sound_ms": 5323.8,
+      "stall_ms": 0.0
+     },
+     "c12": {
+      "first_audio_ms": 5166.9,
+      "first_sound_ms": 5366.9,
+      "stall_ms": 0.0
+     },
+     "n01": {
+      "first_audio_ms": 5605.2,
+      "first_sound_ms": 5785.2,
+      "stall_ms": 0.0
+     },
+     "n02": {
+      "first_audio_ms": 4971.8,
+      "first_sound_ms": 5171.8,
+      "stall_ms": 0.0
+     },
+     "n03": {
+      "first_audio_ms": 5042.8,
+      "first_sound_ms": 5242.8,
+      "stall_ms": 0.0
+     },
+     "n04": {
+      "first_audio_ms": 5109.0,
+      "first_sound_ms": 5329.0,
+      "stall_ms": 0.0
+     },
+     "n05": {
+      "first_audio_ms": 4813.8,
+      "first_sound_ms": 5013.8,
+      "stall_ms": 0.0
+     },
+     "n06": {
+      "first_audio_ms": 5194.6,
+      "first_sound_ms": 5394.6,
+      "stall_ms": 0.0
+     }
+    }
+   }
+  }
+ }
+}

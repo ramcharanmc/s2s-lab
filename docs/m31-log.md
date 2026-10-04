@@ -12,7 +12,9 @@ Kept as events happen. The earlier logs: `docs/m30-log.md` and those it names.
 | 5 | 10-04 | `r4_bench.py::speed`, the author, L40S, 10 probe clips, \$0.164 | the DiT compiled 4.2, 3.2 and 2.1 times faster on 25, 50 and 100 codes, its audio within 0.003 to 0.06 of eager's; both static Talker variants failed at once: `TypeError` (`int` minus `dict`) | — | the run file, this commit |
 | 6 | 10-04 | the failure reproduced on the laptop, a tiny random Talker | with a static cache, generate hands the Talker a dict of masks; given its 2-D mask back it runs, codes identical to eager's; compiled, its layers need no mask on one-code steps: one graph, no breaks, codes identical | `keep_2d_mask`; `compile_layers` without the mask; the variants eager, static, static+layers; `::speed --tag` | 567e7f2 |
 | 7 | 10-04 | `r4_bench.py::speed --tag mask`, the author, L40S, the same 10 probe clips, \$0.287 | both fixes held on the real Talker: static+layers 12.7 ms a code, 0.63 of real time (eager 20.2, static alone 23.6), no graph breaks; its codes differ from eager's on 10 of 10, from code 8 to 200 on; the DiT as in the first run | — | the run file, this commit |
-| 8 | 10-04 | the stream's tests, laptop, a fake model; then `transformers`' own Talker and token2wav, tiny and random | a block decoder that reproduces a whole reply sample for sample; the stream's codes the fast rung's; the real Talker path writes eager's codes; 480 samples a code; my cache reset outside inference mode caught and fixed | `r4stream.py` (`r4-gpu-fast`, `r4-gpu-stream`), `r4streamdev.py`, tests, `::streamdev` | this commit |
+| 8 | 10-04 | the stream's tests, laptop, a fake model; then `transformers`' own Talker and token2wav, tiny and random | a block decoder that reproduces a whole reply sample for sample; the stream's codes the fast rung's; the real Talker path writes eager's codes; 480 samples a code; my cache reset outside inference mode caught and fixed | `r4stream.py` (`r4-gpu-fast`, `r4-gpu-stream`), `r4streamdev.py`, tests, `::streamdev` | ceae735 |
+| 9 | 10-04 | `r4_bench.py::streamdev`, the author, L40S, 30 probe clips, \$0.685 | the stream's first sound 1,629 ms with no buffer, but every turn stalled; with 0.5 s held, 3,284 against R4's 5,865 and no stall; its codes the fast rung's on 30 of 30; Whisper 9 errors in 622 words against R4's 6; `r4-gpu-fast` no faster than R4 in this container | — | the run file, this commit |
+| 10 | 10-04 | the author listens to the development replies | "edges sounded fine"; the author's choice (A of three): register now on the stall-free setting | the setting frozen; `pr015.py`, tests, `::pr015`; PR-015 registered | this commit |
 
 ## 1. The design
 
@@ -295,3 +297,60 @@ modal run modal_app/r4_bench.py::streamdev      one L40S, about 25 min, about $0
 From it: the setting and the start buffer, then PR-015, registered before the eval set.
 
 **Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite, 957 passed, 2 skipped.
+
+## 9. Step 2's development run: sooner, if playback waits for the second block (at ceae735)
+
+Run by the author: `modal run modal_app/r4_bench.py::streamdev`, one L40S, 1,256 s in the function, 1,264
+s end to end, \$0.685. The 30 probe clips; `runs/r4-gpu/stream-dev-l40s.json`; 15 replies in
+`results/r4-gpu/streamdev/` (not committed).
+
+| rung | first sound p50 ms | p90 | stalled turns | total p50 ms | reply s p50 | Whisper's errors |
+|---|---:|---:|---:|---:|---:|---:|
+| `r4-gpu` (R4) | 5,865 | 10,831 | 0 of 30 | 5,675 | 6.2 | 6 of 622 words |
+| `r4-gpu-fast` | 6,216 | 10,290 | 0 | 6,006 | 6.6 | 10 |
+| stream, 24 + 96, no buffer | 1,629 | 2,002 | **30** (p90 1,234 ms) | 6,931 | 6.6 | 9 |
+| **stream, 24 + 96, 0.5 s held** | **3,284** | **3,654** | **0** | | | |
+| stream, 48 + 96, 1 s held | 3,592 | 3,965 | 0 | 6,860 | 6.6 | 8 |
+| stream, 24 + 192, 0.5 s held | 4,641 | 5,136 | 0 | 6,250 | 6.6 | 9 |
+
+(The held rows are computed from the same turns' pieces: `r4streamdev.buffered`, which the tests show
+gives what `StartBuffer` gives.)
+
+- **The stream works.** Its codes were the fast rung's on 30 of 30 turns in every setting: decoding the
+  blocks inside the Talker's call did not move its sampling. Whisper heard 8 or 9 errors in 622 words,
+  against R4's 6. The author listened and heard nothing at the edges.
+- **But with no buffer every turn stalls.** The first block is 0.46 s of audio, and the next arrives
+  1.65 s later (p50): the stream makes its audio at 1.03 of real time, so playback catches up at once.
+  Held until 0.5 s exists, playback starts with the second block, and no turn stalled; any hold from
+  0.5 to 2 s gives the same, because the second block arrives whole.
+- **`r4-gpu-fast` was no faster than R4 here** (paired, 0.998 of its time a second of reply). This
+  container was a fast one: R4 took 0.91 s of wait a second of reply, against 1.32 in step 1's, as in
+  M28. The compiled Talker runs at about 13 ms a code on both hosts; the eager one at 13 to 20 by host.
+  Probably `generate`'s own loop around each step, run by the CPU, is the floor both reach, and a
+  faster host lifts only the eager one. Not measured stage by stage in this container.
+- **What the start depends on.** The stream's first sound grows with the reply's length (r = 0.98): the
+  Thinker writes its whole text before the Talker starts.
+
+On the development data, by the same paired bootstrap PR-002 used: first-sound p50 ratio 0.56 (95%
+interval 0.46 to 0.61), p90 0.34 (0.31 to 0.43), total p50 1.22 (1.08 to 1.24); the smallest margin
+before a stall, on one turn, 102 ms (median 725).
+
+## 10. PR-015, registered
+
+The author's choice (A of three: register now; B, a Talker loop of our own first; C, stop), and his
+listening: "edges sounded fine". The setting frozen by a rule written after the development run, and
+said so in the entry: the lowest first-sound p50 among the settings and buffers with no stalled turn,
+(24, 96) held to 0.5 s. PR-015 (`docs/preregistration.md`) asks, on the eval set, whether the stream's
+first sound is at most 0.70 of R4's at the median and 0.55 at p90, with its total at most 1.40, at most
+20 turns stalling (10 for more than 200 ms), and Whisper's word error rate within 2 points of R4's; and
+it is a valid test only if the stream says R4's text and the fast rung's codes on 190 of 200 turns.
+PR-002's correlation criterion is not used: the Thinker still comes first, and that is said too.
+
+`src/s2slab/pr015.py` runs R4, `r4-gpu-fast` and the stream in one container (`r4streamdev.run` with the
+frozen setting, its buffer in the rung) and computes the criteria.
+
+```
+modal run modal_app/r4_bench.py::pr015 --confirm PR-015      once; one L40S, about 1.5 to 2 h, about $3 to $4; saves runs/r4-gpu/pr015.json
+```
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite, 965 passed, 2 skipped.

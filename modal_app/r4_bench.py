@@ -11,8 +11,9 @@ R4 on Modal: the S2S rung on an L40S, with R3 beside it in the same container.
     modal run modal_app/r4_bench.py::speed                                   M31, step 1b: the Talker and the DiT, eager and compiled
     modal run modal_app/r4_bench.py::speed --tag mask                        the same with the Talker's mask fixed (second run)
     modal run modal_app/r4_bench.py::streamdev                               M31, step 2: R4, r4-gpu-fast and the stream's settings, probe clips
-The file has five entry points (main, pairs, profile, speed, streamdev), so Modal needs the one named:
-::main, ::pairs, ::profile, ::speed or ::streamdev.
+    modal run modal_app/r4_bench.py::pr015 --confirm PR-015                  PR-015, once: the three on the eval set
+The file has six entry points (main, pairs, profile, speed, streamdev, pr015), so Modal needs the one named:
+::main, ::pairs, ::profile, ::speed, ::streamdev or ::pr015.
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
@@ -231,6 +232,21 @@ def stream_dev() -> dict:
     return {"gpu": _gpu_name(), "versions": _versions(), "dev": blob, "seconds": time.perf_counter() - t0}
 
 
+# 200 clips through three rungs (R4 ~7 s a turn on the eval set, the others about as long), each reply heard
+# by Whisper: 75 to 120 min after the load, by the container's speed. The timeout leaves room.
+@app.function(gpu="L40S", timeout=180 * 60, scaledown_window=60)
+def pr015_run(confirm: str) -> dict:
+    """PR-015's one run: R4, r4-gpu-fast and r4-gpu-stream as frozen, on the 200 eval clips (pr015.run)."""
+    import os
+    os.chdir("/root")
+    from s2slab.evalset import TARGET_SR
+    from s2slab.pr015 import eval_clips, run
+    clips, cohorts = eval_clips(confirm)
+    t0 = time.perf_counter()
+    blob = run(clips, TARGET_SR, cohorts)
+    return {"gpu": _gpu_name(), "versions": _versions(), "run": blob, "seconds": time.perf_counter() - t0}
+
+
 def results_path(rung_id: str, limit: int = 0, tag: str = "") -> pathlib.Path:
     """runs/<rung>/evalset-modal-l40s[-tag].json for the real run (committed evidence);
     results/<rung>/...-limitN.json for a smoke test (ignored)."""
@@ -377,5 +393,31 @@ def streamdev():
     print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {path.relative_to(REPO)}; "
           f"{len(listen)} replies for listening -> {folder.relative_to(REPO)}/")
     print(out["versions"])
+    print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
+
+
+@app.local_entrypoint()
+def pr015(confirm: str = ""):
+    """PR-015, once (docs/preregistration.md): refused without --confirm PR-015, if its run file exists, or from
+    a tree with uncommitted changes. Saves runs/r4-gpu/pr015.json and prints the criteria."""
+    from s2slab.pr015 import REGISTRATION, RUN, criteria, format_pr015, save
+    from s2slab.sidechannel import refuse_to_overwrite
+
+    if confirm != REGISTRATION:
+        raise SystemExit(f"add --confirm {REGISTRATION}: the eval set is its confirmation's, and it runs once")
+    refuse_to_overwrite(REPO / RUN)
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    if commit.endswith("-dirty"):
+        raise SystemExit(f"{commit}: commit first; {REGISTRATION} runs from a clean commit")
+    t0 = time.time()
+    out = pr015_run.remote(confirm)
+    wall = time.time() - t0
+    blob = {"registration": REGISTRATION, "commit": commit, "machine": f"Modal {out['gpu']}",
+            "versions": out["versions"], **out["run"]}
+    path = save(blob, REPO / RUN)
+    print(format_pr015(blob, criteria(blob)))
+    print(f"\nsaved -> {path.relative_to(REPO)}")
     print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
           f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")

@@ -6,8 +6,8 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-10-04** (commit `ac3a932`): rungs R0 to R5 built and measured; three fine-tunes run;
-fourteen registrations, all reported, five with a supported claim. A demo that shows
+**Status, 2026-10-04** (commit `ceae735`): rungs R0 to R5 built and measured; three fine-tunes run;
+fifteen registrations, fourteen reported, five with a supported claim; PR-015 (R4 streamed) open. A demo that shows
 the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
 
 **https://ramcharanmc--s2s-lab-demo-web.modal.run**
@@ -60,7 +60,7 @@ rows within this table, not with the one above. Moshi answered 93 callers, Perso
 
 ## What was claimed, and what happened
 
-Fourteen registrations (`docs/preregistration.md`). Criteria are committed before the data is seen;
+Fifteen registrations (`docs/preregistration.md`). Criteria are committed before the data is seen;
 results are appended whatever they say.
 
 | | Question, in short | Outcome |
@@ -78,10 +78,12 @@ results are appended whatever they say.
 | PR-011 | Does a LoRA make Whisper write disfluent speech as spoken? | **supported**: raw WER 9.9% to 2.3% |
 | PR-012 | Do the severity targets work as FastPitch's own inputs? | not supported: rate exact, pitch on target 57 to 60% |
 | PR-013 | Quantized to 8 bits, does Kokoro's pitch drift while its words stay? | **Claim A supported**; fp16 not usable on a CPU |
+| PR-014 | Does voice activity projection end real turns better than T1b? | not run: no setting met its rule on development |
+| PR-015 | Does streaming R4 let the caller hear its reply sooner, without stalls? | registered, open |
 
-All fourteen are reported. Eight were not supported, and one, PR-014 (voice activity projection on
+Fourteen are reported. Eight were not supported, and one, PR-014 (voice activity projection on
 real speech), was not run: no setting met its rule on the development recordings. Each entry says
-why.
+why. PR-015 is registered and open.
 
 ## Run it
 
