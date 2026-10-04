@@ -3,7 +3,16 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-04, at commit `ac3a932`.
+Last updated 2026-10-04, at commit `d843937`.
+
+## Chosen next: M31, R4 streams its reply
+
+R4 (Qwen2.5-Omni speaks its own reply) waits 6,859 ms for its first audio on the L40S (M28), every
+other rung under 700 ms: its Thinker, Talker and token2wav each run to the end before the next begins,
+about 0.93 s of wait per second of reply. M31 adds `r4-gpu-stream`, the same model and settings with the
+audio handed out as it is made, as R1 is to R0. Step 1: where the wait goes, stage by stage (about
+\$0.30). Then the rung, a registration before the eval set, and one run beside R4 in one container
+(`docs/m31-log.md`). About \$2.50 to \$3 on Modal.
 
 ## Done: M30, voice activity projection on real speech
 
@@ -98,7 +107,7 @@ the earlier cost column mixed mean and median.
 |---|---|
 | T4, the voice-activity-projection turn-taking model | v2 §3.1 |
 | A second FT-1, keeping dev checkpoints to see what the LoRA learns when | PR-010 |
-| A streaming Talker, or R3 with streamed output | R3, R4 |
+| R3 with streamed output (R4's is M31) | R3 |
 | The upward pitch bias in the Praat severity render | PR-009 |
 | The base voice's sentence u8, whose pause vanishes in mania | PR-012 |
 | Another disfluent speaker with verbatim transcripts | PR-011 |

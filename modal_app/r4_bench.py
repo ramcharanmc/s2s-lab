@@ -7,7 +7,8 @@ R4 on Modal: the S2S rung on an L40S, with R3 beside it in the same container.
     modal run modal_app/r4_bench.py::pairs --split dev                       PR-008's development: both rungs answer the 21 dev prosody pairs
     modal run modal_app/r4_bench.py::main --rung r0-gpu,r1-gpu,r2-gpu,r2-gpu-turbo,r3-gpu,r4-gpu --evalset --tag ladder
                                                                              M28: the ladder, R0 to R4, in ONE L40S container
-The file has two entry points (main, pairs), so Modal needs the one named: ::main or ::pairs.
+    modal run modal_app/r4_bench.py::profile                                 M31, step 1: R4's stages timed on the 30 probe clips
+The file has three entry points (main, pairs, profile), so Modal needs the one named: ::main, ::pairs or ::profile.
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
@@ -37,6 +38,7 @@ import modal
 REPO = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 L40S_DOLLARS_PER_HOUR = 1.95   # Modal's L40S rate, checked 2026-08-19 (v2 §5)
+PROFILE_PATH = REPO / "runs" / "r4-gpu" / "profile-l40s.json"   # M31, step 1 (s2slab.r4profile)
 
 # Every Hugging Face repo the rungs this file runs will load; tests/test_modal_app.py checks it.
 MODELS = {
@@ -171,6 +173,21 @@ def answer(clips: dict[str, bytes], rung_ids: list[str], repeat: int = 2) -> dic
     return {"gpu": _gpu_name(), "versions": _versions(), "answers": answers, "seconds": time.perf_counter() - t0}
 
 
+# R4 at ~8 s a turn on 30 clips, plus three first blocks decoded twice each: about 6 min after the load.
+@app.function(gpu="L40S", timeout=30 * 60, scaledown_window=60)
+def stages() -> dict:
+    """M31, step 1: R4's three stages timed inside its own call, on the 30 probe clips (r4profile.run)."""
+    import os
+    os.chdir("/root")
+    from s2slab.probes import TARGET_SR
+    from s2slab.r4 import OmniS2S
+    from s2slab.r4profile import run
+    from s2slab.rungs import probe_clips
+    t0 = time.perf_counter()
+    blob = run(OmniS2S(), probe_clips(), TARGET_SR)
+    return {"gpu": _gpu_name(), "versions": _versions(), "profile": blob, "seconds": time.perf_counter() - t0}
+
+
 def results_path(rung_id: str, limit: int = 0, tag: str = "") -> pathlib.Path:
     """runs/<rung>/evalset-modal-l40s[-tag].json for the real run (committed evidence);
     results/<rung>/...-limitN.json for a smoke test (ignored)."""
@@ -237,6 +254,29 @@ def pairs(split: str = "dev", confirm: str = "", save: str = ""):
     if save:
         save_run(pathlib.Path(save), head, prs, out["answers"], measures, deltas)
         print(f"saved to {save}")
+    print(out["versions"])
+    print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
+
+
+@app.local_entrypoint()
+def profile():
+    """Where R4's wait goes, before anything streams (M31, step 1). Saves runs/r4-gpu/profile-l40s.json,
+    never overwritten, and prints the stage table."""
+    from s2slab.r4profile import format_profile, save
+    from s2slab.sidechannel import refuse_to_overwrite
+
+    refuse_to_overwrite(PROFILE_PATH)
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    t0 = time.time()
+    out = stages.remote()
+    wall = time.time() - t0
+    blob = {"run": "M31, step 1: R4's stages timed on the 30 probe clips", "commit": commit,
+            "machine": f"Modal {out['gpu']}", "versions": out["versions"], **out["profile"]}
+    path = save(PROFILE_PATH, blob)
+    print(format_profile(blob))
+    print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {path.relative_to(REPO)}")
     print(out["versions"])
     print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
           f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
