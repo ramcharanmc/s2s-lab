@@ -3,16 +3,19 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-03, at commit `8eaac58`.
+Last updated 2026-10-03, at commit `1a4daaa`.
 
-## Chosen next: M29, PR-001
+## Done: M29, PR-001
 
-The one registration still open (2026-09-11): does a check on whether the sentence is finished cut off
+The last registration open (registered 2026-09-11): does a check on whether the sentence is finished cut off
 fewer disfluent speakers than T1's word list, without making clean speakers wait? The simulator's turns
 stopped mid-sentence, so the confirmation uses whole-sentence turns, recorded as a deviation before any
 check existed (`docs/m29-log.md`). Commit 1 (`8eaac58`): the turns, the sentences, the deviation. Commit 2:
 T1b, T1's list or a small language model's judgement that the sentence is unfinished, its cut-off
-(0.01) chosen on DEV by a written rule and frozen. Next: the author's one run on seed 2000. \$0, the laptop.
+(0.01) chosen on DEV by a written rule and frozen. The author's one run on seed 2000: **supported**,
+disfluent cut-offs 68.8% to 51.2% with the clean wait unchanged. Every registration is now reported.
+What is left, by the exploratory analysis: pauses where the words so far could already be a sentence,
+and pauses longer than any hold. Timing, not words: the case for VAP (Parked, below). \$0, the laptop.
 
 ## M27, a live demo on Modal
 

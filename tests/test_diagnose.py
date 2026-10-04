@@ -234,3 +234,18 @@ def test_report_has_a_header_and_one_row_per_kind():
     rows = [ln for ln in table.splitlines()
             if ln.startswith("| ") and "last word" not in ln]
     assert len(rows) == 2
+
+
+def test_diagnose_refuses_the_eval_sentences_before_pr001s_result_exists(tmp_path, monkeypatch):
+    """The EVAL sentences were PR-001's confirmation's; diagnosing on them first would have read them early."""
+    from s2slab import diagnose
+    monkeypatch.chdir(tmp_path)                              # no runs/turn-taking/pr001.json here
+    with pytest.raises(SystemExit, match="does not exist yet"):
+        diagnose.main(split="eval", turns="sentence", n=1)
+
+
+def test_diagnose_builds_t1b_on_demand_and_registered_policies_by_name(monkeypatch):
+    from s2slab import completion, diagnose
+    monkeypatch.setattr(completion, "LMEnd", lambda: (lambda text: 1.0))
+    assert diagnose._policy("T1b_complete_500ms").name == "T1b_complete_500ms"
+    assert diagnose._policy("T1_semantic_500ms").name == "T1_semantic_500ms"

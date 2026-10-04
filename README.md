@@ -6,8 +6,8 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-09-30** (commit `13d40dc`): rungs R0 to R5 built and measured; three fine-tunes run;
-thirteen registrations, twelve of them reported, four with a supported claim. A demo that shows
+**Status, 2026-10-03** (commit `1a4daaa`): rungs R0 to R5 built and measured; three fine-tunes run;
+thirteen registrations, all reported, five with a supported claim. A demo that shows
 the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
 
 **https://ramcharanmc--s2s-lab-demo-web.modal.run**
@@ -65,6 +65,7 @@ results are appended whatever they say.
 
 | | Question, in short | Outcome |
 |---|---|---|
+| PR-001 | Does a check on whether the sentence is finished cut off fewer disfluent speakers? | **supported**: 68.8% to 51.2% of disfluent turns cut off, clean wait +1 ms (synthetic turns) |
 | PR-002 | Does streaming the reply cut the wait for first audio? | not supported: 26% sooner, under its bars |
 | PR-003 | Does a barge-in policy that reads the caller's words beat a duration threshold? | **supported**: wrong on 1 of 20 against 8 |
 | PR-004 | Does a slow-tier recognizer cut WER by 3 points, and 5 on accented speech? | not supported: -3.4 overall, -4.3 accented |
@@ -78,8 +79,7 @@ results are appended whatever they say.
 | PR-012 | Do the severity targets work as FastPitch's own inputs? | not supported: rate exact, pitch on target 57 to 60% |
 | PR-013 | Quantized to 8 bits, does Kokoro's pitch drift while its words stay? | **Claim A supported**; fp16 not usable on a CPU |
 
-PR-001 is registered and open. Of the twelve reported, eight were not supported, and each entry
-says why.
+All thirteen are reported. Eight were not supported, and each entry says why.
 
 ## Run it
 

@@ -1,0 +1,166 @@
+{
+  "commit": "1a4daaa",
+  "n_per_cohort": 250,
+  "seed": 2000,
+  "split": "eval",
+  "turns": "sentence",
+  "registration": "PR-001",
+  "results": [
+    {
+      "policy": "T1_semantic_500ms",
+      "cohort": "clean",
+      "n": 250,
+      "cutoff_rate": 0.0,
+      "no_fire_rate": 0.0,
+      "n_scored": 250,
+      "latency_p50": 501.06139158750636,
+      "latency_p90": 517.2779675318839,
+      "latency_p99": 519.5008453324625,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T1b_complete_500ms",
+      "cohort": "clean",
+      "n": 250,
+      "cutoff_rate": 0.0,
+      "no_fire_rate": 0.0,
+      "n_scored": 250,
+      "latency_p50": 501.62314554045076,
+      "latency_p90": 518.4751143600605,
+      "latency_p99": 905.58031405342,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T1_semantic_500ms",
+      "cohort": "disfluent",
+      "n": 250,
+      "cutoff_rate": 0.688,
+      "no_fire_rate": 0.0,
+      "n_scored": 78,
+      "latency_p50": 510.2441331151306,
+      "latency_p90": 517.3876121212797,
+      "latency_p99": 519.3806051617738,
+      "latency_unsupported": [
+        "p90",
+        "p99"
+      ]
+    },
+    {
+      "policy": "T1b_complete_500ms",
+      "cohort": "disfluent",
+      "n": 250,
+      "cutoff_rate": 0.512,
+      "no_fire_rate": 0.0,
+      "n_scored": 122,
+      "latency_p50": 510.41692228418526,
+      "latency_p90": 518.5269213516727,
+      "latency_p99": 917.2493044755071,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T1_semantic_500ms",
+      "cohort": "slow",
+      "n": 250,
+      "cutoff_rate": 0.092,
+      "no_fire_rate": 0.0,
+      "n_scored": 227,
+      "latency_p50": 509.089991474112,
+      "latency_p90": 517.927933533453,
+      "latency_p99": 519.7993957349811,
+      "latency_unsupported": [
+        "p99"
+      ]
+    },
+    {
+      "policy": "T1b_complete_500ms",
+      "cohort": "slow",
+      "n": 250,
+      "cutoff_rate": 0.056,
+      "no_fire_rate": 0.0,
+      "n_scored": 236,
+      "latency_p50": 509.51436157841215,
+      "latency_p90": 518.4976799558071,
+      "latency_p99": 912.5658805535016,
+      "latency_unsupported": [
+        "p99"
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "cohort": "clean",
+      "a": "T1_semantic_500ms",
+      "b": "T1b_complete_500ms",
+      "n": 250,
+      "rate_a": 0.0,
+      "rate_b": 0.0,
+      "only_a": 0,
+      "only_b": 0,
+      "p": 1.0,
+      "p_holm": 1.0,
+      "diff": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "verdict": "identical: same turns interrupted"
+    },
+    {
+      "cohort": "disfluent",
+      "a": "T1_semantic_500ms",
+      "b": "T1b_complete_500ms",
+      "n": 250,
+      "rate_a": 0.688,
+      "rate_b": 0.512,
+      "only_a": 44,
+      "only_b": 0,
+      "p": 1.1368683772161603e-13,
+      "p_holm": 3.410605131648481e-13,
+      "diff": 0.176,
+      "ci": [
+        0.128,
+        0.224
+      ],
+      "verdict": "T1b_complete_500ms interrupts less"
+    },
+    {
+      "cohort": "slow",
+      "a": "T1_semantic_500ms",
+      "b": "T1b_complete_500ms",
+      "n": 250,
+      "rate_a": 0.092,
+      "rate_b": 0.056,
+      "only_a": 9,
+      "only_b": 0,
+      "p": 0.00390625,
+      "p_holm": 0.0078125,
+      "diff": 0.036,
+      "ci": [
+        0.016,
+        0.06
+      ],
+      "verdict": "T1b_complete_500ms interrupts less"
+    }
+  ],
+  "criteria": {
+    "disfluent_diff": 0.176,
+    "disfluent_ci": [
+      0.128,
+      0.224
+    ],
+    "disfluent_p_holm": 3.410605131648481e-13,
+    "clean_p50_delta_ms": 0.5617539529444002,
+    "clean_p90_delta_ms": 1.197146828176642,
+    "S1": true,
+    "S2": true,
+    "S3": true,
+    "S4": true,
+    "supported": true
+  }
+}

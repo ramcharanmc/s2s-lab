@@ -322,10 +322,11 @@ def main(n: int = 60, seed: int = 0, split: str = "dev",
         print(format_pr001(crit))
         print(f"\nT1b: cut-off {T1B_THETA} (frozen), model {t1b().scorer.model_name}")
         print()
+    commit = _git_commit()          # before the file exists: a new file under runs/ reads as -dirty
     out = write_results(results, n, seed, comparisons=comps,
                         split=split, registration=registration, turns=turns, criteria=crit,
                         **({"path": PR001_OUT} if pr001 else {}))
-    print(f"commit {_git_commit()} · seed {seed} · n={n}/cohort · "
+    print(f"commit {commit} · seed {seed} · n={n}/cohort · "
           f"sentences {split} · turns {turns} → {out}")
 
 

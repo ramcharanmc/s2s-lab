@@ -26,6 +26,14 @@ understate T1's problem.
 Run this on EXPLORATORY data (seed 0). Anything you change because of what it
 shows has to be confirmed on a seed nobody has looked at -- 1000 is now used.
 
+PR-001's step 6 (after its confirmation, labelled exploratory) is T1b against T1 on the
+confirmation's own turns:
+
+    python -m s2slab.diagnose --policy T1b_complete_500ms --contrast T1_semantic_500ms \
+        --split eval --turns sentence --seed 2000
+
+The EVAL sentences are refused until runs/turn-taking/pr001.json exists.
+
 main()
  ├─ make_all(n, seed)[cohort]                → 250 utterances
  └─ for T0_fixed_500ms, then T1_semantic_500ms:
@@ -167,18 +175,36 @@ def format_breakdown(records: list[Interruption], policy: str, cohort: str,
     return "\n".join(lines)
 
 
+PR001_RESULT = "runs/turn-taking/pr001.json"
+
+
+def _policy(name: str) -> EndpointPolicy:
+    """A registered policy, or T1b, which needs its language model and is built on demand."""
+    if name == "T1b_complete_500ms":
+        from .completion import t1b
+        return t1b()
+    from .policies import get
+    return get(name)
+
+
 def main(policy: str = "T1_semantic_500ms", cohort: str = "disfluent",
-         n: int = 250, seed: int = 0) -> None:
-    """Diagnose `policy`, with T0 at the same threshold printed first for contrast.
+         n: int = 250, seed: int = 0, split: str = "dev", turns: str = "prefix",
+         contrast: str = "T0_fixed_500ms") -> None:
+    """Diagnose `policy`, with `contrast` printed first.
 
     Uses make_all, not make_cohort, so the turns are exactly the ones the sweep
-    scored for this seed.
+    scored for this seed, split and turn mode.
     """
-    from .policies import get
+    import pathlib
+
     from .simulate import make_all
-    utts = make_all(n, seed)[cohort]
-    for name in dict.fromkeys(("T0_fixed_500ms", policy)):   # skips a duplicate
-        print(format_breakdown(interruptions(get(name), utts), name, cohort, len(utts)))
+    if split == "eval" and not pathlib.Path(PR001_RESULT).exists():
+        raise SystemExit(f"the EVAL sentences are PR-001's confirmation's, and {PR001_RESULT} does not exist yet")
+    utts = make_all(n, seed, split=split, turns=turns)[cohort]
+    print(f"seed {seed} · {split} sentences · {turns} turns · {cohort}" + (" · exploratory" if split == "eval" else ""))
+    print()
+    for name in dict.fromkeys((contrast, policy)):            # skips a duplicate
+        print(format_breakdown(interruptions(_policy(name), utts), name, cohort, len(utts)))
         print()
 
 
@@ -189,5 +215,8 @@ if __name__ == "__main__":
     ap.add_argument("--cohort", default="disfluent")
     ap.add_argument("--n", type=int, default=250)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--split", default="dev", choices=["dev", "eval"])
+    ap.add_argument("--turns", default="prefix", choices=["prefix", "sentence"])
+    ap.add_argument("--contrast", default="T0_fixed_500ms")
     a = ap.parse_args()
-    main(a.policy, a.cohort, a.n, a.seed)
+    main(a.policy, a.cohort, a.n, a.seed, a.split, a.turns, a.contrast)

@@ -10,7 +10,9 @@ Kept as events happen. The earlier logs: `docs/m28-log.md` and those it names. T
 | 2 | 10-03 | — | the author chose a recorded deviation, before any T1b exists | — | — |
 | 3 | 10-03 | the rule over DailyTalk's dev fold, laptop | 38 DEV and 30 EVAL sentences, 8 to 14 words | `simsentences.py`, `sentences/`, `simulate.py`, `sweep.py`, tests, PR-001's Deviations | 8eaac58 |
 | 4 | 10-03 | the language model over every DEV sentence and its prefixes, laptop | P(end) separates a whole sentence from an unfinished one: AUC 0.94, 0.91 after a content word | — | — |
-| 5 | 10-03 | T1 against T1b at five cut-offs, DEV seeds 0 and 1000, whole-sentence turns, laptop | the rule picks 0.01: disfluent cut-offs 63% → 46% and 76% → 50%, the clean wait unchanged; frozen | `completion.py`, `policies.py`, `sweep.py`, tests | this commit |
+| 5 | 10-03 | T1 against T1b at five cut-offs, DEV seeds 0 and 1000, whole-sentence turns, laptop | the rule picks 0.01: disfluent cut-offs 63% → 46% and 76% → 50%, the clean wait unchanged; frozen | `completion.py`, `policies.py`, `sweep.py`, tests | 1a4daaa |
+| 6 | 10-03 | **PR-001's confirmation**, by the author, laptop | **supported**: disfluent cut-offs 172 → 128 of 250 (+17.6 pp, CI +12.8 to +22.4, Holm p < 0.001); clean wait +0.6 ms median, +1.2 ms p90 | — | — |
+| 7 | 10-03 | step 6, exploratory: `diagnose.py` on the same turns, laptop | T1b's remaining cut-offs: 84% after a content word (median pause 740 ms), 16% after a function word (1,060 ms) | `diagnose.py` takes the split, the turns and T1b; the sweep's printed commit taken before the file is saved | this commit |
 
 ## 1. What reading the simulator showed
 
@@ -142,3 +144,43 @@ PYTHONPATH=src HF_HUB_OFFLINE=1 python -m s2slab.sweep --split eval --turns sent
 
 Then the result recorded under PR-001's Results verbatim, with this commit's hash (V2), and only
 after that the error analysis of T1b's remaining cut-offs, labelled exploratory.
+
+## 7. The confirmation (at 1a4daaa)
+
+903 tests passed on the author's machine; `1a4daaa` committed and pushed; then the registered command,
+once, on the laptop: a few minutes, most of it the model scoring the EVAL prefixes.
+
+| cohort | T1 cut-offs | T1b cut-offs | rescued / newly cut | T1 − T1b [95% CI] | McNemar p, Holm |
+|---|---:|---:|---:|---|---:|
+| clean | 0 of 250 | 0 of 250 | 0 / 0 | +0.0 pp | 1.000 |
+| **disfluent** | 172 (68.8%) | 128 (51.2%) | 44 / 0 | **+17.6 pp [+12.8, +22.4]** | < 0.001 |
+| slow | 23 (9.2%) | 14 (5.6%) | 9 / 0 | +3.6 pp [+1.6, +6.0] | 0.008 |
+
+S1 met (+17.6 against +10), S2 met, S3 met (the clean wait 501.1 → 501.6 ms at the median,
+517.3 → 518.5 ms at p90), S4 met by construction. **PR-001: supported**, on synthetic
+whole-sentence turns. On DEV the drop had been 17 and 26 points; on EVAL it is 17.6.
+
+**A fault of mine, in the printing only.** The command's last line read `commit 1a4daaa-dirty`. The
+run file records `1a4daaa`, a clean tree: it takes the commit before it saves. The printed line asked
+git again after the results file existed, and a new file under `runs/` reads as a change. The code
+that ran was the committed code. The line is now taken before the file is saved.
+
+## 8. Step 6, exploratory: what T1b still gets wrong
+
+`python -m s2slab.diagnose --policy T1b_complete_500ms --contrast T1_semantic_500ms --split eval
+--turns sentence --seed 2000`, run after the result (the module refuses the EVAL sentences until
+`runs/turn-taking/pr001.json` exists):
+
+| policy | disfluent cut-offs | after a content word | after a function word |
+|---|---:|---|---|
+| T1 | 172 | 155 (90%), median pause 640 ms | 17 (10%), median pause 1,060 ms |
+| T1b | 128 | 107 (84%), median pause 740 ms | 21 (16%), median pause 1,060 ms |
+
+Most of T1b's content-word cut-offs fall in pauses shorter than the 900 ms a hold waits, so they were
+not held: the words so far could already be a sentence ("... you", "... good"), and a check on the
+words alone cannot tell that pause from the end. The function-word cut-offs are pauses longer than
+any hold. What is left is timing: the next thing to try is a learned predictor of voice activity
+(VAP, Ekstedt & Skantze 2022), parked in the backlog. Exploratory: nothing here is tested.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop:
+the full suite, 900 passed, 5 skipped (the skipped ones for audio the scratch copy does not hold).

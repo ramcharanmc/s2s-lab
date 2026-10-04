@@ -15,7 +15,7 @@ Rules, from the v1 Research plan (§8):
 | ID | Question | Registered | Status |
 |---|---|---|---|
 | PR-000 | T0 vs T1, T1 vs T2, T0 700 vs T2 on the seed-1000 confirmation run | **Not verifiably** — see entry | Reported, Notion page 18 §6 |
-| PR-001 | Does a phrase-level completeness check reduce disfluent interruptions beyond T1? | The commit that adds this entry | Open |
+| PR-001 | Does a phrase-level completeness check reduce disfluent interruptions beyond T1? | The commit that adds this entry | **Reported: supported** (on whole-sentence turns, Deviation 1: disfluent cut-offs 68.8% → 51.2%, −17.6 points, interval +12.8 to +22.4, Holm p < 0.001; clean wait +0.6 ms median, +1.2 ms p90) |
 | PR-002 | Does streaming the reply (R1) cut the wait for first audio against R0, without changing the words, slowing the turn or stalling playback? | `194e2bb` | **Reported: not supported** (S1, S2, S3 failed; S4, S5 and validity held) |
 | PR-003 | On the author's real voice, does a barge-in policy that reads the caller's words (B2) make fewer wrong stop / keep-going decisions than the best duration threshold, and stop within 1.5 s? | `e707190` | **Reported: supported** (S1: wrong on 1 of 20 against 8, p = 0.039; S2: 9 of 10 within 1.5 s; any second error would have failed S1) |
 | PR-004 | Does a slow-tier recognizer (R2, large-v3-turbo) cut R1's word error rate by at least 3 points overall and 5 on accented speech, while the reply still starts within a second? | `415ddc7` | **Reported: not supported** (S2 failed: accented −4.3 points, needed −5; S1 −3.4 points and S3 889 ms held) |
@@ -183,7 +183,48 @@ the 10 pp bar's reasoning, which cites T1's 16 pp gain on the old turns. The con
 
 ### Results
 
-*Not yet run.*
+**Run:** 2026-10-03, on the laptop's CPU, by the author:
+`python -m s2slab.sweep --split eval --turns sentence --seed 2000 --n 250 --confirm PR-001`.
+The run file is `runs/turn-taking/pr001.json`.
+
+**Validity.**
+- **V2:** T1b frozen at `1a4daaa`: T1's word list, or Qwen2.5-0.5B-Instruct's probability that the
+  sentence ends after the words so far below 0.01, the cut-off chosen on DEV by a rule written before
+  the tuning run (`runs/turn-taking/pr001-dev.json`). The run file records `1a4daaa`, a clean tree.
+- **V1:** the EVAL sentences were committed at `8eaac58`, before T1b existed, and not displayed to
+  its builder.
+- **V3:** seed 2000, 250 turns a cohort, never examined before.
+- **V4:** the strict-extension test passed at `1a4daaa`.
+
+| cohort | T1 cut-offs | T1b cut-offs | rescued / newly cut | T1 − T1b [95% CI] | McNemar p, Holm |
+|---|---:|---:|---:|---|---:|
+| clean | 0 of 250 | 0 of 250 | 0 / 0 | +0.0 pp | 1.000 |
+| **disfluent** | 172 (68.8%) | 128 (51.2%) | 44 / 0 | **+17.6 pp [+12.8, +22.4]** | < 0.001 |
+| slow | 23 (9.2%) | 14 (5.6%) | 9 / 0 | +3.6 pp [+1.6, +6.0] | 0.008 |
+
+| Criterion | Measured | |
+|---|---|---|
+| S1 · effect | +17.6 pp; needed at least +10 | met |
+| S2 · confidence | CI [+12.8, +22.4], entirely above 0; Holm p < 0.001 | met |
+| S3 · speed guardrail | clean median 501.1 → 501.6 ms (+0.6), p90 517.3 → 518.5 ms (+1.2); allowed +50 and +100 | met |
+| S4 · safety check | clean 0 → 0, slow 23 → 14 | met (by construction) |
+
+**PR-001: supported**, on synthetic, whole-sentence turns (Deviation 1). *What this cannot show*
+stands as written: random-boundary pauses in synthetic turns, not real disfluent speakers. And the
+best disfluent rate is still 51%: T1b rescues 44 of T1's 172 disfluent cut-offs, a quarter of them.
+
+**Exploratory, after the result (step 6):** `diagnose.py` on the same turns.
+
+| policy | disfluent cut-offs | after a content word | after a function word |
+|---|---:|---|---|
+| T1 | 172 | 155 (90%), median pause 640 ms | 17 (10%), median pause 1,060 ms |
+| T1b | 128 | 107 (84%), median pause 740 ms | 21 (16%), median pause 1,060 ms |
+
+Most of T1b's content-word cut-offs fall in pauses shorter than the 900 ms a hold waits, so they
+were not held: at those points the words so far could already be a sentence ("... you", "...
+good"), and a check on the words alone cannot tell such a pause from the end. The function-word
+cut-offs are pauses longer than any hold. What is left is timing, which is what a learned predictor
+of the next voice activity (VAP, Ekstedt & Skantze 2022) would add.
 
 
 ---

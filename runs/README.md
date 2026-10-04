@@ -57,6 +57,7 @@ history, at the commits this table names. No JSON file was touched.
 | `r5-moshi/evalset-modal-l40s-ladder.json` | M28: Moshi on the one card, the same driver as its A10 row | `13d40dc` | Modal NVIDIA L40S | `docs/m28-log.md` |
 | `r5-personaplex/evalset-modal-l40s-ladder.json` | M28: PersonaPlex on the one card, the same driver as its A10 row | `13d40dc` | Modal NVIDIA L40S | `docs/m28-log.md` |
 | `turn-taking/pr001-dev.json` | **PR-001, development, not the test**: T1 against T1b at five cut-offs on the DEV sentences, whole-sentence turns, seeds 0 and 1000, every cohort's cut-off rate and clean wait; the cut-off the written rule picked (0.01) | the commit that adds it (run from a scratch copy of `8eaac58` plus that commit's code) | laptop CPU | `docs/m29-log.md` |
+| `turn-taking/pr001.json` | **PR-001, the registered run**: T1 against T1b on the EVAL sentences, whole-sentence turns, seed 2000, 250 turns a cohort; every cell, the three comparisons, S1 to S4. Supported | `1a4daaa` | laptop CPU | `docs/preregistration.md`, `docs/m29-log.md` |
 
 ## What an eval-set run holds
 
