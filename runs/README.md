@@ -61,6 +61,7 @@ history, at the commits this table names. No JSON file was touched.
 | `turn-taking/pr014-dev-baselines.json` | **PR-014, before any VAP number**: T0 at 500, 700 and 900 ms, T1 and T1b on the 30 own-voice recordings (labelled ends, padded with their own floor noise); each policy's cut-offs, waits and the items it cut off | the commit that adds it (run from a scratch copy of `ee87076` plus that commit's code) | laptop CPU | `docs/m30-log.md` |
 | `turn-taking/pr014-dev-vap-silent.json` | **PR-014, development**: TV at seven θ on the 30 DEV recordings, VAP with a silent second channel, as registered; the rule found none | the commit that adds it (run from a scratch copy of `ac3a932` plus that commit's code) | laptop CPU, VAP `f39a78b` | `docs/m30-log.md` |
 | `turn-taking/pr014-dev-vap.json` | **PR-014, development, Deviation 1**: the same with the system's prompt on VAP's second channel; the rule found none, so PR-014 was not run | the same | laptop CPU, VAP `f39a78b` | `docs/m30-log.md`, `docs/preregistration.md` |
+| `r4-gpu/profile-l40s.json` | **M31, step 1**: R4's Thinker, Talker and token2wav timed inside its own call on the 30 probe clips, and token2wav on each reply's first 25, 50 and 100 codes; the Talker is 75% of the time at real time | `911fea3` | Modal NVIDIA L40S | `docs/m31-log.md` |
 
 ## What an eval-set run holds
 

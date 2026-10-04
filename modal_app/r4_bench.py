@@ -8,7 +8,9 @@ R4 on Modal: the S2S rung on an L40S, with R3 beside it in the same container.
     modal run modal_app/r4_bench.py::main --rung r0-gpu,r1-gpu,r2-gpu,r2-gpu-turbo,r3-gpu,r4-gpu --evalset --tag ladder
                                                                              M28: the ladder, R0 to R4, in ONE L40S container
     modal run modal_app/r4_bench.py::profile                                 M31, step 1: R4's stages timed on the 30 probe clips
-The file has three entry points (main, pairs, profile), so Modal needs the one named: ::main, ::pairs or ::profile.
+    modal run modal_app/r4_bench.py::speed                                   M31, step 1b: the Talker and the DiT, eager and compiled
+The file has four entry points (main, pairs, profile, speed), so Modal needs the one named: ::main, ::pairs,
+::profile or ::speed.
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
@@ -39,6 +41,7 @@ REPO = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
 L40S_DOLLARS_PER_HOUR = 1.95   # Modal's L40S rate, checked 2026-08-19 (v2 §5)
 PROFILE_PATH = REPO / "runs" / "r4-gpu" / "profile-l40s.json"   # M31, step 1 (s2slab.r4profile)
+SPEED_PATH = REPO / "runs" / "r4-gpu" / "speed-l40s.json"       # M31, step 1b (s2slab.r4speed)
 
 # Every Hugging Face repo the rungs this file runs will load; tests/test_modal_app.py checks it.
 MODELS = {
@@ -188,6 +191,22 @@ def stages() -> dict:
     return {"gpu": _gpu_name(), "versions": _versions(), "profile": blob, "seconds": time.perf_counter() - t0}
 
 
+# Ten clips three ways (R4 ~8.6 s a turn eager), two warm-up turns per compiled variant, then the DiT eager and
+# compiled on three block sizes: about 10 min after the load, most of it compiling. The timeout leaves room.
+@app.function(gpu="L40S", timeout=45 * 60, scaledown_window=60)
+def speed_probe() -> dict:
+    """M31, step 1b: the Talker and the DiT, eager and compiled, on every third probe clip (r4speed.run)."""
+    import os
+    os.chdir("/root")
+    from s2slab.probes import TARGET_SR
+    from s2slab.r4 import OmniS2S
+    from s2slab.r4speed import run
+    from s2slab.rungs import probe_clips
+    t0 = time.perf_counter()
+    blob = run(OmniS2S(), probe_clips(), TARGET_SR)
+    return {"gpu": _gpu_name(), "versions": _versions(), "speed": blob, "seconds": time.perf_counter() - t0}
+
+
 def results_path(rung_id: str, limit: int = 0, tag: str = "") -> pathlib.Path:
     """runs/<rung>/evalset-modal-l40s[-tag].json for the real run (committed evidence);
     results/<rung>/...-limitN.json for a smoke test (ignored)."""
@@ -276,6 +295,30 @@ def profile():
             "machine": f"Modal {out['gpu']}", "versions": out["versions"], **out["profile"]}
     path = save(PROFILE_PATH, blob)
     print(format_profile(blob))
+    print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {path.relative_to(REPO)}")
+    print(out["versions"])
+    print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
+
+
+@app.local_entrypoint()
+def speed():
+    """Can R4's Talker and DiT run faster, unchanged in what they make (M31, step 1b)? Saves
+    runs/r4-gpu/speed-l40s.json, never overwritten, and prints the two tables and the estimates."""
+    from s2slab.r4profile import save
+    from s2slab.r4speed import format_speed
+    from s2slab.sidechannel import refuse_to_overwrite
+
+    refuse_to_overwrite(SPEED_PATH)
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    t0 = time.time()
+    out = speed_probe.remote()
+    wall = time.time() - t0
+    blob = {"run": "M31, step 1b: the Talker and the DiT, eager and compiled, on 10 probe clips", "commit": commit,
+            "machine": f"Modal {out['gpu']}", "versions": out["versions"], **out["speed"]}
+    path = save(SPEED_PATH, blob)
+    print(format_speed(blob))
     print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {path.relative_to(REPO)}")
     print(out["versions"])
     print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "

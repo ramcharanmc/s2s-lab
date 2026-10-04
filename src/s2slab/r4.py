@@ -93,15 +93,16 @@ class OmniS2S:
             inputs = self.processor(text=prompt, audios=[audio], sampling_rate=sr, return_tensors="pt", padding=True)
         return inputs.to(self.device)
 
-    def speak(self, audio: np.ndarray, sr: int) -> tuple[str, np.ndarray]:
-        """Takes: the caller's turn. Returns: (the reply's text, the reply's audio at OUT_SR, float32 mono)."""
+    def speak(self, audio: np.ndarray, sr: int, **extra) -> tuple[str, np.ndarray]:
+        """Takes: the caller's turn; extra keyword arguments for generate, which R4 never passes (M31's
+        speed probe does, s2slab.r4speed). Returns: (the reply's text, the reply's audio at OUT_SR, float32 mono)."""
         import torch
         inputs = self._inputs(np.asarray(audio, dtype=np.float32), sr)
         torch.manual_seed(self.seed)                                  # the Talker samples; see the docstring
         with torch.inference_mode():
             text_ids, wav = self.model.generate(**inputs, use_audio_in_video=False, return_audio=True,
                                                 speaker=self.speaker, thinker_max_new_tokens=self.max_new_tokens,
-                                                thinker_do_sample=False)
+                                                thinker_do_sample=False, **extra)
         text = self.processor.batch_decode(text_ids[:, inputs["input_ids"].shape[1]:], skip_special_tokens=True)[0]
         return text.strip(), wav.reshape(-1).float().cpu().numpy().astype(np.float32)
 

@@ -10,9 +10,12 @@ Last updated 2026-10-04, at commit `d843937`.
 R4 (Qwen2.5-Omni speaks its own reply) waits 6,859 ms for its first audio on the L40S (M28), every
 other rung under 700 ms: its Thinker, Talker and token2wav each run to the end before the next begins,
 about 0.93 s of wait per second of reply. M31 adds `r4-gpu-stream`, the same model and settings with the
-audio handed out as it is made, as R1 is to R0. Step 1: where the wait goes, stage by stage (about
-\$0.30). Then the rung, a registration before the eval set, and one run beside R4 in one container
-(`docs/m31-log.md`). About \$2.50 to \$3 on Modal.
+audio handed out as it is made, as R1 is to R0. Step 1 (`911fea3`, \$0.278): the Talker is 75% of R4's
+time and runs at real time, 19.8 ms a code; token2wav costs about 890 ms a call whatever the length. So
+streaming alone would stall. Step 1b, the author's choice: can the Talker and the DiT run faster with a
+static cache and compiled steps, making the same thing (about \$0.40)? If the Talker reaches about half
+of real time, the streaming rung follows on the fast path; if not, M31 reports the profile as its finding
+(`docs/m31-log.md`).
 
 ## Done: M30, voice activity projection on real speech
 
