@@ -8,7 +8,9 @@ Kept as events happen. The earlier logs: `docs/m30-log.md` and those it names.
 | 1 | 10-04 | — | the design: a streaming R4 beside R4, as R1 is to R0; the profile first; the author's go | — | — |
 | 2 | 10-04 | the stage profile's tests, laptop, fake model | the clock times each stage and leaves the reply as it was | `r4profile.py`, tests, `r4_bench.py::profile` | 911fea3 |
 | 3 | 10-04 | `r4_bench.py::profile`, the author, L40S, 30 probe clips, \$0.278 | the Talker is 75% of R4's time and runs at real time (19.8 ms a code, 0.99); token2wav about 890 ms for any block of 25 to 100 codes; streamed as designed, a first block at about 2.1 to 3.5 s but production 1.4 to 2.8 times slower than playback | — | the run file, this commit |
-| 4 | 10-04 | — | the author's choice (A of three): before any streaming, can the Talker and the DiT run faster with standard tools, unchanged in what they make | `r4speed.py`, tests, `r4_bench.py::speed`; `OmniS2S.speak` takes extra arguments for generate | this commit |
+| 4 | 10-04 | — | the author's choice (A of three): before any streaming, can the Talker and the DiT run faster with standard tools, unchanged in what they make | `r4speed.py`, tests, `r4_bench.py::speed`; `OmniS2S.speak` takes extra arguments for generate | f7e8d99 |
+| 5 | 10-04 | `r4_bench.py::speed`, the author, L40S, 10 probe clips, \$0.164 | the DiT compiled 4.2, 3.2 and 2.1 times faster on 25, 50 and 100 codes, its audio within 0.003 to 0.06 of eager's; both static Talker variants failed at once: `TypeError` (`int` minus `dict`) | — | the run file, this commit |
+| 6 | 10-04 | the failure reproduced on the laptop, a tiny random Talker | with a static cache, generate hands the Talker a dict of masks; given its 2-D mask back it runs, codes identical to eager's; compiled, its layers need no mask on one-code steps: one graph, no breaks, codes identical | `keep_2d_mask`; `compile_layers` without the mask; the variants eager, static, static+layers; `::speed --tag` | this commit |
 
 ## 1. The design
 
@@ -138,3 +140,65 @@ modal run modal_app/r4_bench.py::speed          one L40S, about 12 min, about $0
 ```
 
 **Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite, 936 passed, 2 skipped.
+
+## 5. Step 1b, the first run: the DiT runs 2 to 4 times faster compiled; the Talker's static cache failed (at f7e8d99)
+
+Run by the author: `modal run modal_app/r4_bench.py::speed`, one L40S, 298 s in the function, 303 s
+end to end, \$0.164. Every third probe clip (10); `runs/r4-gpu/speed-l40s.json`.
+
+| token2wav on a reply's first codes | eager ms p50 | compiled ms p50 | faster | largest sample difference, 10 replies |
+|---:|---:|---:|---:|---:|
+| 25 codes | 866 | 206 | 4.2 times | 0.0027 |
+| 50 codes | 849 | 266 | 3.2 times | 0.0215 |
+| 100 codes | 854 | 412 | 2.1 times | 0.0605 |
+
+- **The DiT, compiled with CUDA graphs** (`reduce-overhead`, the first mode tried), now costs more for
+  more codes (206, 266, 412 ms): what remains is the arithmetic, not the launching. A block of 50 codes
+  (one second of audio) takes 266 ms.
+- **It is not the same audio.** From the same noise seed, compiled and eager differ by up to 0.0027 on
+  25 codes and 0.06 on 100, growing with the length: a different order of floating-point operations in
+  the compiled kernels, carried through 10 solver steps. Whether that can be heard, or changes the
+  words, is not measured yet; the streaming rung's checks (the words heard, the author's listening)
+  will cover it.
+- **The Talker, eager:** 19.3 ms a code at p50 (19.6 at p90), a real-time factor of 1.0, as in step 1.
+- **Both static Talker variants failed at once**, before any timed turn: `TypeError: unsupported operand
+  type(s) for -: 'int' and 'dict'`.
+- **With the eager Talker and the compiled DiT, by arithmetic:** a first block at about 1,337 ms (25
+  codes), 1,878 (50) or 2,987 (100); a stream at 1.38, 1.23 or 1.17 times the length of the audio. The
+  DiT no longer stops a stream; the Talker, at real time, still does.
+
+**My display error:** the printed table showed the 100-code difference as "0.1", rounded to one place;
+the file holds 0.0605. The table now prints four places.
+
+**The cause, reproduced on the laptop** (entry 6) with a tiny random Talker built from `transformers`'
+own configuration class (2 layers, the real code): with a static cache, `generate` prepares the
+attention masks itself and hands the model a dict of them, one per attention type; the Talker's
+forward computes its rotary positions from the plain 2-D mask (`1 - attention_mask`) and fails on the
+dict. A mistake in `transformers` 5.17's Talker, not in R4's settings. Two fixes, both in
+`r4speed.py`:
+
+- `keep_2d_mask` gives the Talker its 2-D mask back. On the tiny Talker: 40 codes identical to eager's.
+- Compiled that way, the decoder layers saw a mask one longer at every step, recompiled up to torch's
+  limit (8) and then ran eager. `compile_layers` now passes no mask on one-code steps: with one reply
+  and no padding the decoder builds the same causal mask from the cache position. It refuses a padded
+  mask. On the tiny Talker, on the laptop's CPU (compile mode "default": CUDA graphs need a GPU): one
+  graph, no breaks, no recompiles, 40 codes identical to eager's. The real Talker on the L40S is the
+  second run.
+
+The variants are now eager, static (the cache with the 2-D mask) and static+layers (that, with the
+layers compiled). `transformers`' own whole-call compile is dropped: it would see the same growing
+mask.
+
+## 6. Step 1b, the second run (built)
+
+The same probe with the fixes, on the same 10 clips, saved under its own name:
+
+```
+modal run modal_app/r4_bench.py::speed --tag mask      one L40S, about 5 min, about $0.17; saves runs/r4-gpu/speed-l40s-mask.json
+```
+
+What it settles: whether the real Talker, compiled, runs well under real time, and whether its codes
+stay identical to eager's. Below about 0.7 (with the DiT's 0.27 for blocks of 50 codes), a stream keeps
+up before a block's neighbours are counted.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite, 938 passed, 2 skipped.

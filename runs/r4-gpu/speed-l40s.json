@@ -1,0 +1,276 @@
+{
+ "run": "M31, step 1b: the Talker and the DiT, eager and compiled, on 10 probe clips",
+ "commit": "f7e8d99",
+ "machine": "Modal NVIDIA L40S, 610.57.04",
+ "versions": "torch 2.14.0+cu126, torchvision 0.29.0+cu126, transformers 5.17.0",
+ "load_ms": 37463.0,
+ "clips": [
+  "f01",
+  "f04",
+  "f07",
+  "f10",
+  "c01",
+  "c04",
+  "c07",
+  "c10",
+  "n01",
+  "n04"
+ ],
+ "blocks": [
+  25,
+  50,
+  100
+ ],
+ "talker": {
+  "eager": {
+   "name": "eager",
+   "extra": {},
+   "warmup_ms": [],
+   "turns": {
+    "f01": {
+     "talker_ms": 5366.1,
+     "thinker_ms": 655.1,
+     "n_codes": 256,
+     "ms_per_code": 20.96
+    },
+    "f04": {
+     "talker_ms": 4657.7,
+     "thinker_ms": 502.2,
+     "n_codes": 242,
+     "ms_per_code": 19.25
+    },
+    "f07": {
+     "talker_ms": 6315.0,
+     "thinker_ms": 648.8,
+     "n_codes": 331,
+     "ms_per_code": 19.08
+    },
+    "f10": {
+     "talker_ms": 5862.9,
+     "thinker_ms": 563.8,
+     "n_codes": 302,
+     "ms_per_code": 19.41
+    },
+    "c01": {
+     "talker_ms": 4094.1,
+     "thinker_ms": 493.5,
+     "n_codes": 214,
+     "ms_per_code": 19.13
+    },
+    "c04": {
+     "talker_ms": 9709.4,
+     "thinker_ms": 930.2,
+     "n_codes": 504,
+     "ms_per_code": 19.26
+    },
+    "c07": {
+     "talker_ms": 4451.3,
+     "thinker_ms": 489.3,
+     "n_codes": 230,
+     "ms_per_code": 19.35
+    },
+    "c10": {
+     "talker_ms": 6861.1,
+     "thinker_ms": 649.3,
+     "n_codes": 355,
+     "ms_per_code": 19.33
+    },
+    "n01": {
+     "talker_ms": 8972.9,
+     "thinker_ms": 983.1,
+     "n_codes": 471,
+     "ms_per_code": 19.05
+    },
+    "n04": {
+     "talker_ms": 7018.2,
+     "thinker_ms": 714.6,
+     "n_codes": 368,
+     "ms_per_code": 19.07
+    }
+   },
+   "error": null,
+   "graph_breaks": 0
+  },
+  "static+compile": {
+   "name": "static+compile",
+   "extra": {
+    "talker_cache_implementation": "static"
+   },
+   "warmup_ms": [],
+   "turns": {},
+   "error": "TypeError: unsupported operand type(s) for -: 'int' and 'dict'"
+  },
+  "static+layers": {
+   "name": "static+layers",
+   "extra": {
+    "talker_cache_implementation": "static",
+    "talker_disable_compile": true
+   },
+   "warmup_ms": [],
+   "turns": {},
+   "error": "TypeError: unsupported operand type(s) for -: 'int' and 'dict'"
+  }
+ },
+ "dit": {
+  "mode": "reduce-overhead",
+  "errors": [],
+  "blocks": {
+   "25": {
+    "f01": {
+     "eager_ms": 1034.9,
+     "compiled_ms": 206.2,
+     "max_abs_diff": 0.000649
+    },
+    "f04": {
+     "eager_ms": 864.6,
+     "compiled_ms": 206.1,
+     "max_abs_diff": 0.000741
+    },
+    "f07": {
+     "eager_ms": 899.6,
+     "compiled_ms": 205.7,
+     "max_abs_diff": 0.000878
+    },
+    "f10": {
+     "eager_ms": 890.9,
+     "compiled_ms": 207.2,
+     "max_abs_diff": 0.001182
+    },
+    "c01": {
+     "eager_ms": 868.2,
+     "compiled_ms": 205.4,
+     "max_abs_diff": 0.001509
+    },
+    "c04": {
+     "eager_ms": 860.4,
+     "compiled_ms": 204.2,
+     "max_abs_diff": 0.002665
+    },
+    "c07": {
+     "eager_ms": 855.2,
+     "compiled_ms": 207.8,
+     "max_abs_diff": 0.001596
+    },
+    "c10": {
+     "eager_ms": 836.7,
+     "compiled_ms": 206.4,
+     "max_abs_diff": 0.001753
+    },
+    "n01": {
+     "eager_ms": 875.8,
+     "compiled_ms": 205.3,
+     "max_abs_diff": 0.000902
+    },
+    "n04": {
+     "eager_ms": 856.7,
+     "compiled_ms": 212.7,
+     "max_abs_diff": 0.000719
+    }
+   },
+   "50": {
+    "f01": {
+     "eager_ms": 850.0,
+     "compiled_ms": 268.4,
+     "max_abs_diff": 0.0017
+    },
+    "f04": {
+     "eager_ms": 838.2,
+     "compiled_ms": 266.9,
+     "max_abs_diff": 0.001404
+    },
+    "f07": {
+     "eager_ms": 844.8,
+     "compiled_ms": 265.9,
+     "max_abs_diff": 0.001474
+    },
+    "f10": {
+     "eager_ms": 858.4,
+     "compiled_ms": 266.4,
+     "max_abs_diff": 0.001741
+    },
+    "c01": {
+     "eager_ms": 851.2,
+     "compiled_ms": 266.4,
+     "max_abs_diff": 0.003033
+    },
+    "c04": {
+     "eager_ms": 831.5,
+     "compiled_ms": 266.0,
+     "max_abs_diff": 0.009525
+    },
+    "c07": {
+     "eager_ms": 847.1,
+     "compiled_ms": 262.9,
+     "max_abs_diff": 0.005081
+    },
+    "c10": {
+     "eager_ms": 850.2,
+     "compiled_ms": 268.2,
+     "max_abs_diff": 0.021525
+    },
+    "n01": {
+     "eager_ms": 869.2,
+     "compiled_ms": 264.3,
+     "max_abs_diff": 0.00459
+    },
+    "n04": {
+     "eager_ms": 844.8,
+     "compiled_ms": 265.5,
+     "max_abs_diff": 0.0016
+    }
+   },
+   "100": {
+    "f01": {
+     "eager_ms": 877.6,
+     "compiled_ms": 412.8,
+     "max_abs_diff": 0.008622
+    },
+    "f04": {
+     "eager_ms": 850.7,
+     "compiled_ms": 408.7,
+     "max_abs_diff": 0.005583
+    },
+    "f07": {
+     "eager_ms": 878.0,
+     "compiled_ms": 409.2,
+     "max_abs_diff": 0.010388
+    },
+    "f10": {
+     "eager_ms": 854.4,
+     "compiled_ms": 412.1,
+     "max_abs_diff": 0.010191
+    },
+    "c01": {
+     "eager_ms": 837.9,
+     "compiled_ms": 410.9,
+     "max_abs_diff": 0.01868
+    },
+    "c04": {
+     "eager_ms": 858.7,
+     "compiled_ms": 413.4,
+     "max_abs_diff": 0.023652
+    },
+    "c07": {
+     "eager_ms": 844.1,
+     "compiled_ms": 415.0,
+     "max_abs_diff": 0.017235
+    },
+    "c10": {
+     "eager_ms": 839.1,
+     "compiled_ms": 415.2,
+     "max_abs_diff": 0.060461
+    },
+    "n01": {
+     "eager_ms": 854.1,
+     "compiled_ms": 416.1,
+     "max_abs_diff": 0.051286
+    },
+    "n04": {
+     "eager_ms": 864.5,
+     "compiled_ms": 412.1,
+     "max_abs_diff": 0.007928
+    }
+   }
+  }
+ }
+}

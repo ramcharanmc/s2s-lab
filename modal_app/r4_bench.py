@@ -9,6 +9,7 @@ R4 on Modal: the S2S rung on an L40S, with R3 beside it in the same container.
                                                                              M28: the ladder, R0 to R4, in ONE L40S container
     modal run modal_app/r4_bench.py::profile                                 M31, step 1: R4's stages timed on the 30 probe clips
     modal run modal_app/r4_bench.py::speed                                   M31, step 1b: the Talker and the DiT, eager and compiled
+    modal run modal_app/r4_bench.py::speed --tag mask                        the same with the Talker's mask fixed (second run)
 The file has four entry points (main, pairs, profile, speed), so Modal needs the one named: ::main, ::pairs,
 ::profile or ::speed.
 
@@ -42,6 +43,12 @@ sys.path.insert(0, str(REPO / "src"))
 L40S_DOLLARS_PER_HOUR = 1.95   # Modal's L40S rate, checked 2026-08-19 (v2 §5)
 PROFILE_PATH = REPO / "runs" / "r4-gpu" / "profile-l40s.json"   # M31, step 1 (s2slab.r4profile)
 SPEED_PATH = REPO / "runs" / "r4-gpu" / "speed-l40s.json"       # M31, step 1b (s2slab.r4speed)
+
+
+def speed_path(tag: str = "") -> pathlib.Path:
+    """runs/r4-gpu/speed-l40s[-tag].json: each run of the speed probe under its own name."""
+    return SPEED_PATH.with_name(f"speed-l40s-{tag}.json") if tag else SPEED_PATH
+
 
 # Every Hugging Face repo the rungs this file runs will load; tests/test_modal_app.py checks it.
 MODELS = {
@@ -302,22 +309,24 @@ def profile():
 
 
 @app.local_entrypoint()
-def speed():
+def speed(tag: str = ""):
     """Can R4's Talker and DiT run faster, unchanged in what they make (M31, step 1b)? Saves
-    runs/r4-gpu/speed-l40s.json, never overwritten, and prints the two tables and the estimates."""
+    runs/r4-gpu/speed-l40s[-tag].json, never overwritten, and prints the two tables and the estimates."""
     from s2slab.r4profile import save
     from s2slab.r4speed import format_speed
     from s2slab.sidechannel import refuse_to_overwrite
 
-    refuse_to_overwrite(SPEED_PATH)
+    out_path = speed_path(tag)
+    refuse_to_overwrite(out_path)
     commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
                             capture_output=True, text=True).stdout.strip()
     t0 = time.time()
     out = speed_probe.remote()
     wall = time.time() - t0
-    blob = {"run": "M31, step 1b: the Talker and the DiT, eager and compiled, on 10 probe clips", "commit": commit,
+    blob = {"run": "M31, step 1b: the Talker and the DiT, eager and compiled, on 10 probe clips"
+                   + (f" ({tag})" if tag else ""), "commit": commit,
             "machine": f"Modal {out['gpu']}", "versions": out["versions"], **out["speed"]}
-    path = save(SPEED_PATH, blob)
+    path = save(out_path, blob)
     print(format_speed(blob))
     print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {path.relative_to(REPO)}")
     print(out["versions"])

@@ -12,10 +12,11 @@ other rung under 700 ms: its Thinker, Talker and token2wav each run to the end b
 about 0.93 s of wait per second of reply. M31 adds `r4-gpu-stream`, the same model and settings with the
 audio handed out as it is made, as R1 is to R0. Step 1 (`911fea3`, \$0.278): the Talker is 75% of R4's
 time and runs at real time, 19.8 ms a code; token2wav costs about 890 ms a call whatever the length. So
-streaming alone would stall. Step 1b, the author's choice: can the Talker and the DiT run faster with a
-static cache and compiled steps, making the same thing (about \$0.40)? If the Talker reaches about half
-of real time, the streaming rung follows on the fast path; if not, M31 reports the profile as its finding
-(`docs/m31-log.md`).
+streaming alone would stall. Step 1b, the author's choice: can they run faster with a static cache and
+compiled steps? First run (`f7e8d99`, \$0.164): the DiT compiled runs 2 to 4 times faster; the Talker's
+static cache failed on a mask `transformers` hands it, fixed and checked on a tiny Talker. The second
+run (about \$0.17) measures the real Talker. If it runs well under real time, the streaming rung follows
+on the fast path; if not, M31 reports the profile as its finding (`docs/m31-log.md`).
 
 ## Done: M30, voice activity projection on real speech
 

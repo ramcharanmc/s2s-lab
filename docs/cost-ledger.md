@@ -72,6 +72,7 @@ one. A failed run is still a row, since it was still billed.
 | 2026-09-29 | `13d40dc` | `modal run modal_app/r5_bench.py::main --model r5-personaplex --evalset --gpu l40s --tag ladder` | L40S | 2,843 s | 2,848 s | \$1.543 | **M28, run C: PersonaPlex on the one card**: 190 of 200 answered, gap p50 440 / p90 760 ms; RTF 0.50; set-up 3.84 s a call (5.95 on the A10); 18.1 GB (`runs/r5-personaplex/`) |
 | 2026-09-29 | `13d40dc` | `modal run modal_app/r4_bench.py::main --rung r0-gpu,r1-gpu,r2-gpu,r2-gpu-turbo,r3-gpu,r4-gpu --evalset --tag ladder` | L40S | 2,195 s | 2,237 s | \$1.212 | **M28, run A: R0 to R4 in one L40S container**, 200 clips each: first audio p50 R0 300, R1 245, R2 279, R2 turbo 275, R3 632, R4 6,859 ms; WER unchanged; the container 27% faster than R4's earlier one (`docs/m28-log.md`, entry 5) |
 | 2026-10-04 | `911fea3` | `modal run modal_app/r4_bench.py::profile` | L40S | 506 s | 513 s | \$0.278 | **M31, step 1: R4's stages timed** on the 30 probe clips: the Talker 75% of the time at real time (19.8 ms a code); token2wav about 890 ms for any block of 25 to 100 codes (`docs/m31-log.md`, entry 3) |
+| 2026-10-04 | `f7e8d99` | `modal run modal_app/r4_bench.py::speed` | L40S | 298 s | 303 s | \$0.164 | **M31, step 1b, first run**: the DiT compiled 4.2, 3.2 and 2.1 times faster on 25, 50 and 100 codes; both static Talker variants failed (`TypeError`, `int` minus `dict`; `docs/m31-log.md`, entries 5 and 6) |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -80,5 +81,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$14.091 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
+| Modal | \$14.255 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
 | Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |

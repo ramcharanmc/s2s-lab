@@ -11,15 +11,24 @@ compile the step and replay it as a CUDA graph, which needs fixed shapes, so a s
 
 TALKER, three ways on the same clips, each through R4's own call with R4's seed:
     eager           R4 as it runs (no change)
-    static+compile  transformers' own route: generate(cache_implementation="static") for the Talker
-                    only (talker_ prefix), which compiles the Talker's whole call for decoding. The
-                    Talker is not marked fully compilable in transformers 5.17 and its decode step
-                    branches on the cache's length, so this may break into pieces or fail.
-    static+layers   the same static cache, transformers' compile turned off, and only the Talker's
-                    decoder layers (talker.model) compiled, for one-token steps; the prefill stays eager.
+    static          a static KV cache for the Talker only (generate's cache_implementation="static",
+                    talker_ prefix), transformers' own compile turned off, and the Talker given the
+                    plain 2-D attention mask (keep_2d_mask): see THE FIRST RUN below
+    static+layers   the same, and the Talker's decoder layers (talker.model) compiled for one-code
+                    steps, with no attention mask on those steps (compile_layers); the prefill stays eager
 For each: ms per code, the real-time factor, the warm-up (compile) time, and whether its codes are
 identical to eager's on the same clip and seed. A sampled Talker can drift to other codes from a
 last-bit difference in a logit, so "identical" is reported as found, not assumed.
+
+THE FIRST RUN (f7e8d99, runs/r4-gpu/speed-l40s.json) tried transformers' own route, a static cache
+with the Talker's whole call compiled, and failed in both static variants with "TypeError: unsupported
+operand type(s) for -: 'int' and 'dict'". Reproduced on the laptop with a tiny random Talker: with a
+static cache, generate hands the model a dict of prepared masks, one per attention type, and the
+Talker's forward computes its rotary positions from the plain 2-D mask (1 - attention_mask). Giving
+it the 2-D mask back runs, with codes identical to eager's. But compiled that way, the decoder
+layers saw a mask one longer at every step and recompiled until torch's limit, then ran eager. With
+one reply and no padding the mask holds nothing the decoder needs: it builds the causal mask from
+the cache position. Without it the tiny Talker compiled to one graph, no breaks, codes identical.
 
 DIT: its network compiled (mode "reduce-overhead", CUDA graphs; "default" if that fails), and
 token2wav run on the first 25, 50 and 100 codes of eager's replies, eager and compiled, each with
@@ -28,7 +37,8 @@ the same noise seed: milliseconds, and the largest sample difference between the
 Nothing here changes R4 or its records. A variant that fails is recorded with its error, and the
 next one runs. The estimates at the end use the fastest variant that ran.
 
-    modal run modal_app/r4_bench.py::speed        one L40S; saves runs/r4-gpu/speed-l40s.json
+    modal run modal_app/r4_bench.py::speed               the first run: runs/r4-gpu/speed-l40s.json
+    modal run modal_app/r4_bench.py::speed --tag mask    with the mask fixes: runs/r4-gpu/speed-l40s-mask.json
 """
 
 from __future__ import annotations
@@ -45,7 +55,7 @@ EVERY = 3                         # every third probe clip: 10 of the 30, spread
 WARMUPS = 2                       # turns before timing a compiled variant (compile, then graph capture)
 TALKER_VARIANTS = {
     "eager": {},
-    "static+compile": {"talker_cache_implementation": "static"},
+    "static": {"talker_cache_implementation": "static", "talker_disable_compile": True},
     "static+layers": {"talker_cache_implementation": "static", "talker_disable_compile": True},
 }
 DIT_MODES = ("reduce-overhead", "default")
@@ -63,9 +73,27 @@ def _mark_step() -> None:
         torch.compiler.cudagraph_mark_step_begin()
 
 
+def keep_2d_mask(talker):
+    """With a static cache, generate prepares the attention masks itself and hands the model a dict of
+    them; the Talker's forward needs the plain 2-D mask for its rotary positions. Give it that back.
+    Returns the undo. (The wrapper's keyword parameter must be named kwargs: generate checks it.)"""
+    prepare = talker.prepare_inputs_for_generation
+
+    def prepare_inputs_for_generation(input_ids, inputs_embeds=None, **kwargs):
+        out = prepare(input_ids, inputs_embeds=inputs_embeds, **kwargs)
+        if isinstance(out.get("attention_mask"), dict) and kwargs.get("attention_mask") is not None:
+            out["attention_mask"] = kwargs["attention_mask"]
+        return out
+
+    talker.prepare_inputs_for_generation = prepare_inputs_for_generation
+    return lambda: delattr(talker, "prepare_inputs_for_generation")
+
+
 def compile_layers(talker, compile_fn=_torch_compile):
-    """Compile the Talker's decoder layers (talker.model) for one-token steps; a longer input (the
-    prefill) runs eager. Returns a function that undoes it."""
+    """Compile the Talker's decoder layers (talker.model) for one-code steps, with no attention mask on
+    them: a 2-D mask grows by one a step and would recompile every step, and with one reply and no
+    padding the decoder builds the same causal mask from the cache position. The prefill runs eager,
+    and refuses a padded mask. Returns a function that undoes it."""
     m = talker.model
     eager = m.forward
     compiled = compile_fn(eager, mode="reduce-overhead", dynamic=False)
@@ -73,8 +101,12 @@ def compile_layers(talker, compile_fn=_torch_compile):
     def forward(*args, **kwargs):
         emb = kwargs.get("inputs_embeds")
         if emb is not None and emb.shape[1] == 1:
+            kwargs["attention_mask"] = None
             _mark_step()
             return compiled(*args, **kwargs)
+        mask = kwargs.get("attention_mask")
+        if mask is not None and not isinstance(mask, dict) and not bool(mask.all()):
+            raise ValueError("compile_layers drops the mask on one-code steps: one reply, no padding only")
         return eager(*args, **kwargs)
 
     m.forward = forward
@@ -221,12 +253,16 @@ def run(omni, clips: dict, sr: int, blocks=BLOCKS, compile_fn=_torch_compile) ->
     omni.speak(np.zeros(sr, dtype=np.float32), sr)            # R4's throwaway turn
     variants, eager = {}, None
     for name, extra in TALKER_VARIANTS.items():
-        undo = compile_layers(omni.model.talker, compile_fn) if name == "static+layers" else None
+        undo = []
+        if name != "eager":
+            undo.append(keep_2d_mask(omni.model.talker))
+        if name == "static+layers":
+            undo.append(compile_layers(omni.model.talker, compile_fn))
         try:
             variants[name] = talker_variant(omni, clock, chosen, sr, name, extra, eager)
         finally:
-            if undo:
-                undo()
+            for u in reversed(undo):
+                u()
         if name == "eager":
             if variants[name]["error"]:                     # R4 itself did not run: nothing to compare with
                 return {"load_ms": round(load_ms, 1), "clips": list(chosen), "blocks": list(blocks),
@@ -301,7 +337,8 @@ def format_speed(blob: dict) -> str:
     lines += ["", f"| DiT block | replies | eager ms p50 | compiled ms p50 ({s['dit_mode'] or 'none ran'}) | largest sample difference |",
               "|---:|---:|---:|---:|---:|"]
     for b, d in s["dit"].items():
-        lines.append(f"| {b} codes | {d['n']} | {f(d['eager_ms_p50'])} | {f(d['compiled_ms_p50'])} | {f(d['max_abs_diff'])} |")
+        diff = "-" if d["max_abs_diff"] is None else f"{d['max_abs_diff']:.4f}"
+        lines.append(f"| {b} codes | {d['n']} | {f(d['eager_ms_p50'])} | {f(d['compiled_ms_p50'])} | {diff} |")
     lines += [f"DiT {e}" for e in s["dit_errors"]]
     lines += ["", f"estimates with the fastest Talker ({s['best_talker']}) and the DiT as above; the Thinker {f(s['thinker_ms_p50'])} ms:"]
     for b, e in s["estimates"].items():
