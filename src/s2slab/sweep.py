@@ -126,6 +126,40 @@ COMPARISONS: list[tuple[str, str]] = [
     ("T0_fixed_700ms", "T2_prosodic_500ms"),    # T2 against the nearest fixed threshold
 ]
 
+# PR-001's family (docs/preregistration.md): T1 against T1b, in each cohort: 3 comparisons, nothing else.
+PR001_COMPARISONS: list[tuple[str, str]] = [("T1_semantic_500ms", "T1b_complete_500ms")]
+PR001_RUN = dict(split="eval", turns="sentence", seed=2000, n=250)      # the registration, with its Deviation 1
+PR001_OUT = "runs/turn-taking/pr001.json"
+
+
+def pr001_criteria(results: list[PolicyResult], comps: list[Comparison]) -> dict:
+    """PR-001's success criteria, S1 to S4, from one sweep of T1 and T1b and their comparisons."""
+    by = {(r.policy, r.cohort): r for r in results}
+    t1, t1b = "T1_semantic_500ms", "T1b_complete_500ms"
+    dis = next(c for c in comps if c.cohort == "disfluent" and (c.policy_a, c.policy_b) == (t1, t1b))
+    clean_a, clean_b = by[(t1, "clean")].latency, by[(t1b, "clean")].latency
+    d50, d90 = clean_b.p50 - clean_a.p50, clean_b.p90 - clean_a.p90
+    s = {"S1": dis.diff >= 0.10,                                      # at least 10 pp fewer disfluent cut-offs
+         "S2": dis.ci[0] > 0 and dis.p_adjusted < 0.05,               # the CI above 0, and Holm p < 0.05
+         "S3": d50 <= 50 and d90 <= 100,                              # clean wait: +50 ms median, +100 ms p90
+         "S4": all(by[(t1b, c)].n_cutoff <= by[(t1, c)].n_cutoff for c in ("clean", "slow"))}
+    return {"disfluent_diff": dis.diff, "disfluent_ci": list(dis.ci), "disfluent_p_holm": dis.p_adjusted,
+            "clean_p50_delta_ms": d50, "clean_p90_delta_ms": d90,
+            **{k: bool(v) for k, v in s.items()}, "supported": all(s.values())}
+
+
+def format_pr001(crit: dict) -> str:
+    lo, hi = crit["disfluent_ci"]
+    rows = [("S1 · effect", f"disfluent cut-offs {crit['disfluent_diff'] * 100:+.1f} pp (T1 minus T1b); needs >= +10", crit["S1"]),
+            ("S2 · confidence", f"95% CI [{lo * 100:+.1f}, {hi * 100:+.1f}] pp, Holm p {_fmt_p(crit['disfluent_p_holm'])}; needs CI above 0 and p < 0.05", crit["S2"]),
+            ("S3 · speed", f"clean median {crit['clean_p50_delta_ms']:+.0f} ms, p90 {crit['clean_p90_delta_ms']:+.0f} ms; needs <= +50 and <= +100", crit["S3"]),
+            ("S4 · safety", "clean and slow cut-offs not above T1's (guaranteed by construction)", crit["S4"])]
+    lines = ["### PR-001's criteria", "", "| criterion | measured | met |", "|---|---|---|"]
+    lines += [f"| {k} | {m} | {'yes' if ok else 'no'} |" for k, m, ok in rows]
+    lines += ["", f"**PR-001: {'supported' if crit['supported'] else 'not supported'}**"]
+    return "\n".join(lines)
+
+
 def run_comparisons(results: list[PolicyResult],
                     pairs: list[tuple[str, str]] = COMPARISONS,
                     seed: int = 0) -> list[Comparison]:
@@ -241,7 +275,8 @@ def _git_commit() -> str:
 def write_results(results: list[PolicyResult], n_per_cohort: int, seed: int,
                   path: str = "results/sweep.json",
                   comparisons: list[Comparison] | None = None,
-                  split: str = "dev", registration: str = "", turns: str = "prefix") -> pathlib.Path:
+                  split: str = "dev", registration: str = "", turns: str = "prefix",
+                  criteria: dict | None = None) -> pathlib.Path:
     p = pathlib.Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps({
@@ -260,6 +295,7 @@ def write_results(results: list[PolicyResult], n_per_cohort: int, seed: int,
              "diff": c.diff, "ci": list(c.ci), "verdict": c.verdict()}
             for c in (comparisons or [])
         ],
+        **({"criteria": criteria} if criteria is not None else {}),
     }, indent=2))
     return p
 
@@ -267,15 +303,28 @@ def write_results(results: list[PolicyResult], n_per_cohort: int, seed: int,
 
 def main(n: int = 60, seed: int = 0, split: str = "dev",
          registration: str = "", turns: str = "prefix") -> None:
-    results = run_sweep(n, seed, split=split, turns=turns)
+    pr001 = registration == "PR-001"
+    if pr001:                                   # T1 and T1b only, PR-001's family, its own file
+        from .completion import T1B_THETA, t1b
+        policies = {p.name: p for p in (POLICIES["T1_semantic_500ms"], t1b())}
+        results = run_sweep(n, seed, policies=policies, split=split, turns=turns)
+        comps = run_comparisons(results, PR001_COMPARISONS, seed=seed)
+    else:
+        results = run_sweep(n, seed, split=split, turns=turns)
+        comps = run_comparisons(results, seed=seed)
     for cohort in sorted({r.cohort for r in results}):
         print(format_cohort(results, cohort))
         print()
-    comps = run_comparisons(results, seed=seed)
     print(format_comparisons(comps))
     print()
+    crit = pr001_criteria(results, comps) if pr001 else None
+    if crit is not None:
+        print(format_pr001(crit))
+        print(f"\nT1b: cut-off {T1B_THETA} (frozen), model {t1b().scorer.model_name}")
+        print()
     out = write_results(results, n, seed, comparisons=comps,
-                        split=split, registration=registration, turns=turns)
+                        split=split, registration=registration, turns=turns, criteria=crit,
+                        **({"path": PR001_OUT} if pr001 else {}))
     print(f"commit {_git_commit()} · seed {seed} · n={n}/cohort · "
           f"sentences {split} · turns {turns} → {out}")
 
@@ -298,4 +347,8 @@ if __name__ == "__main__":
     if a.confirm == "PR-001" and a.turns != "sentence":
         ap.error("PR-001's confirmation uses whole-sentence turns (its Deviations): "
                  "add --turns sentence")
+    if a.confirm == "PR-001" and (a.split, a.seed, a.n) != (PR001_RUN["split"], PR001_RUN["seed"], PR001_RUN["n"]):
+        ap.error("PR-001's confirmation is --split eval --turns sentence --seed 2000 --n 250 (its registration)")
+    if a.confirm == "PR-001" and pathlib.Path(PR001_OUT).exists():
+        ap.error(f"{PR001_OUT} exists: PR-001's confirmation runs once")
     main(a.n, a.seed, a.split, a.confirm, a.turns)

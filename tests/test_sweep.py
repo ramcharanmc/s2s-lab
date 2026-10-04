@@ -414,6 +414,36 @@ def test_command_line_refuses_eval_without_a_registration():
     assert "reserved for a registered confirmation run" in proc.stderr
 
 
+def test_pr001s_criteria_are_read_from_t1_against_t1b():
+    from s2slab.policies import POLICIES, CompletionThreshold
+    from s2slab.sweep import PR001_COMPARISONS, pr001_criteria, run_comparisons
+
+    t1b = CompletionThreshold(lambda text: 0.0, 0.5)                   # holds after every word
+    pols = {"T1_semantic_500ms": POLICIES["T1_semantic_500ms"], t1b.name: t1b}
+    results = run_sweep(30, 63, policies=pols, turns="sentence")
+    comps = run_comparisons(results, PR001_COMPARISONS, seed=63)
+    crit = pr001_criteria(results, comps)
+    assert len(comps) == 3 and {c.cohort for c in comps} == {"clean", "disfluent", "slow"}
+    assert crit["S4"] is True                                          # a strict extension cannot cut off more
+    assert crit["clean_p50_delta_ms"] >= 300                           # holding everywhere costs the extension
+    assert crit["S3"] is False and crit["supported"] is False
+
+
+def test_command_line_runs_pr001_only_with_its_registered_seed_and_size():
+    import os
+    import pathlib
+    import subprocess
+    import sys
+
+    root = pathlib.Path(__file__).resolve().parents[1]
+    env = {**os.environ, "PYTHONPATH": str(root / "src")}
+    proc = subprocess.run(
+        [sys.executable, "-m", "s2slab.sweep", "--split", "eval", "--turns", "sentence", "--confirm", "PR-001", "--n", "1"],
+        cwd=root, env=env, capture_output=True, text=True, timeout=60)
+    assert proc.returncode == 2
+    assert "--seed 2000 --n 250" in proc.stderr
+
+
 def test_command_line_refuses_pr001s_confirmation_on_the_old_turns():
     """Seed 2000 is spent once: a PR-001 confirmation on prefix turns must stop before any audio."""
     import os

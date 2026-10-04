@@ -56,6 +56,7 @@ history, at the commits this table names. No JSON file was touched.
 | `r4-gpu/evalset-modal-l40s-ladder.json` | M28: R4, the same container; 0.73 of its earlier L40S run's time on the same clips | `13d40dc` | Modal NVIDIA L40S, same container | `docs/m28-log.md` |
 | `r5-moshi/evalset-modal-l40s-ladder.json` | M28: Moshi on the one card, the same driver as its A10 row | `13d40dc` | Modal NVIDIA L40S | `docs/m28-log.md` |
 | `r5-personaplex/evalset-modal-l40s-ladder.json` | M28: PersonaPlex on the one card, the same driver as its A10 row | `13d40dc` | Modal NVIDIA L40S | `docs/m28-log.md` |
+| `turn-taking/pr001-dev.json` | **PR-001, development, not the test**: T1 against T1b at five cut-offs on the DEV sentences, whole-sentence turns, seeds 0 and 1000, every cohort's cut-off rate and clean wait; the cut-off the written rule picked (0.01) | the commit that adds it (run from a scratch copy of `8eaac58` plus that commit's code) | laptop CPU | `docs/m29-log.md` |
 
 ## What an eval-set run holds
 

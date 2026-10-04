@@ -190,6 +190,33 @@ class SemanticThreshold(FixedThreshold):
             return base + self.extension_ms / ctx.frame_ms, f"{self.name}+hold"
         return base, self.name
 
+
+class CompletionThreshold(SemanticThreshold):
+    """T1b (PR-001). T1, and a hold wherever a language model judges the sentence unfinished.
+
+    The word list misses most unfinished sentences: 89% of T1's remaining cut-offs came right after
+    a content word ("my account number" and a pause). T1b asks `scorer` how likely the sentence is to
+    end right after the words so far, and holds below `theta`.
+
+    A STRICT EXTENSION OF T1, as PR-001 requires: it holds wherever T1 holds, and only adds holds,
+    so its silence requirement is never shorter than T1's at any instant. It can therefore never
+    cut off a turn T1 spared; what it buys and what it costs are the experiment.
+
+    Not in POLICIES: it needs a language model (s2slab.completion), and the default sweep must not
+    load one. Build it with completion.t1b().
+    """
+
+    def __init__(self, scorer, theta: float, silence_ms: float = 500, extension_ms: float = 400):
+        super().__init__(silence_ms=silence_ms, extension_ms=extension_ms)
+        self.scorer, self.theta = scorer, theta
+        self.name = f"T1b_complete_{int(silence_ms)}ms"
+
+    def _should_hold(self, partial: str | None) -> bool:
+        if super()._should_hold(partial):
+            return True
+        text = (partial or "").strip().lower()
+        return bool(text) and self.scorer(text) < self.theta
+
 def f0_slope_hz_per_s(f0_tail: list[float] | None,
                       hop_ms: float = 10.0) -> float | None:
     """Least-squares slope of the pitch tail, in Hz per second.
