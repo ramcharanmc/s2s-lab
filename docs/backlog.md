@@ -3,7 +3,16 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-03, at commit `1a4daaa`.
+Last updated 2026-10-03, at commit `ee87076`.
+
+## Chosen next: M30, voice activity projection on real speech
+
+PR-001's error analysis left timing, not words. VAP (Ekstedt & Skantze 2022) projects who speaks next
+from the audio alone; it needs real speech, so M30 builds a real-audio endpointing test bed from the
+frozen eval set. PR-014 is registered: does TV (end the turn when VAP projects the system to speak)
+cut off fewer disfluent turns than T1b, without making clean speakers wait? Commit 1: the harness, the
+registration, the DEV baselines. Then VAP in its own environment, its cut-off on DEV, frozen; then the
+author's one run (`docs/m30-log.md`). \$0, the laptop.
 
 ## Done: M29, PR-001
 

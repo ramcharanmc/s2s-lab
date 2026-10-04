@@ -28,6 +28,7 @@ Rules, from the v1 Research plan (§8):
 | PR-011 | Does a LoRA trained on verbatim transcripts make `whisper-small.en` write down disfluent speech as spoken -- fillers and all -- on the eval set's disfluent cohort, without hurting the other cohorts? | `65c833c` | **Reported: supported** (S1 raw WER on the disfluent cohort 9.9% → 2.3%, −7.6 points, interval −9.6 to −5.7; S2 29 of 29 fillers kept; S3 the other 150 clips −2.3 points normalized where +1.0 was allowed -- most of it EdAcc's verbatim references, not new accent robustness) |
 | PR-012 | On eight sentences neither voice has spoken, do renders made by giving page 09's severity targets to FastPitch as its own inputs meet PR-009's five criteria, over the base LJSpeech voice and a 5-minute fine-tune together? | `89edd05` | **Reported: not supported** (all five criteria failed, as predicted: S1 92 of 96, S2 14 of 32, S3 357 of 384, S4 109 of 192, 56.8%, S5 115 of 192, 59.9%; rate on target in 192 of 192; the base voice 67 and 78 of 96 on S4 and S5, the 5-minute fine-tune 42 and 37) |
 | PR-013 | On two voices and 24 sentences no copy has spoken: when Kokoro-82M is quantized to 8 bits, has its pitch left PR-009's guardrail by more than the package's own noise while its words have stayed (Claim A), and is the fp16 copy a usable rung on a CPU (Claim B)? | `192dd8a` | **Reported: Claim A supported** (the 8-bit copy's pitch is lower than fp32's on 48 of 48 renders, by 3.96 Hz, interval -4.36 to -3.58, the noise floor 1.44; within 3 Hz on 12 of 48; its normalized WER +0.24 points, 10 errors against 8 in 820 words); **Claim B not supported** (fp16 returned no audio for 6 of 48 renders) |
+| PR-014 | On real speech, does an endpointer that ends the turn when a voice-activity-projection model (VAP) projects the system to speak next cut off fewer disfluent turns than T1b, without making clean speakers wait longer? | The commit that adds this entry | Open |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -3262,3 +3263,110 @@ the longest and not the shortest.
 - **The floor is a sample.** Its 95th percentile was 1.44 Hz here and 0.78 to 1.40 over five
   runs of the dev set, the last of them the dry run in the evidence. A2 held against the largest
   of them with 2 Hz to spare.
+
+---
+
+## PR-014 — Voice activity projection on real speech
+
+**Registered:** 2026-10-03, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+PR-001: T1b (T1's word list, or a language model's judgement that the sentence is unfinished) cut
+disfluent cut-offs from 68.8% to 51.2%, on synthetic turns. Its exploratory error analysis: the cut-offs
+left are pauses where the words so far could already be a sentence (84%) and pauses longer than any
+hold (16%). Timing, not words. Voice activity projection (VAP; Ekstedt & Skantze, Interspeech 2022) is
+a published model trained on real two-party conversation to project, from the audio alone, who speaks
+next. And every endpointing result so far is on synthetic turns, or on one speaker's 30 recordings.
+
+### Question
+
+On real speech, does an endpointer that ends the turn when VAP projects the system to speak next (TV)
+cut off fewer disfluent turns than T1b, without making clean speakers wait longer?
+
+### The policies
+
+- **T1b**, as frozen at `1a4daaa` (Qwen2.5-0.5B-Instruct, cut-off 0.01), on the recognizer's words.
+- **TV.** The same silence every policy counts: the energy VAD below 0.5, 20 ms frames. At each frame of
+  a silence run that has lasted at least 100 ms, TV ends the turn if VAP's `p_now` for the silent
+  second channel is at least θ. If it never is, TV ends the turn when the run reaches 1,500 ms. VAP is
+  the published state dict `VAP_3mmz3t0u_50Hz_ad20s_134-epoch9-val_2.56.pt` at a pinned commit of
+  `ErikEkstedt/VoiceActivityProjection`. The caller is on the first channel and silence on the second,
+  as the repo does for a mono file. TV reads VAP's 50 Hz frame that ends at or before each 20 ms
+  frame's end.
+- **θ** is chosen on DEV (the 30 own-voice recordings in `probes/endpointing/`, labelled ends) from
+  {0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8}, by this rule, before any eval number: the value with the
+  fewest DEV cut-offs among those whose median wait on correctly ended DEV turns is at most 1,000 ms;
+  a tie goes to the smaller value.
+
+### Test data
+
+The frozen eval set: 200 clips, 50 each of clean, accented, disfluent and slow, built as turns by
+`realturns.load_eval`. Each is cropped to 100 ms before its first speech. Its end is the end of its
+last voiced stretch of speech by the policies' VAD. It is padded 2.5 s past that end with noise at
+its own floor, and its words come from faster-whisper base.en with word times. No policy has been
+run on these turns.
+
+### Validity requirements
+
+If any is not met, the result is reported as **exploratory**.
+
+- **V1 · Fixed before data.** This entry, `realturns.py` and the DEV results of T0, T1 and T1b
+  (`runs/turn-taking/pr014-dev-baselines.json`) are committed before any VAP number exists.
+- **V2 · Frozen.** TV (the VAP commit, the state dict's SHA-256, θ and the rule's DEV table) is
+  committed before the confirmation, and that commit is recorded under *Results*.
+- **V3 · Causal.** A test shows TV's decision at time t uses no audio after t. If VAP reads ahead,
+  how far is measured and stated; more than 60 ms makes the result exploratory.
+- **V4 · Once.** The eval turns are refused without the registration's confirmation, and the run's
+  file is refused if it exists.
+
+### Primary outcome
+
+The disfluent cut-off rate, TV against T1b, turn by turn on the same 50 disfluent turns.
+
+### Success criteria — all four must hold
+
+| | Criterion |
+|---|---|
+| **S1 · Effect** | TV cuts off fewer disfluent turns than T1b, and the paired bootstrap 95% CI on the difference (T1b minus TV) lies entirely above 0. |
+| **S2 · Confidence** | The Holm-adjusted exact McNemar p < 0.05. The family: TV against T1b in each of the four cohorts. |
+| **S3 · Speed guardrail** | On the clean turns, TV's median wait is at most T1b's + 100 ms, and its p90 at most T1b's + 300 ms. |
+| **S4 · Safety** | On the clean turns, TV cuts off at most 2 more turns (of 50) than T1b. |
+
+**Why these bars.** Fifty turns a cohort supports large effects only, so the effect bar is the
+interval itself rather than a minimum size. Unlike T1b, TV is not a strict extension of anything: it
+can answer sooner, and it can cut off a clean turn T1b spared. S3 and S4 are what stop "fewer
+disfluent cut-offs" being bought with clean speakers' time or clean speakers' turns. If T1b cuts off
+few disfluent turns, S1 and S2 may be out of reach whatever TV does. The entry is then reported as
+not supported, with the count.
+
+**Reported, not tested:** the accented and slow cohorts; TV against T0 at 900 ms; how often TV's
+1,500 ms fallback decided.
+
+### What this cannot show
+
+- Each eval clip is a corpus segment taken as one turn; the end of a segment is assumed to be the end
+  of the turn.
+- The truth is an energy VAD's, and so is the silence every policy counts.
+- The words come from an offline recognizer, which hears the whole clip.
+- VAP was trained on English telephone and video conversation. These are monologues with a silent
+  partner: read (clean, slow), spontaneous accented (EdAcc), and one speaker's read disfluent speech
+  (DisfluencySpeech).
+- DEV is one speaker, the author, performing pauses.
+
+### Analysis plan
+
+1. Commit this entry, `realturns.py` and the DEV baselines (V1).
+2. VAP in its own environment at a pinned commit; the causality test (V3); θ on DEV by the rule;
+   TV frozen (V2). The confirmation's exact command is fixed in that commit.
+3. The one confirmation run.
+4. The results below, verbatim; then an error analysis of TV's cut-offs, labelled exploratory.
+
+### Deviations
+
+*None.*
+
+### Results
+
+*Not yet run.*

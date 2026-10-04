@@ -6,8 +6,8 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-10-03** (commit `1a4daaa`): rungs R0 to R5 built and measured; three fine-tunes run;
-thirteen registrations, all reported, five with a supported claim. A demo that shows
+**Status, 2026-10-03** (commit `ee87076`): rungs R0 to R5 built and measured; three fine-tunes run;
+fourteen registrations, thirteen of them reported, five with a supported claim. A demo that shows
 the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
 
 **https://ramcharanmc--s2s-lab-demo-web.modal.run**
@@ -60,7 +60,7 @@ rows within this table, not with the one above. Moshi answered 93 callers, Perso
 
 ## What was claimed, and what happened
 
-Thirteen registrations (`docs/preregistration.md`). Criteria are committed before the data is seen;
+Fourteen registrations (`docs/preregistration.md`). Criteria are committed before the data is seen;
 results are appended whatever they say.
 
 | | Question, in short | Outcome |
@@ -79,7 +79,8 @@ results are appended whatever they say.
 | PR-012 | Do the severity targets work as FastPitch's own inputs? | not supported: rate exact, pitch on target 57 to 60% |
 | PR-013 | Quantized to 8 bits, does Kokoro's pitch drift while its words stay? | **Claim A supported**; fp16 not usable on a CPU |
 
-All thirteen are reported. Eight were not supported, and each entry says why.
+Thirteen are reported; eight were not supported, and each entry says why. PR-014 (voice activity
+projection on real speech) is registered and open.
 
 ## Run it
 
