@@ -101,20 +101,33 @@ def turn(audio: np.ndarray, cohort: str, key: str, words: list[tuple[str, float]
 def dev_turns(root: pathlib.Path = PROBE_ROOT) -> dict[str, list]:
     """The 30 own-voice recordings by their labels (probes.load_item), padded to PAD_S after the end.
     One cohort, "dev"; their words are the labels' (the recordings' words are known exactly)."""
+    return {"dev": [u for _, u in dev_items(root)]}
+
+
+def dev_items(root: pathlib.Path = PROBE_ROOT) -> list:
+    """dev_turns' turns as (item id, Utterance), in script order."""
     from .simulate import Utterance
     out = []
     for item_id in read_script(root / "script.tsv"):
         u = load_item(item_id, root)
         keep = u.audio[: int(round(u.true_end_s * TARGET_SR))]
         x = pad(keep, PAD_S, item_id)
-        out.append(Utterance(audio=x, sr=TARGET_SR, true_end_s=u.true_end_s, cohort="dev", words=u.words,
-                             n_syllables=u.n_syllables, mid_turn_pauses_s=u.mid_turn_pauses_s,
-                             f0_track=_pitch_track(x)))
-    return {"dev": out}
+        out.append((item_id, Utterance(audio=x, sr=TARGET_SR, true_end_s=u.true_end_s, cohort="dev", words=u.words,
+                                       n_syllables=u.n_syllables, mid_turn_pauses_s=u.mid_turn_pauses_s,
+                                       f0_track=_pitch_track(x))))
+    return out
 
 
 def load_eval(confirm: str = "", words_fn=asr_words) -> dict[str, list]:
     """The 200 eval clips as turns, by cohort. PR-014's confirmation's: refused without confirm."""
+    out: dict[str, list] = {}
+    for _, u in eval_items(confirm, words_fn):
+        out.setdefault(u.cohort, []).append(u)
+    return out
+
+
+def eval_items(confirm: str = "", words_fn=asr_words) -> list:
+    """load_eval's turns as (clip id, Utterance), in manifest order."""
     if confirm != REGISTRATION:
         raise PermissionError(f"the eval clips' turns are {REGISTRATION}'s confirmation's: pass confirm=\"{REGISTRATION}\"")
     from .evalset import load, verify
@@ -125,10 +138,10 @@ def load_eval(confirm: str = "", words_fn=asr_words) -> dict[str, list]:
     if words_fn is asr_words:
         from faster_whisper import WhisperModel
         model = WhisperModel(ASR_MODEL, device="cpu", compute_type="int8")
-    out: dict[str, list] = {}
+    out = []
     for it in load():
         words = words_fn(it.audio, model) if model is not None else words_fn(it.audio)
-        out.setdefault(it.cohort, []).append(turn(it.audio, it.cohort, it.id, words))
+        out.append((it.id, turn(it.audio, it.cohort, it.id, words)))
     return out
 
 

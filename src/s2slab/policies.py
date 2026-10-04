@@ -71,6 +71,9 @@ class TurnContext:
     f0_track: list[float] = field(default_factory=list)
     frame_ms: float = FRAME_MS
     f0_hop_s: float = 0.010
+    # PR-014: VAP's probability that the system speaks next, one value a frame, the frame VAP computed
+    # from the audio up to that frame's end (s2slab.vapturns puts it here; only TV reads it).
+    vap_p: list[float] = field(default_factory=list)
 
     def partial_at(self, t_s: float) -> str:
         """What ASR would have decoded by t_s. Words ending later are unseen."""
@@ -325,6 +328,34 @@ class DecisionTheoretic(EndpointPolicy):
 
     def _requirement(self, ctx, t_s):
         return self.min_silence_frames, self.name
+
+class ProjectionThreshold(EndpointPolicy):
+    """TV (PR-014). End the turn when a voice activity projection model says the other side speaks next.
+
+    VAP (Ekstedt & Skantze, 2022) is trained on real two-party conversation to project, from the audio
+    alone, who will speak in the next moments. With the caller on its first channel and silence on the
+    second, its `p_now` for the second channel is the probability that the system should speak within
+    about 0.6 s. TV counts the same silence as every other policy here: at each frame of a silence run
+    that has lasted at least `min_silence_ms`, it ends the turn if that probability is at least `theta`;
+    if it never is, it ends the turn when the run reaches `fallback_ms`.
+
+    It reads ctx.vap_p, one value per 20 ms frame, written there by s2slab.vapturns from VAP's own
+    environment. Not in POLICIES: it needs those probabilities.
+    """
+
+    def __init__(self, theta: float, min_silence_ms: float = 100.0, fallback_ms: float = 1500.0):
+        self.theta, self.min_silence_ms, self.fallback_ms = theta, min_silence_ms, fallback_ms
+        self.name = f"TV_vap_{theta:g}"
+
+    def _requirement(self, ctx, t_s):
+        if not ctx.vap_p:
+            raise ValueError("TV needs VAP's probabilities in the context (ctx.vap_p): see s2slab.vapturns")
+        i = int(round(t_s * 1000 / ctx.frame_ms)) - 1           # the frame that ends at t_s
+        p = ctx.vap_p[i] if 0 <= i < len(ctx.vap_p) else 0.0
+        if p >= self.theta:
+            return self.min_silence_ms / ctx.frame_ms, f"{self.name}+vap"
+        return self.fallback_ms / ctx.frame_ms, f"{self.name}+fallback"
+
 
 POLICIES: dict[str, EndpointPolicy] = {}
 

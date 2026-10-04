@@ -28,7 +28,7 @@ Rules, from the v1 Research plan (§8):
 | PR-011 | Does a LoRA trained on verbatim transcripts make `whisper-small.en` write down disfluent speech as spoken -- fillers and all -- on the eval set's disfluent cohort, without hurting the other cohorts? | `65c833c` | **Reported: supported** (S1 raw WER on the disfluent cohort 9.9% → 2.3%, −7.6 points, interval −9.6 to −5.7; S2 29 of 29 fillers kept; S3 the other 150 clips −2.3 points normalized where +1.0 was allowed -- most of it EdAcc's verbatim references, not new accent robustness) |
 | PR-012 | On eight sentences neither voice has spoken, do renders made by giving page 09's severity targets to FastPitch as its own inputs meet PR-009's five criteria, over the base LJSpeech voice and a 5-minute fine-tune together? | `89edd05` | **Reported: not supported** (all five criteria failed, as predicted: S1 92 of 96, S2 14 of 32, S3 357 of 384, S4 109 of 192, 56.8%, S5 115 of 192, 59.9%; rate on target in 192 of 192; the base voice 67 and 78 of 96 on S4 and S5, the 5-minute fine-tune 42 and 37) |
 | PR-013 | On two voices and 24 sentences no copy has spoken: when Kokoro-82M is quantized to 8 bits, has its pitch left PR-009's guardrail by more than the package's own noise while its words have stayed (Claim A), and is the fp16 copy a usable rung on a CPU (Claim B)? | `192dd8a` | **Reported: Claim A supported** (the 8-bit copy's pitch is lower than fp32's on 48 of 48 renders, by 3.96 Hz, interval -4.36 to -3.58, the noise floor 1.44; within 3 Hz on 12 of 48; its normalized WER +0.24 points, 10 errors against 8 in 820 words); **Claim B not supported** (fp16 returned no audio for 6 of 48 renders) |
-| PR-014 | On real speech, does an endpointer that ends the turn when a voice-activity-projection model (VAP) projects the system to speak next cut off fewer disfluent turns than T1b, without making clean speakers wait longer? | The commit that adds this entry | Open |
+| PR-014 | On real speech, does an endpointer that ends the turn when a voice-activity-projection model (VAP) projects the system to speak next cut off fewer disfluent turns than T1b, without making clean speakers wait longer? | `ac3a932` | **Reported: not run: no θ met the registered rule on DEV, with a silent partner or with the system's prompt; VAP rated the speaker's own pauses above the end of the turn** |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -3365,8 +3365,47 @@ not supported, with the count.
 
 ### Deviations
 
-*None.*
+**1. The system speaks first (2026-10-04, on DEV only, before any eval data).** The rule, run on DEV
+as registered, found no θ: VAP heard a monologue with a silent second channel, and at every θ the
+median wait on correctly ended turns was 1,435 to 1,500 ms, most of those turns ended by the 1,500 ms
+fallback. VAP is trained on two parties, and a voice agent always speaks before the caller's turn. So
+TV was given what an agent has: the system's prompt on VAP's second channel ("How can I help you
+today?", Kokoro `af_heart`, 1.82 s, then 0.3 s of silence), and the caller's own floor noise on the
+first channel until the turn begins; VAP's frames before the turn are dropped. The prompt is one file,
+pinned by SHA-256 `e78e6b589f44f9ee...`. Everything else in this entry is unchanged, and the rule was run
+again on DEV.
 
 ### Results
 
-*Not yet run.*
+**Not run: no TV could be frozen.** The rule (the θ with the fewest DEV cut-offs among those with a
+median wait of at most 1,000 ms on correctly ended DEV turns) found no θ, as registered or with
+Deviation 1. The confirmation is refused without a frozen θ; the 200 eval turns were never built.
+
+| θ | DEV cut-offs, silent partner | median wait ms | | DEV cut-offs, with the prompt | median wait ms |
+|---:|---:|---:|---|---:|---:|
+| 0.2 | 27 of 30 | 1500 | | 16 of 30 | 1480 |
+| 0.3 | 22 of 30 | 1435 | | 15 of 30 | 1480 |
+| 0.4 | 16 of 30 | 1490 | | 11 of 30 | 1480 |
+| 0.5 | 10 of 30 | 1490 | | 11 of 30 | 1480 |
+| 0.6 | 9 of 30 | 1490 | | 9 of 30 | 1490 |
+| 0.7 | 8 of 30 | 1490 | | 7 of 30 | 1490 |
+| 0.8 | 6 of 30 | 1490 | | 6 of 30 | 1494 |
+
+For comparison, on the same DEV turns (`runs/turn-taking/pr014-dev-baselines.json`): T1b cuts off 20
+of 30 with a median wait of 490 ms, and T0 at 900 ms 13 of 30.
+
+**Why.** On DEV, VAP's highest probability that the system speaks next, inside the speaker's own
+pauses: median 0.37 (with the prompt, 0.37). Within 1.5 s after the true end of the turn: median 0.23
+(with the prompt, 0.29); it reached 0.5 after the end on 5 of 30 turns (9 with the prompt). So on these
+recordings VAP rates the speaker's pauses above the end of the turn, and TV either cuts in on a pause
+or waits for its fallback.
+
+**Checks that held:** VAP read no audio after the decision frame (V3: 0 frames in 90 cuts, silent and
+with the prompt); its probabilities are the repo's own (`probs()`, computed without its training loss:
+the largest difference 0.00 on 8 turns); the turns exported and read back exactly.
+
+**What this does and does not show.** It shows that VAP as published, deciding from one speaker's
+audio, does not mark the end of these turns in time, with or without a spoken prompt. It does not
+show that VAP fails on dialogue: the DEV recordings are one speaker reading and dictating with long
+deliberate pauses, not answering a question in conversation; and nothing here was tested on the eval
+set.

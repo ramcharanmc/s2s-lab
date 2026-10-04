@@ -6,8 +6,8 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-10-03** (commit `ee87076`): rungs R0 to R5 built and measured; three fine-tunes run;
-fourteen registrations, thirteen of them reported, five with a supported claim. A demo that shows
+**Status, 2026-10-04** (commit `ac3a932`): rungs R0 to R5 built and measured; three fine-tunes run;
+fourteen registrations, all reported, five with a supported claim. A demo that shows
 the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
 
 **https://ramcharanmc--s2s-lab-demo-web.modal.run**
@@ -79,8 +79,9 @@ results are appended whatever they say.
 | PR-012 | Do the severity targets work as FastPitch's own inputs? | not supported: rate exact, pitch on target 57 to 60% |
 | PR-013 | Quantized to 8 bits, does Kokoro's pitch drift while its words stay? | **Claim A supported**; fp16 not usable on a CPU |
 
-Thirteen are reported; eight were not supported, and each entry says why. PR-014 (voice activity
-projection on real speech) is registered and open.
+All fourteen are reported. Eight were not supported, and one, PR-014 (voice activity projection on
+real speech), was not run: no setting met its rule on the development recordings. Each entry says
+why.
 
 ## Run it
 
