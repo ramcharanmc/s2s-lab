@@ -108,9 +108,9 @@ def evaluate(policy: EndpointPolicy, utterances: list[Utterance]) -> PolicyResul
 
 def run_sweep(n_per_cohort: int = 60, seed: int = 0,
               policies: dict[str, EndpointPolicy] | None = None,
-              split: str = "dev") -> list[PolicyResult]:
-    """Every policy against every cohort. Deterministic given `seed` and `split`."""
-    cohorts = make_all(n_per_cohort, seed, split=split)
+              split: str = "dev", turns: str = "prefix") -> list[PolicyResult]:
+    """Every policy against every cohort. Deterministic given `seed`, `split` and `turns`."""
+    cohorts = make_all(n_per_cohort, seed, split=split, turns=turns)
     pols = policies if policies is not None else POLICIES
     return [evaluate(p, cohorts[c])
             for c in sorted(cohorts) for p in pols.values()]
@@ -241,7 +241,7 @@ def _git_commit() -> str:
 def write_results(results: list[PolicyResult], n_per_cohort: int, seed: int,
                   path: str = "results/sweep.json",
                   comparisons: list[Comparison] | None = None,
-                  split: str = "dev", registration: str = "") -> pathlib.Path:
+                  split: str = "dev", registration: str = "", turns: str = "prefix") -> pathlib.Path:
     p = pathlib.Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps({
@@ -249,6 +249,7 @@ def write_results(results: list[PolicyResult], n_per_cohort: int, seed: int,
         "n_per_cohort": n_per_cohort,
         "seed": seed,
         "split": split,
+        "turns": turns,
         "registration": registration or None,
         "results": [r.as_dict() for r in results],
         "comparisons": [
@@ -265,8 +266,8 @@ def write_results(results: list[PolicyResult], n_per_cohort: int, seed: int,
 
 
 def main(n: int = 60, seed: int = 0, split: str = "dev",
-         registration: str = "") -> None:
-    results = run_sweep(n, seed, split=split)
+         registration: str = "", turns: str = "prefix") -> None:
+    results = run_sweep(n, seed, split=split, turns=turns)
     for cohort in sorted({r.cohort for r in results}):
         print(format_cohort(results, cohort))
         print()
@@ -274,9 +275,9 @@ def main(n: int = 60, seed: int = 0, split: str = "dev",
     print(format_comparisons(comps))
     print()
     out = write_results(results, n, seed, comparisons=comps,
-                        split=split, registration=registration)
+                        split=split, registration=registration, turns=turns)
     print(f"commit {_git_commit()} · seed {seed} · n={n}/cohort · "
-          f"sentences {split} → {out}")
+          f"sentences {split} · turns {turns} → {out}")
 
 
 if __name__ == "__main__":
@@ -285,10 +286,16 @@ if __name__ == "__main__":
     ap.add_argument("--n", type=int, default=60)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--split", default="dev", choices=["dev", "eval"])
+    ap.add_argument("--turns", default="prefix", choices=["prefix", "sentence"],
+                    help="prefix: the first words of a sentence (every published run); "
+                         "sentence: one whole sentence a turn (PR-001, Deviations)")
     ap.add_argument("--confirm", default="",
                     help="registration this run confirms; required with --split eval")
     a = ap.parse_args()
     if a.split == "eval" and not a.confirm:
         ap.error("--split eval is reserved for a registered confirmation run "
                  "(docs/preregistration.md). Pass e.g. --confirm PR-001.")
-    main(a.n, a.seed, a.split, a.confirm)
+    if a.confirm == "PR-001" and a.turns != "sentence":
+        ap.error("PR-001's confirmation uses whole-sentence turns (its Deviations): "
+                 "add --turns sentence")
+    main(a.n, a.seed, a.split, a.confirm, a.turns)

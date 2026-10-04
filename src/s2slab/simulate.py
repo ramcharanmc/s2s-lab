@@ -30,7 +30,9 @@ on SEP-28k." That sentence survives review. "Our system is fair" does not.
 
 from __future__ import annotations
 
+import hashlib
 import math
+import pathlib
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -177,10 +179,38 @@ SENTENCES: dict[str, list[str]] = {
     ],
 }
 
+# Whole-sentence turns (PR-001, Deviations, 2026-10-03). In the default mode above a turn is the
+# first 8 to 14 words of a 14-word sentence, so it usually stops mid-sentence, and whether the words
+# so far form a sentence says almost nothing about whether the speaker has finished. In the
+# "sentence" mode a turn is one whole sentence: its pauses fall at internal word boundaries, and it
+# ends where the sentence ends. Its sentences are text the author did not write, drawn by the rule in
+# simsentences.py from DailyTalk's dev fold, and pinned here by SHA-256. The eval file is read by no
+# run until PR-001's confirmation.
+TURNS = ("prefix", "sentence")
+SENTENCE_DIR = pathlib.Path(__file__).parent / "sentences"
+WHOLE_SHA256 = {
+    "dev": "d6035c24a93ec260530c1f18ad8c57ba2167b3789234dae85bed9a64920e8862",
+    "eval": "a6a4a53cdb91a627827b4619d5f07ba21baf56c2e4f0009770692cf9ced7f1b0",
+}
+_WHOLE: dict[str, list[str]] = {}
+
+
+def whole_sentences(split: str) -> list[str]:
+    """One split's whole sentences, from sentences/whole-<split>.txt, refused if the file has changed."""
+    if split not in WHOLE_SHA256:
+        raise KeyError(f"unknown sentence split {split!r}; have: {sorted(WHOLE_SHA256)}")
+    if split not in _WHOLE:
+        path = SENTENCE_DIR / f"whole-{split}.txt"
+        data = path.read_bytes()
+        if hashlib.sha256(data).hexdigest() != WHOLE_SHA256[split]:
+            raise RuntimeError(f"{path.name} is not the file PR-001's deviation pinned: its SHA-256 differs")
+        _WHOLE[split] = data.decode("utf-8").splitlines()
+    return _WHOLE[split]
+
 
 def synth_utterance(spec: CohortSpec, rng: np.random.Generator,
                     trailing_silence_s: float = 1.5,
-                    split: str = "dev") -> Utterance:
+                    split: str = "dev", turns: str = "prefix") -> Utterance:
     """One turn from a cohort. `true_end_s` is exact by construction.
 
     Trailing silence is 1.5 s so that even the 900 ms threshold can fire. A
@@ -190,9 +220,22 @@ def synth_utterance(spec: CohortSpec, rng: np.random.Generator,
     Mid-turn pause durations are LOG-NORMAL, not uniform. Pause distributions
     are heavy-tailed in every corpus anyone has measured, and a uniform draw
     would remove exactly the long tail that breaks fixed thresholds.
+
+    turns="prefix" (the default) draws the turn's length, then its pauses, then a sentence to read
+    words from, in that order, so every seed gives the turns it always gave. turns="sentence" draws
+    a whole sentence first and the turn is exactly that long.
     """
-    lo, hi = spec.n_syllables
-    n_syll = int(rng.integers(lo, hi + 1))
+    if turns not in TURNS:
+        raise KeyError(f"unknown turn mode {turns!r}; have: {list(TURNS)}")
+    if split not in SENTENCES:
+        raise KeyError(f"unknown sentence split {split!r}; have: {sorted(SENTENCES)}")
+    if turns == "sentence":
+        pool = whole_sentences(split)
+        sentence = pool[int(rng.integers(0, len(pool)))].split()
+        n_syll = len(sentence)
+    else:
+        lo, hi = spec.n_syllables
+        n_syll = int(rng.integers(lo, hi + 1))
     p_lo, p_hi = spec.n_pauses
     n_pause = int(rng.integers(p_lo, p_hi + 1))
     n_pause = min(n_pause, max(0, n_syll - 2))
@@ -206,10 +249,9 @@ def synth_utterance(spec: CohortSpec, rng: np.random.Generator,
     f0_track: list[float] = []
     pauses: list[float] = []
     t = 0.0
-    if split not in SENTENCES:
-        raise KeyError(f"unknown sentence split {split!r}; have: {sorted(SENTENCES)}")
-    pool = SENTENCES[split]
-    sentence = pool[int(rng.integers(0, len(pool)))].split()
+    if turns == "prefix":
+        pool = SENTENCES[split]
+        sentence = pool[int(rng.integers(0, len(pool)))].split()
     words: list[tuple[str, float]] = []
 
     for i in range(n_syll):
@@ -245,7 +287,8 @@ def synth_utterance(spec: CohortSpec, rng: np.random.Generator,
         f0_track=f0_track,
     )
 
-def make_cohort(name: str, n: int = 50, seed: int = 0, split: str = "dev") -> list[Utterance]:
+def make_cohort(name: str, n: int = 50, seed: int = 0, split: str = "dev",
+                turns: str = "prefix") -> list[Utterance]:
     """`n` utterances from one cohort. Deterministic given `seed`.
 
     Seeded from an explicit integer, never from `hash()` -- Python salts string
@@ -255,14 +298,14 @@ def make_cohort(name: str, n: int = 50, seed: int = 0, split: str = "dev") -> li
     if name not in COHORTS:
         raise KeyError(f"unknown cohort {name!r}; have: {sorted(COHORTS)}")
     rng = np.random.default_rng(seed)
-    return [synth_utterance(COHORTS[name], rng, split=split) for _ in range(n)]
+    return [synth_utterance(COHORTS[name], rng, split=split, turns=turns) for _ in range(n)]
 
 
 def make_all(n_per_cohort: int = 50, seed: int = 0,
-             split: str = "dev") -> dict[str, list[Utterance]]:
+             split: str = "dev", turns: str = "prefix") -> dict[str, list[Utterance]]:
     """Every cohort, each with its own derived seed so adding a cohort does not
     change the utterances generated for the existing ones."""
-    return {name: make_cohort(name, n_per_cohort, seed + i, split=split)
+    return {name: make_cohort(name, n_per_cohort, seed + i, split=split, turns=turns)
             for i, name in enumerate(sorted(COHORTS))}
 
 
@@ -278,37 +321,3 @@ def describe(cohorts: dict[str, list[Utterance]]) -> str:
         lines.append(f"| {name} | {len(utts)} | {dur:.2f} | {npz:.0f} | "
                      f"{longest:.2f} | {COHORTS[name].replaces} |")
     return "\n".join(lines)
-
-# cd <repo> && source .venv/bin/activate && python -c "
-# import sys; sys.path.insert(0,'src')
-# import numpy as np
-# from s2slab.simulate import make_all, describe
-# from s2slab.vad import frame_speech_prob
-# from s2slab.policies import get
-# c = make_all(40, seed=0)
-# print(describe(c)); print()
-# print('premature-cutoff rate, T0 fixed thresholds:')
-# print(f\"{'policy':>18} | \" + ' | '.join(f'{k:>10}' for k in sorted(c)))
-# for ms in (300, 500, 700):
-#     p = get(f'T0_fixed_{ms}ms'); row=[]
-#     for name in sorted(c):
-#         bad = sum(1 for u in c[name]
-#                   if p.decide(frame_speech_prob(u.audio, u.sr), u.partial, u.f0_tail()).endpoint_s < u.true_end_s)
-#         row.append(f'{bad/len(c[name]):>9.0%}')
-#     print(f'{p.name:>18} | ' + ' | '.join(row))
-# "
-
-# Endpointing ladder T0-T3
-# Fourth module of the CPU-only harness, and the one that carries the
-# research contribution. Each rung adds exactly one signal:
-#   T0  silence duration          the industry default
-#   T1  + syntactic completeness  hold the floor mid-sentence
-#   T2  + prosody                 falling F0 commits EARLY
-#   T3  + cost asymmetry          p > R/(1+R), R = C_cutoff/C_wait
-# All four share decide(speech_prob, partial, f0_tail) -> EndpointDecision,
-# EOFAuthored-By: Claude Opus 5 <noreply@anthropic.com>ion written downete
-# [main 283991e] Endpointing ladder T0-T3
-#  2 files changed, 570 insertions(+)
-#  create mode 100644 src/s2slab/policies.py
-#  create mode 100644 tests/test_policies.py
-

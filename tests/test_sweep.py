@@ -389,6 +389,14 @@ def test_results_file_records_a_registration(tmp_path):
     assert blob["registration"] == "PR-001"
 
 
+def test_results_file_records_the_turn_mode(tmp_path):
+    blob = json.loads(write_results(run_sweep(5, 62, turns="sentence"), 5, 62, str(tmp_path / "s.json"),
+                                    turns="sentence").read_text())
+    assert blob["turns"] == "sentence"
+    blob = json.loads(write_results(run_sweep(5, 62), 5, 62, str(tmp_path / "p.json")).read_text())
+    assert blob["turns"] == "prefix"
+
+
 def test_command_line_refuses_eval_without_a_registration():
     """The EVAL lock. Runs the real command; it must exit before generating any
     audio, so no policy is ever scored on the EVAL sentences by accident."""
@@ -404,3 +412,19 @@ def test_command_line_refuses_eval_without_a_registration():
         cwd=root, env=env, capture_output=True, text=True, timeout=60)
     assert proc.returncode == 2
     assert "reserved for a registered confirmation run" in proc.stderr
+
+
+def test_command_line_refuses_pr001s_confirmation_on_the_old_turns():
+    """Seed 2000 is spent once: a PR-001 confirmation on prefix turns must stop before any audio."""
+    import os
+    import pathlib
+    import subprocess
+    import sys
+
+    root = pathlib.Path(__file__).resolve().parents[1]
+    env = {**os.environ, "PYTHONPATH": str(root / "src")}
+    proc = subprocess.run(
+        [sys.executable, "-m", "s2slab.sweep", "--split", "eval", "--confirm", "PR-001", "--n", "1"],
+        cwd=root, env=env, capture_output=True, text=True, timeout=60)
+    assert proc.returncode == 2
+    assert "add --turns sentence" in proc.stderr

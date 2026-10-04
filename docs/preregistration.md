@@ -153,7 +153,33 @@ can.
 
 ### Deviations
 
-*None.*
+**1. The turns (2026-10-03, before any T1b code exists).** In the simulator every turn was the
+first 8 to 14 words of a 14-word sentence. On the DEV seeds already used (0 and 1000, 250 turns a
+cohort), 10–18% of turns were a whole sentence, and in 27–38% the last word was on T1's list, so T1
+already held at the true end. Whether the words so far form a sentence then says almost nothing
+about whether the speaker has finished: a pause and the end both fall at random word boundaries of
+one sentence. Any real completeness check would hold at most true ends and fail S3 by construction,
+and the test would be of the simulator, not of T1b.
+
+The confirmation therefore uses a new turn mode, `turns="sentence"` (`simulate.py`): every turn is
+one whole sentence, its pauses at internal word boundaries, its end where the sentence ends. Its
+sentences are new: 8 to 14 words, drawn by a fixed rule (`s2slab/simsentences.py`) from the
+transcripts of DailyTalk's dev fold, text the author did not write; 38 DEV and 30 EVAL
+sentences from disjoint dialogues, never the test fold. Both files are pinned in `simulate.py` by
+SHA-256; EVAL's is
+`a6a4a53cdb91a627827b4619d5f07ba21baf56c2e4f0009770692cf9ced7f1b0`.
+EVAL is read by no run until confirmation, and was not displayed to the builder of T1b when it was
+written. The sweep
+refuses `--confirm PR-001` without `--turns sentence`.
+
+The default mode is unchanged, so every published T0–T3 number reproduces. The six EVAL sentences
+of 2026-09-12 are retired unused.
+
+**Unchanged:** the question, the constraints on T1b, V2–V4, the primary outcome, S1–S4, seed 2000
+and 250 turns a cohort, the Holm family. **Changed with the turns, and said here:** the turn
+lengths (most new sentences are 8 or 9 words, where the old turns were uniform over 8 to 14), and
+the 10 pp bar's reasoning, which cites T1's 16 pp gain on the old turns. The confirmation command:
+`python -m s2slab.sweep --split eval --turns sentence --seed 2000 --n 250 --confirm PR-001`.
 
 ### Results
 

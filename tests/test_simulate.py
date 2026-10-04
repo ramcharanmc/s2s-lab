@@ -385,3 +385,65 @@ def test_eval_is_not_easier_for_t1_than_dev():
 def test_unknown_split_raises_helpfully():
     with pytest.raises(KeyError, match="unknown sentence split"):
         make_cohort("clean", 1, seed=0, split="test")
+
+
+# --------------------------------------------------------------------------- #
+# Whole-sentence turns (PR-001, Deviations)
+# --------------------------------------------------------------------------- #
+
+
+def test_the_prefix_mode_is_the_default_and_gives_the_turns_it_always_gave():
+    """Every published T0-T3 number came from prefix turns; the new mode must not move one."""
+    a = make_all(20, seed=53)
+    b = make_all(20, seed=53, turns="prefix")
+    for name in COHORTS:
+        assert [(_spoken(u), u.true_end_s, u.mid_turn_pauses_s) for u in a[name]] == \
+               [(_spoken(u), u.true_end_s, u.mid_turn_pauses_s) for u in b[name]]
+
+
+def test_a_sentence_turn_is_one_whole_dev_sentence_and_ends_where_it_ends():
+    from s2slab.simulate import whole_sentences
+    pool = whole_sentences("dev")
+    for name in COHORTS:
+        for u in make_cohort(name, 30, seed=54, turns="sentence"):
+            assert _spoken(u) in pool
+            assert u.n_syllables == len(u.words)
+            assert u.words[-1][1] == pytest.approx(u.true_end_s)
+
+
+def test_the_whole_sentence_sets_are_pinned_disjoint_and_turn_length():
+    """Counts and lengths only: no policy is scored on the eval set here."""
+    import hashlib
+
+    from s2slab.simulate import SENTENCE_DIR, WHOLE_SHA256, whole_sentences
+    dev, ev = whole_sentences("dev"), whole_sentences("eval")
+    assert (len(dev), len(ev)) == (38, 30)
+    assert not set(dev) & set(ev)
+    assert all(8 <= len(s.split()) <= 14 for s in dev + ev)
+    for split in ("dev", "eval"):
+        assert hashlib.sha256((SENTENCE_DIR / f"whole-{split}.txt").read_bytes()).hexdigest() == WHOLE_SHA256[split]
+
+
+def test_whole_eval_is_not_easier_for_t1_than_whole_dev():
+    from s2slab.policies import INCOMPLETE_TAILS
+    from s2slab.simulate import whole_sentences
+
+    def share(pool):
+        words = [w for s in pool for w in s.split()]
+        return sum(w in INCOMPLETE_TAILS for w in words) / len(words)
+
+    assert abs(share(whole_sentences("dev")) - share(whole_sentences("eval"))) < 0.10
+
+
+def test_a_changed_sentence_file_is_refused(tmp_path, monkeypatch):
+    from s2slab import simulate
+    (tmp_path / "whole-dev.txt").write_bytes((simulate.SENTENCE_DIR / "whole-dev.txt").read_bytes() + b"one more\n")
+    monkeypatch.setattr(simulate, "SENTENCE_DIR", tmp_path)
+    monkeypatch.setattr(simulate, "_WHOLE", {})
+    with pytest.raises(RuntimeError, match="SHA-256 differs"):
+        simulate.whole_sentences("dev")
+
+
+def test_unknown_turn_mode_raises_helpfully():
+    with pytest.raises(KeyError, match="unknown turn mode"):
+        make_cohort("clean", 1, seed=0, turns="paragraph")
