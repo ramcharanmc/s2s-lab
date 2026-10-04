@@ -10,8 +10,9 @@ R4 on Modal: the S2S rung on an L40S, with R3 beside it in the same container.
     modal run modal_app/r4_bench.py::profile                                 M31, step 1: R4's stages timed on the 30 probe clips
     modal run modal_app/r4_bench.py::speed                                   M31, step 1b: the Talker and the DiT, eager and compiled
     modal run modal_app/r4_bench.py::speed --tag mask                        the same with the Talker's mask fixed (second run)
-The file has four entry points (main, pairs, profile, speed), so Modal needs the one named: ::main, ::pairs,
-::profile or ::speed.
+    modal run modal_app/r4_bench.py::streamdev                               M31, step 2: R4, r4-gpu-fast and the stream's settings, probe clips
+The file has five entry points (main, pairs, profile, speed, streamdev), so Modal needs the one named:
+::main, ::pairs, ::profile, ::speed or ::streamdev.
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
@@ -43,6 +44,7 @@ sys.path.insert(0, str(REPO / "src"))
 L40S_DOLLARS_PER_HOUR = 1.95   # Modal's L40S rate, checked 2026-08-19 (v2 §5)
 PROFILE_PATH = REPO / "runs" / "r4-gpu" / "profile-l40s.json"   # M31, step 1 (s2slab.r4profile)
 SPEED_PATH = REPO / "runs" / "r4-gpu" / "speed-l40s.json"       # M31, step 1b (s2slab.r4speed)
+STREAM_DEV_PATH = REPO / "runs" / "r4-gpu" / "stream-dev-l40s.json"   # M31, step 2 (s2slab.r4streamdev)
 
 
 def speed_path(tag: str = "") -> pathlib.Path:
@@ -214,6 +216,21 @@ def speed_probe() -> dict:
     return {"gpu": _gpu_name(), "versions": _versions(), "speed": blob, "seconds": time.perf_counter() - t0}
 
 
+# 30 clips through five rungs, R4 ~8.6 s a turn, the others faster, each reply heard by Whisper, and the compiles:
+# about 25 min after the load. The timeout leaves room.
+@app.function(gpu="L40S", timeout=75 * 60, scaledown_window=60)
+def stream_dev() -> dict:
+    """M31, step 2: R4, r4-gpu-fast and r4-gpu-stream at each setting, the 30 probe clips (r4streamdev.run)."""
+    import os
+    os.chdir("/root")
+    from s2slab.probes import TARGET_SR
+    from s2slab.r4streamdev import run
+    from s2slab.rungs import probe_clips
+    t0 = time.perf_counter()
+    blob = run(probe_clips(), TARGET_SR)
+    return {"gpu": _gpu_name(), "versions": _versions(), "dev": blob, "seconds": time.perf_counter() - t0}
+
+
 def results_path(rung_id: str, limit: int = 0, tag: str = "") -> pathlib.Path:
     """runs/<rung>/evalset-modal-l40s[-tag].json for the real run (committed evidence);
     results/<rung>/...-limitN.json for a smoke test (ignored)."""
@@ -329,6 +346,36 @@ def speed(tag: str = ""):
     path = save(out_path, blob)
     print(format_speed(blob))
     print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {path.relative_to(REPO)}")
+    print(out["versions"])
+    print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
+
+
+@app.local_entrypoint()
+def streamdev():
+    """The streamed R4 on development clips (M31, step 2): saves runs/r4-gpu/stream-dev-l40s.json, never
+    overwritten; three replies of each rung to results/r4-gpu/streamdev/ for listening (not committed)."""
+    from s2slab.r4profile import save
+    from s2slab.r4streamdev import format_dev
+    from s2slab.sidechannel import refuse_to_overwrite
+
+    refuse_to_overwrite(STREAM_DEV_PATH)
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    t0 = time.time()
+    out = stream_dev.remote()
+    wall = time.time() - t0
+    listen = out["dev"].pop("listen")
+    blob = {"run": "M31, step 2: R4, r4-gpu-fast and r4-gpu-stream on the 30 probe clips (development)",
+            "commit": commit, "machine": f"Modal {out['gpu']}", "versions": out["versions"], **out["dev"]}
+    path = save(STREAM_DEV_PATH, blob)
+    folder = REPO / "results" / "r4-gpu" / "streamdev"
+    for name, data in listen.items():
+        (folder / name).parent.mkdir(parents=True, exist_ok=True)
+        (folder / name).write_bytes(data)
+    print(format_dev(blob))
+    print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {path.relative_to(REPO)}; "
+          f"{len(listen)} replies for listening -> {folder.relative_to(REPO)}/")
     print(out["versions"])
     print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
           f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")

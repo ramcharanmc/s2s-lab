@@ -63,6 +63,7 @@ history, at the commits this table names. No JSON file was touched.
 | `turn-taking/pr014-dev-vap.json` | **PR-014, development, Deviation 1**: the same with the system's prompt on VAP's second channel; the rule found none, so PR-014 was not run | the same | laptop CPU, VAP `f39a78b` | `docs/m30-log.md`, `docs/preregistration.md` |
 | `r4-gpu/profile-l40s.json` | **M31, step 1**: R4's Thinker, Talker and token2wav timed inside its own call on the 30 probe clips, and token2wav on each reply's first 25, 50 and 100 codes; the Talker is 75% of the time at real time | `911fea3` | Modal NVIDIA L40S | `docs/m31-log.md` |
 | `r4-gpu/speed-l40s.json` | **M31, step 1b, first run**: on 10 probe clips, the Talker eager (both static variants failed: `int` minus `dict`) and the DiT eager against compiled on 25, 50 and 100 codes | `f7e8d99` | Modal NVIDIA L40S | `docs/m31-log.md` |
+| `r4-gpu/speed-l40s-mask.json` | **M31, step 1b, second run**: the same 10 clips with the Talker's mask fixed: eager 20.2 ms a code, static 23.6, static+layers 12.7 (0.63 of real time); codes identical to eager's on 0 of 10 | `567e7f2` | Modal NVIDIA L40S | `docs/m31-log.md` |
 
 ## What an eval-set run holds
 

@@ -10,7 +10,9 @@ Kept as events happen. The earlier logs: `docs/m30-log.md` and those it names.
 | 3 | 10-04 | `r4_bench.py::profile`, the author, L40S, 30 probe clips, \$0.278 | the Talker is 75% of R4's time and runs at real time (19.8 ms a code, 0.99); token2wav about 890 ms for any block of 25 to 100 codes; streamed as designed, a first block at about 2.1 to 3.5 s but production 1.4 to 2.8 times slower than playback | — | the run file, this commit |
 | 4 | 10-04 | — | the author's choice (A of three): before any streaming, can the Talker and the DiT run faster with standard tools, unchanged in what they make | `r4speed.py`, tests, `r4_bench.py::speed`; `OmniS2S.speak` takes extra arguments for generate | f7e8d99 |
 | 5 | 10-04 | `r4_bench.py::speed`, the author, L40S, 10 probe clips, \$0.164 | the DiT compiled 4.2, 3.2 and 2.1 times faster on 25, 50 and 100 codes, its audio within 0.003 to 0.06 of eager's; both static Talker variants failed at once: `TypeError` (`int` minus `dict`) | — | the run file, this commit |
-| 6 | 10-04 | the failure reproduced on the laptop, a tiny random Talker | with a static cache, generate hands the Talker a dict of masks; given its 2-D mask back it runs, codes identical to eager's; compiled, its layers need no mask on one-code steps: one graph, no breaks, codes identical | `keep_2d_mask`; `compile_layers` without the mask; the variants eager, static, static+layers; `::speed --tag` | this commit |
+| 6 | 10-04 | the failure reproduced on the laptop, a tiny random Talker | with a static cache, generate hands the Talker a dict of masks; given its 2-D mask back it runs, codes identical to eager's; compiled, its layers need no mask on one-code steps: one graph, no breaks, codes identical | `keep_2d_mask`; `compile_layers` without the mask; the variants eager, static, static+layers; `::speed --tag` | 567e7f2 |
+| 7 | 10-04 | `r4_bench.py::speed --tag mask`, the author, L40S, the same 10 probe clips, \$0.287 | both fixes held on the real Talker: static+layers 12.7 ms a code, 0.63 of real time (eager 20.2, static alone 23.6), no graph breaks; its codes differ from eager's on 10 of 10, from code 8 to 200 on; the DiT as in the first run | — | the run file, this commit |
+| 8 | 10-04 | the stream's tests, laptop, a fake model; then `transformers`' own Talker and token2wav, tiny and random | a block decoder that reproduces a whole reply sample for sample; the stream's codes the fast rung's; the real Talker path writes eager's codes; 480 samples a code; my cache reset outside inference mode caught and fixed | `r4stream.py` (`r4-gpu-fast`, `r4-gpu-stream`), `r4streamdev.py`, tests, `::streamdev` | this commit |
 
 ## 1. The design
 
@@ -202,3 +204,94 @@ stay identical to eager's. Below about 0.7 (with the DiT's 0.27 for blocks of 50
 up before a block's neighbours are counted.
 
 **Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite, 938 passed, 2 skipped.
+
+## 7. Step 1b, the second run: the Talker at 0.63 of real time (at 567e7f2)
+
+Run by the author: `modal run modal_app/r4_bench.py::speed --tag mask`, one L40S, 521 s in the function,
+530 s end to end, \$0.287. The same 10 clips; `runs/r4-gpu/speed-l40s-mask.json`.
+
+| Talker | ms a code p50 | p90 | real-time factor | warm-up s | codes identical to eager's |
+|---|---:|---:|---:|---|---:|
+| eager (R4) | 20.2 | 20.4 | 1.0 | - | - |
+| static (the cache, its 2-D mask) | 23.6 | 24.1 | 1.2 | 8.2, 8.6 | 0 of 10 |
+| **static+layers** (and the layers compiled) | **12.7** | **13.0** | **0.63** | 41.7, 5.2 | 0 of 10 |
+
+- **Both fixes held on the real Talker**: no error, no graph break. Compiled, it takes 12.7 ms a code,
+  1.6 times eager's speed; the static cache alone is slower than eager (each step attends over the
+  whole cache, the prompt and 4,096 places). Where the remaining time goes, not measured: most likely
+  `generate`'s own work around each step (sampling, its stopping checks), which is not compiled.
+- **The codes are not eager's.** In both static variants they part from eager's on all 10 clips, from
+  code 8 to code 200 on (the first codes always agree: the prompt and the positions are right). The
+  static cache already does it, without any compile: a last-bit difference in a logit, and a sampled
+  Talker takes another code from there. The replies run from 12% shorter to 22% longer than eager's.
+  So a fast R4 speaks another sample of the same reply; the words come from the Thinker, untouched,
+  and whether the speech still says them is what the next step measures.
+- **The DiT, as in the first run:** compiled 219, 273 and 421 ms on 25, 50 and 100 codes; the largest
+  sample difference 0.0027, 0.0211 and 0.0737.
+- **By arithmetic, with the compiled Talker and DiT:** a first block at about 1,176 ms (25 codes),
+  1,549 (50) or 2,332 (100); a stream at 1.08, 0.91 or 0.85 of real time, before a block's neighbours
+  are counted. R4 waits 6.9 s on the eval set (M28) and 8.6 s on these clips.
+
+The author chose A (of three): build the streaming rung on this path now; a faster Talker (its whole
+step compiled, in a loop of our own) can follow if the stream stalls too much.
+
+## 8. Step 2, the fast and streamed rungs (built)
+
+`src/s2slab/r4stream.py`, two rungs on R4's model, prompt, greedy text, voice and seed:
+
+| rung | what changes from R4 |
+|---|---|
+| `r4-gpu-fast` | the Talker with a static cache of its own (6,144 places, made once, reset each turn), its 2-D mask, and its layers compiled; the reply decoded whole, as R4's |
+| `r4-gpu-stream` | the same Talker; its codes handed over one by one (`generate`'s streamer) and decoded a block at a time by the compiled DiT, each block handed out (`Rung.emit`) as soon as it exists |
+
+So R4 to `r4-gpu-fast` is what compiling the Talker buys, and `r4-gpu-fast` to `r4-gpu-stream` what
+streaming buys, as R1 is to R0.
+
+- **A fixed cache.** `transformers` sizes a static cache to each prompt plus 4,096; every longer prompt
+  would make a new cache and recompile the layers. One cache of 6,144, reset each turn, holds a turn of
+  up to 60 s (about 25 prompt tokens a second of audio, plus about 110 of text) and R4's own cap of
+  4,096 codes; a longer turn is refused. The longest probe clip is 53.4 s (my first size, for 30 s,
+  would have stopped the development run on it; caught before the hand-over), the eval set's 17.0 s.
+- **The blocks** (`BlockDecoder`). The DiT attends within blocks of `block_size` mel frames (12 codes in
+  `transformers`' default configuration; the rung reads the checkpoint's own at load), one block back in
+  two of its layers and one ahead in one: a frame depends on at most two blocks back and one ahead. With
+  blocks of 12 codes, a block of codes [s, e) is decoded in the window [s - 24, e + 12), aligned to the
+  DiT's blocks, and only [s, e) kept: the attention it sees is the attention the whole reply would give it.
+  The noise is its own, so neighbouring blocks are crossfaded over one code (20 ms). A block is decoded
+  once 12 more codes exist, or the reply has ended. The DiT runs compiled on the steady windows and
+  eager on the last, shorter one.
+- **The Talker is not disturbed.** Each block is decoded inside the Talker's own `generate` call, when
+  the streamer hands over a code, inside `torch.random.fork_rng`: the DiT's noise does not move the
+  Talker's sampling, so the stream writes the fast rung's codes on the same clip and seed. A test
+  checks it with a fake Talker that draws each code as it streams.
+- **A start buffer** (`StartBuffer`), if one is needed: the first pieces held back until that much audio
+  exists, then everything played on.
+- **The blocks must be whole DiT blocks.** The rung, and the development run before any turn, refuse a
+  setting that is not a multiple of the DiT's block (read from the checkpoint at load).
+
+**Checked on the laptop before the hand-over**, with `transformers`' own code and tiny random weights:
+
+- the Talker through the stream's path (our cache reset between turns, the 2-D mask, the layers
+  compiled, on the CPU, and the streamer) wrote eager's codes on four turns of different prompt
+  lengths: one graph, no breaks, no recompiles. That check caught a mistake of mine: the cache's
+  tensors are made inside `generate`'s inference mode, and resetting them outside it fails, so every
+  turn after the first would have crashed on Modal. The reset now runs inside it.
+- the real token2wav code (a small DiT): 480 samples a code from a window, the DiT's context read as 24
+  codes back and 12 ahead, and 150 codes streamed in four pieces to exactly 72,000 samples, every
+  window starting on a DiT block.
+
+**Step 2's development run** (`src/s2slab/r4streamdev.py`), one container, one set of weights, the 30
+probe clips: R4, then `r4-gpu-fast`, then the stream with its first block and later blocks at (24, 96),
+(24, 192) and (48, 96) codes, no start buffer. For each turn: first sound, stalls, total, the reply's
+length; the stream's codes against the fast rung's; and Whisper small.en on the reply audio against the
+Thinker's text (the same text for all three), so a stream that garbles its seams shows. What a start
+buffer of 0.5 to 3 s would do is computed afterwards from each turn's pieces. Three replies of each rung
+are written to `results/` for the author to listen to.
+
+```
+modal run modal_app/r4_bench.py::streamdev      one L40S, about 25 min, about $0.80; saves runs/r4-gpu/stream-dev-l40s.json
+```
+
+From it: the setting and the start buffer, then PR-015, registered before the eval set.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite, 957 passed, 2 skipped.

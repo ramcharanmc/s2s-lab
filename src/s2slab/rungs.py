@@ -280,6 +280,8 @@ RUNGS = {
     "r2-gpu-verbatim": "s2slab.r2verbatim:TwoTierCascadeGPUVerbatim",
     "r3-gpu": "s2slab.r3:SpeechLLMCascade",
     "r4-gpu": "s2slab.r4:SpeechToSpeech",
+    "r4-gpu-fast": "s2slab.r4stream:FastSpeechToSpeech",
+    "r4-gpu-stream": "s2slab.r4stream:StreamingSpeechToSpeech",
 }
 
 def get(rung_id: str) -> Rung:

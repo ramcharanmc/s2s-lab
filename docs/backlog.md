@@ -14,9 +14,10 @@ audio handed out as it is made, as R1 is to R0. Step 1 (`911fea3`, \$0.278): the
 time and runs at real time, 19.8 ms a code; token2wav costs about 890 ms a call whatever the length. So
 streaming alone would stall. Step 1b, the author's choice: can they run faster with a static cache and
 compiled steps? First run (`f7e8d99`, \$0.164): the DiT compiled runs 2 to 4 times faster; the Talker's
-static cache failed on a mask `transformers` hands it, fixed and checked on a tiny Talker. The second
-run (about \$0.17) measures the real Talker. If it runs well under real time, the streaming rung follows
-on the fast path; if not, M31 reports the profile as its finding (`docs/m31-log.md`).
+static cache failed on a mask `transformers` hands it, fixed. Second run (`567e7f2`, \$0.287): the
+Talker compiled at 0.63 of real time, its codes another sample than eager's. Step 2, the author's choice:
+`r4-gpu-fast` and `r4-gpu-stream`, then a development run on the probe clips (about \$0.80) to set the
+blocks and any start buffer; then PR-015, registered before the eval set, and the run (`docs/m31-log.md`).
 
 ## Done: M30, voice activity projection on real speech
 
