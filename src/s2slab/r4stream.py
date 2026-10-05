@@ -316,3 +316,18 @@ class StreamingSpeechToSpeech(Rung):
 def _empty():
     import torch
     return torch.zeros(0)
+
+
+def pair(model=None):
+    """The demo's L40S: r4-gpu-fast and r4-gpu-stream on one FastOmni, one set of R4's weights (two sets,
+    22.5 GB each with their activations, would not fit the card's 48). Returns get(rung_id), as
+    demo.Live takes it; each rung is made when it is asked for, both on the same model."""
+    fast = model or FastOmni()
+    made = {"r4-gpu-fast": lambda: FastSpeechToSpeech(fast), "r4-gpu-stream": lambda: StreamingSpeechToSpeech(fast)}
+
+    def get(rung_id: str):
+        if rung_id not in made:
+            raise KeyError(f"{rung_id!r} is not one of the pair: {', '.join(made)}")
+        return made[rung_id]()
+
+    return get

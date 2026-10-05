@@ -15,9 +15,10 @@ the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md
 A recording answered by R0 to R5 on four machines (R3, R4 and R5 woken only when asked for; 32 to
 82 s to wake), with what the visitor's voice carried beside the words the cascades received, and
 a severity score rendered onto synthetic speech, to be heard. The measured tab is open to anyone;
-the live tab needs an access code and stops at \$1 of GPU a day.
+the live tab needs an access code and stops at \$3 of GPU a day. R4 and R4 streamed answer side by side,
+on one set of weights (M32a).
 Every rung was also measured on one card, the L40S, R0 to R4 in one
-container (M28, below). About \$38 spent: \$13.81 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+container (M28, below). About \$42 spent: \$17.82 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 
@@ -106,8 +107,8 @@ PYTHONPATH=src python -m s2slab.quantladder dev         # the quantization ladde
 ```
 
 The demo, on the laptop's CPU (`requirements/demo.txt`; the measured part needs no model). The
-access code must be ten characters or more, or the live part stays closed; five wrong codes in
-ten minutes close it for ten:
+access code must be ten characters or more, or the live part stays closed; thirty wrong codes in
+five minutes close it for five:
 
 ```bash
 PYTHONPATH=src DEMO_ACCESS_CODE=... python -m uvicorn s2slab.demoweb:laptop --factory --port 8000

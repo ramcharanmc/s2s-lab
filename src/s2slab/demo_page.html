@@ -220,7 +220,7 @@ function showFindings(list) {
   box.appendChild(el("p", "soft", "Each claim was written down with its criteria before its data was seen. Most were not supported, and are here as they came out."));
   for (const f of list) {
     const card = el("div", "card");
-    card.appendChild(el("div", "row")).append(el("strong", null, f.title), el("span", f.supported ? "num" : "warn", f.registration + ": " + (f.supported ? "supported" : "not supported")));
+    card.appendChild(el("div", "row")).append(el("strong", null, f.title), el("span", f.supported ? "num" : "warn", f.registration + ": " + (f.status || (f.supported ? "supported" : "not supported"))));
     card.appendChild(el("p", null, f.question));
     const table = el("table");
     for (const [what, value] of f.rows) { const tr = el("tr"); tr.append(el("td", "soft", what), el("td", "num", value)); table.appendChild(tr); }

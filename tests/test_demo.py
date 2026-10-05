@@ -136,7 +136,7 @@ def test_the_clips_shown_are_the_shortest_clean_ones_and_every_run_named_is_comm
     assert demo.CLIPS == demo.pick_clips(json.loads((root / "evalset" / "manifest.json").read_text(encoding="utf-8")))
     for label, what, rel in demo.MEASURED:
         assert (root / rel).exists(), rel
-    assert [label for label, _, _ in demo.MEASURED] == ["R0", "R1", "R2", "R3", "R4", "R5 Moshi", "R5 PersonaPlex"]
+    assert [label for label, _, _ in demo.MEASURED] == ["R0", "R1", "R2", "R3", "R4", "R4 streamed", "R5 Moshi", "R5 PersonaPlex"]
 
 
 def test_a_live_turn_is_a_record_with_the_reply_as_a_wav_and_a_rung_loads_once():
@@ -324,18 +324,19 @@ def test_rungs_on_another_machine_are_sent_the_samples_and_answer_as_if_here():
 # --------------------------------------------------------------------------- #
 # wrong codes
 # --------------------------------------------------------------------------- #
-def test_five_wrong_codes_in_ten_minutes_close_the_door_to_everyone_for_ten():
+def test_thirty_wrong_codes_in_five_minutes_close_the_door_to_everyone_for_five():
+    assert (demo.WRONG_CODES, demo.LOCK_S) == (30, 300.0)
     store = {}
     door = demo.Door(store)
-    for i in range(4):
+    for i in range(29):
         door.wrong(DAY + i)
-    assert door.locked_s(DAY + 4) == 0
-    door.wrong(DAY + 700)                                         # the four have aged out: this is the first of a new count
-    assert door.locked_s(DAY + 700) == 0 and store["wrong_codes"] == [DAY + 700]
-    for i in range(4):
-        door.wrong(DAY + 701 + i)
-    assert door.locked_s(DAY + 705) == pytest.approx(599) and store["wrong_codes"] == []
-    assert door.locked_s(DAY + 704 + 600) == 0
+    assert door.locked_s(DAY + 29) == 0
+    door.wrong(DAY + 400)                                         # the 29 have aged out: this is the first of a new count
+    assert door.locked_s(DAY + 400) == 0 and store["wrong_codes"] == [DAY + 400]
+    for i in range(29):
+        door.wrong(DAY + 401 + i)
+    assert door.locked_s(DAY + 430) == pytest.approx(299) and store["wrong_codes"] == []
+    assert door.locked_s(DAY + 429 + 300) == 0
     assert demo.Door({}, tries=1, lock_s=5).locked_s(DAY) == 0
 
 
@@ -345,16 +346,16 @@ def test_a_locked_door_refuses_the_right_code_wakes_nothing_and_opens_again(web)
                                     headers={"X-Access-Code": code} if code else {})
     for _ in range(9):
         assert send(None).status_code == 401                      # no code is not a guess
-    for guess in ("00001", "00002", "00003", "00004"):
-        assert send(guess).status_code == 401
+    for i in range(1, 30):
+        assert send(f"{i:05d}").status_code == 401
     assert client.get("/api/status").json()["locked_s"] == 0 and send("open sesame").status_code == 200
     spent = budget.spent(DAY)
-    assert send("00005").status_code == 401                       # the fifth: the right code in between did not reset the count
-    assert send("00006").status_code == 429                       # and a locked door does not say whether a code is wrong
+    assert send("00030").status_code == 401                       # the 30th: the right code in between did not reset the count
+    assert send("00031").status_code == 429                       # and a locked door does not say whether a code is wrong
     locked = send("open sesame")
     assert locked.status_code == 429 and "wrong codes" in locked.json()["detail"] and budget.spent(DAY) == spent
-    assert client.get("/api/status").json()["locked_s"] == 600
-    clock["t"] += 601
+    assert client.get("/api/status").json()["locked_s"] == 300
+    clock["t"] += 301
     assert client.get("/api/status").json()["locked_s"] == 0 and send("open sesame").status_code == 200
 
 
@@ -597,8 +598,18 @@ def test_the_other_findings_are_read_from_their_committed_run_files_as_they_came
     import pathlib
     root = pathlib.Path(__file__).resolve().parents[1]
     by = {f["registration"]: f for f in demo.findings(root)}
-    assert list(by) == ["PR-003", "PR-010", "PR-009", "PR-012", "PR-013"] and [f["file"] for f in by.values()] == list(demo.FINDINGS)
-    assert {k: f["supported"] for k, f in by.items()} == {"PR-003": True, "PR-010": False, "PR-009": False, "PR-012": False, "PR-013": True}
+    assert list(by) == ["PR-003", "PR-010", "PR-009", "PR-012", "PR-013", "PR-014", "PR-015"]
+    assert [f["file"] for f in by.values()] == list(demo.FINDINGS)
+    assert {k: f["supported"] for k, f in by.items()} == {"PR-003": True, "PR-010": False, "PR-009": False, "PR-012": False,
+                                                         "PR-013": True, "PR-014": False, "PR-015": True}
+    assert by["PR-014"]["status"] == "not run" and "status" not in by["PR-013"]
+    assert dict(by["PR-014"]["rows"])["setting 0.2"] == "16 of 30 turns cut off, a median wait of 1,480 ms"
+    assert dict(by["PR-014"]["rows"])["the rule: the fewest cut-offs with a median wait of at most 1,000 ms"] == "no setting met it"
+    s = dict(by["PR-015"]["rows"])
+    assert s["first sound, the median: streamed against R4"] == "3,331 ms against 6,806 (0.49 of R4's)"
+    assert s["first sound, p90"] == "3,728 ms against 11,784 (0.32)" and s["turns where playback ran dry"] == "0 of 200"
+    assert s["the words, as Whisper hears the reply"] == "1.1% wrong against 1.3%" and by["PR-015"]["commit"] == "e2a4b4e"
+    assert s["the whole reply, the median"] == "7,530 ms against 6,602 (1.14 times)" and s["R4 with its Talker compiled, not streamed"].startswith("7,010 ms")
     assert dict(by["PR-003"]["rows"])["after 1500 ms"] == "wrong on 8 of 20"
     assert dict(by["PR-003"]["rows"])["stop when the words are not a backchannel"] == "wrong on 1 of 20" and "not played" in by["PR-003"]["note"]
     assert by["PR-010"]["rows"][0][1] == "496 ms" and by["PR-010"]["rows"][1][1] == "1035 ms" and "further away" in by["PR-010"]["rows"][2][1]
@@ -750,3 +761,25 @@ def test_the_page_renders_behind_the_door_and_charges_the_budget(tree, monkeypat
     assert no_render.get("/api/status").json()["render"] is None
     assert no_render.post("/api/render", data={"voice": "af_sarah", "sentence": "t2", "condition": "mania", "score": "20"},
                           headers={"X-Access-Code": "open sesame"}).status_code == 404
+
+
+def test_the_measured_part_shows_r4_streamed_from_the_pr015_run():
+    import pathlib
+    root = pathlib.Path(__file__).resolve().parents[1]
+    rows = {r["label"]: r for r in demo.measured(root)["rungs"]}
+    s = rows["R4 streamed"]
+    assert s["file"] == "runs/r4-gpu/pr015.json" and s["turns_in_run"] == 200 and s["commit"] == "e2a4b4e"
+    assert s["kind"] == "turn" and 2500 < s["first_audio_p50_ms"] < 4000                 # the stream, not R4 beside it
+    t = s["turns"][0]
+    assert t["clip"] == demo.CLIPS[0] and t["transcript"] is None and t["stages_ms"] == {} and t["reply_text"]
+
+
+def test_the_l40s_pair_makes_both_rungs_on_one_model():
+    from s2slab.r4stream import FastOmni, FastSpeechToSpeech, StreamingSpeechToSpeech, pair
+    model = FastOmni()
+    get = pair(model)
+    fast, stream = get("r4-gpu-fast"), get("r4-gpu-stream")
+    assert isinstance(fast, FastSpeechToSpeech) and isinstance(stream, StreamingSpeechToSpeech)
+    assert fast.model is model and stream.model is model                               # one set of weights
+    with pytest.raises(KeyError, match="pair"):
+        get("r4-gpu")

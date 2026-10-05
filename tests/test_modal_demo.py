@@ -40,15 +40,16 @@ def test_the_image_holds_every_model_the_four_rungs_load_and_the_export_is_pr011
         if label != "R2 verbatim":
             assert f"Systran/faster-whisper-{rung.asr.model_name}" in app.MODELS
     assert app.EXPORT_NAME == r2verbatim.EXPORT_NAME and app.EXPORT == f"/ft2/export/{r2verbatim.EXPORT_NAME}/ct2"
-    assert set(app.ABOUT) <= set(app.OFFERED) | {"R3", "R4", "R5"} and "large-v3-turbo" in app.ABOUT["R2"]
+    assert set(app.ABOUT) <= set(app.OFFERED) | {"R3", "R4", "R4 streamed", "R5"} and "large-v3-turbo" in app.ABOUT["R2"]
 
 
 def test_the_web_container_is_sent_what_the_measured_part_reads_and_no_more(app):
-    assert list(app.RUN_FILES) == [rel for _, _, rel in demo.MEASURED] + [demo.VERBATIM_RUN, demo.PROSODY_RUN] + list(demo.FINDINGS)
+    assert list(app.RUN_FILES) == list(dict.fromkeys([rel for _, _, rel in demo.MEASURED] + [demo.VERBATIM_RUN, demo.PROSODY_RUN]
+                                                    + list(demo.FINDINGS)))            # each file once
     assert app.CLIPS == demo.CLIPS + demo.VERBATIM_CLIPS
     for rel in app.RUN_FILES:
         assert (ROOT / rel).exists(), rel
-    assert (app.SECRET, app.CAP_DOLLARS, app.WINDOW_S, app.T4_DOLLARS_PER_HOUR) == ("s2s-lab-demo", 1.0, 300, 0.59)
+    assert (app.SECRET, app.CAP_DOLLARS, app.WINDOW_S, app.T4_DOLLARS_PER_HOUR) == ("s2s-lab-demo", 3.0, 300, 0.59)
 
 
 def test_the_gpu_is_reached_only_with_the_code_and_inside_the_budget(app, monkeypatch):
@@ -65,8 +66,9 @@ def test_the_gpu_is_reached_only_with_the_code_and_inside_the_budget(app, monkey
     client = TestClient(app.make_app(call, store, root=ROOT))
     status = client.get("/api/status").json()
     assert status["rungs"] == list(app.OFFERED) and status["about"] == app.ABOUT and status["wake_s"] is None
-    assert client.get("/").status_code == 200 and len(client.get("/api/measured").json()["rungs"]) == 7
-    assert [f["registration"] for f in client.get("/api/measured").json()["findings"]] == ["PR-003", "PR-010", "PR-009", "PR-012", "PR-013"]
+    assert client.get("/").status_code == 200 and len(client.get("/api/measured").json()["rungs"]) == 8
+    assert [f["registration"] for f in client.get("/api/measured").json()["findings"]] == ["PR-003", "PR-010", "PR-009", "PR-012",
+                                                                                          "PR-013", "PR-014", "PR-015"]
     send = lambda code, rungs="": client.post("/api/live", files={"audio": ("turn", wav(), "audio/wav")}, data={"rungs": rungs},
                                               headers={"X-Access-Code": code} if code else {})
     assert send(None).status_code == 401 and send("wrong").status_code == 401 and calls == []      # the T4 stays asleep
@@ -75,9 +77,9 @@ def test_the_gpu_is_reached_only_with_the_code_and_inside_the_budget(app, monkey
     assert [t["label"] for t in ok["turns"]] == list(app.OFFERED) and ok["load_s"] == 41.0
     assert 80 < ok["voice"]["pitch_hz"] < 400 and ok["voice"]["voiced_s"] > 1            # measured beside the door, not on the T4
     assert ok["charged"] == pytest.approx(300 / 3600 * 0.59, abs=0.002) and store["wake_s"] >= 0   # the window, and the wall time
-    assert app.CAP_DOLLARS / ok["charged"] > 15                                                    # bursts of use in a day's dollar
+    assert app.CAP_DOLLARS / ok["charged"] > 45                                                    # bursts of use in a day's dollars
     assert client.get("/api/status").json()["wake_s"] == store["wake_s"]
-    store[f"dollars:{demo.Budget.day(__import__('time').time())}"] = 1.0                           # the day's dollar is spent
+    store[f"dollars:{demo.Budget.day(__import__('time').time())}"] = app.CAP_DOLLARS               # the day's dollars are spent
     assert send("open sesame").status_code == 429 and len(calls) == 1
 
 
@@ -100,14 +102,16 @@ def test_a_t4_that_does_not_answer_is_a_sentence_on_its_cards_and_is_still_charg
 
 def test_r3_r4_and_r5_are_on_machines_of_their_own_that_hold_their_models(app):
     from s2slab import r5
-    assert {name: o["offered"] for name, o in app.OTHERS.items()} == {"a10": {"R3": "r3-gpu"}, "l40s": {"R4": "r4-gpu"},
+    assert {name: o["offered"] for name, o in app.OTHERS.items()} == {"a10": {"R3": "r3-gpu"},
+                                                                      "l40s": {"R4": "r4-gpu-fast", "R4 streamed": "r4-gpu-stream"},
                                                                       "moshi": {"R5": "r5-moshi"}}
     assert list(app.MODELS_MOSHI) == [r5.MOSHI_REPO] and "r5-moshi" in r5.MODELS and app.OTHERS["moshi"]["rate"] == 1.10
     assert (app.OTHERS["a10"]["rate"], app.OTHERS["l40s"]["rate"], app.WINDOW_BIG_S) == (1.10, 1.95, 120)
-    r3, r4 = get("r3-gpu"), get("r4-gpu")
+    r3, r4, r4s = get("r3-gpu"), get("r4-gpu-fast"), get("r4-gpu-stream")
     assert r3.llm.model_name in app.MODELS_A10 and f"voices/{r3.tts.voice}.pt" in app.MODELS_A10["hexgrad/Kokoro-82M"]
-    assert r4.model.model_name in app.MODELS_L40S
-    assert set(app.ABOUT) == set(app.OFFERED) - {"R0", "R1"} | {"R3", "R4", "R5"} and "no transcript" in app.ABOUT["R3"]
+    assert r4.model.model_name in app.MODELS_L40S and r4s.model.model_name in app.MODELS_L40S
+    assert set(app.ABOUT) == set(app.OFFERED) - {"R0", "R1"} | {"R3", "R4", "R4 streamed", "R5"} and "no transcript" in app.ABOUT["R3"]
+    assert "3.3 s instead of 6.8" in app.ABOUT["R4 streamed"] and "1.03" in app.ABOUT["R4"]
     assert "may describe you" in app.ABOUT["R3"] and "nothing here checks" in app.ABOUT["R3"]
 
 
@@ -129,7 +133,8 @@ def test_the_bigger_machines_wake_only_for_a_visitor_who_asks(app, monkeypatch):
                                      others={name: machine(name, o["offered"]) for name, o in app.OTHERS.items()}))
     status = client.get("/api/status").json()
     assert status["rungs"] == list(app.OFFERED) and [(o["label"], o["machine"], o["dollars"]) for o in status["optional"]] == [
-        ("R3", "an A10", 0.04), ("R4", "an L40S", 0.07), ("R5", "a second A10", 0.04)]    # what each one's idle window costs
+        ("R3", "an A10", 0.04), ("R4", "an L40S", 0.07), ("R4 streamed", "an L40S", 0.07),
+        ("R5", "a second A10", 0.04)]                                                      # what each one's idle window costs
     send = lambda rungs: client.post("/api/live", files={"audio": ("turn", wav(), "audio/wav")}, data={"rungs": rungs},
                                      headers={"X-Access-Code": "open sesame"})
     assert send("").status_code == 200 and woke == ["t4"]                                  # a recording alone wakes the T4 only
@@ -160,3 +165,25 @@ def test_the_t4_holds_pr009s_voices_and_the_render_reaches_it_through_the_door(a
     assert asked == [("am_adam", "t3", "depression", 27.0)] and ok["charged"] > 0
     assert ok["registered"]["registration"] == "PR-009" and ok["registered"]["achieved"]["rate"] == pytest.approx(0.5, abs=0.06)   # from the run file
     assert TestClient(app.make_app(lambda labels, raw: {}, {}, root=ROOT)).get("/api/status").json()["render"] is None
+
+
+def test_both_r4_cards_wake_one_machine_once(app, monkeypatch):
+    pytest.importorskip("fastapi")
+    from fastapi.testclient import TestClient
+    monkeypatch.setenv("DEMO_ACCESS_CODE", "open sesame")
+    woke, store = [], {}
+
+    def machine(name, offered):
+        rungs = demo.Live({label: "stub" for label in offered}, get=lambda rung_id: StubRung())
+
+        def call(labels, raw):
+            woke.append((name, list(labels)))
+            return dict(demo.answer(rungs, labels, raw), machine=f"Modal {name}", load_s=1.0)
+        return call
+
+    client = TestClient(app.make_app(machine("t4", app.OFFERED), store, root=ROOT,
+                                     others={name: machine(name, o["offered"]) for name, o in app.OTHERS.items()}))
+    ok = client.post("/api/live", files={"audio": ("turn", wav(), "audio/wav")}, data={"rungs": "R4,R4 streamed"},
+                     headers={"X-Access-Code": "open sesame"}).json()
+    assert ("l40s", ["R4", "R4 streamed"]) in woke and sum(name == "l40s" for name, _ in woke) == 1     # one request, both cards
+    assert [t["label"] for t in ok["turns"]][-2:] == ["R4", "R4 streamed"]

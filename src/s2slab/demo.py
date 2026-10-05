@@ -46,7 +46,7 @@ MAX_UPLOAD_BYTES = 2_000_000        # 15 s of browser audio is well under this
 SILENT_PEAK = 1e-3
 CODE_ENV = "DEMO_ACCESS_CODE"
 MIN_CODE_LEN = 10                   # a shorter code is treated as none: it could be found by trying
-WRONG_CODES, LOCK_S = 5, 600.0      # this many wrong codes inside LOCK_S close the live part for LOCK_S
+WRONG_CODES, LOCK_S = 30, 300.0     # this many wrong codes inside LOCK_S close the live part for LOCK_S (M32a)
 NOT_LOADED = "This rung could not be loaded on this machine."
 NOT_ANSWERED = "This rung failed on this recording."
 NO_MACHINE = "The machine this rung runs on did not answer."
@@ -60,10 +60,13 @@ MEASURED = (
     ("R2", "two-tier: a slow recognizer (large-v3-turbo) drives the reply", "runs/r2-gpu-turbo/evalset-modal-t4-pr004.json"),
     ("R3", "speech-LLM: Qwen2-Audio hears the turn, no transcript in the loop", "runs/r3-gpu/evalset-modal-a10.json"),
     ("R4", "speech-to-speech, half duplex: Qwen2.5-Omni speaks the reply itself", "runs/r4-gpu/evalset-modal-l40s.json"),
+    ("R4 streamed", "the same model, its reply decoded a block at a time and handed out, its first half second held; "
+                    "in its own run, beside it, R4 took 6.8 s to first sound (PR-015)", "runs/r4-gpu/pr015.json"),
     ("R5 Moshi", "full duplex: no turns, the model decides when to talk", "runs/r5-moshi/evalset-modal-a10.json"),
     ("R5 PersonaPlex", "full duplex, with a role and a voice prompt before every call", "runs/r5-personaplex/evalset-modal-a10.json"),
 )
 CLIPS = ("clean-07", "clean-11", "clean-23", "clean-37")      # LibriSpeech test-clean, CC BY 4.0; set by pick_clips()
+FROM_RUNG = {"runs/r4-gpu/pr015.json": "r4-gpu-stream"}        # a run file of several rungs: the one its row shows
 # The verbatim panel: PR-011's run, small.en beside small.en + FT-2's LoRA, on two clips of the disfluent cohort.
 VERBATIM_RUN = "runs/ft2/pr011.json"
 VERBATIM_CLIPS = ("disfluent-29", "disfluent-42")             # DisfluencySpeech test split, Apache-2.0; set by pick_verbatim()
@@ -139,7 +142,9 @@ def code_ok(given: str | None, expected: str | None) -> bool:
 
 class Door:
     """Wrong codes, counted. WRONG_CODES of them inside LOCK_S close the live part to everyone for
-    LOCK_S, the right code included: five tries in ten minutes find no code of ten characters.
+    LOCK_S, the right code included: thirty tries in five minutes find no code of ten characters, and
+    a few strangers guessing do not close it on the people who were given the code (M32a; it was
+    five in ten minutes, for ten, before the demo was shown widely).
 
     The count is one for all visitors, not one each: behind a proxy a visitor's address is what a
     header says it is. So someone sending wrong codes can keep the live part closed; they cannot
@@ -314,7 +319,7 @@ def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS
             out["rungs"].append({"label": label, "what": what, "file": rel, "missing": True})
             continue
         run = json.loads(path.read_text(encoding="utf-8"))
-        turns = run["turns"]
+        turns = run["rungs"][FROM_RUNG[rel]]["turns"] if rel in FROM_RUNG else run["turns"]
         row = {"label": label, "what": what, "file": rel, "machine": run.get("machine"), "commit": run.get("commit"),
                "turns_in_run": len(turns), "turns": []}
         if "gap_ms" in next(iter(turns.values())):                 # full duplex: a conversation, not a turn
@@ -329,9 +334,9 @@ def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS
                        total_p50_ms=_p50(t["total_ms"] for t in turns.values()))
             for c in clips:
                 t = turns[c]
-                row["turns"].append({"clip": c, "transcript": t["transcript"], "reply_text": t["reply_text"],
-                                     "stages_ms": t["stages_ms"], "first_audio_ms": t["first_audio_ms"], "total_ms": t["total_ms"],
-                                     "reply_s": t["reply_s"]})
+                row["turns"].append({"clip": c, "transcript": t.get("transcript"), "reply_text": t["reply_text"],
+                                     "stages_ms": t.get("stages_ms", {}), "first_audio_ms": t["first_audio_ms"],
+                                     "total_ms": t["total_ms"], "reply_s": t["reply_s"]})
         out["rungs"].append(row)
     return out
 
@@ -342,7 +347,7 @@ def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS
 # One panel a registration, from its committed run file. No audio: the barge-in set is the
 # author's own voice, and the renders are synthetic speech kept out of git.
 FINDINGS = ("runs/bargein/pr003-70ms.json", "runs/ft1/pr010.json", "runs/severity/pr009.json", "runs/ft3/pr012.json",
-            "runs/m26/pr013.json")
+            "runs/m26/pr013.json", "runs/turn-taking/pr014-dev-vap.json", "runs/r4-gpu/pr015.json")
 BARGEIN_POLICIES = (("B0_duration_200ms", "stop after 200 ms of caller sound"), ("B0_duration_400ms", "after 400 ms"),
                     ("B0_duration_800ms", "after 800 ms"), ("B0_duration_1500ms", "after 1500 ms"),
                     ("B1_words", "stop when the recognizer has written words"), ("B2_speechlike", "stop when the words are not a backchannel"))
@@ -407,10 +412,46 @@ def _quant(run: dict, rel: str) -> dict:
             "commit": run.get("commit"), "file": rel}
 
 
+def _pr014(run: dict, rel: str) -> dict:
+    rows = [[f"setting {r['theta']:g}", f"{r['cut']} of {r['n']} turns cut off, a median wait of {r['p50']:,.0f} ms"] for r in run["rows"]]
+    return {"registration": "PR-014", "title": "Voice activity projection, on real speech", "supported": False, "status": "not run",
+            "question": "Does an endpointer that ends the turn when a voice-activity-projection model expects the system to speak "
+                        "cut off fewer disfluent speakers than the best word-based one, without making anyone wait longer?",
+            "rows": rows + [["the rule: the fewest cut-offs with a median wait of at most 1,000 ms", "no setting met it"]],
+            "note": "On the author's 30 recordings, with the system's prompt played first, the model rated the speaker's own pauses "
+                    "above the end of the turn, so most turns were ended by the 1,500 ms fallback, not by the model. With no "
+                    "setting, the test set was never run: reported as not run.",
+            "commit": None, "file": rel}
+
+
+def _pr015(run: dict, rel: str) -> dict:
+    from .pr015 import STREAM, _wer, criteria
+    c = criteria(run)
+    d, R = c["describe"], run["rungs"]
+    fs, total = d["first_sound"], d["total"]
+    turns = lambda name: list(R[name]["turns"].values())                       # noqa: E731
+    rows = [["first sound, the median: streamed against R4",
+             f"{fs['stream'][0]:,.0f} ms against {fs['r4'][0]:,.0f} ({fs['stream'][0] / fs['r4'][0]:.2f} of R4's)"],
+            ["first sound, p90", f"{fs['stream'][1]:,.0f} ms against {fs['r4'][1]:,.0f} ({fs['stream'][1] / fs['r4'][1]:.2f})"],
+            ["turns where playback ran dry", f"{len(d['stalls'])} of {d['turns']}"],
+            ["the words, as Whisper hears the reply", f"{_wer(turns(STREAM)):.1f}% wrong against {_wer(turns('r4-gpu')):.1f}%"],
+            ["the whole reply, the median", f"{total['stream'][0]:,.0f} ms against {total['r4'][0]:,.0f} "
+                                            f"({total['stream'][0] / total['r4'][0]:.2f} times)"],
+            ["R4 with its Talker compiled, not streamed", f"{fs['fast'][0]:,.0f} ms to first sound: no sooner"]]
+    return {"registration": "PR-015", "title": "R4, streamed", "supported": c["verdict"].startswith("SUPPORTED"),
+            "question": "Does streaming R4's reply let the caller hear it sooner, without stalling, a much longer turn or "
+                        "garbled words?",
+            "rows": rows,
+            "note": "The same model, the same words and the same voice: the reply decoded a block at a time and handed out, "
+                    "playback held for its first half second. Times on the server, the three in one container, 200 clips.",
+            "commit": run.get("commit"), "file": rel}
+
+
 def findings(root, files=FINDINGS) -> list[dict]:
     """The panels of what else was registered and run, each from its run file; a file that is
     not there is left out."""
     make = {"runs/bargein/pr003-70ms.json": _bargein, "runs/ft1/pr010.json": _ft1, "runs/m26/pr013.json": _quant,
+            "runs/turn-taking/pr014-dev-vap.json": _pr014, "runs/r4-gpu/pr015.json": _pr015,
             "runs/severity/pr009.json": lambda run, rel: _severity(
                 run, rel, "PR-009", "A severity score, put onto speech",
                 "Does a severity score render onto neutral speech as the mapping says: lower, slower, flatter, with longer pauses?",
