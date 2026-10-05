@@ -3,9 +3,11 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-04, at commit `d843937`.
+Last updated 2026-10-04, at commit `e2a4b4e`.
 
-## Chosen next: M31, R4 streams its reply
+No milestone chosen next.
+
+## Done: M31, R4 streams its reply
 
 R4 (Qwen2.5-Omni speaks its own reply) waits 6,859 ms for its first audio on the L40S (M28), every
 other rung under 700 ms: its Thinker, Talker and token2wav each run to the end before the next begins,
@@ -17,9 +19,9 @@ compiled steps? First run (`f7e8d99`, \$0.164): the DiT compiled runs 2 to 4 tim
 static cache failed on a mask `transformers` hands it, fixed. Second run (`567e7f2`, \$0.287): the
 Talker compiled at 0.63 of real time, its codes another sample than eager's. Step 2 (`ceae735`, \$0.685):
 `r4-gpu-fast` and `r4-gpu-stream` on the probe clips; the stream's first sound 3,284 ms against R4's
-5,865 with playback held to 0.5 s, no stall. **PR-015 registered**; next, the author's one run on the eval
-set (about \$3 to \$4). If wanted after it: a Talker loop of our own, to start sooner without stalls
-(`docs/m31-log.md`).
+5,865 with playback held to 0.5 s, no stall. **PR-015 supported** (`e2a4b4e`, \$2.592): on the eval set the caller
+hears R4's reply after 3.3 s instead of 6.8 (p50) and 3.7 instead of 11.8 (p90), no stall, the same words.
+M31 cost \$4.006 on Modal (`docs/m31-log.md`).
 
 ## Done: M30, voice activity projection on real speech
 
@@ -115,6 +117,9 @@ the earlier cost column mixed mean and median.
 | T4, the voice-activity-projection turn-taking model | v2 §3.1 |
 | A second FT-1, keeping dev checkpoints to see what the LoRA learns when | PR-010 |
 | R3 with streamed output (R4's is M31) | R3 |
+| A Talker decode loop of our own, its whole step compiled, so R4's stream starts from its first block without stalling | PR-015 |
+| R4 streamed from the Thinker's first words, not after its whole text | PR-015 |
+| The compiled Talker timed stage by stage on a slow and a fast host (1.6 times faster on one, no faster on the other) | M31 |
 | The upward pitch bias in the Praat severity render | PR-009 |
 | The base voice's sentence u8, whose pause vanishes in mania | PR-012 |
 | Another disfluent speaker with verbatim transcripts | PR-011 |

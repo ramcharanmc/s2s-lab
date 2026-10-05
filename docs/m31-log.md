@@ -14,7 +14,8 @@ Kept as events happen. The earlier logs: `docs/m30-log.md` and those it names.
 | 7 | 10-04 | `r4_bench.py::speed --tag mask`, the author, L40S, the same 10 probe clips, \$0.287 | both fixes held on the real Talker: static+layers 12.7 ms a code, 0.63 of real time (eager 20.2, static alone 23.6), no graph breaks; its codes differ from eager's on 10 of 10, from code 8 to 200 on; the DiT as in the first run | — | the run file, this commit |
 | 8 | 10-04 | the stream's tests, laptop, a fake model; then `transformers`' own Talker and token2wav, tiny and random | a block decoder that reproduces a whole reply sample for sample; the stream's codes the fast rung's; the real Talker path writes eager's codes; 480 samples a code; my cache reset outside inference mode caught and fixed | `r4stream.py` (`r4-gpu-fast`, `r4-gpu-stream`), `r4streamdev.py`, tests, `::streamdev` | ceae735 |
 | 9 | 10-04 | `r4_bench.py::streamdev`, the author, L40S, 30 probe clips, \$0.685 | the stream's first sound 1,629 ms with no buffer, but every turn stalled; with 0.5 s held, 3,284 against R4's 5,865 and no stall; its codes the fast rung's on 30 of 30; Whisper 9 errors in 622 words against R4's 6; `r4-gpu-fast` no faster than R4 in this container | — | the run file, this commit |
-| 10 | 10-04 | the author listens to the development replies | "edges sounded fine"; the author's choice (A of three): register now on the stall-free setting | the setting frozen; `pr015.py`, tests, `::pr015`; PR-015 registered | this commit |
+| 10 | 10-04 | the author listens to the development replies | "edges sounded fine"; the author's choice (A of three): register now on the stall-free setting | the setting frozen; `pr015.py`, tests, `::pr015`; PR-015 registered | e2a4b4e |
+| 11 | 10-04 | `r4_bench.py::pr015 --confirm PR-015`, the author, L40S, the 200 eval clips, once, \$2.592 | **PR-015 supported**: first sound 3,331 ms against R4's 6,806 (0.49), p90 3,728 against 11,784 (0.32); no stall; Whisper 1.1% against 1.3%; total 1.14 times R4's; the same text and codes on 200 of 200 | — | the run file, PR-015's Results, this commit |
 
 ## 1. The design
 
@@ -354,3 +355,50 @@ modal run modal_app/r4_bench.py::pr015 --confirm PR-015      once; one L40S, abo
 ```
 
 **Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite, 965 passed, 2 skipped.
+
+## 11. PR-015: supported (at e2a4b4e)
+
+Run once by the author: `modal run modal_app/r4_bench.py::pr015 --confirm PR-015`, one L40S, 4,778 s in
+the function, 4,785 s end to end, \$2.592. `runs/r4-gpu/pr015.json`; the analysis's output is recorded
+verbatim under PR-015's *Results*.
+
+| on the 200 eval clips | `r4-gpu-stream` | R4 | `r4-gpu-fast` |
+|---|---:|---:|---:|
+| first sound p50 / p90, ms | **3,331 / 3,728** | 6,806 / 11,784 | 7,010 / 12,439 |
+| total p50 / p90, ms | 7,530 / 12,638 | 6,602 / 11,584 | 6,810 / 12,239 |
+| stalled turns | **0 of 200** | — | — |
+| Whisper's word error rate on the reply | 1.1% | 1.3% | 1.1% |
+
+All five criteria held, with room: first sound 0.489 of R4's at the median (interval 0.471 to 0.504,
+bar 0.70) and 0.316 at p90 (bar 0.55); the total 1.141 (bar 1.40). The stream said R4's text and the
+fast rung's codes on 200 of 200 turns. Every prediction came close: 0.50, 0.33 and 1.2 predicted.
+
+Exploratory: no turn stalled, but four came within 200 ms of it (the closest 44 ms); the gain is the
+same in every cohort (3.3 to 3.4 s against 6.8 to 7.0); the stream's first sound still grows with the
+reply's length, the Thinker writing its whole text first, but within 2.2 to 4.1 s against R4's up to
+18.4; and the compiled Talker alone bought nothing in this container (1.03 of R4's time).
+
+## 12. M31, closed
+
+What M31 found and built, in order:
+
+1. **Where R4's wait goes** (step 1): the Talker, 75%, at real time; token2wav a fixed ~890 ms a call.
+2. **What standard tools buy** (step 1b): the DiT compiled, 2 to 4 times faster; the Talker compiled
+   after two fixes for a mistake in `transformers` 5.17 (the static cache hands it a dict of masks), 1.6
+   times faster on a slow host and no faster on a fast one, where probably `generate`'s own loop is the
+   floor (not timed stage by stage).
+3. **R4 streamed** (step 2): codes decoded a block at a time inside the Talker's call, the DiT's
+   context kept, its noise kept from the Talker's sampling; on development, every turn stalled without
+   a start buffer, none with 0.5 s.
+4. **PR-015** (step 3): on the eval set, the caller hears R4's reply in half the time at the median and
+   a third at p90, with no stall and the same words.
+
+Cost on Modal, M31: \$0.278 + \$0.164 + \$0.287 + \$0.685 + \$2.592 = **\$4.006**. My errors along the way,
+each caught before it cost a run but one: the display that rounded 0.06 to "0.1"; a cache sized for
+30 s turns when a probe clip ran 53.4 s; the cache reset outside inference mode; the first speed run's
+Talker variants, which failed on Modal (\$0.164) because I had not run `transformers`' static path on
+the laptop first.
+
+**Left, if wanted** (the backlog): a Talker decode loop of our own, its whole step compiled, so a stream
+can start from its first block without stalling (about 1.6 s on development); a stream that starts from
+the Thinker's first words; the compiled Talker timed stage by stage on a slow and a fast host.

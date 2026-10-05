@@ -29,7 +29,7 @@ Rules, from the v1 Research plan (§8):
 | PR-012 | On eight sentences neither voice has spoken, do renders made by giving page 09's severity targets to FastPitch as its own inputs meet PR-009's five criteria, over the base LJSpeech voice and a 5-minute fine-tune together? | `89edd05` | **Reported: not supported** (all five criteria failed, as predicted: S1 92 of 96, S2 14 of 32, S3 357 of 384, S4 109 of 192, 56.8%, S5 115 of 192, 59.9%; rate on target in 192 of 192; the base voice 67 and 78 of 96 on S4 and S5, the 5-minute fine-tune 42 and 37) |
 | PR-013 | On two voices and 24 sentences no copy has spoken: when Kokoro-82M is quantized to 8 bits, has its pitch left PR-009's guardrail by more than the package's own noise while its words have stayed (Claim A), and is the fp16 copy a usable rung on a CPU (Claim B)? | `192dd8a` | **Reported: Claim A supported** (the 8-bit copy's pitch is lower than fp32's on 48 of 48 renders, by 3.96 Hz, interval -4.36 to -3.58, the noise floor 1.44; within 3 Hz on 12 of 48; its normalized WER +0.24 points, 10 errors against 8 in 820 words); **Claim B not supported** (fp16 returned no audio for 6 of 48 renders) |
 | PR-014 | On real speech, does an endpointer that ends the turn when a voice-activity-projection model (VAP) projects the system to speak next cut off fewer disfluent turns than T1b, without making clean speakers wait longer? | `ac3a932` | **Reported: not run: no θ met the registered rule on DEV, with a silent partner or with the system's prompt; VAP rated the speaker's own pauses above the end of the turn** |
-| PR-015 | On the eval set, does R4 streamed let the caller hear its reply sooner than R4, without stalling, a much longer turn or garbled words? | The commit that adds this entry | Open |
+| PR-015 | On the eval set, does R4 streamed let the caller hear its reply sooner than R4, without stalling, a much longer turn or garbled words? | `e2a4b4e` | **Reported: supported** (first sound 0.49 of R4's at the median, 95% interval 0.47 to 0.50, and 0.32 at p90: 3.3 s against 6.8, 3.7 against 11.8; no turn stalled; Whisper's word error rate 1.1% against 1.3%; the turn 1.14 times as long) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -3536,4 +3536,49 @@ reply lengths; the run's cost.
 
 ### Results
 
-*Not yet run.*
+**Run once**, by the author, 2026-10-04: `modal run modal_app/r4_bench.py::pr015 --confirm PR-015` at
+`e2a4b4e` (this entry's commit, clean), one L40S, 4,778 s in the function, \$2.592.
+`runs/r4-gpu/pr015.json`. The analysis's output, verbatim:
+
+```
+PR-015: r4-gpu-stream (first block 24 codes, then 96, start buffer 0.5 s) against r4-gpu, with r4-gpu-fast beside them
+  commit e2a4b4e · Modal NVIDIA L40S, 580.95.05 · torch 2.14.0+cu126, torchvision 0.29.0+cu126, transformers 5.17.0
+  paired bootstrap: 10000 resamples of 200 clips, seed 0
+
+V1 same text         PASS  the stream's reply text is R4's on 200 of 200; needs >= 190
+V2 same codes        PASS  the stream's codes are r4-gpu-fast's on 200 of 200; needs >= 190
+S1 median            PASS  first-sound p50 ratio 0.489 [95% CI 0.471, 0.504]; needs upper end <= 0.7
+S2 tail              PASS  first-sound p90 ratio 0.316 [95% CI 0.281, 0.353]; needs upper end <= 0.55
+S3 speed guardrail   PASS  total p50 ratio 1.141 [95% CI 1.103, 1.161]; needs upper end <= 1.4
+S4 stall guardrail   PASS  0 turns stall (max 20), 0 for more than 200 ms (max 10)
+S5 words             PASS  Whisper WER on the replies 1.1% against R4's 1.3%; needs <= R4's + 2
+
+SUPPORTED: all five criteria hold
+
+Descriptive, not criteria:
+  ms, p50 / p90          r4-gpu-stream      r4-gpu   r4-gpu-fast
+  first sound            3331 /  3728    6806 / 11784    7010 / 12439
+  total                  7530 / 12638    6602 / 11584    6810 / 12239
+  reply s p50                    7.47            7.44            7.47
+  r4-gpu-fast's total p50 over R4's: 1.032 [95% CI 0.974, 1.051]; its Whisper WER 1.1%
+  first-sound p50 by cohort, stream vs R4: clean 3313 vs 6794, accented 3284 vs 6796, disfluent 3342 vs 6985, slow 3423 vs 6765
+  stalls: 0 turns
+```
+
+**PR-015: supported.** All four validity requirements held: the stream said R4's text and wrote the fast
+rung's codes on every turn; the entry, the setting and the code were committed before the run (V3),
+which ran once from a clean commit (V4).
+
+**Predictions scored.** S1 about 0.50: 0.489. S2 about 0.33: 0.316. S3 about 1.2: 1.141. A few stalls at
+most: none. The word error rates within a point: 1.1% against 1.3%. `r4-gpu-fast` within 10% of R4 on a
+fast container: 1.03 (the container was one, driver 580.95.05, as in development).
+
+**Exploratory, after the result** (from `runs/r4-gpu/pr015.json`):
+
+- **No stall, but not by much on a few turns.** The smallest margin before playback would have run dry
+  was 44 ms, on one turn; four turns had less than 200 ms; the 5th percentile 533 ms, the median 738.
+- **The same gain in every cohort**: the stream's first sound 3.3 to 3.4 s, R4's 6.8 to 7.0 s.
+- **The Thinker still sets the start.** The stream's first sound still grows with the reply's length
+  (r = 0.97 against its words), but within 2.2 to 4.1 s; R4's longest was 18.4 s.
+- **The gain is streaming's, not compiling's.** `r4-gpu-fast` took 1.03 of R4's time in this container,
+  as in development's. Whether compiling helps on a slower host is not tested here.

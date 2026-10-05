@@ -6,8 +6,8 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-10-04** (commit `ceae735`): rungs R0 to R5 built and measured; three fine-tunes run;
-fifteen registrations, fourteen reported, five with a supported claim; PR-015 (R4 streamed) open. A demo that shows
+**Status, 2026-10-04** (commit `e2a4b4e`): rungs R0 to R5 built and measured, and R4 streamed; three
+fine-tunes run; fifteen registrations, all reported, six with a supported claim. A demo that shows
 the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
 
 **https://ramcharanmc--s2s-lab-demo-web.modal.run**
@@ -58,6 +58,12 @@ than on its cheapest card; the table above keeps the cascades' T4 numbers. Two c
 same card differed by up to a quarter (R4: 0.73 of its earlier time on the same clips), so compare
 rows within this table, not with the one above. Moshi answered 93 callers, PersonaPlex 190.
 
+**R4 streamed** (M31, PR-015, 2026-10-04, `docs/m31-log.md`): R4's reply decoded a block at a time and
+handed out as it is made, playback held for its first 0.5 s, on the same 200 clips in one L40S container
+beside R4. The caller hears it after 3.3 s instead of 6.8 at the median and 3.7 instead of 11.8 at p90;
+no turn stalled; Whisper hears its words as well as R4's (1.1% against 1.3% word error rate); the turn
+as a whole takes 1.14 times as long. Compiling R4's Talker alone (`r4-gpu-fast`) bought nothing there.
+
 ## What was claimed, and what happened
 
 Fifteen registrations (`docs/preregistration.md`). Criteria are committed before the data is seen;
@@ -79,11 +85,11 @@ results are appended whatever they say.
 | PR-012 | Do the severity targets work as FastPitch's own inputs? | not supported: rate exact, pitch on target 57 to 60% |
 | PR-013 | Quantized to 8 bits, does Kokoro's pitch drift while its words stay? | **Claim A supported**; fp16 not usable on a CPU |
 | PR-014 | Does voice activity projection end real turns better than T1b? | not run: no setting met its rule on development |
-| PR-015 | Does streaming R4 let the caller hear its reply sooner, without stalls? | registered, open |
+| PR-015 | Does streaming R4 let the caller hear its reply sooner, without stalls? | **supported**: 3.3 s instead of 6.8 (p50), 3.7 instead of 11.8 (p90), no stall |
 
-Fourteen are reported. Eight were not supported, and one, PR-014 (voice activity projection on
+All fifteen are reported. Eight were not supported, and one, PR-014 (voice activity projection on
 real speech), was not run: no setting met its rule on the development recordings. Each entry says
-why. PR-015 is registered and open.
+why.
 
 ## Run it
 
