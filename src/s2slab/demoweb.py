@@ -9,6 +9,7 @@ No handler is `async`: the spend counter (a modal.Dict in the deployment) and th
 calls, and FastAPI runs a plain function on a worker thread, so the page is served meanwhile.
 """
 
+import json
 import os
 import pathlib
 import sys
@@ -16,7 +17,7 @@ import threading
 import time
 
 from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, StreamingResponse
 
 from .demo import (CLIPS, CODE_ENV, MAX_CLIP_S, MAX_UPLOAD_BYTES, MEASURED, MIN_CODE_LEN, PAGE, SR, Budget, Door, Live, code_ok,
                    code_usable, decode, measured, registered_step, render_choices, voice)
@@ -28,6 +29,7 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
     `live` is a Live, a Remote or a Several; `about` is a sentence a rung's card carries, by label."""
     usual = list(getattr(live, "default", live.offered))           # what answers a recording when nothing is asked for
     asked_for = dict(getattr(live, "optional", {}))                # label -> the machine it wakes
+    streaming = dict(getattr(live, "streaming", {}))               # label -> its machine, for the rungs heard as they come
     root = pathlib.Path(root)
     busy = {name: threading.Lock() for name in {None, *asked_for.values()}}     # one recording at a time, on each machine
 
@@ -66,7 +68,8 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
         code = os.environ.get(code_env)
         return {"machine": machine, "rungs": usual, "code_needed": True, "code_set": code_usable(code),
                 "optional": [{"label": label, "machine": live.says[name], "wake_s": budget.store.get(f"wake_s:{name}"),
-                              "dollars": round(budget.machines[name][0] * budget.machines[name][1] / 3600, 2)}   # its idle window alone
+                              "dollars": round(budget.machines[name][0] * budget.machines[name][1] / 3600, 2),   # its idle window alone
+                              "streams": label in streaming}
                              for label, name in asked_for.items()],
                 "code_short": bool(code) and not code_usable(code), "min_code_len": MIN_CODE_LEN, "locked_s": round(door.locked_s(now)),
                 "budget_left": round(budget.left(now), 3), "budget_cap": budget.cap, "open": budget.allows(now),
@@ -155,6 +158,51 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
                              "voice": carried, "woken": woken,
                              "cold": bool(out.get("cold")), "wake_s": budget.store.get("wake_s") if out.get("cold") else None,
                              "load_s": out.get("load_s"), "charged": round(dollars, 4), "budget_left": round(budget.left(clock()), 3)})
+
+    @app.post("/api/stream")
+    def api_stream(audio: UploadFile = File(...), rungs: str = Form(""), x_access_code: str = Header(default="")):
+        """One machine's rungs, at least one of them heard as it is made: newline-delimited JSON, an event a
+        line (demo.Live.stream's), passed on as it comes; then {"charged", "budget_left", "woken"}. The
+        door, the machine's lock and the budget as in /api/live."""
+        start = clock()
+        enter(x_access_code, start)
+        wanted = [r for r in rungs.split(",") if r]
+        names = {asked_for.get(label) for label in wanted}
+        if not wanted or len(names) != 1 or None in names or not any(label in streaming for label in wanted):
+            raise HTTPException(400, "a stream is one machine's rungs, one of them heard as it is made")
+        name = names.pop()
+        try:
+            clip = decode(audio.file.read(MAX_UPLOAD_BYTES + 1))
+        except ValueError as e:
+            raise HTTPException(400, str(e)) from None
+
+        def lines():
+            cold, busy_s, failed, settled = False, 0.0, False, {}
+            busy[name].acquire()
+            try:
+                try:
+                    for ev in live.stream(name, wanted, clip):
+                        if "cold" in ev and "label" not in ev:
+                            cold = bool(ev["cold"])
+                        if "done" in ev:
+                            busy_s += float(ev["done"].get("total_ms") or 0.0) / 1000
+                        yield json.dumps(ev) + "\n"
+                except Exception as e:
+                    failed = True
+                    print(f"{live.says[name]} did not answer: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
+            finally:                                                 # also if the visitor leaves: the machine was up
+                busy[name].release()
+                end = clock()
+                settled["dollars"] = budget.charge(start, end, name)
+                if cold:
+                    budget.store[f"wake_s:{name}"] = round(max(0.0, end - start - busy_s), 1)
+                    settled["woken"] = [{"machine": live.says[name], "wake_s": budget.store[f"wake_s:{name}"]}]
+            if failed:
+                yield json.dumps({"error": "the machine these rungs run on did not answer"}) + "\n"
+            yield json.dumps({"charged": round(settled["dollars"], 4), "budget_left": round(budget.left(clock()), 3),
+                              "woken": settled.get("woken", [])}) + "\n"
+
+        return StreamingResponse(lines(), media_type="application/x-ndjson")
 
     return app
 

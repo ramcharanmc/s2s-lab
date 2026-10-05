@@ -47,6 +47,7 @@ SILENT_PEAK = 1e-3
 CODE_ENV = "DEMO_ACCESS_CODE"
 MIN_CODE_LEN = 10                   # a shorter code is treated as none: it could be found by trying
 WRONG_CODES, LOCK_S = 30, 300.0     # this many wrong codes inside LOCK_S close the live part for LOCK_S (M32a)
+STREAMING_RUNGS = ("r4-gpu-stream",)  # rungs whose pieces the page can play as they are made (M32a)
 NOT_LOADED = "This rung could not be loaded on this machine."
 NOT_ANSWERED = "This rung failed on this recording."
 NO_MACHINE = "The machine this rung runs on did not answer."
@@ -116,6 +117,58 @@ def decode(data: bytes) -> np.ndarray:
     if not np.isfinite(audio).all() or np.abs(audio).max() < SILENT_PEAK:
         raise ValueError("the recording is silent")
     return audio
+
+
+def pcm16(audio: np.ndarray) -> str:
+    """Float audio as 16-bit little-endian PCM, base64: one piece of a stream, half the size of float32."""
+    x = np.clip(np.asarray(audio, dtype=np.float32), -1.0, 1.0)
+    return base64.b64encode((x * 32767.0).round().astype("<i2").tobytes()).decode("ascii")
+
+
+def stream_turn(rung, label: str, rung_id: str, audio: np.ndarray, sr: int = SR, record=None):
+    """One turn through a streaming rung, its pieces handed out the moment they exist.
+
+    Yields {"label", "start": True, "sr"}; then {"label", "piece" (pcm16), "made_ms"} for each piece the
+    rung emits, made_ms on the rung's own clock (Rung.emit); then {"label", "done": the turn's record,
+    as `record(label, turn)` makes it} -- or, if the rung fails, {"label", "done": {..., "error"}}.
+    The rung runs on a worker thread; its emit() is wrapped for the turn to pass each piece on as
+    well as keep it, and unwrapped after."""
+    import queue
+    import threading
+    q: queue.Queue = queue.Queue()
+    keep = rung.emit
+
+    def emit(chunk):
+        keep(chunk)
+        q.put(("piece", np.asarray(chunk, dtype=np.float32), rung._emitted[-1][0]))
+
+    def work():
+        try:
+            q.put(("done", rung.respond(audio, sr)))
+        except Exception as e:                                     # what went wrong goes to the log, not to the visitor
+            q.put(("error", e))
+
+    rung.emit = emit
+    worker = threading.Thread(target=work, daemon=True)
+    worker.start()
+    try:
+        yield {"label": label, "start": True, "sr": int(getattr(rung, "out_sr", 24_000))}
+        while True:
+            kind, *rest = q.get()
+            if kind == "piece":
+                if len(rest[0]):
+                    yield {"label": label, "piece": pcm16(rest[0]), "made_ms": round(float(rest[1]), 1)}
+                continue
+            if kind == "done":
+                yield {"label": label, "done": record(label, rest[0]) if record else {"label": label, "rung": rung_id}}
+            else:
+                print(f"rung {label} ({rung_id}) failed while answering: {type(rest[0]).__name__}: {rest[0]}",
+                      file=sys.stderr, flush=True)
+                yield {"label": label, "done": {"label": label, "rung": rung_id, "error": NOT_ANSWERED}}
+            return
+    finally:
+        worker.join()
+        del rung.emit
 
 
 def wav_bytes(audio: np.ndarray, sr: int) -> bytes:
@@ -662,12 +715,36 @@ class Live:
             t = rung.respond(audio, SR)
         except Exception as e:
             return self._failed(label, "answering", e, NOT_ANSWERED)
-        clean = lambda x: None if x != x else round(float(x), 1)
+        return self._record(label, t)
+
+    def _record(self, label: str, t, wav: bool = True) -> dict:
+        """A turn as the page shows it; with the reply as a WAV, unless its pieces were already sent."""
+        clean = lambda x: None if x != x else round(float(x), 1)                 # noqa: E731
         return {"label": label, "rung": self.offered[label], "transcript": t.transcript, "reply_text": t.reply_text,
                 "stages_ms": {k: round(float(v), 1) for k, v in t.stages_ms.items()}, "total_ms": round(float(t.total_ms), 1),
                 "first_audio_ms": clean(t.first_audio_ms), "first_sound_ms": clean(t.first_sound_ms),
                 "stall_ms": round(float(t.stall_ms), 1), "reply_s": round(t.reply_s, 2),
-                "reply_wav": base64.b64encode(wav_bytes(t.audio, t.sr)).decode("ascii") if len(t.audio) else None}
+                "reply_wav": base64.b64encode(wav_bytes(t.audio, t.sr)).decode("ascii") if wav and len(t.audio) else None}
+
+    def stream(self, labels, audio: np.ndarray):
+        """One recording through each rung named, as events: {"cold"} first; then, streaming rungs first so
+        their pieces are not held behind a whole turn, each rung's stream_turn events, or one
+        {"label", "done"} for a rung that answers whole."""
+        cold, self._answered = not self._answered, True
+        yield {"cold": cold}
+        for label in sorted(labels, key=lambda lb: self.offered.get(lb) not in STREAMING_RUNGS):
+            if label not in self.offered:
+                raise KeyError(f"no rung {label!r} here; there are {', '.join(self.offered)}")
+            if self.offered[label] not in STREAMING_RUNGS or label in self.unavailable:
+                yield {"label": label, "done": self.turn(label, audio)}
+                continue
+            try:
+                rung = self.rung(label)
+            except Exception as e:
+                self.unavailable[label] = NOT_LOADED
+                yield {"label": label, "done": self._failed(label, "loading", e, NOT_LOADED)}
+                continue
+            yield from stream_turn(rung, label, self.offered[label], audio, record=lambda lb, t: self._record(lb, t, wav=False))
 
 
 class Remote:
@@ -675,10 +752,12 @@ class Remote:
     Live. `call(labels, samples)` reaches the other end, where answer() hands them to a Live. The
     recording travels as float32 samples at 16 kHz."""
 
-    def __init__(self, offered: dict, call, render=None):
-        self.offered, self._call, self._render = dict(offered), call, render
+    def __init__(self, offered: dict, call, render=None, stream=None):
+        self.offered, self._call, self._render, self._stream = dict(offered), call, render, stream
         if render is not None:                                    # only a machine that renders says it can
             self.render = lambda voice, sentence, condition, score: self._render(voice, sentence, condition, score)
+        if stream is not None:                                    # only a machine that streams says it can
+            self.stream = lambda labels, audio: self._stream(list(labels), np.ascontiguousarray(audio, dtype=np.float32).tobytes())
 
     def turns(self, labels, audio: np.ndarray) -> dict:
         return self._call(list(labels), np.ascontiguousarray(audio, dtype=np.float32).tobytes())
@@ -687,6 +766,11 @@ class Remote:
 def answer(live: Live, labels, samples: bytes) -> dict:
     """The other end of a Remote."""
     return live.turns(labels, np.frombuffer(samples, dtype=np.float32))
+
+
+def answer_stream(live: Live, labels, samples: bytes):
+    """The other end of a Remote's stream: Live.stream's events."""
+    yield from live.stream(labels, np.frombuffer(samples, dtype=np.float32))
 
 
 class Several:
@@ -706,9 +790,19 @@ class Several:
         self.optional = {}
         if hasattr(first, "render"):                              # the render is the first machine's: Kokoro is there
             self.render = first.render
+        self.streaming = {}                                        # label -> its machine, for the rungs heard as they come
         for name, machine in self.others.items():
             self.offered.update(machine.offered)
             self.optional.update({label: name for label in machine.offered})
+            if hasattr(machine, "stream"):
+                self.streaming.update({label: name for label, rid in machine.offered.items() if rid in STREAMING_RUNGS})
+
+    def stream(self, name, labels, audio: np.ndarray):
+        """One machine's rungs as events (Live.stream), each record told which machine answered."""
+        for ev in self.others[name].stream(labels, audio):
+            if "done" in ev:
+                ev = dict(ev, done=dict(ev["done"], machine=ev["done"].get("machine") or self.says[name]))
+            yield ev
 
     def _ask(self, name, machine, labels, audio) -> tuple[dict, dict]:
         start = self._clock()

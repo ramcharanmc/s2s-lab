@@ -187,3 +187,30 @@ def test_both_r4_cards_wake_one_machine_once(app, monkeypatch):
                      headers={"X-Access-Code": "open sesame"}).json()
     assert ("l40s", ["R4", "R4 streamed"]) in woke and sum(name == "l40s" for name, _ in woke) == 1     # one request, both cards
     assert [t["label"] for t in ok["turns"]][-2:] == ["R4", "R4 streamed"]
+
+
+def test_the_l40s_streams_and_the_web_app_reaches_it(app, monkeypatch):
+    pytest.importorskip("fastapi")
+    import json
+
+    from fastapi.testclient import TestClient
+    assert hasattr(app.Speaks, "stream")
+    monkeypatch.setenv("DEMO_ACCESS_CODE", "open sesame")
+    l40s = demo.Live({"R4": "stub", "R4 streamed": "stub"}, get=lambda rung_id: StubRung())
+    streamed = []
+
+    def stream(labels, raw):                                  # the L40S's end, as Speaks.stream would yield it
+        streamed.append(list(labels))
+        for ev in demo.answer_stream(l40s, labels, raw):
+            yield dict(ev, machine="Modal L40S", load_s=1.0) if "cold" in ev else ev
+
+    client = TestClient(app.make_app(lambda labels, raw: {}, {}, root=ROOT,
+                                     others={name: (lambda labels, raw: {}) for name in app.OTHERS},
+                                     streams={"l40s": stream}))
+    status = client.get("/api/status").json()
+    assert [(o["label"], o["streams"]) for o in status["optional"] if o["machine"] == "an L40S"] == [("R4", False), ("R4 streamed", True)]
+    r = client.post("/api/stream", files={"audio": ("turn", wav(), "audio/wav")}, data={"rungs": "R4 streamed,R4"},
+                    headers={"X-Access-Code": "open sesame"})
+    events = [json.loads(line) for line in r.text.splitlines()]
+    assert streamed == [["R4 streamed", "R4"]] and events[0]["cold"] and events[-1]["charged"] > 0
+    assert {e["done"]["label"] for e in events if "done" in e} == {"R4", "R4 streamed"}

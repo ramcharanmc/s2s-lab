@@ -72,8 +72,8 @@ ABOUT = {"R2": "slow tier small.en here; the measured R2 row is large-v3-turbo",
          "R4": "speech-to-speech: Qwen2.5-Omni hears the recording and speaks the reply itself; no recognizer, no TTS. Its "
                "Talker is compiled here, which on the eval set took 1.03 of R4's time (PR-015)",
          "R4 streamed": "the same model and the same reply, decoded a block at a time and handed out, its first half second "
-                        "held: on the eval set the caller heard it after 3.3 s instead of 6.8 (PR-015). This page plays it "
-                        "once all of it has arrived; the card says when its first sound existed",
+                        "held: on the eval set the caller heard it after 3.3 s instead of 6.8 (PR-015). This page plays each "
+                        "block as it arrives, and times the first in your browser",
          "R5": "full duplex: Moshi, no turns. Your recording is the caller's side of one call"}
 # The machines beside the T4, each woken only by a visitor who asks for its rung.
 OTHERS = {"a10": {"offered": {"R3": "r3-gpu"}, "says": "an A10", "rate": A10_DOLLARS_PER_HOUR},
@@ -263,6 +263,15 @@ class Speaks:
     def turns(self, labels: list, raw: bytes) -> dict:
         return _turns(self, labels, raw)
 
+    @modal.method()
+    def stream(self, labels: list, raw: bytes):
+        """The same, as events, each piece of R4 streamed yielded the moment it exists (demo.Live.stream)."""
+        from s2slab.demo import answer_stream
+        for ev in answer_stream(self.live, labels, raw):
+            if "cold" in ev and "label" not in ev:
+                ev = dict(ev, machine=self.machine, load_s=round(self.load_s, 1))
+            yield ev
+
 
 @app.cls(image=moshi_image, gpu="A10G", max_containers=1, scaledown_window=WINDOW_BIG_S, timeout=5 * 60, startup_timeout=15 * 60)
 class Talks:
@@ -277,16 +286,18 @@ class Talks:
         return _turns(self, labels, raw)
 
 
-def make_app(call, store, root="/root", others=None, render=None):
+def make_app(call, store, root="/root", others=None, render=None, streams=None):
     """The web app with the T4's rungs behind `call`, the other machines' behind `others` (by
-    name, as in OTHERS) and the spend in `store`: what web() serves, and what the tests run with
-    functions and a dict in their place."""
+    name, as in OTHERS), a machine's stream behind `streams` (by name) and the spend in `store`: what
+    web() serves, and what the tests run with functions and a dict in their place."""
     from s2slab.demo import Budget, Remote, Several
     from s2slab.demoweb import create_app
     others = dict(others or {})
     budget = Budget(store, CAP_DOLLARS, T4_DOLLARS_PER_HOUR, window_s=WINDOW_S, cold_start_s=0.0,
                     machines={name: (OTHERS[name]["rate"], WINDOW_BIG_S) for name in others})
-    live = Several(Remote(OFFERED, call, render=render), {name: Remote(OTHERS[name]["offered"], c) for name, c in others.items()},
+    streams = dict(streams or {})
+    live = Several(Remote(OFFERED, call, render=render),
+                   {name: Remote(OTHERS[name]["offered"], c, stream=streams.get(name)) for name, c in others.items()},
                    says={name: OTHERS[name]["says"] for name in others})
     return create_app(live, budget, root=root, machine="Modal T4", about=ABOUT)
 
@@ -298,4 +309,4 @@ def make_app(call, store, root="/root", others=None, render=None):
 def web():
     return make_app(Rungs().turns.remote, modal.Dict.from_name(SPEND, create_if_missing=True),
                     others={"a10": Hears().turns.remote, "l40s": Speaks().turns.remote, "moshi": Talks().turns.remote},
-                    render=Rungs().render.remote)
+                    render=Rungs().render.remote, streams={"l40s": Speaks().stream.remote_gen})

@@ -196,7 +196,7 @@ def test_the_page_the_measured_data_and_only_the_clips_it_shows(web):
         assert client.get(f"/api/clip/{other}").status_code == 404
     assert client.get("/docs").status_code == 404 and client.get("/openapi.json").status_code == 404
     handlers = [r.endpoint for r in client.app.routes if getattr(r, "path", "").startswith("/api/") or getattr(r, "path", "") == "/"]
-    assert len(handlers) == 7 and not any(inspect.iscoroutinefunction(h) for h in handlers)   # blocking calls stay off the event loop
+    assert len(handlers) == 8 and not any(inspect.iscoroutinefunction(h) for h in handlers)   # blocking calls stay off the event loop
 
 
 def test_the_live_part_needs_the_code_answers_with_every_rung_and_charges_the_budget(web):
@@ -509,7 +509,8 @@ def test_the_page_asks_the_other_machines_only_for_what_is_ticked(tree, monkeypa
     client = TestClient(demoweb.create_app(several(clock), budget, root=tree, machine="a test", code_env="TEST_DEMO_CODE",
                                            clock=lambda: clock["t"], clips=PICK, rows=ROWS, verbatim_run="runs/none.json"))
     status = client.get("/api/status").json()
-    assert status["rungs"] == ["R0", "R1"] and status["optional"] == [{"label": "R3", "machine": "an A10", "wake_s": None, "dollars": 0.04}]
+    assert status["rungs"] == ["R0", "R1"] and status["optional"] == [{"label": "R3", "machine": "an A10", "wake_s": None, "dollars": 0.04,
+                                                                          "streams": False}]
     send = lambda rungs: client.post("/api/live", files={"audio": ("turn", wav(2.0), "audio/wav")}, data={"rungs": rungs},
                                      headers={"X-Access-Code": "open sesame"}).json()
     usual = send("")
@@ -783,3 +784,131 @@ def test_the_l40s_pair_makes_both_rungs_on_one_model():
     assert fast.model is model and stream.model is model                               # one set of weights
     with pytest.raises(KeyError, match="pair"):
         get("r4-gpu")
+
+
+# --------------------------------------------------------------------------- #
+# a turn heard as it is made (M32a)
+# --------------------------------------------------------------------------- #
+class Streamer(StubRung):
+    """A streaming rung, as r4-gpu-stream is to the demo: three pieces, each after a pause, then the turn."""
+    rung_id, streams, out_sr = "streamer", True, 24_000
+
+    def __init__(self, fail=False, pause_s=0.03):
+        self.fail, self.pause_s = fail, pause_s
+
+    def _respond(self, audio, sr, sink):
+        import time
+        from s2slab.rungs import Reply
+        for k in range(3):
+            time.sleep(self.pause_s)
+            self.emit(np.full(2400, 0.1 * (k + 1), dtype=np.float32))
+            if self.fail and k == 1:
+                raise RuntimeError("broke mid-reply at /a/path/nobody/should/see")
+        return Reply(None, 24_000, None, "Hello there.")
+
+
+def test_pcm16_is_16_bit_little_endian_and_clipped():
+    raw = base64.b64decode(demo.pcm16(np.array([0.0, 0.5, -0.5, 2.0], dtype=np.float32)))
+    assert np.frombuffer(raw, dtype="<i2").tolist() == [0, 16384, -16384, 32767]
+
+
+def test_a_streaming_turn_hands_each_piece_out_before_the_turn_is_over():
+    import time
+    rung, events, arrived = Streamer(), [], []
+    for ev in demo.stream_turn(rung, "R4 streamed", "r4-gpu-stream", np.zeros(16_000, dtype=np.float32),
+                               record=lambda label, t: {"label": label, "reply_text": t.reply_text, "chunks": len(t.chunks)}):
+        events.append(ev)
+        arrived.append(time.perf_counter())
+    assert events[0] == {"label": "R4 streamed", "start": True, "sr": 24_000}
+    pieces = [e for e in events if "piece" in e]
+    assert len(pieces) == 3 and events[-1] == {"label": "R4 streamed", "done": {"label": "R4 streamed", "reply_text": "Hello there.", "chunks": 3}}
+    assert [p["made_ms"] for p in pieces] == sorted(p["made_ms"] for p in pieces) and pieces[0]["made_ms"] > 20
+    levels = [np.frombuffer(base64.b64decode(p["piece"]), dtype="<i2")[0] / 32768 for p in pieces]
+    assert levels == pytest.approx([0.1, 0.2, 0.3], abs=1e-3)
+    assert arrived[-1] - arrived[1] > 0.04                                  # the first piece came well before the end
+    assert "emit" not in vars(rung)                                          # unwrapped after the turn
+
+
+def test_a_streaming_turn_that_fails_says_so_and_unwraps(capsys):
+    rung = Streamer(fail=True)
+    events = list(demo.stream_turn(rung, "R4 streamed", "r4-gpu-stream", np.zeros(16_000, dtype=np.float32)))
+    assert sum("piece" in e for e in events) == 2
+    assert events[-1] == {"label": "R4 streamed", "done": {"label": "R4 streamed", "rung": "r4-gpu-stream", "error": demo.NOT_ANSWERED}}
+    assert "emit" not in vars(rung) and "path" not in json.dumps(events) and "broke mid-reply" in capsys.readouterr().err
+
+
+def test_a_machine_streams_its_streaming_rung_first_and_answers_the_other_whole():
+    live = demo.Live({"R4": "r4-gpu-fast", "R4 streamed": "r4-gpu-stream"},
+                     get=lambda rung_id: Streamer() if rung_id == "r4-gpu-stream" else StubRung())
+    events = list(live.stream(["R4", "R4 streamed"], np.zeros(16_000, dtype=np.float32)))
+    assert events[0] == {"cold": True} and [e.get("label") for e in events[1:]] == ["R4 streamed"] * 5 + ["R4"]
+    streamed, whole = events[-2]["done"], events[-1]["done"]
+    assert streamed["reply_text"] == "Hello there." and streamed["reply_wav"] is None and streamed["first_audio_ms"] > 0
+    assert whole["reply_wav"] is not None and whole["rung"] == "r4-gpu-fast"               # the whole one keeps its WAV
+    assert list(live.stream(["R4"], np.zeros(16_000, dtype=np.float32)))[0] == {"cold": False}
+
+
+@pytest.fixture
+def streaming_web(tree, monkeypatch):
+    pytest.importorskip("fastapi")
+    from fastapi.testclient import TestClient
+
+    from s2slab import demoweb
+    monkeypatch.setenv("TEST_DEMO_CODE", "open sesame")
+    clock = {"t": DAY}
+    budget = demo.Budget({}, cap_dollars=3.0, dollars_per_hour=0.59, machines={"l40s": (1.95, 120.0)})
+    first = demo.Live({"R0": "stub"}, get=lambda rung_id: StubRung())
+    l40s = demo.Live({"R4": "r4-gpu-fast", "R4 streamed": "r4-gpu-stream"},
+                     get=lambda rung_id: Streamer() if rung_id == "r4-gpu-stream" else StubRung())
+    live = demo.Several(first, {"l40s": l40s}, says={"l40s": "an L40S"})
+    app = demoweb.create_app(live, budget, root=tree, machine="a test", code_env="TEST_DEMO_CODE", clock=lambda: clock["t"],
+                             clips=PICK, rows=ROWS, verbatim_clips=("dis-00", "dis-01"), verbatim_run="runs/v.json")
+    return TestClient(app), clock, budget
+
+
+def test_the_stream_passes_the_door_streams_the_machines_rungs_and_charges_it(streaming_web):
+    client, clock, budget = streaming_web
+    status = client.get("/api/status").json()
+    assert [(o["label"], o["streams"]) for o in status["optional"]] == [("R4", False), ("R4 streamed", True)]
+    send = lambda code, rungs: client.post("/api/stream", files={"audio": ("turn", wav(2.0), "audio/wav")}, data={"rungs": rungs},
+                                          headers={"X-Access-Code": code} if code else {})
+    assert send(None, "R4 streamed").status_code == 401 and budget.spent(DAY) == 0.0
+    assert send("open sesame", "R0").status_code == 400                     # the first machine does not stream
+    assert send("open sesame", "R4").status_code == 400                     # nor does a machine asked only for a whole turn
+    r = send("open sesame", "R4 streamed,R4")
+    assert r.status_code == 200 and r.headers["content-type"].startswith("application/x-ndjson")
+    events = [json.loads(line) for line in r.text.splitlines()]
+    assert events[0] == {"cold": True} and events[1] == {"label": "R4 streamed", "start": True, "sr": 24_000}
+    assert sum("piece" in e for e in events) == 3
+    done = [e["done"] for e in events if "done" in e]
+    assert [d["label"] for d in done] == ["R4 streamed", "R4"] and all(d["machine"] == "an L40S" for d in done)
+    summary = events[-1]
+    assert summary["charged"] > 0 and summary["woken"][0]["machine"] == "an L40S" and "billed_until:l40s" in budget.store
+    assert send("open sesame", "R4 streamed").status_code == 200            # the machine's lock was let go
+
+
+def test_a_stream_whose_machine_fails_says_so_and_still_charges(tree, monkeypatch):
+    pytest.importorskip("fastapi")
+    from fastapi.testclient import TestClient
+
+    from s2slab import demoweb
+    monkeypatch.setenv("TEST_DEMO_CODE", "open sesame")
+    budget = demo.Budget({}, cap_dollars=3.0, dollars_per_hour=0.59, machines={"l40s": (1.95, 120.0)})
+
+    class Gone:
+        offered = {"R4 streamed": "r4-gpu-stream"}
+
+        def turns(self, labels, audio):
+            raise RuntimeError("no")
+
+        def stream(self, labels, audio):
+            raise RuntimeError("the container did not start: /a/path/nobody/should/see")
+
+    live = demo.Several(demo.Live({"R0": "stub"}, get=lambda rung_id: StubRung()), {"l40s": Gone()}, says={"l40s": "an L40S"})
+    client = TestClient(demoweb.create_app(live, budget, root=tree, code_env="TEST_DEMO_CODE", clock=lambda: DAY, clips=PICK, rows=ROWS,
+                                           verbatim_clips=("dis-00", "dis-01"), verbatim_run="runs/v.json"))
+    r = client.post("/api/stream", files={"audio": ("turn", wav(2.0), "audio/wav")}, data={"rungs": "R4 streamed"},
+                    headers={"X-Access-Code": "open sesame"})
+    events = [json.loads(line) for line in r.text.splitlines()]
+    assert events[0] == {"error": "the machine these rungs run on did not answer"} and "path" not in r.text
+    assert events[-1]["charged"] > 0 and budget.spent(DAY) > 0

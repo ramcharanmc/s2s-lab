@@ -254,6 +254,7 @@ class StreamingSpeechToSpeech(Rung):
     rung_id = "r4-gpu-stream"
     description = ("R4 streamed: Qwen2.5-Omni-7B's Talker compiled, its codes decoded a block at a time by the "
                    "compiled DiT and handed out as they are made; bf16, CUDA")
+    streams, out_sr = True, OUT_SR          # what the demo reads: its pieces can be played as they come (demo.stream_turn)
 
     def __init__(self, model=None, first: int = FIRST_CODES, block: int = BLOCK_CODES,
                  start_buffer_s: float = START_BUFFER_S):
