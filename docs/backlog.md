@@ -3,14 +3,20 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-12, at commit `f5d22a5`.
+Last updated 2026-10-12, at commit `250eeca`.
 
-## Chosen next: M32b, a Talker decode loop of our own
+## Chosen next: none
 
-R4 streamed's first block is made 3.1 to 3.4 s after a turn starts on the L40S (M32a). M32b writes the Talker's
-decode loop itself, in place of `transformers`' `generate`, so the first block can leave sooner. A design note
-first, with where those seconds go and what the loop can save; then a registration, if the change is to be
-claimed (`docs/m32-log.md`).
+## Done: M32b, a Talker decode loop of our own, stopped by its rule
+
+R4 streamed's first block is made 3.1 to 3.4 s into a turn on the L40S, and the stream at 0.86 of real time;
+the design note took most of the Talker's 12.7 ms a code to be overhead around its layers. Our own decode
+loop (`src/s2slab/talkerloop.py`) writes `generate`'s codes exactly, on a tiny Talker and on R4's own (10 of
+10 clips). But on R4's Talker it wrote a code in 11.24 ms, and with its step captured as one CUDA graph in
+10.15, against `generate`'s 11.77 (`250eeca`, \$0.165): over the 10 ms the stop rule set before the run, so
+M32b stopped there and PR-016 was not registered. The premise was wrong: about 10 ms a code is work on the
+GPU. A lead, not measured: the step attends over the static cache's 6144 places while a turn uses about
+600 to 1,000 (`docs/m32-log.md`, section 7).
 
 ## Done: M32a, R4 streamed in the demo
 

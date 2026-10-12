@@ -1,0 +1,275 @@
+{
+ "run": "M32b, step 2: R4's Talker through generate and through our loop, on 10 probe clips",
+ "commit": "250eeca",
+ "machine": "Modal NVIDIA L40S, 580.95.05",
+ "versions": "torch 2.14.0+cu126, torchvision 0.29.0+cu126, transformers 5.17.0",
+ "load_ms": 42465.0,
+ "clips": [
+  "f01",
+  "f04",
+  "f07",
+  "f10",
+  "c01",
+  "c04",
+  "c07",
+  "c10",
+  "n01",
+  "n04"
+ ],
+ "stop_ms": 10.0,
+ "talker": {
+  "generate": {
+   "name": "generate",
+   "extra": {},
+   "warmup_ms": [],
+   "turns": {
+    "f01": {
+     "talker_ms": 3255.3,
+     "thinker_ms": 602.5,
+     "n_codes": 277,
+     "ms_per_code": 11.75
+    },
+    "f04": {
+     "talker_ms": 2690.1,
+     "thinker_ms": 604.9,
+     "n_codes": 227,
+     "ms_per_code": 11.85
+    },
+    "f07": {
+     "talker_ms": 3835.6,
+     "thinker_ms": 630.3,
+     "n_codes": 324,
+     "ms_per_code": 11.84
+    },
+    "f10": {
+     "talker_ms": 3642.1,
+     "thinker_ms": 539.1,
+     "n_codes": 311,
+     "ms_per_code": 11.71
+    },
+    "c01": {
+     "talker_ms": 2749.7,
+     "thinker_ms": 473.9,
+     "n_codes": 234,
+     "ms_per_code": 11.75
+    },
+    "c04": {
+     "talker_ms": 5604.9,
+     "thinker_ms": 908.8,
+     "n_codes": 479,
+     "ms_per_code": 11.7
+    },
+    "c07": {
+     "talker_ms": 3279.3,
+     "thinker_ms": 539.1,
+     "n_codes": 278,
+     "ms_per_code": 11.8
+    },
+    "c10": {
+     "talker_ms": 4074.7,
+     "thinker_ms": 632.6,
+     "n_codes": 346,
+     "ms_per_code": 11.78
+    },
+    "n01": {
+     "talker_ms": 6918.6,
+     "thinker_ms": 1205.4,
+     "n_codes": 591,
+     "ms_per_code": 11.71
+    },
+    "n04": {
+     "talker_ms": 4010.9,
+     "thinker_ms": 704.5,
+     "n_codes": 340,
+     "ms_per_code": 11.8
+    }
+   },
+   "error": null,
+   "graph_breaks": 0
+  },
+  "loop": {
+   "name": "loop",
+   "extra": {},
+   "warmup_ms": [
+    4910.0,
+    4909.8
+   ],
+   "turns": {
+    "f01": {
+     "talker_ms": 3107.1,
+     "thinker_ms": 584.8,
+     "n_codes": 277,
+     "ms_per_code": 11.22,
+     "identical": true,
+     "first_difference": null
+    },
+    "f04": {
+     "talker_ms": 2556.2,
+     "thinker_ms": 471.4,
+     "n_codes": 227,
+     "ms_per_code": 11.26,
+     "identical": true,
+     "first_difference": null
+    },
+    "f07": {
+     "talker_ms": 3651.1,
+     "thinker_ms": 630.6,
+     "n_codes": 324,
+     "ms_per_code": 11.27,
+     "identical": true,
+     "first_difference": null
+    },
+    "f10": {
+     "talker_ms": 3497.6,
+     "thinker_ms": 540.2,
+     "n_codes": 311,
+     "ms_per_code": 11.25,
+     "identical": true,
+     "first_difference": null
+    },
+    "c01": {
+     "talker_ms": 2623.7,
+     "thinker_ms": 473.2,
+     "n_codes": 234,
+     "ms_per_code": 11.21,
+     "identical": true,
+     "first_difference": null
+    },
+    "c04": {
+     "talker_ms": 5351.4,
+     "thinker_ms": 907.1,
+     "n_codes": 479,
+     "ms_per_code": 11.17,
+     "identical": true,
+     "first_difference": null
+    },
+    "c07": {
+     "talker_ms": 3122.4,
+     "thinker_ms": 542.3,
+     "n_codes": 278,
+     "ms_per_code": 11.23,
+     "identical": true,
+     "first_difference": null
+    },
+    "c10": {
+     "talker_ms": 3908.0,
+     "thinker_ms": 630.2,
+     "n_codes": 346,
+     "ms_per_code": 11.29,
+     "identical": true,
+     "first_difference": null
+    },
+    "n01": {
+     "talker_ms": 6629.6,
+     "thinker_ms": 1204.2,
+     "n_codes": 591,
+     "ms_per_code": 11.22,
+     "identical": true,
+     "first_difference": null
+    },
+    "n04": {
+     "talker_ms": 3845.7,
+     "thinker_ms": 704.2,
+     "n_codes": 340,
+     "ms_per_code": 11.31,
+     "identical": true,
+     "first_difference": null
+    }
+   },
+   "error": null,
+   "graph_breaks": 0
+  },
+  "loop+graph": {
+   "name": "loop+graph",
+   "extra": {},
+   "warmup_ms": [
+    28638.4,
+    4615.0
+   ],
+   "turns": {
+    "f01": {
+     "talker_ms": 2811.9,
+     "thinker_ms": 584.6,
+     "n_codes": 277,
+     "ms_per_code": 10.15,
+     "identical": true,
+     "first_difference": null
+    },
+    "f04": {
+     "talker_ms": 2306.9,
+     "thinker_ms": 473.3,
+     "n_codes": 227,
+     "ms_per_code": 10.16,
+     "identical": true,
+     "first_difference": null
+    },
+    "f07": {
+     "talker_ms": 3286.9,
+     "thinker_ms": 630.7,
+     "n_codes": 324,
+     "ms_per_code": 10.14,
+     "identical": true,
+     "first_difference": null
+    },
+    "f10": {
+     "talker_ms": 3155.7,
+     "thinker_ms": 539.6,
+     "n_codes": 311,
+     "ms_per_code": 10.15,
+     "identical": true,
+     "first_difference": null
+    },
+    "c01": {
+     "talker_ms": 2377.8,
+     "thinker_ms": 473.4,
+     "n_codes": 234,
+     "ms_per_code": 10.16,
+     "identical": true,
+     "first_difference": null
+    },
+    "c04": {
+     "talker_ms": 4850.9,
+     "thinker_ms": 908.8,
+     "n_codes": 479,
+     "ms_per_code": 10.13,
+     "identical": true,
+     "first_difference": null
+    },
+    "c07": {
+     "talker_ms": 2821.8,
+     "thinker_ms": 538.9,
+     "n_codes": 278,
+     "ms_per_code": 10.15,
+     "identical": true,
+     "first_difference": null
+    },
+    "c10": {
+     "talker_ms": 3508.1,
+     "thinker_ms": 631.2,
+     "n_codes": 346,
+     "ms_per_code": 10.14,
+     "identical": true,
+     "first_difference": null
+    },
+    "n01": {
+     "talker_ms": 5981.9,
+     "thinker_ms": 1205.4,
+     "n_codes": 591,
+     "ms_per_code": 10.12,
+     "identical": true,
+     "first_difference": null
+    },
+    "n04": {
+     "talker_ms": 3470.0,
+     "thinker_ms": 704.3,
+     "n_codes": 340,
+     "ms_per_code": 10.21,
+     "identical": true,
+     "first_difference": null
+    }
+   },
+   "error": null,
+   "graph_breaks": 0
+  }
+ }
+}

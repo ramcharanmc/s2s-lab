@@ -17,7 +17,9 @@ Kept as events happen. The earlier logs: `docs/m31-log.md` and those it names.
 | 10 | 10-12 | `modal deploy modal_app/demo.py`, the author; the deployed page's status and measured data read from the laptop | the public demo offers R4 and R4 streamed on the L40S, the streamed one marked to play as it arrives; the measured part has the R4 streamed row and the PR-014 and PR-015 panels; the cap \$3. M32a done | — | ad11466 |
 | 11 | 10-12 | the DEV stream timings of M31 read again (`stream-dev-l40s.json`, 30 probe clips; no eval file) | R4 streamed's first block exists at 1.43 s (p50); today's start rule plays at 3.08 s; a start that knew every block's arrival could not play before 2.67 s: the stream is made at 0.86 of real time | — | — |
 | 12 | 10-12 | — | the design (M32b): our own Talker decode loop; the stop rule (no loop under 10 ms a code: stop); PR-016 to be registered before any eval run; the author's go | — | — |
-| 13 | 10-12 | the loop's tests, laptop, a tiny Talker of Qwen2.5-Omni's own architecture | the loop writes generate's codes, code for code, on the fast route (three seeds), on plain generate, and with the step on fixed buffers; it stops at an end code and streams each code | `talkerloop.py`, `r4loopspeed.py`, `::loopspeed`, tests | this commit |
+| 13 | 10-12 | the loop's tests, laptop, a tiny Talker of Qwen2.5-Omni's own architecture | the loop writes generate's codes, code for code, on the fast route (three seeds), on plain generate, and with the step on fixed buffers; it stops at an end code and streams each code | `talkerloop.py`, `r4loopspeed.py`, `::loopspeed`, tests | 250eeca |
+| 14 | 10-12 | `modal run modal_app/r4_bench.py::loopspeed`, the author, L40S, 10 probe clips, \$0.165 | generate 11.77 ms a code (p50), the loop 11.24, the loop with its step captured 10.15 (10.12 to 10.21 on every clip); both loops wrote generate's codes on 10 of 10 clips; the capture took 28.6 s once. **By the stop rule, no loop under 10 ms: M32b stops here**; PR-016 is not registered | — | — |
+| 15 | 10-12 | — | M32b closed, stopped by its rule | — | this commit |
 
 ## 1. The design (M32a)
 
@@ -199,3 +201,38 @@ code after the prompt. Its processors and draw match transformers' on 50 random 
 loop, and the loop with its step captured (the decoder compiled by inductor without graphs of its own
 inside it), on R4's own Talker, the 10 probe clips M31's speed probe used: ms a code, and whether the codes
 are generate's on each clip.
+
+## 7. M32b, step 2: the speed probe, and the stop rule (row 14)
+
+R4's own Talker on the fast route, the 10 probe clips of M31's speed probe, one L40S container
+(`runs/r4-gpu/loop-speed-l40s.json`, at `250eeca`):
+
+| Talker | ms a code p50 | p90 | codes identical to generate's | warm-up |
+|---|---:|---:|---|---|
+| generate (today's `r4-gpu-fast` and `r4-gpu-stream`) | 11.77 | 11.84 | (the reference) | - |
+| our loop | 11.24 | 11.29 | 10 of 10 | 4.9 s, 4.9 s |
+| our loop, its step captured as one CUDA graph | **10.15** | 10.16 | 10 of 10 | 28.6 s (the compile and the capture), 4.6 s |
+
+**The stop rule, written before the run: if neither loop writes a code in under 10 ms at p50, M32b stops
+here.** The faster loop wrote one in 10.15 ms, on every clip between 10.12 and 10.21. M32b stops: no
+stream is built on the loop and PR-016 is not registered. The rule is kept as written, although the
+margin is 0.15 ms; moving it after the result is what it was written to prevent.
+
+**What was learned.**
+
+1. **The premise was wrong.** The design note took most of the Talker's 12.7 ms a code to be overhead
+   around its layers. With all of generate's Python gone (the loop) the code took 0.53 ms less; with every
+   operation of the step replayed as one CUDA graph, 1.62 ms less than generate. About 10 ms a code is
+   work on the GPU itself, not launching it.
+2. **The loop is exact.** On R4's own Talker both loops wrote generate's codes on every clip, the
+   captured one included: the processors, the draw, the positions and the cache are generate's. The
+   module stays in the repository for that reason; no rung uses it.
+3. **Not measured, a lead for later.** The Talker's static cache holds 6144 places (r4stream.MAX_CACHE,
+   room for a 60 s turn and 4096 codes), and a step's attention runs over all of them, masked, while a
+   turn uses about 600 to 1,000. Whether that is where the 10 ms goes is not known: it would take a
+   profile of the step, a design note and a decision of its own.
+
+On this host generate took 11.77 ms a code, against 12.7 in M31's probe; M31 found the fast route's time
+to vary with the host (`docs/m31-log.md`).
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite, 990 passed, 2 skipped.
