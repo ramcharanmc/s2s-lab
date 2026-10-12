@@ -12,8 +12,9 @@ R4 on Modal: the S2S rung on an L40S, with R3 beside it in the same container.
     modal run modal_app/r4_bench.py::speed --tag mask                        the same with the Talker's mask fixed (second run)
     modal run modal_app/r4_bench.py::streamdev                               M31, step 2: R4, r4-gpu-fast and the stream's settings, probe clips
     modal run modal_app/r4_bench.py::pr015 --confirm PR-015                  PR-015, once: the three on the eval set
-The file has six entry points (main, pairs, profile, speed, streamdev, pr015), so Modal needs the one named:
-::main, ::pairs, ::profile, ::speed, ::streamdev or ::pr015.
+    modal run modal_app/r4_bench.py::loopspeed                               M32b, step 2: the Talker, generate and our loop
+The file has seven entry points (main, pairs, profile, speed, streamdev, pr015, loopspeed), so Modal needs the
+one named: ::main, ::pairs, ::profile, ::speed, ::streamdev, ::pr015 or ::loopspeed.
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
@@ -46,6 +47,7 @@ L40S_DOLLARS_PER_HOUR = 1.95   # Modal's L40S rate, checked 2026-08-19 (v2 §5)
 PROFILE_PATH = REPO / "runs" / "r4-gpu" / "profile-l40s.json"   # M31, step 1 (s2slab.r4profile)
 SPEED_PATH = REPO / "runs" / "r4-gpu" / "speed-l40s.json"       # M31, step 1b (s2slab.r4speed)
 STREAM_DEV_PATH = REPO / "runs" / "r4-gpu" / "stream-dev-l40s.json"   # M31, step 2 (s2slab.r4streamdev)
+LOOP_SPEED_PATH = REPO / "runs" / "r4-gpu" / "loop-speed-l40s.json"   # M32b, step 2 (s2slab.r4loopspeed)
 
 
 def speed_path(tag: str = "") -> pathlib.Path:
@@ -247,6 +249,21 @@ def pr015_run(confirm: str) -> dict:
     return {"gpu": _gpu_name(), "versions": _versions(), "run": blob, "seconds": time.perf_counter() - t0}
 
 
+# Ten clips three ways (R4 ~6 s a turn on the fast route), two warm-up turns per loop (the compile, the capture):
+# about 10 min after the load. The timeout leaves room.
+@app.function(gpu="L40S", timeout=45 * 60, scaledown_window=60)
+def loop_speed() -> dict:
+    """M32b, step 2: the Talker through generate and through our loop, on every third probe clip (r4loopspeed.run)."""
+    import os
+    os.chdir("/root")
+    from s2slab.probes import TARGET_SR
+    from s2slab.r4loopspeed import run
+    from s2slab.rungs import probe_clips
+    t0 = time.perf_counter()
+    blob = run(probe_clips(), TARGET_SR)
+    return {"gpu": _gpu_name(), "versions": _versions(), "speed": blob, "seconds": time.perf_counter() - t0}
+
+
 def results_path(rung_id: str, limit: int = 0, tag: str = "") -> pathlib.Path:
     """runs/<rung>/evalset-modal-l40s[-tag].json for the real run (committed evidence);
     results/<rung>/...-limitN.json for a smoke test (ignored)."""
@@ -419,5 +436,29 @@ def pr015(confirm: str = ""):
     path = save(blob, REPO / RUN)
     print(format_pr015(blob, criteria(blob)))
     print(f"\nsaved -> {path.relative_to(REPO)}")
+    print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
+
+
+@app.local_entrypoint()
+def loopspeed():
+    """Does our Talker loop write R4's codes faster, and the same ones (M32b, step 2)? Saves
+    runs/r4-gpu/loop-speed-l40s.json, never overwritten, and prints the table and the stop rule's verdict."""
+    from s2slab.r4loopspeed import format_loop_speed
+    from s2slab.r4profile import save
+    from s2slab.sidechannel import refuse_to_overwrite
+
+    refuse_to_overwrite(LOOP_SPEED_PATH)
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    t0 = time.time()
+    out = loop_speed.remote()
+    wall = time.time() - t0
+    blob = {"run": "M32b, step 2: R4's Talker through generate and through our loop, on 10 probe clips",
+            "commit": commit, "machine": f"Modal {out['gpu']}", "versions": out["versions"], **out["speed"]}
+    path = save(LOOP_SPEED_PATH, blob)
+    print(format_loop_speed(blob))
+    print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {path.relative_to(REPO)}")
+    print(out["versions"])
     print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
           f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")

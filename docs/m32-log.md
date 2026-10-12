@@ -14,7 +14,10 @@ Kept as events happen. The earlier logs: `docs/m31-log.md` and those it names.
 | 7 | 10-12 | the page in the author's browser, its network panel open; a cold turn and a warm one, R4 and R4 streamed | the warm turn: the stream request 13.34 s; R4 streamed's first audio 3.41 s on the L40S, 5.83 s after Send in the browser; R4 5.81 s: the browser gets the blocks as they come | — | — |
 | 8 | 10-12 | the voice measurement timed on the laptop beside a thread that ticks every 5 ms | `voice()` on a 6 s recording took 0.23 s and held every other thread up to 101 ms at a time; on Modal's default share of a core, seconds | the page's container a full core (`cpu=1.0`) | f5d22a5 |
 | 9 | 10-12 | the second probe again, the author, after the fix | beside the T4's request the stream's first lines at 1.53 s (4.17 before), as with nothing beside it; each block reached the client 0.6 to 0.8 s after it was made in every run, the T4 beside it or not | — | — |
-| 10 | 10-12 | `modal deploy modal_app/demo.py`, the author; the deployed page's status and measured data read from the laptop | the public demo offers R4 and R4 streamed on the L40S, the streamed one marked to play as it arrives; the measured part has the R4 streamed row and the PR-014 and PR-015 panels; the cap \$3. M32a done | — | this commit |
+| 10 | 10-12 | `modal deploy modal_app/demo.py`, the author; the deployed page's status and measured data read from the laptop | the public demo offers R4 and R4 streamed on the L40S, the streamed one marked to play as it arrives; the measured part has the R4 streamed row and the PR-014 and PR-015 panels; the cap \$3. M32a done | — | ad11466 |
+| 11 | 10-12 | the DEV stream timings of M31 read again (`stream-dev-l40s.json`, 30 probe clips; no eval file) | R4 streamed's first block exists at 1.43 s (p50); today's start rule plays at 3.08 s; a start that knew every block's arrival could not play before 2.67 s: the stream is made at 0.86 of real time | — | — |
+| 12 | 10-12 | — | the design (M32b): our own Talker decode loop; the stop rule (no loop under 10 ms a code: stop); PR-016 to be registered before any eval run; the author's go | — | — |
+| 13 | 10-12 | the loop's tests, laptop, a tiny Talker of Qwen2.5-Omni's own architecture | the loop writes generate's codes, code for code, on the fast route (three seeds), on plain generate, and with the step on fixed buffers; it stops at an end code and streams each code | `talkerloop.py`, `r4loopspeed.py`, `::loopspeed`, tests | this commit |
 
 ## 1. The design (M32a)
 
@@ -134,3 +137,65 @@ in row 7 (5.83 s).
 **Deployed (row 10)** by the author on 10-12: https://ramcharanmc--s2s-lab-demo-web.modal.run. M32a is
 done. Next, M32b: a Talker decode loop of our own, for the 3.1 s the L40S takes to make the first block;
 a design note first.
+
+## 5. M32b: the design
+
+**Where R4 streamed's 3.1 s goes** (row 11; the 30 probe clips of M31's development run, read again; no
+eval file read):
+
+| | p50 |
+|---|---:|
+| the Thinker writes the reply | about 0.66 s |
+| the first block exists (+ the Talker's 24 codes + the first DiT window, about 0.22 s) | 1.43 s |
+| the second block exists | 1.43 + 1.66 s |
+| playback starts under today's rule (hold until 0.5 s of audio exists) | 3.08 s |
+| the earliest start that would never stall, knowing every block's arrival | 2.67 s |
+
+A better start rule alone could save at most 0.4 s. The limit is the rate: a block of 96 codes (1.92 s of
+audio) takes about 1.66 s to make, 1.2 s of it the Talker at 12.7 ms a code and 0.45 s the DiT, so the
+first block (0.46 s) runs out about 1.2 s before the second exists.
+
+**The lever: the Talker's step.** Compiled, the Talker takes 12.7 ms a code (M31). It is much smaller
+than the Thinker, and reading its weights once on an L40S takes about a millisecond: most of the 12.7 ms
+is around the layers (generate's Python, its masks and stopping checks, the host synchronisations). Not
+measured yet: that is step 2.
+
+**What it could buy** (projections from the DEV block timings with only the Talker's time a code changed):
+
+| ms a code | a block of 96 made in | first block | stall-free start about |
+|---|---:|---:|---:|
+| 12.7 (today) | 1.66 s | 1.43 s | 2.7 to 3.1 s |
+| 9 | 1.31 s | 1.34 s | 2.2 s |
+| 5 | 0.93 s | 1.24 s | 1.7 s |
+
+**The steps.** 1, the loop on the laptop, its codes matched to generate's on a tiny Talker ($0). 2, a
+speed probe on R4's own Talker, 10 probe clips (about \$0.50). **The stop rule, written before step 2
+runs: if neither loop writes a code in under 10 ms at p50, M32b stops there and is reported as such.**
+3, the stream on our loop on the 30 probe clips, its start rule chosen by a rule written before the run
+(about \$0.70). 4, PR-016, registered before any eval run: R4 streamed on our loop against today's, first
+sound and stalls on the 200 eval clips (about \$2.60). 5, the demo. The author's go, with the
+registration, on 10-12.
+
+## 6. M32b, step 1: the loop (row 13)
+
+`s2slab.talkerloop.TalkerLoop.generate` takes what Qwen2.5-Omni's generate hands `talker.generate` and
+returns what that returns, for one reply. The prefill goes through the Talker's own
+`prepare_inputs_for_generation` and forward, as generate's first step. Each code after it is generate's
+step done directly: the code's embedding plus the Thinker's reply part, the projection, the decoder, the
+codec head, then the logits processors generate builds for R4's settings (repetition penalty 1.05, the
+suppressed start code, temperature 0.9, top-k 40, top-p 0.8) as tensor operations of fixed shape. The
+draw is torch.multinomial's own for one sample (q ~ Exp(1), argmax p/q), without its two validity
+checks, each a host synchronisation; each code is read back once, to stop at an end code and to stream
+it. With `graph=True` the step runs on fixed buffers and is captured once as a CUDA graph; the capture
+puts the cache and the random state back, so the turn that makes it is not disturbed.
+
+On the laptop, a tiny Talker of the same architecture with random weights: the loop writes generate's
+80 codes exactly on R4's fast route (static cache, the 2-D mask kept, the layers' one-code steps without
+a mask) on three seeds, on plain generate, and with the step on fixed buffers (what is captured on the
+GPU, run eagerly here), over a second turn too; it stops at an end code, includes it, and streams each
+code after the prompt. Its processors and draw match transformers' on 50 random draws.
+
+**Step 2, the speed probe** (`modal run modal_app/r4_bench.py::loopspeed`, the author's): generate, the
+loop, and the loop with its step captured (the decoder compiled by inductor without graphs of its own
+inside it), on R4's own Talker, the 10 probe clips M31's speed probe used: ms a code, and whether the codes
+are generate's on each clip.
