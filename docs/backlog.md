@@ -3,17 +3,25 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-04, at commit `38ffbfb`.
+Last updated 2026-10-12, at commit `f5d22a5`.
 
-## Chosen next: M32a, R4 streamed in the demo
+## Chosen next: M32b, a Talker decode loop of our own
+
+R4 streamed's first block is made 3.1 to 3.4 s after a turn starts on the L40S (M32a). M32b writes the Talker's
+decode loop itself, in place of `transformers`' `generate`, so the first block can leave sooner. A design note
+first, with where those seconds go and what the loop can save; then a registration, if the change is to be
+claimed (`docs/m32-log.md`).
+
+## Done: M32a, R4 streamed in the demo
 
 The demo's L40S offers R4 and R4 streamed side by side, on one set of weights (two would not fit the
 card): the same reply, heard sooner. Commit 1: the pair, PR-014 and PR-015 in the measured part, the
 door at thirty wrong codes in five minutes, the day's cap at \$3. Commit 2: the stream's blocks played
 in the browser as they arrive: on Modal a browser played R4 streamed's first audio 5.83 s after Send, its first
 block made at 3.41 s. Commit 3: the page's container a full core, so measuring the visitor's voice no longer
-holds the stream back. Then one `modal serve` check, and `modal deploy`, the author's. Then
-M32b: a Talker decode loop of our own (`docs/m32-log.md`).
+holds the stream back (its first lines at 1.53 s, 4.17 before). Deployed 2026-10-12: a visitor hears R4 streamed
+about 5.5 s after Send on a warm L40S, R4 decoded whole 5 s or more after it. About \$1.14 of Modal across four
+sessions (`docs/m32-log.md`, `docs/cost-ledger.md`).
 
 ## Done: M31, R4 streams its reply
 

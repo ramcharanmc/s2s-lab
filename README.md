@@ -6,7 +6,7 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-10-04** (commit `e2a4b4e`): rungs R0 to R5 built and measured, and R4 streamed; three
+**Status, 2026-10-12** (commit `f5d22a5`): rungs R0 to R5 built and measured, and R4 streamed; three
 fine-tunes run; fifteen registrations, all reported, six with a supported claim. A demo that shows
 the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
 
@@ -18,7 +18,7 @@ a severity score rendered onto synthetic speech, to be heard. The measured tab i
 the live tab needs an access code and stops at \$3 of GPU a day. R4 and R4 streamed answer side by side,
 on one set of weights, and the streamed reply plays as it arrives (M32a).
 Every rung was also measured on one card, the L40S, R0 to R4 in one
-container (M28, below). About \$43 spent: \$18.70 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+container (M28, below). About \$43 spent: \$18.96 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 

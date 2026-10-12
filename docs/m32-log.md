@@ -12,7 +12,9 @@ Kept as events happen. The earlier logs: `docs/m31-log.md` and those it names.
 | 5 | 10-06 | a probe outside the repo (an HTTP client reading `/api/stream` line by line, with and without gzip), the author | the lines left Modal as they were made: on the warm run the blocks made at 3.06, 4.73 and 6.15 s reached the client at 4.30, 5.83 and 7.25 s; no compression either way | — | — |
 | 6 | 10-06 | a second probe: HTTP/2 alone, HTTP/1.1 beside a T4 request, HTTP/2 beside a T4 request (the page's set-up), the author | every run streamed; beside the T4's request the stream's first lines came at 4.17 s instead of 1.1, its second block with the T4's answer | — | — |
 | 7 | 10-12 | the page in the author's browser, its network panel open; a cold turn and a warm one, R4 and R4 streamed | the warm turn: the stream request 13.34 s; R4 streamed's first audio 3.41 s on the L40S, 5.83 s after Send in the browser; R4 5.81 s: the browser gets the blocks as they come | — | — |
-| 8 | 10-12 | the voice measurement timed on the laptop beside a thread that ticks every 5 ms | `voice()` on a 6 s recording took 0.23 s and held every other thread up to 101 ms at a time; on Modal's default share of a core, seconds | the page's container a full core (`cpu=1.0`) | this commit |
+| 8 | 10-12 | the voice measurement timed on the laptop beside a thread that ticks every 5 ms | `voice()` on a 6 s recording took 0.23 s and held every other thread up to 101 ms at a time; on Modal's default share of a core, seconds | the page's container a full core (`cpu=1.0`) | f5d22a5 |
+| 9 | 10-12 | the second probe again, the author, after the fix | beside the T4's request the stream's first lines at 1.53 s (4.17 before), as with nothing beside it; each block reached the client 0.6 to 0.8 s after it was made in every run, the T4 beside it or not | — | — |
+| 10 | 10-12 | `modal deploy modal_app/demo.py`, the author; the deployed page's status and measured data read from the laptop | the public demo offers R4 and R4 streamed on the L40S, the streamed one marked to play as it arrives; the measured part has the R4 streamed row and the PR-014 and PR-015 panels; the cap \$3. M32a done | — | this commit |
 
 ## 1. The design (M32a)
 
@@ -106,3 +108,29 @@ page's container gets a full core (`cpu=1.0`): a few cents a day while the page 
 day's cap, which counts the GPUs.
 
 **Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite, 978 passed, 2 skipped.
+
+## 4. After the fix, and M32a done
+
+**The check (row 9)**, the page's set-up (HTTP/2, the T4's request beside the stream):
+
+| | before the fix | after |
+|---|---:|---:|
+| the stream's first lines | 4.17 s | 1.53 s |
+| its first block reached the client | 5.14 s (made at 3.14) | 5.76 s (made at 3.41) |
+| the first block's lag after it was made | about 0.9 s | about 0.8 s |
+
+The fix did what it was for and no more: the opening lines are no longer held while the voice is
+measured, but a block reaches a client 0.6 to 0.8 s after the L40S makes it, with the T4 beside it or
+not, so that lag is not the web container's CPU. Not measured: how it splits between the two hops (the
+L40S to the web container, the web container to the client); a block is about 150 kB of base64.
+Reading the second block's arrival "with the T4's answer" (row 6) as a cause was wrong: here it came
+on time against its making.
+
+**What a visitor hears**, on a warm L40S: R4 streamed after about 1.5 s (upload and the call) + 3.1 to
+3.4 s (the L40S) + 0.7 s (delivery), 5.3 to 5.6 s from Send; R4, decoded whole, after it is done and R4
+streamed with it, 5 s or more later. The browser's number on the card is this whole wait, as measured
+in row 7 (5.83 s).
+
+**Deployed (row 10)** by the author on 10-12: https://ramcharanmc--s2s-lab-demo-web.modal.run. M32a is
+done. Next, M32b: a Talker decode loop of our own, for the 3.1 s the L40S takes to make the first block;
+a design note first.
