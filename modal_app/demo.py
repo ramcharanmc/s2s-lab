@@ -303,7 +303,7 @@ def make_app(call, store, root="/root", others=None, render=None, streams=None):
 
 
 @app.function(image=web_image, secrets=[modal.Secret.from_name(SECRET, required_keys=["DEMO_ACCESS_CODE"])],
-              max_containers=1, scaledown_window=WINDOW_S, timeout=10 * 60)
+              cpu=1.0, max_containers=1, scaledown_window=WINDOW_S, timeout=10 * 60)   # a full core: the voice measurement does not hold the stream (M32a)
 @modal.concurrent(max_inputs=16)                # the page is still served while a turn waits for the T4
 @modal.asgi_app()
 def web():

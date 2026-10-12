@@ -7,7 +7,12 @@ Kept as events happen. The earlier logs: `docs/m31-log.md` and those it names.
 |---|---|---|---|---|---|
 | 1 | 10-04 | — | the design (M32a): R4 and R4 streamed in the demo on one set of weights; the stream heard as it arrives; the author's go, with real streaming to the browser, the door at 30 wrong codes in 5 minutes and the day's cap at \$3 | — | — |
 | 2 | 10-04 | the demo's tests, laptop | the pair on one model; both R4 cards from one request to the L40S; PR-014 and PR-015 read from their run files | `r4stream.pair`, `demo` (measured row, two panels, door), `modal_app/demo.py` (the L40S's two rungs, the cap), the page | 39f0c6a |
-| 3 | 10-04 | the demo's tests, laptop; the page on localhost with fake rungs, in a browser | the stream reached the browser a piece at a time (an HTTP client saw the pieces at 0.96, 1.76 and 2.56 s, as the fake rung made them); the page played them as they came and timed the first at 940 ms after Send, the server's own 801 | `demo` (`stream_turn`, `Live.stream`, `Several.stream`), `demoweb` (`/api/stream`), `modal_app/demo.py` (`Speaks.stream`), the page (it plays the pieces as they arrive), tests | this commit |
+| 3 | 10-04 | the demo's tests, laptop; the page on localhost with fake rungs, in a browser | the stream reached the browser a piece at a time (an HTTP client saw the pieces at 0.96, 1.76 and 2.56 s, as the fake rung made them); the page played them as they came and timed the first at 940 ms after Send, the server's own 801 | `demo` (`stream_turn`, `Live.stream`, `Several.stream`), `demoweb` (`/api/stream`), `modal_app/demo.py` (`Speaks.stream`), the page (it plays the pieces as they arrive), tests | ec2713b |
+| 4 | 10-05 | `modal serve modal_app/demo.py`, the author, T4 and L40S; a cold turn (R4 streamed) and a warm one (R4 and R4 streamed) | the stream through Modal: `Speaks.stream` and `remote_gen` worked; the L40S loaded both rungs in 152.7 s with the compiles; R4 streamed's first audio 3.14 s (cold turn) and 3.06 s (warm; R4 3.67 s); but the browser's first audio 164.59 s and 8.91 s after Send, about when the request ended; the door held (two wrong codes 401) | — | — |
+| 5 | 10-06 | a probe outside the repo (an HTTP client reading `/api/stream` line by line, with and without gzip), the author | the lines left Modal as they were made: on the warm run the blocks made at 3.06, 4.73 and 6.15 s reached the client at 4.30, 5.83 and 7.25 s; no compression either way | — | — |
+| 6 | 10-06 | a second probe: HTTP/2 alone, HTTP/1.1 beside a T4 request, HTTP/2 beside a T4 request (the page's set-up), the author | every run streamed; beside the T4's request the stream's first lines came at 4.17 s instead of 1.1, its second block with the T4's answer | — | — |
+| 7 | 10-12 | the page in the author's browser, its network panel open; a cold turn and a warm one, R4 and R4 streamed | the warm turn: the stream request 13.34 s; R4 streamed's first audio 3.41 s on the L40S, 5.83 s after Send in the browser; R4 5.81 s: the browser gets the blocks as they come | — | — |
+| 8 | 10-12 | the voice measurement timed on the laptop beside a thread that ticks every 5 ms | `voice()` on a 6 s recording took 0.23 s and held every other thread up to 101 ms at a time; on Modal's default share of a core, seconds | the page's container a full core (`cpu=1.0`) | this commit |
 
 ## 1. The design (M32a)
 
@@ -72,5 +77,32 @@ R4's card answered whole with its WAV.
 
 **Not checked until Modal:** `remote_gen` through a real container, the compiles in the wake, and the
 browser's time against the server's on a real network.
+
+**Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite, 978 passed, 2 skipped.
+
+## 3. On Modal (commit 2, then commit 3)
+
+**The first session (10-05, row 4).** Everything ran: the door, the T4's wake (41.5 s of loading), the
+L40S's (159 s, 152.7 of it loading, against 67 s in M27, before the compiles), R4 streamed beside R4 on one set of
+weights, the same reply from both. But the browser's first audio came about when the request ended:
+164.59 s after Send on the cold turn (the request 164.3 s), 8.91 s on the warm one (R4 streamed 4.48 s
+and R4 3.67 s, one after the other). It looked as if the stream were held somewhere between the L40S
+and the page.
+
+**Two probes (10-06, rows 5 and 6)** read `/api/stream` from the laptop line by line. Every line left
+Modal as it was made: neither `remote_gen`, nor Modal's proxy, nor compression, nor HTTP/2 held it. One
+thing did slow it: with the T4's request running beside it, as the page sends it, the stream's first
+lines came at 4.17 s instead of about 1.1, and its second block with the T4's answer.
+
+**The browser (10-12, row 7).** With the network panel open, a warm turn: the stream request lasted
+13.34 s, and the browser played R4 streamed's first audio 5.83 s after Send (3.41 s on the L40S). The
+browser gets the blocks as they come. The 8.91 s of row 4 is not explained by a run of its own: the
+slowing of row 6, larger on a 6 s recording, is the likeliest part of it.
+
+**The cause of the slowing (row 8).** The web container measures the visitor's voice (Praat) during
+the T4's request, and it had Modal's default share of a core. On the laptop the measurement takes
+0.23 s and holds every other thread up to 101 ms at a time; on a fraction of a core, seconds. So the
+page's container gets a full core (`cpu=1.0`): a few cents a day while the page is used, outside the
+day's cap, which counts the GPUs.
 
 **Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite, 978 passed, 2 skipped.

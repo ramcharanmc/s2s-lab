@@ -10,7 +10,9 @@ Last updated 2026-10-04, at commit `38ffbfb`.
 The demo's L40S offers R4 and R4 streamed side by side, on one set of weights (two would not fit the
 card): the same reply, heard sooner. Commit 1: the pair, PR-014 and PR-015 in the measured part, the
 door at thirty wrong codes in five minutes, the day's cap at \$3. Commit 2: the stream's blocks played
-in the browser as they arrive. Then a `modal serve` session, and `modal deploy`, the author's. Then
+in the browser as they arrive: on Modal a browser played R4 streamed's first audio 5.83 s after Send, its first
+block made at 3.41 s. Commit 3: the page's container a full core, so measuring the visitor's voice no longer
+holds the stream back. Then one `modal serve` check, and `modal deploy`, the author's. Then
 M32b: a Talker decode loop of our own (`docs/m32-log.md`).
 
 ## Done: M31, R4 streams its reply

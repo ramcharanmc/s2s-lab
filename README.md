@@ -16,9 +16,9 @@ A recording answered by R0 to R5 on four machines (R3, R4 and R5 woken only when
 82 s to wake), with what the visitor's voice carried beside the words the cascades received, and
 a severity score rendered onto synthetic speech, to be heard. The measured tab is open to anyone;
 the live tab needs an access code and stops at \$3 of GPU a day. R4 and R4 streamed answer side by side,
-on one set of weights (M32a).
+on one set of weights, and the streamed reply plays as it arrives (M32a).
 Every rung was also measured on one card, the L40S, R0 to R4 in one
-container (M28, below). About \$42 spent: \$17.82 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+container (M28, below). About \$43 spent: \$18.70 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 
