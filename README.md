@@ -7,7 +7,7 @@ The point is the measurement, not the demo. Each rung is thin: get it working, m
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
 **Status, 2026-10-13** (commit `a4502d2`): rungs R0 to R5 built and measured, and R4 streamed; three
-fine-tunes run; fifteen registrations, all reported, six with a supported claim. A demo that shows
+fine-tunes run; sixteen registrations, fifteen reported, six with a supported claim, PR-016 not yet run. A demo that shows
 the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
 
 **https://ramcharanmc--s2s-lab-demo-web.modal.run**
@@ -18,7 +18,7 @@ a severity score rendered onto synthetic speech, to be heard. The measured tab i
 the live tab needs an access code and stops at \$3 of GPU a day. R4 and R4 streamed answer side by side,
 on one set of weights, and the streamed reply plays as it arrives (M32a).
 Every rung was also measured on one card, the L40S, R0 to R4 in one
-container (M28, below). About \$44 spent: \$19.43 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+container (M28, below). About \$44 spent: \$19.94 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 
@@ -67,7 +67,7 @@ as a whole takes 1.14 times as long. Compiling R4's Talker alone (`r4-gpu-fast`)
 
 ## What was claimed, and what happened
 
-Fifteen registrations (`docs/preregistration.md`). Criteria are committed before the data is seen;
+Sixteen registrations (`docs/preregistration.md`). Criteria are committed before the data is seen;
 results are appended whatever they say.
 
 | | Question, in short | Outcome |
@@ -87,8 +87,9 @@ results are appended whatever they say.
 | PR-013 | Quantized to 8 bits, does Kokoro's pitch drift while its words stay? | **Claim A supported**; fp16 not usable on a CPU |
 | PR-014 | Does voice activity projection end real turns better than T1b? | not run: no setting met its rule on development |
 | PR-015 | Does streaming R4 let the caller hear its reply sooner, without stalls? | **supported**: 3.3 s instead of 6.8 (p50), 3.7 instead of 11.8 (p90), no stall |
+| PR-016 | Does a cache sized to the turn let R4 streamed be heard sooner still? | registered 2026-10-13, not yet run |
 
-All fifteen are reported. Eight were not supported, and one, PR-014 (voice activity projection on
+The first fifteen are reported; PR-016 is registered and not yet run. Eight were not supported, and one, PR-014 (voice activity projection on
 real speech), was not run: no setting met its rule on the development recordings. Each entry says
 why.
 

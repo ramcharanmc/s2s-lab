@@ -25,9 +25,11 @@ LISTEN = 3                                       # replies of each rung kept as 
 STREAMS = ("r4-gpu-stream", "r4-gpu-stream-sized")
 
 
-def run(clips: dict, sr: int, asr=None, base=None, make_fast=None, listen: int = LISTEN) -> dict:
-    """r4-gpu-fast, then both streams with no start buffer, every clip, one set of weights; then the buffers
-    computed from the pieces. asr and make_fast as in r4streamdev.run."""
+def run(clips: dict, sr: int, asr=None, base=None, make_fast=None, listen: int = LISTEN,
+        start_buffer_s: float = 0.0) -> dict:
+    """r4-gpu-fast, then both streams, every clip, one set of weights; with no start buffer (development),
+    the buffers computed from the pieces afterwards; with one (PR-016: frozen), each stream holds it itself.
+    asr and make_fast as in r4streamdev.run."""
     from .r0 import WhisperASR
     from .r4 import OmniS2S
     from .r4sized import SizedStreamingSpeechToSpeech
@@ -61,12 +63,12 @@ def run(clips: dict, sr: int, asr=None, base=None, make_fast=None, listen: int =
         through("r4-gpu-fast", fast_rung, lambda: tap.codes)
     finally:
         tap.close()
-    stream = StreamingSpeechToSpeech(fast, start_buffer_s=0.0)
+    stream = StreamingSpeechToSpeech(fast, start_buffer_s=start_buffer_s)
     through("r4-gpu-stream", stream, lambda: stream.last_codes)
-    sized = SizedStreamingSpeechToSpeech(fast, start_buffer_s=0.0)
+    sized = SizedStreamingSpeechToSpeech(fast, start_buffer_s=start_buffer_s)
     through("r4-gpu-stream-sized", sized, lambda: sized.last_codes,
             lambda: {k: sized.last_turn.get(k) for k in ("places", "prompt", "cut")})
-    for name in STREAMS:
+    for name in STREAMS if start_buffer_s == 0 else ():
         rungs[name]["buffers"] = {f"{b:g}": {clip: buffered(t["chunks"], OUT_SR, b, t["leading_silence_ms"])
                                              for clip, t in rungs[name]["turns"].items()} for b in BUFFERS_S}
     return {"clips": list(clips), "buffers_s": list(BUFFERS_S), "rungs": rungs, "listen": listened}

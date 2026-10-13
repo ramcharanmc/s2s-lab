@@ -353,3 +353,10 @@ def test_the_l40s_app_has_the_sizeddev_entry_point():
     spec.loader.exec_module(mod)
     assert hasattr(mod.sized_dev, "remote") and hasattr(mod.sizeddev, "info")
     assert mod.SIZED_DEV_PATH == ROOT / "runs" / "r4-gpu" / "sized-dev-l40s.json"
+
+
+def test_the_l40s_app_has_the_pr016_entry_point():
+    spec = importlib.util.spec_from_file_location("r4_bench", ROOT / "modal_app" / "r4_bench.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert hasattr(mod.pr016_run, "remote") and hasattr(mod.pr016, "info")

@@ -3582,3 +3582,127 @@ fast container: 1.03 (the container was one, driver 580.95.05, as in development
   (r = 0.97 against its words), but within 2.2 to 4.1 s; R4's longest was 18.4 s.
 - **The gain is streaming's, not compiling's.** `r4-gpu-fast` took 1.03 of R4's time in this container,
   as in development's. Whether compiling helps on a slower host is not tested here.
+
+## PR-016 — R4 streamed on a right-sized cache: the reply heard sooner still
+
+**Registered:** 2026-10-13, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+PR-015 found R4 streamed (`r4-gpu-stream`) heard after 3.3 s instead of R4's 6.8 on the eval set. Its
+first sound waits for its second block: the Talker makes the stream at only 0.86 of real time. M33
+(`docs/m33-log.md`) found half of the Talker's step to be attention over its 6144-place cache's empty
+places: our own decode loop with its step captured as one CUDA graph (M32b, `src/s2slab/talkerloop.py`,
+which writes generate's codes exactly) took 10.26 ms a code on that cache and 6.62 ms on a 2048-place one,
+the same codes. M34 built `r4-gpu-stream-sized`: R4 streamed with its codes from that loop on a cache
+sized to the turn (`src/s2slab/r4sized.py`).
+
+On the 30 probe clips (`runs/r4-gpu/sized-dev-l40s.json`, development, one L40S container on the slower
+of the two hosts M31 met): both streams' codes were `r4-gpu-fast`'s on 30 of 30 turns, and their reply
+texts the same; the sized stream took the 2048-place cache on 29 turns and the 6144-place one on the
+53 s clip; no reply was cut. Holding playback for 0.5 s of audio, the sized stream's first sound came at
+2,684 ms (p50) and 3,114 (p90), with no turn stalled (the smallest margin before a stall 771 ms); the
+stream's at 3,433 and 3,816, with 4 of 30 turns stalled on this host. Whisper heard 2 errors in 634 words
+in each stream.
+
+### Question
+
+On the frozen eval set, does the right-sized cache let the caller hear R4 streamed's reply sooner than
+R4 streamed as PR-015 froze it, at the median and in the tail, without stalling, without a longer turn,
+and without changing the words?
+
+### The rungs
+
+- **`r4-gpu-stream-sized`**, as frozen in this commit (`src/s2slab/r4sized.py`): R4 streamed's blocks
+  (24 codes, then 96) and start buffer (0.5 s of audio); its codes from our loop with its step captured,
+  on the smallest of two caches (2048, then 6144 places) that leaves 1,024 codes of room after the
+  turn's prompt. **The start buffer was chosen on the development run by a rule written before that run**
+  (`docs/m34-log.md`): the lowest first-sound p50 among buffers of 0, 0.25, 0.5 and 1 s with no stalled
+  turn: 0.5 s (0 and 0.25 stalled every turn; 1 s gave the same as 0.5).
+- **`r4-gpu-stream`**, as frozen for PR-015 (24 + 96 codes, 0.5 s), run again in the same container: the
+  baseline. By the same rule it had no admissible buffer on development (0.5 and 1 s stalled 4 turns);
+  it is compared as frozen, not re-chosen.
+- **`r4-gpu-fast`**, in the same run: the codes both streams should write (V2), not tested.
+
+### Test data
+
+The frozen eval set, 200 clips, 50 each of clean, accented, disfluent and slow. `r4-gpu-stream` and
+`r4-gpu-fast` have answered them once (PR-015); `r4-gpu-stream-sized` never has.
+
+### Validity requirements
+
+- **V1 · The same words.** The sized stream's reply text is the stream's on at least 190 of 200 turns
+  (the Thinker is untouched and greedy; development: 30 of 30).
+- **V2 · The same Talker.** The sized stream's codes are `r4-gpu-fast`'s on at least 190 of 200 turns
+  (development: 30 of 30).
+- **V3 · No reply cut.** At most 2 of 200 sized replies reach their cache's end (development: 0).
+- **V4 · Fixed before data.** This entry, the frozen rung, `src/s2slab/pr016.py` and the command are
+  committed before the run; the run records its commit.
+- **V5 · Once.** The run is refused without `--confirm PR-016`, if its file exists, or from a tree with
+  uncommitted changes.
+
+If V1, V2 or V3 fails, the result is **not a valid test** and is reported as such. If V4 or V5 fails, it
+is reported as **exploratory**.
+
+### Primary outcome
+
+First sound (`rungs.Turn.first_sound_ms`), the sized stream against the stream, on the same clip.
+
+### Success criteria — all five must hold
+
+| | Criterion |
+|---|---|
+| **S1 · Median** | The sized stream's first-sound p50 ≤ **0.90** of the stream's. |
+| **S2 · Tail** | The sized stream's first-sound p90 ≤ **0.92** of the stream's. |
+| **S3 · Speed guardrail** | The sized stream's total p50 ≤ **1.00** of the stream's. |
+| **S4 · Stall guardrail** | At most **20 of 200** sized turns stall at all (`stall_ms > 0`), and at most **10 of 200** for more than 200 ms. |
+| **S5 · Words** | Whisper small.en's word error rate on the sized stream's reply audio, against the Thinker's text, at most the stream's **+ 1.0 point**. |
+
+**Confidence.** As PR-015: for S1 to S3 a paired bootstrap of the 200 clip ids (10,000 resamples, seed
+0, percentile interval), both rungs' percentiles recomputed on each resample; the criterion holds only
+if the **upper end of the 95% interval** is at or below the bar. S4 is a count and S5 a pooled rate,
+both taken as observed. No multiplicity correction: success needs all five at once.
+
+**Why these bars.** On development: S1 0.782 (95% interval 0.771 to 0.794), S2 0.816 (0.737 to 0.868),
+S3 0.753 (0.720 to 0.804). Both streams wait for their second block, and the sized one makes its first
+120 codes faster whatever the reply's length, so the ratios should hold on the eval set's longer replies;
+the bars sit above the development intervals, S2's widest. S3 asks only that the turn not take longer.
+S4 keeps PR-015's tolerance. S5: the codes should be the same, so the words should be; a point allows
+for Whisper on two decodes of the same codes (the DiT draws its own noise per window).
+
+### Predictions, recorded but not criteria
+
+- S1 about 0.78, S2 about 0.8, S3 about 0.75; no sized turn stalled; the same word error rate.
+- On a host as fast as PR-015's, the stream stalls no turn; on a slower one, a few.
+
+### Reported alongside, descriptively
+
+`r4-gpu-fast`'s first sound and total; both streams' stalls; the caches the sized stream took; first
+sound by cohort; the stream's codes against `r4-gpu-fast`'s; the run's cost.
+
+### What this cannot show
+
+- **Processing time only**: no endpointer wait, no network, no audio device. Stalls are modelled from
+  when each piece existed.
+- **One container**: same-card containers differed by up to 27% (M28), and the stream's stalls depend on
+  the host (development). Both streams share one container.
+- **The Thinker still comes first**: both streams start when the Talker has written their first blocks,
+  after the whole text.
+- **Whisper is the listener**, not a listening test.
+- **R4 itself is not run again**: PR-015 compared the stream with R4; this compares the sized stream with
+  the stream.
+
+### Analysis plan
+
+1. Commit this entry, the frozen rung, `src/s2slab/pr016.py` and the command (V4).
+2. The one run: `modal run modal_app/r4_bench.py::pr016 --confirm PR-016`.
+3. The results below, verbatim; then, labelled exploratory, the stalls and the cohorts.
+
+### Deviations
+
+*None.*
+
+### Results
+
+*Not yet run.*
