@@ -3,14 +3,20 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-12, at commit `250eeca`.
+Last updated 2026-10-13, at commit `a4502d2`.
 
-## Chosen next: M33, where a Talker step's time goes
+## Chosen next: M34, R4 streamed on a right-sized cache
 
-A measurement, not a change: the Talker's size and the floor an L40S sets, one turn's kernels by kind, and its
-captured step on caches of 6144, 2048 and 1024 places. A follow-up (a right-sized cache in R4 streamed, then a
-registration) only if 2048 places bring a code to 8 ms or less with no turn cut, a line written before the run
-(`docs/m33-log.md`).
+M33's follow-up, the author's go: a new rung, `r4-gpu-stream-sized`, our captured loop on a 2048-place cache
+when the turn leaves room, else 6144; its start rule chosen on the probe clips by a rule written first; then
+PR-016, registered before any eval run; then the demo (`docs/m34-log.md`).
+
+## Done: M33, where a Talker step's time goes
+
+R4's Talker has 1,351 M parameters (a code reads 2.64 GB: 3.06 ms on an L40S at best). Captured as one CUDA
+graph, its step took 10.26 ms a code on today's 6144-place cache and **6.62 on a 2048-place one**, the same
+codes on 10 of 10 probe clips (`a4502d2`, \$0.309): attention over the cache's empty places was about half
+the step. Under the 8 ms line written before the run, so a design note follows (`docs/m33-log.md`).
 
 ## Done: M32b, a Talker decode loop of our own, stopped by its rule
 

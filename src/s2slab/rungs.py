@@ -282,6 +282,7 @@ RUNGS = {
     "r4-gpu": "s2slab.r4:SpeechToSpeech",
     "r4-gpu-fast": "s2slab.r4stream:FastSpeechToSpeech",
     "r4-gpu-stream": "s2slab.r4stream:StreamingSpeechToSpeech",
+    "r4-gpu-stream-sized": "s2slab.r4sized:SizedStreamingSpeechToSpeech",
 }
 
 def get(rung_id: str) -> Rung:

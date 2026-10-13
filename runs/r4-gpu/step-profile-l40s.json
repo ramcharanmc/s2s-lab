@@ -1,0 +1,512 @@
+{
+ "run": "M33: R4's Talker step, its size, three cache sizes and one turn's kernels, on 10 probe clips",
+ "commit": "a4502d2",
+ "machine": "Modal NVIDIA L40S, 610.57.04",
+ "versions": "torch 2.14.0+cu126, torchvision 0.29.0+cu126, transformers 5.17.0",
+ "load_ms": 49079.4,
+ "clips": [
+  "f01",
+  "f04",
+  "f07",
+  "f10",
+  "c01",
+  "c04",
+  "c07",
+  "c10",
+  "n01",
+  "n04"
+ ],
+ "sizes": [
+  6144,
+  2048,
+  1024
+ ],
+ "follow_up_ms": 8.0,
+ "talker_size": {
+  "layers": 24,
+  "hidden": 896,
+  "intermediate": 18944,
+  "heads": 12,
+  "kv_heads": 4,
+  "head_dim": 128,
+  "vocab": 8448,
+  "embedding": 3584,
+  "params": 1351360256,
+  "bytes_a_code": 2642165248,
+  "floor_ms": 3.058,
+  "kv_bytes": {
+   "6144": 301989888,
+   "2048": 100663296,
+   "1024": 50331648
+  },
+  "kv_floor_ms": {
+   "6144": 0.35,
+   "2048": 0.117,
+   "1024": 0.058
+  }
+ },
+ "timing": {
+  "6144": {
+   "name": "graph@6144",
+   "extra": {},
+   "warmup_ms": [
+    34714.7,
+    4500.3
+   ],
+   "turns": {
+    "f01": {
+     "talker_ms": 2758.8,
+     "thinker_ms": 607.1,
+     "n_codes": 269,
+     "ms_per_code": 10.26
+    },
+    "f04": {
+     "talker_ms": 2382.4,
+     "thinker_ms": 660.3,
+     "n_codes": 232,
+     "ms_per_code": 10.27
+    },
+    "f07": {
+     "talker_ms": 3279.1,
+     "thinker_ms": 688.3,
+     "n_codes": 320,
+     "ms_per_code": 10.25
+    },
+    "f10": {
+     "talker_ms": 3317.6,
+     "thinker_ms": 570.7,
+     "n_codes": 324,
+     "ms_per_code": 10.24
+    },
+    "c01": {
+     "talker_ms": 2423.3,
+     "thinker_ms": 505.4,
+     "n_codes": 235,
+     "ms_per_code": 10.31
+    },
+    "c04": {
+     "talker_ms": 4981.3,
+     "thinker_ms": 1092.1,
+     "n_codes": 487,
+     "ms_per_code": 10.23
+    },
+    "c07": {
+     "talker_ms": 2514.5,
+     "thinker_ms": 510.8,
+     "n_codes": 245,
+     "ms_per_code": 10.26
+    },
+    "c10": {
+     "talker_ms": 3444.3,
+     "thinker_ms": 700.2,
+     "n_codes": 336,
+     "ms_per_code": 10.25
+    },
+    "n01": {
+     "talker_ms": 5130.4,
+     "thinker_ms": 1030.8,
+     "n_codes": 502,
+     "ms_per_code": 10.22
+    },
+    "n04": {
+     "talker_ms": 3342.1,
+     "thinker_ms": 750.7,
+     "n_codes": 325,
+     "ms_per_code": 10.28
+    }
+   },
+   "error": null,
+   "graph_breaks": 0
+  },
+  "2048": {
+   "name": "graph@2048",
+   "extra": {},
+   "warmup_ms": [
+    40460.8,
+    3499.5
+   ],
+   "turns": {
+    "f01": {
+     "talker_ms": 1778.7,
+     "thinker_ms": 617.9,
+     "n_codes": 269,
+     "ms_per_code": 6.61,
+     "identical": true,
+     "first_difference": null
+    },
+    "f04": {
+     "talker_ms": 1538.3,
+     "thinker_ms": 502.0,
+     "n_codes": 232,
+     "ms_per_code": 6.63,
+     "identical": true,
+     "first_difference": null
+    },
+    "f07": {
+     "talker_ms": 2111.7,
+     "thinker_ms": 649.9,
+     "n_codes": 320,
+     "ms_per_code": 6.6,
+     "identical": true,
+     "first_difference": null
+    },
+    "f10": {
+     "talker_ms": 2146.1,
+     "thinker_ms": 655.2,
+     "n_codes": 324,
+     "ms_per_code": 6.62,
+     "identical": true,
+     "first_difference": null
+    },
+    "c01": {
+     "talker_ms": 1556.7,
+     "thinker_ms": 493.9,
+     "n_codes": 235,
+     "ms_per_code": 6.62,
+     "identical": true,
+     "first_difference": null
+    },
+    "c04": {
+     "talker_ms": 3201.4,
+     "thinker_ms": 954.6,
+     "n_codes": 487,
+     "ms_per_code": 6.57,
+     "identical": true,
+     "first_difference": null
+    },
+    "c07": {
+     "talker_ms": 1622.5,
+     "thinker_ms": 497.3,
+     "n_codes": 245,
+     "ms_per_code": 6.62,
+     "identical": true,
+     "first_difference": null
+    },
+    "c10": {
+     "talker_ms": 2221.2,
+     "thinker_ms": 678.4,
+     "n_codes": 336,
+     "ms_per_code": 6.61,
+     "identical": true,
+     "first_difference": null
+    },
+    "n01": {
+     "talker_ms": 3302.4,
+     "thinker_ms": 1073.7,
+     "n_codes": 502,
+     "ms_per_code": 6.58,
+     "identical": true,
+     "first_difference": null
+    },
+    "n04": {
+     "talker_ms": 2159.2,
+     "thinker_ms": 765.8,
+     "n_codes": 325,
+     "ms_per_code": 6.64,
+     "identical": true,
+     "first_difference": null
+    }
+   },
+   "error": null,
+   "graph_breaks": 0
+  },
+  "1024": {
+   "name": "graph@1024",
+   "extra": {},
+   "warmup_ms": [
+    36982.4,
+    3237.9
+   ],
+   "turns": {},
+   "error": "ValueError: a prompt of 1422 places does not fit a cache of 1024"
+  }
+ },
+ "turns_filled": {
+  "6144": [
+   {
+    "prompt": 246,
+    "codes": 270,
+    "cut": false
+   },
+   {
+    "prompt": 274,
+    "codes": 233,
+    "cut": false
+   },
+   {
+    "prompt": 239,
+    "codes": 321,
+    "cut": false
+   },
+   {
+    "prompt": 253,
+    "codes": 325,
+    "cut": false
+   },
+   {
+    "prompt": 304,
+    "codes": 236,
+    "cut": false
+   },
+   {
+    "prompt": 290,
+    "codes": 488,
+    "cut": false
+   },
+   {
+    "prompt": 239,
+    "codes": 246,
+    "cut": false
+   },
+   {
+    "prompt": 242,
+    "codes": 337,
+    "cut": false
+   },
+   {
+    "prompt": 291,
+    "codes": 503,
+    "cut": false
+   },
+   {
+    "prompt": 1422,
+    "codes": 326,
+    "cut": false
+   }
+  ],
+  "2048": [
+   {
+    "prompt": 246,
+    "codes": 270,
+    "cut": false
+   },
+   {
+    "prompt": 274,
+    "codes": 233,
+    "cut": false
+   },
+   {
+    "prompt": 239,
+    "codes": 321,
+    "cut": false
+   },
+   {
+    "prompt": 253,
+    "codes": 325,
+    "cut": false
+   },
+   {
+    "prompt": 304,
+    "codes": 236,
+    "cut": false
+   },
+   {
+    "prompt": 290,
+    "codes": 488,
+    "cut": false
+   },
+   {
+    "prompt": 239,
+    "codes": 246,
+    "cut": false
+   },
+   {
+    "prompt": 242,
+    "codes": 337,
+    "cut": false
+   },
+   {
+    "prompt": 291,
+    "codes": 503,
+    "cut": false
+   },
+   {
+    "prompt": 1422,
+    "codes": 326,
+    "cut": false
+   }
+  ],
+  "1024": [
+   {
+    "prompt": 246,
+    "codes": 270,
+    "cut": false
+   },
+   {
+    "prompt": 246,
+    "codes": 270,
+    "cut": false
+   },
+   {
+    "prompt": 274,
+    "codes": 233,
+    "cut": false
+   },
+   {
+    "prompt": 239,
+    "codes": 321,
+    "cut": false
+   },
+   {
+    "prompt": 253,
+    "codes": 325,
+    "cut": false
+   },
+   {
+    "prompt": 304,
+    "codes": 236,
+    "cut": false
+   },
+   {
+    "prompt": 290,
+    "codes": 488,
+    "cut": false
+   },
+   {
+    "prompt": 239,
+    "codes": 246,
+    "cut": false
+   },
+   {
+    "prompt": 242,
+    "codes": 337,
+    "cut": false
+   },
+   {
+    "prompt": 291,
+    "codes": 503,
+    "cut": false
+   }
+  ]
+ },
+ "breakdown": {
+  "6144": {
+   "size": 6144,
+   "codes": 278,
+   "device": "cuda",
+   "ms_a_code": {
+    "attention": 5.097,
+    "matmul": 4.146,
+    "other": 2.451,
+    "sampling": 0.073
+   },
+   "total_ms_a_code": 11.767,
+   "top": [
+    {
+     "name": "fmha_cutlassF_bf16_aligned_64x128_rf_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::bfloat16_t, cutlass::arch::Sm",
+     "kind": "attention",
+     "ms_a_code": 5.096
+    },
+    {
+     "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, floa",
+     "kind": "matmul",
+     "ms_a_code": 2.405
+    },
+    {
+     "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, float, float, float, false, true, ",
+     "kind": "matmul",
+     "ms_a_code": 1.241
+    },
+    {
+     "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::T",
+     "kind": "other",
+     "ms_a_code": 0.918
+    },
+    {
+     "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, floa",
+     "kind": "matmul",
+     "ms_a_code": 0.443
+    },
+    {
+     "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::BFloat16, ",
+     "kind": "other",
+     "ms_a_code": 0.181
+    },
+    {
+     "name": "void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctor_add<c10::BFloat16>, std::array<char*, 3ul>, fa",
+     "kind": "other",
+     "ms_a_code": 0.114
+    },
+    {
+     "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::MeanOps<float, float, float, float>, unsi",
+     "kind": "other",
+     "ms_a_code": 0.108
+    },
+    {
+     "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}:",
+     "kind": "other",
+     "ms_a_code": 0.107
+    },
+    {
+     "name": "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<2> >(at::Ten",
+     "kind": "other",
+     "ms_a_code": 0.104
+    }
+   ]
+  },
+  "2048": {
+   "size": 2048,
+   "codes": 278,
+   "device": "cuda",
+   "ms_a_code": {
+    "matmul": 4.144,
+    "other": 1.9,
+    "attention": 1.747,
+    "sampling": 0.073
+   },
+   "total_ms_a_code": 7.864,
+   "top": [
+    {
+     "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, floa",
+     "kind": "matmul",
+     "ms_a_code": 2.406
+    },
+    {
+     "name": "fmha_cutlassF_bf16_aligned_64x128_rf_sm80(PyTorchMemEffAttention::AttentionKernel<cutlass::bfloat16_t, cutlass::arch::Sm",
+     "kind": "attention",
+     "ms_a_code": 1.746
+    },
+    {
+     "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, float, float, float, false, true, ",
+     "kind": "matmul",
+     "ms_a_code": 1.238
+    },
+    {
+     "name": "std::enable_if<!(false), void>::type internal::gemvx::kernel<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, floa",
+     "kind": "matmul",
+     "ms_a_code": 0.443
+    },
+    {
+     "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::T",
+     "kind": "other",
+     "ms_a_code": 0.362
+    },
+    {
+     "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<c10::BFloat16, ",
+     "kind": "other",
+     "ms_a_code": 0.183
+    },
+    {
+     "name": "void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctor_add<c10::BFloat16>, std::array<char*, 3ul>, fa",
+     "kind": "other",
+     "ms_a_code": 0.115
+    },
+    {
+     "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::MeanOps<float, float, float, float>, unsi",
+     "kind": "other",
+     "ms_a_code": 0.109
+    },
+    {
+     "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}:",
+     "kind": "other",
+     "ms_a_code": 0.108
+    },
+    {
+     "name": "void at::native::index_elementwise_kernel<128, 4, at::native::index_copy_kernel_impl<at::native::OpaqueType<2> >(at::Ten",
+     "kind": "other",
+     "ms_a_code": 0.103
+    }
+   ]
+  }
+ }
+}

@@ -80,13 +80,17 @@ class FastOmni:
         if self.base.model is None:
             self.base.load()
         talker = self.base.model.talker
-        if self.cache_factory is None:
-            from transformers import StaticCache
-            self.cache = StaticCache(config=talker.config, max_cache_len=MAX_CACHE)
-        else:
-            self.cache = self.cache_factory(talker.config, MAX_CACHE)
+        self.cache = self.make_cache(MAX_CACHE)
         keep_2d_mask(talker)
         compile_layers(talker, self.compile_fn or _torch_compile)
+
+    def make_cache(self, places: int):
+        """A static cache of the Talker's, this many places (M34 keeps a smaller one beside MAX_CACHE's)."""
+        talker = self.base.model.talker
+        if self.cache_factory is None:
+            from transformers import StaticCache
+            return StaticCache(config=talker.config, max_cache_len=places)
+        return self.cache_factory(talker.config, places)
 
     def compile_dit(self, lengths) -> None:
         """Run the DiT compiled on windows of these lengths (in codes), eager on any other."""
