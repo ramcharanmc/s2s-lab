@@ -68,7 +68,7 @@ def test_the_gpu_is_reached_only_with_the_code_and_inside_the_budget(app, monkey
     assert status["rungs"] == list(app.OFFERED) and status["about"] == app.ABOUT and status["wake_s"] is None
     assert client.get("/").status_code == 200 and len(client.get("/api/measured").json()["rungs"]) == 8
     assert [f["registration"] for f in client.get("/api/measured").json()["findings"]] == ["PR-003", "PR-010", "PR-009", "PR-012",
-                                                                                          "PR-013", "PR-014", "PR-015"]
+                                                                                          "PR-013", "PR-014", "PR-015", "PR-016"]
     send = lambda code, rungs="": client.post("/api/live", files={"audio": ("turn", wav(), "audio/wav")}, data={"rungs": rungs},
                                               headers={"X-Access-Code": code} if code else {})
     assert send(None).status_code == 401 and send("wrong").status_code == 401 and calls == []      # the T4 stays asleep
@@ -103,15 +103,15 @@ def test_a_t4_that_does_not_answer_is_a_sentence_on_its_cards_and_is_still_charg
 def test_r3_r4_and_r5_are_on_machines_of_their_own_that_hold_their_models(app):
     from s2slab import r5
     assert {name: o["offered"] for name, o in app.OTHERS.items()} == {"a10": {"R3": "r3-gpu"},
-                                                                      "l40s": {"R4": "r4-gpu-fast", "R4 streamed": "r4-gpu-stream"},
+                                                                      "l40s": {"R4": "r4-gpu-fast", "R4 streamed": "r4-gpu-stream-sized"},
                                                                       "moshi": {"R5": "r5-moshi"}}
     assert list(app.MODELS_MOSHI) == [r5.MOSHI_REPO] and "r5-moshi" in r5.MODELS and app.OTHERS["moshi"]["rate"] == 1.10
     assert (app.OTHERS["a10"]["rate"], app.OTHERS["l40s"]["rate"], app.WINDOW_BIG_S) == (1.10, 1.95, 120)
-    r3, r4, r4s = get("r3-gpu"), get("r4-gpu-fast"), get("r4-gpu-stream")
+    r3, r4, r4s = get("r3-gpu"), get("r4-gpu-fast"), get("r4-gpu-stream-sized")
     assert r3.llm.model_name in app.MODELS_A10 and f"voices/{r3.tts.voice}.pt" in app.MODELS_A10["hexgrad/Kokoro-82M"]
     assert r4.model.model_name in app.MODELS_L40S and r4s.model.model_name in app.MODELS_L40S
     assert set(app.ABOUT) == set(app.OFFERED) - {"R0", "R1"} | {"R3", "R4", "R4 streamed", "R5"} and "no transcript" in app.ABOUT["R3"]
-    assert "3.3 s instead of 6.8" in app.ABOUT["R4 streamed"] and "1.03" in app.ABOUT["R4"]
+    assert "2.6 s" in app.ABOUT["R4 streamed"] and "PR-016" in app.ABOUT["R4 streamed"] and "1.03" in app.ABOUT["R4"]
     assert "may describe you" in app.ABOUT["R3"] and "nothing here checks" in app.ABOUT["R3"]
 
 

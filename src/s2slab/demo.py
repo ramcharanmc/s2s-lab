@@ -47,7 +47,7 @@ SILENT_PEAK = 1e-3
 CODE_ENV = "DEMO_ACCESS_CODE"
 MIN_CODE_LEN = 10                   # a shorter code is treated as none: it could be found by trying
 WRONG_CODES, LOCK_S = 30, 300.0     # this many wrong codes inside LOCK_S close the live part for LOCK_S (M32a)
-STREAMING_RUNGS = ("r4-gpu-stream",)  # rungs whose pieces the page can play as they are made (M32a)
+STREAMING_RUNGS = ("r4-gpu-stream", "r4-gpu-stream-sized")  # rungs whose pieces the page can play as they are made (M32a)
 NOT_LOADED = "This rung could not be loaded on this machine."
 NOT_ANSWERED = "This rung failed on this recording."
 NO_MACHINE = "The machine this rung runs on did not answer."
@@ -61,13 +61,15 @@ MEASURED = (
     ("R2", "two-tier: a slow recognizer (large-v3-turbo) drives the reply", "runs/r2-gpu-turbo/evalset-modal-t4-pr004.json"),
     ("R3", "speech-LLM: Qwen2-Audio hears the turn, no transcript in the loop", "runs/r3-gpu/evalset-modal-a10.json"),
     ("R4", "speech-to-speech, half duplex: Qwen2.5-Omni speaks the reply itself", "runs/r4-gpu/evalset-modal-l40s.json"),
-    ("R4 streamed", "the same model, its reply decoded a block at a time and handed out, its first half second held; "
-                    "in its own run, beside it, R4 took 6.8 s to first sound (PR-015)", "runs/r4-gpu/pr015.json"),
+    ("R4 streamed", "the same model, its reply decoded a block at a time and handed out, its first half second held, its "
+                    "Talker on a cache sized to the turn; in its own run, beside it, R4 streamed as first built took 3.3 s "
+                    "to first sound (PR-016), and R4 6.8 in PR-015's", "runs/r4-gpu/pr016.json"),
     ("R5 Moshi", "full duplex: no turns, the model decides when to talk", "runs/r5-moshi/evalset-modal-a10.json"),
     ("R5 PersonaPlex", "full duplex, with a role and a voice prompt before every call", "runs/r5-personaplex/evalset-modal-a10.json"),
 )
 CLIPS = ("clean-07", "clean-11", "clean-23", "clean-37")      # LibriSpeech test-clean, CC BY 4.0; set by pick_clips()
-FROM_RUNG = {"runs/r4-gpu/pr015.json": "r4-gpu-stream"}        # a run file of several rungs: the one its row shows
+FROM_RUNG = {"runs/r4-gpu/pr015.json": "r4-gpu-stream",        # a run file of several rungs: the one its row shows
+             "runs/r4-gpu/pr016.json": "r4-gpu-stream-sized"}
 # The verbatim panel: PR-011's run, small.en beside small.en + FT-2's LoRA, on two clips of the disfluent cohort.
 VERBATIM_RUN = "runs/ft2/pr011.json"
 VERBATIM_CLIPS = ("disfluent-29", "disfluent-42")             # DisfluencySpeech test split, Apache-2.0; set by pick_verbatim()
@@ -400,7 +402,7 @@ def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS
 # One panel a registration, from its committed run file. No audio: the barge-in set is the
 # author's own voice, and the renders are synthetic speech kept out of git.
 FINDINGS = ("runs/bargein/pr003-70ms.json", "runs/ft1/pr010.json", "runs/severity/pr009.json", "runs/ft3/pr012.json",
-            "runs/m26/pr013.json", "runs/turn-taking/pr014-dev-vap.json", "runs/r4-gpu/pr015.json")
+            "runs/m26/pr013.json", "runs/turn-taking/pr014-dev-vap.json", "runs/r4-gpu/pr015.json", "runs/r4-gpu/pr016.json")
 BARGEIN_POLICIES = (("B0_duration_200ms", "stop after 200 ms of caller sound"), ("B0_duration_400ms", "after 400 ms"),
                     ("B0_duration_800ms", "after 800 ms"), ("B0_duration_1500ms", "after 1500 ms"),
                     ("B1_words", "stop when the recognizer has written words"), ("B2_speechlike", "stop when the words are not a backchannel"))
@@ -500,11 +502,35 @@ def _pr015(run: dict, rel: str) -> dict:
             "commit": run.get("commit"), "file": rel}
 
 
+def _pr016(run: dict, rel: str) -> dict:
+    from .pr016 import SIZED, STREAM, _wer, criteria
+    c = criteria(run)
+    d, R = c["describe"], run["rungs"]
+    fs, total = d["first_sound"], d["total"]
+    turns = lambda name: list(R[name]["turns"].values())                       # noqa: E731
+    rows = [["first sound, the median: on the sized cache against the stream as first built",
+             f"{fs['sized'][0]:,.0f} ms against {fs['stream'][0]:,.0f} ({fs['sized'][0] / fs['stream'][0]:.2f} of it)"],
+            ["first sound, p90", f"{fs['sized'][1]:,.0f} ms against {fs['stream'][1]:,.0f} ({fs['sized'][1] / fs['stream'][1]:.2f})"],
+            ["turns where playback ran dry", f"{len(d['stalls'])} of {d['turns']}"],
+            ["the words, as Whisper hears the reply", f"{_wer(turns(SIZED)):.1f}% wrong against {_wer(turns(STREAM)):.1f}%"],
+            ["the whole reply, the median", f"{total['sized'][0]:,.0f} ms against {total['stream'][0]:,.0f} "
+                                            f"({total['sized'][0] / total['stream'][0]:.2f} times)"],
+            ["the cache each turn took", ", ".join(f"{n} places on {k} turns" for n, k in sorted(d["places"].items()))]]
+    return {"registration": "PR-016", "title": "R4 streamed, on a cache sized to the turn", "supported": c["verdict"].startswith("SUPPORTED"),
+            "question": "Does a Talker cache sized to the turn let the caller hear R4 streamed's reply sooner still, without "
+                        "stalling, a longer turn or other words?",
+            "rows": rows,
+            "note": "The same model, words, voice and codes: half of each Talker step had been attention over the empty places "
+                    "of a cache sized for a minute-long turn. Times on the server, the three in one container, 200 clips.",
+            "commit": run.get("commit"), "file": rel}
+
+
 def findings(root, files=FINDINGS) -> list[dict]:
     """The panels of what else was registered and run, each from its run file; a file that is
     not there is left out."""
     make = {"runs/bargein/pr003-70ms.json": _bargein, "runs/ft1/pr010.json": _ft1, "runs/m26/pr013.json": _quant,
             "runs/turn-taking/pr014-dev-vap.json": _pr014, "runs/r4-gpu/pr015.json": _pr015,
+            "runs/r4-gpu/pr016.json": _pr016,
             "runs/severity/pr009.json": lambda run, rel: _severity(
                 run, rel, "PR-009", "A severity score, put onto speech",
                 "Does a severity score render onto neutral speech as the mapping says: lower, slower, flatter, with longer pauses?",

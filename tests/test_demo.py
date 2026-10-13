@@ -599,10 +599,11 @@ def test_the_other_findings_are_read_from_their_committed_run_files_as_they_came
     import pathlib
     root = pathlib.Path(__file__).resolve().parents[1]
     by = {f["registration"]: f for f in demo.findings(root)}
-    assert list(by) == ["PR-003", "PR-010", "PR-009", "PR-012", "PR-013", "PR-014", "PR-015"]
+    assert list(by) == ["PR-003", "PR-010", "PR-009", "PR-012", "PR-013", "PR-014", "PR-015", "PR-016"]
     assert [f["file"] for f in by.values()] == list(demo.FINDINGS)
     assert {k: f["supported"] for k, f in by.items()} == {"PR-003": True, "PR-010": False, "PR-009": False, "PR-012": False,
-                                                         "PR-013": True, "PR-014": False, "PR-015": True}
+                                                         "PR-013": True, "PR-014": False, "PR-015": True,
+                                                         "PR-016": True}
     assert by["PR-014"]["status"] == "not run" and "status" not in by["PR-013"]
     assert dict(by["PR-014"]["rows"])["setting 0.2"] == "16 of 30 turns cut off, a median wait of 1,480 ms"
     assert dict(by["PR-014"]["rows"])["the rule: the fewest cut-offs with a median wait of at most 1,000 ms"] == "no setting met it"
@@ -610,6 +611,10 @@ def test_the_other_findings_are_read_from_their_committed_run_files_as_they_came
     assert s["first sound, the median: streamed against R4"] == "3,331 ms against 6,806 (0.49 of R4's)"
     assert s["first sound, p90"] == "3,728 ms against 11,784 (0.32)" and s["turns where playback ran dry"] == "0 of 200"
     assert s["the words, as Whisper hears the reply"] == "1.1% wrong against 1.3%" and by["PR-015"]["commit"] == "e2a4b4e"
+    z = dict(by["PR-016"]["rows"])
+    assert z["first sound, the median: on the sized cache against the stream as first built"] == "2,622 ms against 3,333 (0.79 of it)"
+    assert z["turns where playback ran dry"] == "0 of 200" and z["the cache each turn took"] == "2048 places on 200 turns"
+    assert by["PR-016"]["commit"] == "d65274d"
     assert s["the whole reply, the median"] == "7,530 ms against 6,602 (1.14 times)" and s["R4 with its Talker compiled, not streamed"].startswith("7,010 ms")
     assert dict(by["PR-003"]["rows"])["after 1500 ms"] == "wrong on 8 of 20"
     assert dict(by["PR-003"]["rows"])["stop when the words are not a backchannel"] == "wrong on 1 of 20" and "not played" in by["PR-003"]["note"]
@@ -764,13 +769,13 @@ def test_the_page_renders_behind_the_door_and_charges_the_budget(tree, monkeypat
                           headers={"X-Access-Code": "open sesame"}).status_code == 404
 
 
-def test_the_measured_part_shows_r4_streamed_from_the_pr015_run():
+def test_the_measured_part_shows_r4_streamed_from_the_pr016_run():
     import pathlib
     root = pathlib.Path(__file__).resolve().parents[1]
     rows = {r["label"]: r for r in demo.measured(root)["rungs"]}
     s = rows["R4 streamed"]
-    assert s["file"] == "runs/r4-gpu/pr015.json" and s["turns_in_run"] == 200 and s["commit"] == "e2a4b4e"
-    assert s["kind"] == "turn" and 2500 < s["first_audio_p50_ms"] < 4000                 # the stream, not R4 beside it
+    assert s["file"] == "runs/r4-gpu/pr016.json" and s["turns_in_run"] == 200 and s["commit"] == "d65274d"
+    assert s["kind"] == "turn" and 1800 < s["first_audio_p50_ms"] < 3000                 # the sized stream, not the stream beside it
     t = s["turns"][0]
     assert t["clip"] == demo.CLIPS[0] and t["transcript"] is None and t["stages_ms"] == {} and t["reply_text"]
 
@@ -779,9 +784,11 @@ def test_the_l40s_pair_makes_both_rungs_on_one_model():
     from s2slab.r4stream import FastOmni, FastSpeechToSpeech, StreamingSpeechToSpeech, pair
     model = FastOmni()
     get = pair(model)
-    fast, stream = get("r4-gpu-fast"), get("r4-gpu-stream")
+    from s2slab.r4sized import SizedStreamingSpeechToSpeech
+    fast, stream, sized = get("r4-gpu-fast"), get("r4-gpu-stream"), get("r4-gpu-stream-sized")
     assert isinstance(fast, FastSpeechToSpeech) and isinstance(stream, StreamingSpeechToSpeech)
-    assert fast.model is model and stream.model is model                               # one set of weights
+    assert isinstance(sized, SizedStreamingSpeechToSpeech) and sized.streams
+    assert fast.model is model and stream.model is model and sized.model is model      # one set of weights
     with pytest.raises(KeyError, match="pair"):
         get("r4-gpu")
 
