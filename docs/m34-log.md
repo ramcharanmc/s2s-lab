@@ -9,7 +9,9 @@ Kept as events happen. The earlier logs: `docs/m33-log.md` and those it names.
 | 2 | 10-13 | the new rung's tests, laptop, the tiny Talker and the fake DiT | a turn takes the smallest cache that leaves it room, and writes generate's codes; a cache too small cuts the reply and says so; the sized stream writes today's stream's codes and the same audio, on the 2048-place cache; each cache written and its step captured at load | `r4sized.py` (`SizedTalker`, `r4-gpu-stream-sized`), `FastOmni.make_cache`, `r4sizeddev.py`, `::sizeddev`, tests | deb2294 |
 | 3 | 10-13 | `modal run modal_app/r4_bench.py::sizeddev`, the author, L40S (driver 610.57.04), 30 probe clips, \$0.505 | both streams' codes `r4-gpu-fast`'s on 30 of 30, the same texts and words (2 errors in 634 each); the sized stream on 2048 places for 29 turns, 6144 for the 53 s clip, no reply cut; at a 0.5 s buffer the sized stream's first sound 2,684 ms (p50), 3,114 (p90), no stall; the stream's 3,433 and 3,816, 4 of 30 stalled; total 5,820 against 7,734 | — | — |
 | 4 | 10-13 | — | the start rule applied: 0.5 s for the sized stream (0 and 0.25 s stalled every turn; 1 s the same as 0.5); none for the stream on this host, which PR-016 compares as frozen | — | — |
-| 5 | 10-13 | — | PR-016 registered before any eval-set turn of the sized stream: first sound p50 ≤ 0.90 and p90 ≤ 0.92 of the stream's, total ≤ 1.00, PR-015's stall tolerance, words within a point | `pr016.py`, `::pr016`, `r4sizeddev.run` takes a frozen start buffer, tests | this commit |
+| 5 | 10-13 | — | PR-016 registered before any eval-set turn of the sized stream: first sound p50 ≤ 0.90 and p90 ≤ 0.92 of the stream's, total ≤ 1.00, PR-015's stall tolerance, words within a point | `pr016.py`, `::pr016`, `r4sizeddev.run` takes a frozen start buffer, tests | d65274d |
+| 6 | 10-13 | `modal run modal_app/r4_bench.py::pr016 --confirm PR-016`, the author, at `d65274d`, L40S (driver 580.95.05), 200 eval clips, \$2.468 | **PR-016 supported**: first sound p50 0.787 of the stream's [0.781, 0.790], p90 0.809 [0.803, 0.816], total 0.725; no stall; the same texts and codes on 200 of 200, the same words; 2,622 ms against 3,333 at p50; every turn on the 2048-place cache | — | — |
+| 7 | 10-13 | — | PR-016's results recorded, verbatim | — | this commit |
 
 ## 1. The design
 
@@ -77,3 +79,18 @@ p50 ≤ 0.90 and p90 ≤ 0.92 of the stream's (upper ends of paired bootstrap in
 most 20 turns stalled and 10 for more than 200 ms, Whisper's word error rate within a point. Then the run,
 once: `modal run modal_app/r4_bench.py::pr016 --confirm PR-016` (about \$2.60).
 
+## 4. PR-016's run (row 6)
+
+Once, from the registration's clean commit, on PR-015's host: **supported**, all five criteria with the
+upper ends of their intervals well inside the bars.
+
+| | the sized stream | the stream (PR-015's) | `r4-gpu-fast` |
+|---|---:|---:|---:|
+| first sound p50 / p90 | **2,622 / 3,005 ms** | 3,333 / 3,716 | 6,939 / 12,472 |
+| total p50 / p90 | 5,484 / 9,285 | 7,562 / 12,759 | 6,729 / 12,272 |
+| stalled turns | 0 of 200 | 0 of 200 | - |
+| Whisper WER | 1.1% | 1.1% | |
+
+The same reply: texts and codes the same on 200 of 200. Every turn took the 2048-place cache (the
+longest prompt 512 places, the longest reply 899 codes). On the slower host of development the stream
+stalled 4 of 30 turns at 0.5 s; here none, as predicted. Next, M34's step 4: the demo.

@@ -3705,4 +3705,51 @@ sound by cohort; the stream's codes against `r4-gpu-fast`'s; the run's cost.
 
 ### Results
 
-*Not yet run.*
+**Run once**, by the author, 2026-10-13: `modal run modal_app/r4_bench.py::pr016 --confirm PR-016` at
+`d65274d` (this entry's commit, clean), one L40S, 4,549 s in the function, \$2.468.
+`runs/r4-gpu/pr016.json`. The analysis's output, verbatim:
+
+```
+PR-016: r4-gpu-stream-sized (caches of 2048, 6144 places, 1024 codes of room) against r4-gpu-stream, both first block 24 codes, then 96, start buffer 0.5 s; r4-gpu-fast beside them
+  commit d65274d · Modal NVIDIA L40S, 580.95.05 · torch 2.14.0+cu126, torchvision 0.29.0+cu126, transformers 5.17.0
+  paired bootstrap: 10000 resamples of 200 clips, seed 0
+
+V1 same text         PASS  the sized stream's reply text is the stream's on 200 of 200; needs >= 190
+V2 same codes        PASS  the sized stream's codes are r4-gpu-fast's on 200 of 200; needs >= 190
+V3 no reply cut      PASS  0 sized replies cut at their cache's end; needs <= 2
+S1 median            PASS  first-sound p50 ratio 0.787 [95% CI 0.781, 0.790]; needs upper end <= 0.9
+S2 tail              PASS  first-sound p90 ratio 0.809 [95% CI 0.803, 0.816]; needs upper end <= 0.92
+S3 speed guardrail   PASS  total p50 ratio 0.725 [95% CI 0.723, 0.743]; needs upper end <= 1.0
+S4 stall guardrail   PASS  0 turns stall (max 20), 0 for more than 200 ms (max 10)
+S5 words             PASS  Whisper WER on the replies 1.1% against the stream's 1.1%; needs <= the stream's + 1
+
+SUPPORTED: all five criteria hold
+
+Descriptive, not criteria:
+  ms, p50 / p90          sized stream     the stream   r4-gpu-fast
+  first sound            2622 /  3005    3333 /  3716    6939 / 12472
+  total                  5484 /  9285    7562 / 12759    6729 / 12272
+  reply s p50                    7.47            7.47            7.47
+  first-sound p50 by cohort, sized vs stream: clean 2614 vs 3332, accented 2581 vs 3281, disfluent 2633 vs 3344, slow 2631 vs 3338
+  the sized stream's caches: 2048 places on 200 turns
+  stalls, sized stream: 0 turns
+  stalls, the stream: 0 turns
+  the stream's codes are r4-gpu-fast's on 200 of 200
+```
+
+**SUPPORTED.** All three validity requirements and all five criteria hold.
+
+**Exploratory, not criteria:**
+
+- **The same reply, sooner.** The texts and the codes were the same on 200 of 200 turns, and Whisper
+  heard the same 1.1%: the sized cache changed when the reply was heard, not what it said.
+- **Every turn took the small cache.** The longest prompt took 512 places and the longest reply 899
+  codes, so 2048 places held every turn with room to spare; the 6144-place cache was never used.
+- **The same gain in every cohort**: the sized stream's first sound 2.58 to 2.63 s, the stream's 3.28 to
+  3.34.
+- **The stream did not stall on this host** (driver 580.95.05, PR-015's): the four stalls of development
+  came on the slower host, as predicted.
+- **The Thinker still sets the start.** The sized stream's first sound grows with the reply's length
+  (r = 0.99 against its words), within 1.8 to 3.4 s.
+- **Against R4 itself**, across two runs on the same eval set and host (descriptive only): R4's first
+  sound was 6,806 ms at p50 in PR-015, the sized stream's here 2,622, about 0.39 of it.

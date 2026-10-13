@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-13, at commit `deb2294`.
+Last updated 2026-10-13, at commit `d65274d`.
 
 ## Chosen next: M34, R4 streamed on a right-sized cache
 
@@ -11,7 +11,9 @@ M33's follow-up, the author's go: a new rung, `r4-gpu-stream-sized`, our capture
 when the turn leaves room, else 6144; its start rule chosen on the probe clips by a rule written first; then
 PR-016, registered before any eval run; then the demo (`docs/m34-log.md`). Development (`deb2294`, \$0.505): at
 0.5 s the sized stream's first sound 2,684 ms against the stream's 3,433, no stall against 4 of 30, the same
-codes. **PR-016 registered**; its one run is next (`modal run modal_app/r4_bench.py::pr016 --confirm PR-016`).
+codes. **PR-016 supported** (`d65274d`, \$2.468): on the eval set the sized stream's first sound 2,622 ms against
+3,333 (p50), 3,005 against 3,716 (p90), no stall, the same codes and words. Next, step 4: the new rung under
+"R4 streamed" in the demo, a `modal serve` check and `modal deploy`, the author's.
 
 ## Done: M33, where a Talker step's time goes
 
