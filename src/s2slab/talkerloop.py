@@ -223,6 +223,8 @@ class TalkerLoop:
         if dev.type != "cuda":                           # no graph off CUDA: the same step, run eagerly
             self._g, self._replay_fn = "eager", self._static_step
             return
+        if not getattr(self.cache.layers[0], "is_initialized", True):   # its tensors are made on its first write
+            raise RuntimeError("TalkerLoop captures its step on a cache the Talker has written to: run one turn first")
         ids = [dev.index if dev.index is not None else torch.cuda.current_device()]
         with torch.random.fork_rng(devices=ids):
             side = torch.cuda.Stream()

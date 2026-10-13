@@ -337,3 +337,11 @@ def test_the_l40s_app_has_the_loopspeed_entry_point():
     spec.loader.exec_module(mod)
     assert hasattr(mod.loop_speed, "remote") and hasattr(mod.loopspeed, "info")
     assert mod.LOOP_SPEED_PATH == ROOT / "runs" / "r4-gpu" / "loop-speed-l40s.json"
+
+
+def test_the_l40s_app_has_the_stepprofile_entry_point():
+    spec = importlib.util.spec_from_file_location("r4_bench", ROOT / "modal_app" / "r4_bench.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert hasattr(mod.step_profile, "remote") and hasattr(mod.stepprofile, "info")
+    assert mod.STEP_PROFILE_PATH == ROOT / "runs" / "r4-gpu" / "step-profile-l40s.json"

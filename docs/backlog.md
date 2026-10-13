@@ -5,7 +5,12 @@ are in `docs/preregistration.md` and `runs/`; this file is only the list of what
 
 Last updated 2026-10-12, at commit `250eeca`.
 
-## Chosen next: none
+## Chosen next: M33, where a Talker step's time goes
+
+A measurement, not a change: the Talker's size and the floor an L40S sets, one turn's kernels by kind, and its
+captured step on caches of 6144, 2048 and 1024 places. A follow-up (a right-sized cache in R4 streamed, then a
+registration) only if 2048 places bring a code to 8 ms or less with no turn cut, a line written before the run
+(`docs/m33-log.md`).
 
 ## Done: M32b, a Talker decode loop of our own, stopped by its rule
 

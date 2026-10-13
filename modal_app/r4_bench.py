@@ -13,8 +13,9 @@ R4 on Modal: the S2S rung on an L40S, with R3 beside it in the same container.
     modal run modal_app/r4_bench.py::streamdev                               M31, step 2: R4, r4-gpu-fast and the stream's settings, probe clips
     modal run modal_app/r4_bench.py::pr015 --confirm PR-015                  PR-015, once: the three on the eval set
     modal run modal_app/r4_bench.py::loopspeed                               M32b, step 2: the Talker, generate and our loop
-The file has seven entry points (main, pairs, profile, speed, streamdev, pr015, loopspeed), so Modal needs the
-one named: ::main, ::pairs, ::profile, ::speed, ::streamdev, ::pr015 or ::loopspeed.
+    modal run modal_app/r4_bench.py::stepprofile                             M33: where a Talker step's time goes
+The file has eight entry points (main, pairs, profile, speed, streamdev, pr015, loopspeed, stepprofile), so Modal
+needs the one named: ::main, ::pairs, ::profile, ::speed, ::streamdev, ::pr015, ::loopspeed or ::stepprofile.
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
@@ -48,6 +49,7 @@ PROFILE_PATH = REPO / "runs" / "r4-gpu" / "profile-l40s.json"   # M31, step 1 (s
 SPEED_PATH = REPO / "runs" / "r4-gpu" / "speed-l40s.json"       # M31, step 1b (s2slab.r4speed)
 STREAM_DEV_PATH = REPO / "runs" / "r4-gpu" / "stream-dev-l40s.json"   # M31, step 2 (s2slab.r4streamdev)
 LOOP_SPEED_PATH = REPO / "runs" / "r4-gpu" / "loop-speed-l40s.json"   # M32b, step 2 (s2slab.r4loopspeed)
+STEP_PROFILE_PATH = REPO / "runs" / "r4-gpu" / "step-profile-l40s.json"   # M33 (s2slab.r4stepprofile)
 
 
 def speed_path(tag: str = "") -> pathlib.Path:
@@ -264,6 +266,21 @@ def loop_speed() -> dict:
     return {"gpu": _gpu_name(), "versions": _versions(), "speed": blob, "seconds": time.perf_counter() - t0}
 
 
+# Three cache sizes, a turn each to make them, two warm-up turns and ten clips each (R4 ~5 s a turn on the loop),
+# then two profiled turns run eagerly: about 8 min after the load. The timeout leaves room.
+@app.function(gpu="L40S", timeout=45 * 60, scaledown_window=60)
+def step_profile() -> dict:
+    """M33: the Talker's size, its captured step on three cache sizes, and one turn's kernels (r4stepprofile.run)."""
+    import os
+    os.chdir("/root")
+    from s2slab.probes import TARGET_SR
+    from s2slab.r4stepprofile import run
+    from s2slab.rungs import probe_clips
+    t0 = time.perf_counter()
+    blob = run(probe_clips(), TARGET_SR)
+    return {"gpu": _gpu_name(), "versions": _versions(), "profile": blob, "seconds": time.perf_counter() - t0}
+
+
 def results_path(rung_id: str, limit: int = 0, tag: str = "") -> pathlib.Path:
     """runs/<rung>/evalset-modal-l40s[-tag].json for the real run (committed evidence);
     results/<rung>/...-limitN.json for a smoke test (ignored)."""
@@ -458,6 +475,30 @@ def loopspeed():
             "commit": commit, "machine": f"Modal {out['gpu']}", "versions": out["versions"], **out["speed"]}
     path = save(LOOP_SPEED_PATH, blob)
     print(format_loop_speed(blob))
+    print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {path.relative_to(REPO)}")
+    print(out["versions"])
+    print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
+
+
+@app.local_entrypoint()
+def stepprofile():
+    """Where R4's Talker step spends its time, and what its cache's size costs (M33). Saves
+    runs/r4-gpu/step-profile-l40s.json, never overwritten, and prints the tables and the follow-up rule's verdict."""
+    from s2slab.r4profile import save
+    from s2slab.r4stepprofile import format_step_profile
+    from s2slab.sidechannel import refuse_to_overwrite
+
+    refuse_to_overwrite(STEP_PROFILE_PATH)
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    t0 = time.time()
+    out = step_profile.remote()
+    wall = time.time() - t0
+    blob = {"run": "M33: R4's Talker step, its size, three cache sizes and one turn's kernels, on 10 probe clips",
+            "commit": commit, "machine": f"Modal {out['gpu']}", "versions": out["versions"], **out["profile"]}
+    path = save(STEP_PROFILE_PATH, blob)
+    print(format_step_profile(blob))
     print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {path.relative_to(REPO)}")
     print(out["versions"])
     print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
