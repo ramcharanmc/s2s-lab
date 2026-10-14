@@ -718,6 +718,15 @@ class Live:
                 self.unavailable[label] = self._failed(label, "loading", e, NOT_LOADED)["error"]
         return time.perf_counter() - t0
 
+    def load_report(self) -> list[str]:
+        """A line for each rung loaded: its seconds, and its phases when it timed them (load_phases, M35)."""
+        lines = []
+        for label, rung in self._loaded.items():
+            phases = getattr(rung, "load_phases", None) or {}
+            lines.append(f"  {label}: {self.load_ms[label] / 1000:.1f} s"
+                         + (" (" + ", ".join(f"{k} {v:.1f} s" for k, v in phases.items()) + ")" if phases else ""))
+        return lines
+
     def turns(self, labels, audio: np.ndarray) -> dict:
         """One recording through each rung named. "cold": this is the first recording answered
         since the process began, so whoever waited for it also waited for the machine."""

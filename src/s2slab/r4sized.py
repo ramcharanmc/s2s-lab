@@ -11,8 +11,10 @@ on a 2048-place one, the same codes on 10 of 10 probe clips. So:
                                     captured step a cache. A reply that reaches its cache's end is cut, and
                                     the turn says so (last["cut"]): counted in every run, never hidden.
     r4-gpu-stream-sized             R4 streamed (r4stream.StreamingSpeechToSpeech: the same blocks, DiT and
-                                    start buffer) with its codes from a SizedTalker. Its load writes each cache
-                                    once (our loop, eager) and captures each cache's step, so no turn pays it.
+                                    start buffer) with its codes from a SizedTalker. Its load writes the
+                                    caches of PREPARED once (our loop, eager) and captures their steps, so no
+                                    turn pays it; any other cache's step is captured on the first turn that
+                                    needs it (M35: the demo's turns, 15 s at most, never need 6144 places).
 
 ROOM_CODES is 1,024 codes, about 20 s of speech: twice the longest reply on the probe clips (503 codes,
 M33). A prompt of 1,024 places takes about 36 s of audio; a longer turn takes today's cache.
@@ -28,6 +30,7 @@ from .r0 import ASR_SR
 from .r4stream import MAX_CACHE, StreamingSpeechToSpeech
 
 SIZES = (2048, MAX_CACHE)           # a cache's places: the small one first
+PREPARED = (2048,)                  # the caches whose steps are captured at load (M35); the rest on first use
 ROOM_CODES = 1024                   # the codes a turn's cache must leave room for after its prompt
 
 
@@ -51,8 +54,9 @@ class SizedTalker:
         prompt = int(kw["inputs_embeds"].shape[1])
         n = self._force[0] if self._force else self.places_for(prompt)
         loop = self.loops[n]
-        if self._force and self._force[1] == "eager":     # writes the cache once: its tensors made
-            loop = TalkerLoop(self.talker, loop.cache)
+        unwritten = loop.graph and loop._g is None and not getattr(loop.cache.layers[0], "is_initialized", True)
+        if (self._force and self._force[1] == "eager") or unwritten:   # writes the cache once: its tensors made;
+            loop = TalkerLoop(self.talker, loop.cache)                 # its step captured on the next turn
         room = n - prompt
         if room < 1:
             raise ValueError(f"a prompt of {prompt} places does not fit a cache of {n}")
@@ -71,12 +75,12 @@ class SizedTalker:
         self.talker.generate = self.generate
         return (lambda: setattr(self.talker, "generate", inner)) if had else (lambda: delattr(self.talker, "generate"))
 
-    def prepare(self, speak) -> None:
-        """Each cache written once (our loop, eager), then its step captured, by throwaway turns through
-        `speak` (R4's call): so that no real turn pays either."""
+    def prepare(self, speak, sizes=None) -> None:
+        """Each cache of `sizes` (all, if None) written once (our loop, eager), then its step captured, by
+        throwaway turns through `speak` (R4's call): so that no real turn pays either."""
         undo = self.install()
         try:
-            for n in self.loops:
+            for n in (self.loops if sizes is None else sizes):
                 for mode in ("eager", "loop"):
                     self._force = (n, mode)
                     speak()
@@ -93,9 +97,9 @@ class SizedStreamingSpeechToSpeech(StreamingSpeechToSpeech):
                    "with its step captured as a CUDA graph, on 2048 places when the turn leaves room, else 6144; "
                    "the reply decoded a block at a time by the compiled DiT; bf16, CUDA")
 
-    def __init__(self, model=None, sizes=SIZES, room: int = ROOM_CODES, **stream):
+    def __init__(self, model=None, sizes=SIZES, room: int = ROOM_CODES, prepared=PREPARED, **stream):
         super().__init__(model, **stream)
-        self.sizes, self.room = tuple(sizes), room
+        self.sizes, self.room, self.prepared = tuple(sizes), room, tuple(prepared)
         self.sized: SizedTalker | None = None
         self.last_turn: dict | None = None
 
@@ -108,7 +112,9 @@ class SizedStreamingSpeechToSpeech(StreamingSpeechToSpeech):
         layers = (self.model.compile_fn or _torch_compile)(lambda **kw: type(m).forward(m, **kw), mode="default",
                                                            dynamic=False)
         self.sized = SizedTalker(talker, caches, layers=layers, room=self.room)
-        self.sized.prepare(lambda: self.model.speak(np.zeros(ASR_SR, dtype=np.float32), ASR_SR))
+        speak = lambda: self.model.speak(np.zeros(ASR_SR, dtype=np.float32), ASR_SR)        # noqa: E731
+        for n in self.prepared:
+            self._timed(f"{n}-place cache prepared", lambda n=n: self.sized.prepare(speak, sizes=(n,)))
 
     def _respond(self, audio, sr, sink):
         undo = self.sized.install()

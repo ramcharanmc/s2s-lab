@@ -232,6 +232,7 @@ def _load_rungs(self, offered: dict, shared_r4: bool = False) -> None:
     self.machine = f"Modal {_gpu_name()}"
     print(f"loaded {[r for r in offered if r not in self.live.unavailable]} in {self.load_s:.1f} s on {self.machine}; "
           f"not loaded: {list(self.live.unavailable)}", flush=True)
+    print("\n".join(self.live.load_report()), flush=True)
 
 
 def _turns(self, labels: list, raw: bytes) -> dict:

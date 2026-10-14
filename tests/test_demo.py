@@ -919,3 +919,15 @@ def test_a_stream_whose_machine_fails_says_so_and_still_charges(tree, monkeypatc
     events = [json.loads(line) for line in r.text.splitlines()]
     assert events[0] == {"error": "the machine these rungs run on did not answer"} and "path" not in r.text
     assert events[-1]["charged"] > 0 and budget.spent(DAY) > 0
+
+
+def test_the_load_report_gives_each_rungs_seconds_and_its_phases():
+    class Phased(StubRung):
+        def _load(self):
+            self.load_phases = {"model": 41.0, "DiT windows": 12.5}
+
+    live = demo.Live({"R4": "stub", "R4 streamed": "phased"}, get=lambda rung_id: Phased() if rung_id == "phased" else StubRung())
+    live.load_all()
+    lines = live.load_report()
+    assert len(lines) == 2 and lines[0].startswith("  R4: ") and "(" not in lines[0]
+    assert lines[1].startswith("  R4 streamed: ") and lines[1].endswith("(model 41.0 s, DiT windows 12.5 s)")

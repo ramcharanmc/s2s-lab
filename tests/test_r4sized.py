@@ -83,7 +83,8 @@ def test_the_sized_stream_writes_todays_streams_codes_and_audio_on_the_small_cac
     sized = r4sized.SizedStreamingSpeechToSpeech(fast, start_buffer_s=0.0)
     stream.load()
     sized.load()
-    assert all(loop._g is not None for loop in sized.sized.loops.values())       # every step prepared at load
+    assert sized.sized.loops[2048]._g is not None and sized.sized.loops[6144]._g is None   # only 2048's step at load (M35)
+    assert list(sized.load_phases) == ["model", "throwaway turn", "DiT windows", "2048-place cache prepared"]
     assert "generate" not in vars(fast.model.talker)                            # installed only while it answers
     clip = np.full(16_000, 2.0, dtype=np.float32)
     a, b = stream.respond(clip, 16_000), sized.respond(clip, 16_000)
@@ -124,3 +125,19 @@ def test_the_start_rule_takes_the_lowest_first_sound_with_no_stall_and_the_small
     assert c["r4-gpu-stream-sized"]["buffer_s"] == 0.25                     # a tie: the smaller buffer
     blob["rungs"]["r4-gpu-stream"]["buffers"] = {b: {"a": {"first_sound_ms": 1, "stall_ms": 9}} for b in ("0", "1")}
     assert r4sizeddev.choose(blob)["r4-gpu-stream"] is None
+
+
+def test_a_cache_not_prepared_is_written_on_its_first_turn_and_captured_on_the_next():
+    from transformers import StaticCache
+    talker = tiny_talker()
+    fast_route(talker)
+    inputs = turn(talker)
+    want, _ = generate_codes(talker, inputs, static_cache(talker))
+    big = StaticCache(config=talker.config, max_cache_len=PROMPT + 200)
+    sized = r4sized.SizedTalker(talker, {PROMPT + 90: StaticCache(config=talker.config, max_cache_len=PROMPT + 90), PROMPT + 200: big},
+                                room=95)                                 # the turn takes the big one, never prepared
+    assert not big.layers[0].is_initialized
+    assert sized_codes(sized, inputs) == want and sized.loops[PROMPT + 200]._g is None      # eager: the cache written
+    assert big.layers[0].is_initialized
+    assert sized_codes(sized, inputs) == want and sized.loops[PROMPT + 200]._g is not None  # now its step is made
+    assert sized.loops[PROMPT + 90]._g is None                          # the small one never asked for

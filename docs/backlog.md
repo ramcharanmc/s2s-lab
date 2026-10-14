@@ -3,14 +3,16 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-13, at commit `a12cec6`.
+Last updated 2026-10-14, at commit `a6652db`.
 
-## Chosen next: none
+## Chosen next: M35, a cheaper L40S wake
 
-Candidates: R4 streamed from the Thinker's first words (the Talker still waits for the whole text); a start rule
-timed from the turn's own code rate (the 0.5 s hold waits for the second block); a cheaper L40S load (capture
-the 6144-place step only when a turn needs it: the wake grew from about 160 s to 251 s); the repository made
-public, the author's call.
+The L40S's wake grew from about 160 s to 251 s in M34. M35 prepares only the 2048-place cache at load (no demo
+turn, 15 s at most, can take the 6144-place one, whose step is now captured on the first turn that needs it) and
+times the load by phase; then a `modal serve` session reads the wake, and `modal deploy` (`docs/m35-log.md`).
+After it, the candidates: R4 streamed from the Thinker's first words; a start rule timed from the turn's own
+code rate; a compile cache on a Modal volume, if the phases show the wake is mostly compiling; the repository
+made public, the author's call.
 
 ## Done: M34, R4 streamed on a right-sized cache
 

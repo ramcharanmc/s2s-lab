@@ -287,16 +287,28 @@ class StreamingSpeechToSpeech(Rung):
             wav = m.token2wav.code2wav_bigvgan_model(mel)
         return wav.reshape(-1).float().cpu().numpy()
 
+    def _timed(self, phase: str, fn) -> None:
+        """Run one phase of the load and keep its seconds in load_phases (the demo prints them, M35)."""
+        import time
+        t0 = time.perf_counter()
+        fn()
+        self.load_phases[phase] = round(time.perf_counter() - t0, 1)
+
     def _load(self) -> None:
-        self.model.load()
+        self.load_phases: dict[str, float] = {}
+        self._timed("model", self.model.load)
         check_blocks(self.model.model, ((self.first, self.block),))
         left, right = self._context()
         lengths = windows_for(self.first, self.block, left, right)
         self.model.compile_dit(lengths)
-        self.model.speak(np.zeros(ASR_SR, dtype=np.float32), ASR_SR)      # the Talker's graph, as R4's throwaway turn
-        for n in lengths:                                                  # each DiT window: compile, then capture
-            for _ in range(2):
-                self._decode_window([0] * n)
+        self._timed("throwaway turn", lambda: self.model.speak(np.zeros(ASR_SR, dtype=np.float32), ASR_SR))  # the Talker's graph
+
+        def windows():
+            for n in lengths:                                              # each DiT window: compile, then capture
+                for _ in range(2):
+                    self._decode_window([0] * n)
+
+        self._timed("DiT windows", windows)
 
     def _respond(self, audio, sr, sink):
         if sr != ASR_SR:
