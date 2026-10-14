@@ -11,7 +11,11 @@ Kept as events happen. The earlier logs: `docs/m33-log.md` and those it names.
 | 4 | 10-13 | — | the start rule applied: 0.5 s for the sized stream (0 and 0.25 s stalled every turn; 1 s the same as 0.5); none for the stream on this host, which PR-016 compares as frozen | — | — |
 | 5 | 10-13 | — | PR-016 registered before any eval-set turn of the sized stream: first sound p50 ≤ 0.90 and p90 ≤ 0.92 of the stream's, total ≤ 1.00, PR-015's stall tolerance, words within a point | `pr016.py`, `::pr016`, `r4sizeddev.run` takes a frozen start buffer, tests | d65274d |
 | 6 | 10-13 | `modal run modal_app/r4_bench.py::pr016 --confirm PR-016`, the author, at `d65274d`, L40S (driver 580.95.05), 200 eval clips, \$2.468 | **PR-016 supported**: first sound p50 0.787 of the stream's [0.781, 0.790], p90 0.809 [0.803, 0.816], total 0.725; no stall; the same texts and codes on 200 of 200, the same words; 2,622 ms against 3,333 at p50; every turn on the 2048-place cache | — | — |
-| 7 | 10-13 | — | PR-016's results recorded, verbatim | — | this commit |
+| 7 | 10-13 | — | PR-016's results recorded, verbatim | — | d48eb87 |
+| 8 | 10-13 | the demo's tests, laptop | the demo's R4 streamed is `r4-gpu-stream-sized`, on the L40S's one set of weights; its measured row from PR-016's run; a PR-016 panel | `r4stream.pair`, `demo`, `modal_app/demo.py`, tests | a12cec6 |
+| 9 | 10-13 | two turns on the deployed demo, the author (the old rung, by mistake: the deployed address, not the session's) | today's R4 streamed, warm: first audio 3.70 s on the server, 5.73 s in the browser, a 16 s reply; one `enter` timed out after 10 s, the next passed | — | — |
+| 10 | 10-13 | `modal serve modal_app/demo.py`, the author, a cold turn and a warm one, R4 and R4 streamed | the new rung on Modal: the L40S loaded both in 251.0 s (153 to 167 before: its caches written and steps captured at load); warm, first audio 2.86 s on the server and 4.77 s in the browser (a 9 s reply), R4 whole 8.74 s; cold, 3.36 s (a 19 s reply), 266 s in the browser with the wake | — | — |
+| 11 | 10-13 | `modal deploy modal_app/demo.py`, the author; the deployed page's measured data and status read from the laptop | the R4 streamed row from `pr016.json`, the PR-016 panel, R4 streamed offered as a streaming rung, its wake 260.8 s. M34 done | — | this commit |
 
 ## 1. The design
 
@@ -94,3 +98,30 @@ upper ends of their intervals well inside the bars.
 The same reply: texts and codes the same on 200 of 200. Every turn took the 2048-place cache (the
 longest prompt 512 places, the longest reply 899 codes). On the slower host of development the stream
 stalled 4 of 30 turns at 0.5 s; here none, as predicted. Next, M34's step 4: the demo.
+
+## 5. The demo, and M34 done (rows 8 to 11)
+
+The demo's "R4 streamed" is now `r4-gpu-stream-sized`, on the L40S's one set of R4's weights beside
+`r4-gpu-fast`; the measured part's R4 streamed row reads PR-016's run, and a PR-016 panel follows PR-015's.
+
+**Checked on Modal** (`modal serve`, the session's address; the first two turns went to the deployed page
+by mistake and ran the old rung, row 9):
+
+| | R4 streamed, on the server | in the browser | R4, whole |
+|---|---:|---:|---:|
+| warm turn, a 9 s reply | first audio 2.86 s, whole 7.37 | **4.77 s** | 8.74 s |
+| cold turn, a 19 s reply | first audio 3.36 s, whole 13.87 | 266 s (the wake in it) | 19.75 s |
+
+The same reply on both cards, as PR-016 found. The old rung's warm turn on the deployed page, for a 16 s
+reply: 3.70 s on the server, 5.73 in the browser; not the same recording, so not a comparison.
+
+**The wake is longer.** The L40S loaded R4 and R4 streamed in 251.0 s, against 153 to 167 s before: the
+new rung writes both its caches and captures both steps at load (two turns each), about 90 s, more than
+the 30 to 40 s estimated from development. A visitor's first R4 turn waits about 4.5 minutes, and a cold
+wake costs about \$0.14 of the day's cap instead of \$0.09. A cheaper load, if wanted later: capture the
+2048-place cache's step at load and the 6144's when a turn first needs it (no turn needed it on the eval
+set).
+
+**Deployed** by the author on 10-13: https://ramcharanmc--s2s-lab-demo-web.modal.run, its measured part
+and status read from the laptop afterwards (row 11). M34 is done.
+

@@ -3,9 +3,16 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-13, at commit `d65274d`.
+Last updated 2026-10-13, at commit `a12cec6`.
 
-## Chosen next: M34, R4 streamed on a right-sized cache
+## Chosen next: none
+
+Candidates: R4 streamed from the Thinker's first words (the Talker still waits for the whole text); a start rule
+timed from the turn's own code rate (the 0.5 s hold waits for the second block); a cheaper L40S load (capture
+the 6144-place step only when a turn needs it: the wake grew from about 160 s to 251 s); the repository made
+public, the author's call.
+
+## Done: M34, R4 streamed on a right-sized cache
 
 M33's follow-up, the author's go: a new rung, `r4-gpu-stream-sized`, our captured loop on a 2048-place cache
 when the turn leaves room, else 6144; its start rule chosen on the probe clips by a rule written first; then
@@ -13,7 +20,9 @@ PR-016, registered before any eval run; then the demo (`docs/m34-log.md`). Devel
 0.5 s the sized stream's first sound 2,684 ms against the stream's 3,433, no stall against 4 of 30, the same
 codes. **PR-016 supported** (`d65274d`, \$2.468): on the eval set the sized stream's first sound 2,622 ms against
 3,333 (p50), 3,005 against 3,716 (p90), no stall, the same codes and words. Next, step 4: the new rung under
-"R4 streamed" in the demo, a `modal serve` check and `modal deploy`, the author's.
+"R4 streamed" in the demo, a `modal serve` check and `modal deploy`, the author's. **Deployed 2026-10-13**
+(`a12cec6`): warm, the visitor's browser played R4 streamed's first audio 4.77 s after Send (2.86 s on the server);
+the L40S's wake is now 251 s. M34 cost about \$3.47 on Modal.
 
 ## Done: M33, where a Talker step's time goes
 
