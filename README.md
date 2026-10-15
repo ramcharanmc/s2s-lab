@@ -6,20 +6,20 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-10-13** (commit `a12cec6`): rungs R0 to R5 built and measured, and R4 streamed; three
+**Status, 2026-10-14** (commit `d61c79d`): rungs R0 to R5 built and measured, and R4 streamed; three
 fine-tunes run; sixteen registrations, all reported, seven with a supported claim. A demo that shows
 the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
 
 **https://ramcharanmc--s2s-lab-demo-web.modal.run**
 
 A recording answered by R0 to R5 on four machines (R3, R4 and R5 woken only when asked for; 32 s to
-about 4 min to wake, the L40S the slowest), with what the visitor's voice carried beside the words the cascades received, and
+about 3 min to wake, the L40S the slowest), with what the visitor's voice carried beside the words the cascades received, and
 a severity score rendered onto synthetic speech, to be heard. The measured tab is open to anyone;
 the live tab needs an access code and stops at \$3 of GPU a day. R4 and R4 streamed answer side by side,
 on one set of weights, and the streamed reply plays as it arrives (M32a), on a Talker cache sized to
 the turn (M34, PR-016).
 Every rung was also measured on one card, the L40S, R0 to R4 in one
-container (M28, below). About \$47 spent: \$22.91 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+container (M28, below). About \$47 spent: \$23.15 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 

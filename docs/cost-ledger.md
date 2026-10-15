@@ -85,6 +85,7 @@ one. A failed run is still a row, since it was still billed.
 | 2026-10-13 | `deb2294` | `modal run modal_app/r4_bench.py::sizeddev` | L40S | 925 s | 932 s | \$0.505 | **M34, step 2, development**: R4 streamed on a right-sized cache against today's, 30 probe clips: at 0.5 s first sound 2,684 ms against 3,433, no stall against 4; the same codes (`docs/m34-log.md`, entry 3) |
 | 2026-10-13 | `d65274d` | `modal run modal_app/r4_bench.py::pr016 --confirm PR-016` | L40S | 4,549 s | 4,556 s | \$2.468 | **the PR-016 run**: the sized stream's first sound 2,622 ms against the stream's 3,333 (p50), 3,005 against 3,716 (p90), no stall, the same codes and words: **supported** (`docs/preregistration.md`) |
 | 2026-10-13 | `a12cec6` | two turns on the deployed demo (the old rung), then `modal serve modal_app/demo.py` (a cold turn and a warm one) | T4, L40S, and a CPU container for the page | — | 295.3 s and 16.9 s (the session's streams) | ≈ \$0.50 (estimated from the GPU rates, the wakes and the idle windows; the app's count not noted) | **M34, the demo**: the new rung on Modal, warm first audio 2.86 s on the server and 4.77 s in the browser; the L40S's load 251 s (`docs/m34-log.md`, entries 9 and 10) |
+| 2026-10-14 | `d61c79d` | `modal serve modal_app/demo.py` (the demo; one cold turn on the T4 and the L40S) | T4, L40S, and a CPU container for the page | — | 203.4 s (the L40S's stream) | ≈ \$0.24 (estimated from the GPU rates, the wakes and the idle windows) | **M35**: the L40S's wake 185.7 s, 251.0 before; most of it compiling (`docs/m35-log.md`, entry 3) |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -93,5 +94,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$22.906 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
+| Modal | \$23.146 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
 | Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |

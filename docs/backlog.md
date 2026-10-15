@@ -3,16 +3,20 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-14, at commit `a6652db`.
+Last updated 2026-10-14, at commit `d61c79d`.
 
-## Chosen next: M35, a cheaper L40S wake
+## Chosen next: none
 
-The L40S's wake grew from about 160 s to 251 s in M34. M35 prepares only the 2048-place cache at load (no demo
-turn, 15 s at most, can take the 6144-place one, whose step is now captured on the first turn that needs it) and
-times the load by phase; then a `modal serve` session reads the wake, and `modal deploy` (`docs/m35-log.md`).
-After it, the candidates: R4 streamed from the Thinker's first words; a start rule timed from the turn's own
-code rate; a compile cache on a Modal volume, if the phases show the wake is mostly compiling; the repository
-made public, the author's call.
+Candidates: a compile cache on a Modal volume (M35's phases: most of the L40S's 186 s wake is compiling, the
+DiT's windows 65 s and the sized cache 57 s alone); R4 streamed from the Thinker's first words; a start rule
+timed from the turn's own code rate; the repository made public, the author's call.
+
+## Done: M35, a cheaper L40S wake
+
+M34 had lengthened the L40S's wake to 251 s. Only the 2048-place cache is now prepared at load (a demo turn,
+15 s at most, never takes the 6144-place one, whose step is captured on the first turn that needs it), and
+the load is timed by phase (`d61c79d`). On Modal the L40S loaded in 185.7 s; deployed 2026-10-14, its wake
+194.1 s. About \$0.24 (`docs/m35-log.md`).
 
 ## Done: M34, R4 streamed on a right-sized cache
 
