@@ -221,5 +221,6 @@ def test_the_l40s_keeps_what_it_compiled_on_a_volume(app):
     text = (ROOT / "modal_app" / "demo.py").read_text(encoding="utf-8")          # Modal wraps the method: read its source
     source = text[text.index("class Speaks:"):text.index("@app.cls", text.index("class Speaks:"))]
     assert "volumes={COMPILE_CACHE: compile_cache}" in text[text.rindex("@app.cls", 0, text.index("class Speaks:")):text.index("class Speaks:")]
+    assert 'before={"R4 streamed": load_cache}' in source                      # after R4, before R4 streamed
     assert source.index("compilecache.load(COMPILE_FILE)") < source.index("_load_rungs(") < source.index("compilecache.save(")
     assert "compile_cache.commit()" in source

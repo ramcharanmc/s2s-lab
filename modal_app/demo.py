@@ -226,14 +226,14 @@ class Rungs:
         return self.live.render(voice, sentence, condition, score)
 
 
-def _load_rungs(self, offered: dict, shared_r4: bool = False) -> None:
+def _load_rungs(self, offered: dict, shared_r4: bool = False, before: dict | None = None) -> None:
     import os
     os.chdir("/root")
     from s2slab.demo import Live, any_rung, kokoro_speaker
     if shared_r4:                                   # R4 and R4 streamed: one set of weights for the two (r4stream.pair)
         from s2slab.r4stream import pair
     self.live = Live(offered, get=pair() if shared_r4 else any_rung, speaker=lambda: kokoro_speaker("cuda"))
-    self.load_s = self.live.load_all()
+    self.load_s = self.live.load_all(before)
     self.machine = f"Modal {_gpu_name()}"
     print(f"loaded {[r for r in offered if r not in self.live.unavailable]} in {self.load_s:.1f} s on {self.machine}; "
           f"not loaded: {list(self.live.unavailable)}", flush=True)
@@ -269,8 +269,13 @@ class Speaks:
     @modal.enter()
     def load(self):
         from s2slab import compilecache
-        loaded = compilecache.load(COMPILE_FILE)            # before anything compiles
-        _load_rungs(self, OTHERS["l40s"]["offered"], shared_r4=True)
+        box = {"loaded": {"loaded": False, "bytes": 0}}
+
+        def load_cache():           # after R4 has loaded, before R4 streamed: R4 compiles as it did before M36
+            box["loaded"] = compilecache.load(COMPILE_FILE)          # (its load took 288 s, not 57, with the cache first)
+
+        _load_rungs(self, OTHERS["l40s"]["offered"], shared_r4=True, before={"R4 streamed": load_cache})
+        loaded = box["loaded"]
         saved = compilecache.save(COMPILE_FILE, loaded)
         if saved["saved"]:
             compile_cache.commit()

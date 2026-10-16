@@ -251,6 +251,7 @@ def test_the_fast_rung_answers_whole_as_r4_does():
     rung = FastSpeechToSpeech(fast_model())
     turn = rung.respond(np.zeros(16000, dtype=np.float32), 16000)
     assert turn.reply_text == "Sure, here it is." and len(turn.chunks) == 1 and turn.reply_s == 150 * SPC / OUT_SR
+    assert list(rung.load_phases) == ["model", "throwaway turn"]                 # its load timed by phase (M36)
 
 
 def test_the_stream_hands_out_blocks_as_the_talker_writes_and_its_codes_are_the_fast_rungs():

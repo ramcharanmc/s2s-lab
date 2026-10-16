@@ -133,6 +133,19 @@ class FastSpeechToSpeech(SpeechToSpeech):
     def __init__(self, model=None):
         super().__init__(model or FastOmni())
 
+    def _load(self) -> None:                          # R4's load, timed by phase (M36)
+        self.load_phases: dict[str, float] = {}
+        _timed(self, "model", self.model.load)
+        _timed(self, "throwaway turn", lambda: self.model.speak(np.zeros(ASR_SR, dtype=np.float32), ASR_SR))
+
+
+def _timed(rung, phase: str, fn) -> None:
+    """Run one phase of a rung's load and keep its seconds in rung.load_phases (the demo prints them, M35)."""
+    import time
+    t0 = time.perf_counter()
+    fn()
+    rung.load_phases[phase] = round(time.perf_counter() - t0, 1)
+
 
 class CodeStreamer:
     """generate's streamer for the Talker: the first put is the prompt; each later put is one new code,
@@ -288,11 +301,7 @@ class StreamingSpeechToSpeech(Rung):
         return wav.reshape(-1).float().cpu().numpy()
 
     def _timed(self, phase: str, fn) -> None:
-        """Run one phase of the load and keep its seconds in load_phases (the demo prints them, M35)."""
-        import time
-        t0 = time.perf_counter()
-        fn()
-        self.load_phases[phase] = round(time.perf_counter() - t0, 1)
+        _timed(self, phase, fn)
 
     def _load(self) -> None:
         self.load_phases: dict[str, float] = {}

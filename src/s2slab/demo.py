@@ -708,10 +708,13 @@ class Live:
         print(f"rung {label} ({self.offered[label]}) failed while {doing}: {type(e).__name__}: {e}", file=sys.stderr, flush=True)
         return {"label": label, "rung": self.offered[label], "error": sentence}
 
-    def load_all(self) -> float:
-        """Load every rung offered, now. Returns the seconds it took."""
+    def load_all(self, before: dict | None = None) -> float:
+        """Load every rung offered, now, in order; `before` maps a label to what runs just before that rung
+        loads (the L40S's compile cache, M36). Returns the seconds it took."""
         t0 = time.perf_counter()
         for label in self.offered:
+            if before and label in before:
+                before[label]()
             try:
                 self.rung(label)
             except Exception as e:                                  # a rung's models: any error is "not here"

@@ -931,3 +931,18 @@ def test_the_load_report_gives_each_rungs_seconds_and_its_phases():
     lines = live.load_report()
     assert len(lines) == 2 and lines[0].startswith("  R4: ") and "(" not in lines[0]
     assert lines[1].startswith("  R4 streamed: ") and lines[1].endswith("(model 41.0 s, DiT windows 12.5 s)")
+
+
+def test_something_can_run_just_before_a_given_rung_loads():
+    order = []
+
+    class Noted(StubRung):
+        def __init__(self, name):
+            self.name = name
+
+        def _load(self):
+            order.append(self.name)
+
+    live = demo.Live({"R4": "a", "R4 streamed": "b"}, get=lambda rung_id: Noted(rung_id))
+    live.load_all(before={"R4 streamed": lambda: order.append("cache")})
+    assert order == ["a", "cache", "b"]
