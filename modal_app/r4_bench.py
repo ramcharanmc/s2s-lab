@@ -16,9 +16,10 @@ R4 on Modal: the S2S rung on an L40S, with R3 beside it in the same container.
     modal run modal_app/r4_bench.py::stepprofile                             M33: where a Talker step's time goes
     modal run modal_app/r4_bench.py::sizeddev                                M34, step 2: R4 streamed on a right-sized cache
     modal run modal_app/r4_bench.py::pr016 --confirm PR-016                  PR-016, once: both streams on the eval set
-The file has ten entry points (main, pairs, profile, speed, streamdev, pr015, loopspeed, stepprofile, sizeddev,
-pr016), so Modal needs the one named: ::main, ::pairs, ::profile, ::speed, ::streamdev, ::pr015, ::loopspeed,
-::stepprofile, ::sizeddev or ::pr016.
+    modal run modal_app/r4_bench.py::timeddev                                M37, step 2: the timed start, probe clips
+The file has eleven entry points (main, pairs, profile, speed, streamdev, pr015, loopspeed, stepprofile, sizeddev,
+pr016, timeddev), so Modal needs the one named: ::main, ::pairs, ::profile, ::speed, ::streamdev, ::pr015,
+::loopspeed, ::stepprofile, ::sizeddev, ::pr016 or ::timeddev.
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
@@ -54,6 +55,7 @@ STREAM_DEV_PATH = REPO / "runs" / "r4-gpu" / "stream-dev-l40s.json"   # M31, ste
 LOOP_SPEED_PATH = REPO / "runs" / "r4-gpu" / "loop-speed-l40s.json"   # M32b, step 2 (s2slab.r4loopspeed)
 STEP_PROFILE_PATH = REPO / "runs" / "r4-gpu" / "step-profile-l40s.json"   # M33 (s2slab.r4stepprofile)
 SIZED_DEV_PATH = REPO / "runs" / "r4-gpu" / "sized-dev-l40s.json"   # M34, step 2 (s2slab.r4sizeddev)
+TIMED_DEV_PATH = REPO / "runs" / "r4-gpu" / "timed-dev-l40s.json"   # M37, step 2 (s2slab.r4timeddev)
 
 
 def speed_path(tag: str = "") -> pathlib.Path:
@@ -294,6 +296,21 @@ def sized_dev() -> dict:
     os.chdir("/root")
     from s2slab.probes import TARGET_SR
     from s2slab.r4sizeddev import run
+    from s2slab.rungs import probe_clips
+    t0 = time.perf_counter()
+    blob = run(probe_clips(), TARGET_SR)
+    return {"gpu": _gpu_name(), "versions": _versions(), "dev": blob, "seconds": time.perf_counter() - t0}
+
+
+# 30 clips through one rung (the sized stream, about 3 s a turn), each reply heard by Whisper, after the load and
+# its compiles: about 10 min in all. The timeout leaves room.
+@app.function(gpu="L40S", timeout=45 * 60, scaledown_window=60)
+def timed_dev() -> dict:
+    """M37, step 2: r4-gpu-stream-sized with no hold on the 30 probe clips, its times kept (r4timeddev.run)."""
+    import os
+    os.chdir("/root")
+    from s2slab.probes import TARGET_SR
+    from s2slab.r4timeddev import run
     from s2slab.rungs import probe_clips
     t0 = time.perf_counter()
     blob = run(probe_clips(), TARGET_SR)
@@ -563,6 +580,37 @@ def sizeddev():
         (folder / name).parent.mkdir(parents=True, exist_ok=True)
         (folder / name).write_bytes(data)
     print(format_sized_dev(blob))
+    print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {path.relative_to(REPO)}; "
+          f"{len(listen)} replies for listening -> {folder.relative_to(REPO)}/")
+    print(out["versions"])
+    print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
+
+
+@app.local_entrypoint()
+def timeddev():
+    """R4 streamed, its start timed from the turn, development clips (M37, step 2): saves
+    runs/r4-gpu/timed-dev-l40s.json, never overwritten; three replies to results/r4-gpu/timeddev/ for listening
+    (not committed); prints the table, what the plan rests on, and the rules' verdict."""
+    from s2slab.r4profile import save
+    from s2slab.r4timeddev import format_timed_dev
+    from s2slab.sidechannel import refuse_to_overwrite
+
+    refuse_to_overwrite(TIMED_DEV_PATH)
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    t0 = time.time()
+    out = timed_dev.remote()
+    wall = time.time() - t0
+    listen = out["dev"].pop("listen")
+    blob = {"run": "M37, step 2: r4-gpu-stream-sized with no hold on the 30 probe clips, its times kept (development)",
+            "commit": commit, "machine": f"Modal {out['gpu']}", "versions": out["versions"], **out["dev"]}
+    path = save(TIMED_DEV_PATH, blob)
+    folder = REPO / "results" / "r4-gpu" / "timeddev"
+    for name, data in listen.items():
+        (folder / name).parent.mkdir(parents=True, exist_ok=True)
+        (folder / name).write_bytes(data)
+    print(format_timed_dev(blob))
     print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {path.relative_to(REPO)}; "
           f"{len(listen)} replies for listening -> {folder.relative_to(REPO)}/")
     print(out["versions"])

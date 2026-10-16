@@ -48,6 +48,12 @@ def buffered(chunks: list, sr: int, buffer_s: float, lead_ms: float | None) -> d
             out.append((ms, held))
     if not out and chunks:                       # the reply is shorter than the buffer: all of it at the end
         out = [(chunks[-1][0], sum(n for _, n in chunks))]
+    return {"first_audio_ms": out[0][0] if out else math.nan, **heard(out, sr, lead_ms)}
+
+
+def heard(out: list, sr: int, lead_ms: float | None) -> dict:
+    """Pieces handed out at [(ms, samples)], played back to back from the first, scored as rungs.Turn scores a
+    turn: {"first_sound_ms", "stall_ms"}. buffered's, and r4timed's for a planned start (M37)."""
     first = out[0][0] if out else math.nan
     stall, cursor = 0.0, None
     for ms, n in out:
@@ -63,7 +69,7 @@ def buffered(chunks: list, sr: int, buffer_s: float, lead_ms: float | None) -> d
                 sound = max(first + lead_ms, ms)
                 break
             start += n
-    return {"first_audio_ms": first, "first_sound_ms": sound, "stall_ms": stall}
+    return {"first_sound_ms": sound, "stall_ms": stall}
 
 
 def to_16k(audio: np.ndarray) -> np.ndarray:

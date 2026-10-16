@@ -35,6 +35,9 @@ same clip and seed, which the development run checks.
 
 from __future__ import annotations
 
+import threading
+import time
+
 import numpy as np
 
 from .r0 import ASR_SR, clean_for_speech
@@ -141,7 +144,6 @@ class FastSpeechToSpeech(SpeechToSpeech):
 
 def _timed(rung, phase: str, fn) -> None:
     """Run one phase of a rung's load and keep its seconds in rung.load_phases (the demo prints them, M35)."""
-    import time
     t0 = time.perf_counter()
     fn()
     rung.load_phases[phase] = round(time.perf_counter() - t0, 1)
@@ -149,10 +151,11 @@ def _timed(rung, phase: str, fn) -> None:
 
 class CodeStreamer:
     """generate's streamer for the Talker: the first put is the prompt; each later put is one new code,
-    handed to on_code until an end code."""
+    handed to on_code until an end code. With a clock, each code's time is kept in `times` (M37)."""
 
-    def __init__(self, on_code):
+    def __init__(self, on_code, clock=None):
         self.on_code, self.prompt_seen, self.done, self.codes = on_code, False, False, []
+        self.clock, self.times = clock, []
 
     def put(self, value) -> None:
         if not self.prompt_seen:
@@ -165,6 +168,8 @@ class CodeStreamer:
                 self.done = True
                 return
             self.codes.append(int(code))
+            if self.clock is not None:
+                self.times.append(self.clock())
             self.on_code(int(code))
 
     def end(self) -> None:
@@ -188,6 +193,7 @@ class BlockDecoder:
         self.s = 0
         self.held: np.ndarray | None = None
         self.windows: list[tuple[int, int]] = []           # (window start, window end) as decoded
+        self.decode_ms: list[float] = []                   # each window's decode, as timed (M37)
 
     def _size(self) -> int:
         return self.first if self.s == 0 else self.block
@@ -196,7 +202,9 @@ class BlockDecoder:
         s, n = self.s, len(self.codes)
         ws, we = s - min(self.left, s), min(e + self.right, n)
         self.windows.append((ws, we))
+        t0 = time.perf_counter()
         audio = np.asarray(self.decode_window(self.codes[ws:we]), dtype=np.float32)
+        self.decode_ms.append(round((time.perf_counter() - t0) * 1000, 1))
         start = (s - ws) * self.spc - (self.xf if s > 0 else 0)
         piece = audio[start:(e - ws) * self.spc]
         if self.held is not None:
@@ -250,6 +258,68 @@ class StartBuffer:
         self.open = True
 
 
+class TimedStart:
+    """Holds the first pieces back until a planned time (M37): when the first piece exists, plan(now, samples)
+    gives the time playback may start, on the turn's clock, and a timer hands the held pieces on then, from a
+    thread of its own: the Talker's is busy decoding the very window the start waits on (about 520 ms, longer
+    than the first block plays). Later pieces pass straight on; the reply's end hands everything on whatever
+    the plan (flush). One lock keeps the pieces in order whichever thread hands them on."""
+
+    def __init__(self, emit, plan, clock):
+        self.emit, self.plan, self.clock = emit, plan, clock
+        self.held, self.at, self.open, self.timer = [], None, False, None
+        self.lock = threading.Lock()
+
+    def add(self, pieces) -> None:
+        with self.lock:
+            for p in pieces:
+                if self.open:
+                    self.emit(p)
+                    continue
+                self.held.append(p)
+                if self.at is None:
+                    now = self.clock()
+                    self.at = self.plan(now, len(p))
+                    if self.at <= now:
+                        self._hand_on()
+                    else:
+                        self.timer = threading.Timer((self.at - now) / 1000, self.flush)
+                        self.timer.daemon = True
+                        self.timer.start()
+
+    def _hand_on(self) -> None:
+        if self.held:
+            self.emit(np.concatenate(self.held))
+            self.held = []
+        self.open = True
+
+    def flush(self) -> None:
+        if self.timer is not None:
+            self.timer.cancel()
+        with self.lock:
+            if not self.open:
+                self._hand_on()
+
+    def cancel(self) -> None:
+        """The turn failed: nothing more handed on, the timer stopped."""
+        if self.timer is not None:
+            self.timer.cancel()
+        with self.lock:
+            self.held, self.open = [], True
+        self.emit = lambda p: None
+
+
+def planned_start(first_ms: float, code_ms: list, block: int, window_ms: float, first_s: float,
+                  margin_s: float) -> float:
+    """When playback may start, in ms on the turn's clock (M37). The first piece exists at first_ms; the next
+    comes after `block` more codes and one decode of its window (window_ms), so the start that keeps playback
+    from running dry is about first_ms + block * (ms a code) + window_ms - the first piece's length (first_s).
+    The ms a code is the turn's own, over the codes written so far (code_ms). Plus the margin; never earlier
+    than first_ms."""
+    per = (code_ms[-1] - code_ms[0]) / (len(code_ms) - 1) if len(code_ms) > 1 else 0.0
+    return first_ms + max(0.0, block * per + window_ms - first_s * 1000 + margin_s * 1000)
+
+
 def check_blocks(model, settings) -> None:
     """Every first and later block a whole number of the DiT's blocks, or the windows would not align."""
     dit = model.token2wav.code2wav_dit_model
@@ -279,6 +349,8 @@ class StreamingSpeechToSpeech(Rung):
         self.first, self.block, self.start_buffer_s = first, block, start_buffer_s
         self.last_codes: list[int] = []
         self.last_windows: list[tuple[int, int]] = []
+        self.window_ms: dict[int, float] = {}            # each DiT window's decode at load, replayed (M37)
+        self.last_timing: dict = {}                       # the last turn's codes, pieces and decodes, timed (M37)
 
     def _context(self) -> tuple[int, int]:
         """LEFT and RIGHT in codes, from the DiT's own configuration: two blocks back, one ahead."""
@@ -313,29 +385,52 @@ class StreamingSpeechToSpeech(Rung):
         self._timed("throwaway turn", lambda: self.model.speak(np.zeros(ASR_SR, dtype=np.float32), ASR_SR))  # the Talker's graph
 
         def windows():
-            for n in lengths:                                              # each DiT window: compile, then capture
+            for n in lengths:                              # each DiT window: compile, capture, then a replay timed
                 for _ in range(2):
                     self._decode_window([0] * n)
+                t0 = time.perf_counter()
+                self._decode_window([0] * n)
+                self.window_ms[n] = round((time.perf_counter() - t0) * 1000, 1)
 
         self._timed("DiT windows", windows)
+
+    def _start(self, clock, code_ms):
+        """What holds the first pieces back: the start buffer (M31). r4timed's rung plans the start instead."""
+        return StartBuffer(self.emit, self.start_buffer_s)
 
     def _respond(self, audio, sr, sink):
         if sr != ASR_SR:
             raise ValueError(f"R4 expects {ASR_SR} Hz input, got {sr}: resample first (probes.load_wav does)")
         left, right = self._context()
         dec = BlockDecoder(self._decode_window, self.first, self.block, left, right)
-        out = StartBuffer(self.emit, self.start_buffer_s)
-        streamer = CodeStreamer(lambda code: out.add(dec.push(code)))
+        clock = lambda: (time.perf_counter() - self._t0) * 1000          # noqa: E731  (the turn's clock, as emit's)
+        made: list = []                                   # (ms, samples) as each piece is decoded, before any hold
+
+        def on_code(code):
+            pieces = dec.push(code)
+            made.extend((clock(), len(p)) for p in pieces)
+            out.add(pieces)
+
+        streamer = CodeStreamer(on_code, clock)
+        out = self._start(clock, streamer.times)          # made before the first code arrives
         t2w = self.model.model.token2wav
-        with stage("s2s", sink):
-            t2w.forward = lambda *a, **k: _empty()               # the whole-reply decode is the stream's now
-            try:
-                text, _ = self.model.speak(audio, sr, talker_streamer=streamer)
-            finally:
-                del t2w.forward
-            out.add(dec.finish())
-            out.flush()
+        try:
+            with stage("s2s", sink):
+                t2w.forward = lambda *a, **k: _empty()           # the whole-reply decode is the stream's now
+                try:
+                    text, _ = self.model.speak(audio, sr, talker_streamer=streamer)
+                finally:
+                    del t2w.forward
+                rest = dec.finish()
+                made.extend((clock(), len(p)) for p in rest)
+                out.add(rest)
+                out.flush()
+        except BaseException:
+            if hasattr(out, "cancel"):                    # a planned start's timer must not outlive the turn
+                out.cancel()
+            raise
         self.last_codes, self.last_windows = streamer.codes, dec.windows
+        self.last_timing = {"code_ms": streamer.times, "made": made, "decode_ms": dec.decode_ms}
         return Reply(None, OUT_SR, None, clean_for_speech(text))
 
 
