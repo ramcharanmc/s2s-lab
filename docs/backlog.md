@@ -3,13 +3,21 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-14, at commit `d61c79d`.
+Last updated 2026-10-15, at commit `f674725`.
 
-## Chosen next: none
+## Chosen next: M36, a compile cache for the L40S; then M37, a start rule timed from the turn
 
-Candidates: a compile cache on a Modal volume (M35's phases: most of the L40S's 186 s wake is compiling, the
-DiT's windows 65 s and the sized cache 57 s alone); R4 streamed from the Thinker's first words; a start rule
-timed from the turn's own code rate; the repository made public, the author's call.
+The author's go, 2026-10-15, in that order. **M36**: what the L40S compiles kept on a Modal volume, so a wake
+after the first skips most compiles (M35: most of its 186 s is compiling); a `modal serve` session with two
+cold wakes, then `modal deploy` (`docs/m36-log.md`). **M37**: R4 streamed's start predicted from the turn's own
+code rate and first DiT window instead of the 0.5 s hold; on the development turns of M34 playback could start
+about 0.70 s after the first block on 29 of 30, against about 1.16 s today; a development run, then a
+registration (PR-017) before any eval run, then the demo.
+
+**Set aside, 2026-10-15: R4 streamed from the Thinker's first words.** On one GPU the time to the second block,
+which a stall-free start must wait for, is the Thinker's whole reply plus 120 Talker steps, both bound by
+reading weights: interleaving them changes their order, not their sum (`docs/m36-log.md`, section 1). It would
+pay only with the two models on two GPUs.
 
 ## Done: M35, a cheaper L40S wake
 
@@ -160,7 +168,7 @@ the earlier cost column mixed mean and median.
 | What | Cost |
 |---|---|
 | Leading silence across TTS engines | \$0 to small |
-| Cold-start economics on Modal | a few dollars |
+| Cold-start economics on Modal | a few dollars; the demo's L40S: M35 (phases), M36 (the compile cache) |
 
 ## Parked
 
@@ -169,9 +177,9 @@ the earlier cost column mixed mean and median.
 | T4, the voice-activity-projection turn-taking model | v2 §3.1 |
 | A second FT-1, keeping dev checkpoints to see what the LoRA learns when | PR-010 |
 | R3 with streamed output (R4's is M31) | R3 |
-| A Talker decode loop of our own, its whole step compiled, so R4's stream starts from its first block without stalling | PR-015 |
-| R4 streamed from the Thinker's first words, not after its whole text | PR-015 |
-| The compiled Talker timed stage by stage on a slow and a fast host (1.6 times faster on one, no faster on the other) | M31 |
+| ~~A Talker decode loop of our own, its whole step compiled~~: built in M32b (exact, stopped by its rule); the gain came from the cache's size (M33, M34, PR-016) | PR-015 |
+| ~~R4 streamed from the Thinker's first words~~: analysed and set aside, 2026-10-15 (above) | PR-015 |
+| The compiled Talker timed stage by stage on a slow and a fast host (1.6 times faster on one, no faster on the other); M33 profiled its step on the slow host only | M31 |
 | The upward pitch bias in the Praat severity render | PR-009 |
 | The base voice's sentence u8, whose pause vanishes in mania | PR-012 |
 | Another disfluent speaker with verbatim transcripts | PR-011 |

@@ -214,3 +214,12 @@ def test_the_l40s_streams_and_the_web_app_reaches_it(app, monkeypatch):
     events = [json.loads(line) for line in r.text.splitlines()]
     assert streamed == [["R4 streamed", "R4"]] and events[0]["cold"] and events[-1]["charged"] > 0
     assert {e["done"]["label"] for e in events if "done" in e} == {"R4", "R4 streamed"}
+
+
+def test_the_l40s_keeps_what_it_compiled_on_a_volume(app):
+    assert app.COMPILE_FILE.startswith(app.COMPILE_CACHE + "/") and app.compile_cache is not None
+    text = (ROOT / "modal_app" / "demo.py").read_text(encoding="utf-8")          # Modal wraps the method: read its source
+    source = text[text.index("class Speaks:"):text.index("@app.cls", text.index("class Speaks:"))]
+    assert "volumes={COMPILE_CACHE: compile_cache}" in text[text.rindex("@app.cls", 0, text.index("class Speaks:")):text.index("class Speaks:")]
+    assert source.index("compilecache.load(COMPILE_FILE)") < source.index("_load_rungs(") < source.index("compilecache.save(")
+    assert "compile_cache.commit()" in source

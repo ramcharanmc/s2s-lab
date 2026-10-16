@@ -26,6 +26,8 @@ What happens where:
            is one side of a call, streamed as the eval clips were. Woken only when R5 is asked
            for. All three asleep 120 s after their last turn
   volume   `ft2`, read-only: PR-011's export, for the rung r2-gpu-verbatim
+  volume   `s2s-lab-compile-cache`: what the L40S compiled, loaded before its next load so that a wake
+           after the first finds most compiles done (M36, s2slab.compilecache)
   dict     `s2s-lab-demo-spend`: the day's spend and the last measured wake, kept across restarts
 
 WHY TWO CONTAINERS. One web app on the T4 would wake the GPU for every visit to the page, and for
@@ -61,6 +63,8 @@ WINDOW_BIG_S = 120                  # the A10 and the L40S: their idle time cost
 SECRET = "s2s-lab-demo"             # holds DEMO_ACCESS_CODE
 SPEND = "s2s-lab-demo-spend"
 VOLUME = "/ft2"
+COMPILE_CACHE = "/compile-cache"      # the volume s2s-lab-compile-cache, on the L40S (M36)
+COMPILE_FILE = f"{COMPILE_CACHE}/l40s-artifacts.bin"
 EXPORT_NAME = "export-runs_train-f37d0df-20260926-235222_csv_version_0_adapters_step-000900-float16"   # == s2slab.r2verbatim.EXPORT_NAME
 EXPORT = f"{VOLUME}/export/{EXPORT_NAME}/ct2"
 
@@ -194,6 +198,7 @@ for _clip in CLIPS:
 
 app = modal.App("s2s-lab-demo")
 ft2 = modal.Volume.from_name("ft2")
+compile_cache = modal.Volume.from_name("s2s-lab-compile-cache", create_if_missing=True)
 
 
 def _gpu_name() -> str:
@@ -255,13 +260,21 @@ class Hears:
         return _turns(self, labels, raw)
 
 
-@app.cls(image=l40s_image, gpu="L40S", max_containers=1, scaledown_window=WINDOW_BIG_S, timeout=5 * 60, startup_timeout=15 * 60)
+@app.cls(image=l40s_image, gpu="L40S", volumes={COMPILE_CACHE: compile_cache}, max_containers=1,
+         scaledown_window=WINDOW_BIG_S, timeout=5 * 60, startup_timeout=15 * 60)
 class Speaks:
-    """R4 and R4 streamed on an L40S, one set of weights, loaded and compiled when the container starts."""
+    """R4 and R4 streamed on an L40S, one set of weights, loaded and compiled when the container starts;
+    what it compiled kept on a volume for the next start (M36)."""
 
     @modal.enter()
     def load(self):
+        from s2slab import compilecache
+        loaded = compilecache.load(COMPILE_FILE)            # before anything compiles
         _load_rungs(self, OTHERS["l40s"]["offered"], shared_r4=True)
+        saved = compilecache.save(COMPILE_FILE, loaded)
+        if saved["saved"]:
+            compile_cache.commit()
+        print(f"compile cache: loaded {loaded}; saved {saved}", flush=True)
 
     @modal.method()
     def turns(self, labels: list, raw: bytes) -> dict:
