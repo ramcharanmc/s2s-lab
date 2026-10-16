@@ -8,7 +8,9 @@ Kept as events happen. The earlier logs: `docs/m35-log.md` and those it names.
 | 1 | 10-15 | — | the design: what the L40S compiles kept on a Modal volume between wakes; the author's go, M36 before M37 (a timed start rule, with a registration). Option 2 of M35's candidates, R4 streamed from the Thinker's first words, analysed and set aside (below) | — | — |
 | 2 | 10-15 | the tests, laptop, torch.compiler's save and load replaced by recorders | no file: nothing loaded, the first wake's blob written; a later wake loads it and writes only when it compiled more; a broken file costs only the cache and is replaced; the L40S's load reads the cache before anything compiles and writes it after | `compilecache.py`, `modal_app/demo.py` (the volume `s2s-lab-compile-cache` on `Speaks`), tests | f7e5bef |
 | 3 | 10-15 | `modal serve modal_app/demo.py`, the author, two cold L40S wakes | the first filled the cache (32 MB): loaded in 160.4 s (R4 57.4, the DiT's windows 54.4, the 2048 cache prepared 46.2); the second loaded the cache first (19.8 s) and took 311.4 s: R4 streamed's compiles fell from 103 s to 23 (the DiT's windows 9.8, the cache 11.0), but **R4's own load rose from 57 s to 288**, and its weights loaded at 62 files a second, not 400 to 900 | — | — |
-| 4 | 10-15 | — | R4's 288 s not explained by one sample: a slow host, or the loaded cache sending R4's compile (its layers in PyTorch's CUDA-graph mode) down a slower path. So: R4's load timed by phase, and the cache loaded after R4 and before R4 streamed, where it was shown to work; not deployed meanwhile | `r4stream` (`FastSpeechToSpeech` load phases), `demo.Live.load_all(before)`, `modal_app/demo.py`, tests | this commit |
+| 4 | 10-15 | — | R4's 288 s not explained by one sample: a slow host, or the loaded cache sending R4's compile (its layers in PyTorch's CUDA-graph mode) down a slower path. So: R4's load timed by phase, and the cache loaded after R4 and before R4 streamed, where it was shown to work; not deployed meanwhile | `r4stream` (`FastSpeechToSpeech` load phases), `demo.Live.load_all(before)`, `modal_app/demo.py`, tests | 6e66acc |
+| 5 | 10-15 | `modal serve modal_app/demo.py`, the author, two cold L40S wakes | the cache loaded after R4 (0.1 s each time; not rewritten: nothing new compiled): the L40S loaded in **93.1 s** and **71.8 s** (160.4 and 185.7 before); R4 59.7 and 45.5 s (its model 26.8 and 17.6, its throwaway turn 32.9 and 27.9), R4 streamed 31.6 and 26.1 (the DiT's windows 12.4 and 10.4, the 2048 cache prepared 16.6 and 13.4); the cold streams 105.5 and 91.4 s | — | — |
+| 6 | 10-15 | `modal deploy modal_app/demo.py`, the author; the deployed page's status read from the laptop | deployed; the status gives the L40S's wake as 78.3 s, the last one measured (row 5's second: the page and the deployed app share one store); no wake on the deployed app yet. M36 done | — | this commit |
 
 ## 1. The design
 
@@ -55,3 +57,28 @@ wake, with no cache, was itself faster than M35's 186 s: hosts differ.
 **The change (row 4).** R4's load is now timed by phase (its model, its throwaway turn); the cache is loaded
 after R4 has loaded and before R4 streamed, where it worked, so R4 compiles as it did before M36. Not
 deployed until a session shows the wake shorter: expected about 57 + 23 s plus the cache's load.
+
+## 3. The second session (rows 5 and 6)
+
+| the L40S's load | M35 (no cache) | first wake (row 5) | second wake (row 5) |
+|---|---:|---:|---:|
+| R4: its model | | 26.8 s | 17.6 s |
+| R4: its throwaway turn (the Talker's layers compiled, not cached) | | 32.9 | 27.9 |
+| R4, in all | 61.2 s | 59.7 | 45.5 |
+| R4 streamed: the DiT's windows | 65.2 | **12.4** | **10.4** |
+| R4 streamed: the 2048-place cache prepared | 56.6 | **16.6** | **13.4** |
+| R4 streamed: the throwaway turn | 2.7 | 2.6 | 2.3 |
+| in all | **185.7 s** | **93.1 s** | **71.8 s** |
+
+**M36 worked.** Loaded after R4, the cache cut R4 streamed's compiles from about 120 s to about 25, and R4's
+own load was as before M36 (45 to 60 s): the wake about 72 to 93 s, against 160 to 186 without the cache and
+251 in M34. A visitor's first R4 turn waits about 1.5 min, not about 3. The cache loaded in 0.1 s, not the
+first session's 19.8 (the file was read once; the volume's caching, perhaps).
+
+**Not explained:** the first session's 288 s for R4's load, with the cache loaded first. It has not come back
+because the cache is no longer loaded there; one sample cannot tell a slow host from a slower compile path.
+
+**Left as it is:** R4's own compile (about 30 s, its throwaway turn) could also come from the cache, but only by
+loading it first, the order that went wrong once.
+
+**Deployed** by the author on 10-15 (row 6). M36 cost about \$0.75 on Modal (\$0.45 and \$0.30, estimated).

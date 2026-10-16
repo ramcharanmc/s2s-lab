@@ -87,6 +87,7 @@ one. A failed run is still a row, since it was still billed.
 | 2026-10-13 | `a12cec6` | two turns on the deployed demo (the old rung), then `modal serve modal_app/demo.py` (a cold turn and a warm one) | T4, L40S, and a CPU container for the page | — | 295.3 s and 16.9 s (the session's streams) | ≈ \$0.50 (estimated from the GPU rates, the wakes and the idle windows; the app's count not noted) | **M34, the demo**: the new rung on Modal, warm first audio 2.86 s on the server and 4.77 s in the browser; the L40S's load 251 s (`docs/m34-log.md`, entries 9 and 10) |
 | 2026-10-14 | `d61c79d` | `modal serve modal_app/demo.py` (the demo; one cold turn on the T4 and the L40S) | T4, L40S, and a CPU container for the page | — | 203.4 s (the L40S's stream) | ≈ \$0.24 (estimated from the GPU rates, the wakes and the idle windows) | **M35**: the L40S's wake 185.7 s, 251.0 before; most of it compiling (`docs/m35-log.md`, entry 3) |
 | 2026-10-15 | `f7e5bef` | `modal serve modal_app/demo.py` (the demo; two cold L40S wakes, a turn each) | T4, L40S, and a CPU container for the page | — | 171.5 s and 356.7 s (the L40S's streams) | ≈ \$0.45 (estimated from the GPU rates, the wakes and the idle windows) | **M36, first session**: the compile cache filled (32 MB) and loaded; R4 streamed's compiles 103 s to 23, but R4's load 57 s to 288 (`docs/m36-log.md`, entry 3) |
+| 2026-10-15 | `6e66acc` | `modal serve modal_app/demo.py` (the demo; two cold L40S wakes, a turn each), then `modal deploy` | T4, L40S, and a CPU container for the page | — | 105.5 s and 91.4 s (the L40S's streams) | ≈ \$0.30 (estimated from the GPU rates, the wakes and the idle windows) | **M36, second session**: the cache loaded after R4; the L40S loaded in 93.1 s and 71.8 s (185.7 in M35); deployed (`docs/m36-log.md`, entries 5 and 6) |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -95,5 +96,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$23.596 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
+| Modal | \$23.896 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
 | Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |

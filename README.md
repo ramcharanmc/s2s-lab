@@ -13,13 +13,13 @@ the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md
 **https://ramcharanmc--s2s-lab-demo-web.modal.run**
 
 A recording answered by R0 to R5 on four machines (R3, R4 and R5 woken only when asked for; 32 s to
-about 3 min to wake, the L40S the slowest), with what the visitor's voice carried beside the words the cascades received, and
+about 1.5 min to wake, the L40S the slowest), with what the visitor's voice carried beside the words the cascades received, and
 a severity score rendered onto synthetic speech, to be heard. The measured tab is open to anyone;
 the live tab needs an access code and stops at \$3 of GPU a day. R4 and R4 streamed answer side by side,
 on one set of weights, and the streamed reply plays as it arrives (M32a), on a Talker cache sized to
 the turn (M34, PR-016).
 Every rung was also measured on one card, the L40S, R0 to R4 in one
-container (M28, below). About \$48 spent: \$23.60 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+container (M28, below). About \$48 spent: \$23.90 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 
