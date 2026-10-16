@@ -30,6 +30,8 @@ Rules, from the v1 Research plan (§8):
 | PR-013 | On two voices and 24 sentences no copy has spoken: when Kokoro-82M is quantized to 8 bits, has its pitch left PR-009's guardrail by more than the package's own noise while its words have stayed (Claim A), and is the fp16 copy a usable rung on a CPU (Claim B)? | `192dd8a` | **Reported: Claim A supported** (the 8-bit copy's pitch is lower than fp32's on 48 of 48 renders, by 3.96 Hz, interval -4.36 to -3.58, the noise floor 1.44; within 3 Hz on 12 of 48; its normalized WER +0.24 points, 10 errors against 8 in 820 words); **Claim B not supported** (fp16 returned no audio for 6 of 48 renders) |
 | PR-014 | On real speech, does an endpointer that ends the turn when a voice-activity-projection model (VAP) projects the system to speak next cut off fewer disfluent turns than T1b, without making clean speakers wait longer? | `ac3a932` | **Reported: not run: no θ met the registered rule on DEV, with a silent partner or with the system's prompt; VAP rated the speaker's own pauses above the end of the turn** |
 | PR-015 | On the eval set, does R4 streamed let the caller hear its reply sooner than R4, without stalling, a much longer turn or garbled words? | `e2a4b4e` | **Reported: supported** (first sound 0.49 of R4's at the median, 95% interval 0.47 to 0.50, and 0.32 at p90: 3.3 s against 6.8, 3.7 against 11.8; no turn stalled; Whisper's word error rate 1.1% against 1.3%; the turn 1.14 times as long) |
+| PR-016 | On the eval set, does a Talker cache sized to the turn let the caller hear R4 streamed's reply sooner still, at the median and in the tail, without stalling, a longer turn or other words? | `d65274d` | **Reported: supported** (first sound 0.787 of the stream's at the median, 95% interval 0.781 to 0.790, and 0.809 at p90: 2.6 s against 3.3, 3.0 against 3.7; no turn stalled; the same codes and words on 200 of 200) |
+| PR-017 | On the eval set, does starting R4 streamed's playback when the turn's own code rate says its second block is due, instead of after 0.5 s of audio, let the caller hear the reply sooner, without stalling? | The commit that adds this entry | Registered; not yet run |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -3753,3 +3755,129 @@ Descriptive, not criteria:
   (r = 0.99 against its words), within 1.8 to 3.4 s.
 - **Against R4 itself**, across two runs on the same eval set and host (descriptive only): R4's first
   sound was 6,806 ms at p50 in PR-015, the sized stream's here 2,622, about 0.39 of it.
+
+## PR-017 — R4 streamed, its start timed from the turn: the reply heard sooner, without stalls
+
+**Registered:** 2026-10-16, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+PR-016 found R4 streamed on a cache sized to the turn (`r4-gpu-stream-sized`) heard after 2.62 s (p50) on the
+eval set. It holds playback until 0.5 s of audio exists; its first block is 0.46 s, so it always waits for the
+second block. On M34's development turns the second block came a nearly fixed time after the first: 96 codes
+of the Talker and one decode of the second window (`docs/m37-log.md`). Later blocks are made faster than they
+play, so only the second can run playback dry, and playback could start about 0.46 s before it arrives.
+
+M37 built a start planned from the turn (`src/s2slab/r4timed.py`, `r4stream.planned_start`): when the first
+block exists, playback starts after 96 codes at the turn's own ms a code (over the codes written so far), plus
+the second window's decode as timed at load in the same container, less the first block's length, plus a
+margin. A timer hands the held audio on at that time, from a thread of its own, since the Talker's thread is
+busy decoding the very window it waits on.
+
+On the 30 probe clips (`runs/r4-gpu/timed-dev-l40s.json`, development, at `fe65b94`, one L40S on the slower of
+the two hosts M31 met): the sized stream run with no hold, every turn's times kept, every rule scored from
+those times on the same turns. The second window decoded in 513.5 ms at load and 526 (p50) in the turns; the
+plan with no margin was short by 12 ms (p50) and 17 at most, and stalled every turn. **By the rule written
+before the run** (the smallest margin of 0 to 500 ms in steps of 50 with no stalled turn) **the margin is
+50 ms**: first sound 2,248 ms (p50) and 2,668 (p90) against the 0.5 s buffer's 2,670 and 3,092, no turn
+stalled, every turn at least 33 ms from a stall; the ratios 0.842 (95% interval 0.834 to 0.850) at p50 and
+0.863 (0.854 to 0.932) at p90. A fixed wait after the first block would have needed 1,100 ms (the one turn on
+the 6,144-place cache): 2,612 ms at p50. Whisper heard 2 errors in 634 words.
+
+### Question
+
+On the frozen eval set, does the timed start let the caller hear R4 streamed's reply sooner than the 0.5 s
+start buffer, at the median and in the tail, without stalling?
+
+### The rule and its comparator
+
+- **`r4-gpu-stream-timed`**, as frozen in this commit (`src/s2slab/r4timed.py`, `MARGIN_S = 0.05`): the
+  sized stream's blocks (24 codes, then 96), caches (2048, then 6144 places) and codes, its start planned as
+  above with a 50 ms margin. The margin was chosen on the development run by a rule written before that run.
+- **The 0.5 s start buffer**, as frozen for PR-015 and PR-016, **on the same turns**. A start rule changes when
+  audio is handed out, never what is made: each turn of the timed rung keeps the time each piece was made,
+  before any hold, and what the buffer would have done to that very turn is computed from those times
+  (`r4streamdev.buffered`, StartBuffer's rule applied to the pieces' times, on which the development runs of
+  M31, M34 and M37 rest). The two rules are compared on the same codes, the same pieces and the same host.
+
+### Test data
+
+The frozen eval set, 200 clips, 50 each of clean, accented, disfluent and slow. The sized stream has answered
+them once (PR-016); `r4-gpu-stream-timed` never has.
+
+### Validity requirements
+
+- **V1 · The same audio.** On all 200 turns the audio handed out is the audio made (the same samples), so the
+  two rules play the same reply.
+- **V2 · No reply cut.** At most 2 of 200 replies reach their cache's end (PR-016: 0).
+- **V3 · Fixed before data.** This entry, the frozen rung, `src/s2slab/pr017.py` and the command are committed
+  before the run; the run records its commit.
+- **V4 · Once.** The run is refused without `--confirm PR-017`, if its file exists, or from a tree with
+  uncommitted changes.
+
+If V1 or V2 fails, the result is **not a valid test** and is reported as such. If V3 or V4 fails, it is
+reported as **exploratory**. A turn with no first sound under either rule is not dropped: it is reported as a
+deviation.
+
+### Primary outcome
+
+First sound (`rungs.Turn.first_sound_ms`), the timed start against the buffer, on the same turn.
+
+### Success criteria — all three must hold
+
+| | Criterion |
+|---|---|
+| **S1 · Median** | The timed start's first-sound p50 ≤ **0.90** of the buffer's. |
+| **S2 · Tail** | The timed start's first-sound p90 ≤ **0.92** of the buffer's. |
+| **S3 · Stalls** | At most **2 of 200** timed turns stall at all (`stall_ms > 0`), and none for more than **100 ms**. |
+
+**Confidence.** As PR-015 and PR-016: for S1 and S2 a paired bootstrap of the 200 clip ids (10,000 resamples,
+seed 0, percentile interval), both rules' percentiles recomputed on each resample; the criterion holds only if
+the **upper end of the 95% interval** is at or below the bar. S3 is a count, taken as observed. No
+multiplicity correction: success needs all three at once.
+
+**Why these bars.** The gain is about a fixed 0.42 s (the first block's 0.46 s less the margin), so the ratio
+is about 1 − 0.42 / (the buffer's first sound). On development: S1 0.842 (0.834 to 0.850), S2 0.863 (0.854 to
+0.932; the p90 of 30 turns rests on three). On PR-016's eval turns the buffer's first sound was 2.62 s at p50
+and 3.01 at p90, which puts the ratios near 0.84 and 0.86; S2 fails only if the p90 first sound passes about
+5.3 s. S1's bar sits above the development interval. S3: the margin left every development turn at least
+33 ms from a stall; the bar allows a rare slow decode on a busy host, not a rule that stalls as a habit. The
+turn's total, its words and its codes are the same under both rules by construction, so no criterion asks
+about them.
+
+### Predictions, recorded but not criteria
+
+- S1 about 0.84, S2 about 0.86; no turn stalled; first sound about 2.2 s at p50 (PR-016's 2.62 less 0.42).
+- The simulation from the pieces' times matches the live first sound within a few ms; the timer hands on within
+  a few ms of its plan.
+
+### Reported alongside, descriptively
+
+The fixed 1,100 ms wait on the same turns; the buffer's stalls; the second window's decode at load and in the
+turns; how late the timer handed on, and how close each turn came to a stall; the simulation against the live
+first sound; first sound by cohort; the caches; Whisper's word error rate; the run's cost.
+
+### What this cannot show
+
+- **Processing time only**: no endpointer wait, no network, no audio device. Stalls are modelled from when
+  each piece existed; the demo's browser plays pieces as they arrive.
+- **One container**: the margin was chosen on the slower host; the window's decode is timed at load in each
+  container, but other hosts are not tested.
+- **The comparator is computed, not run**: the buffer's turns come from the same pieces by StartBuffer's rule,
+  not from a second live pass.
+- **The Thinker still comes first**: both rules start after the whole text and the first block.
+
+### Analysis plan
+
+1. Commit this entry, the frozen rung, `src/s2slab/pr017.py` and the command (V3).
+2. The one run: `modal run modal_app/r4_bench.py::pr017 --confirm PR-017`.
+3. The results below, verbatim; then, labelled exploratory, the stalls, the timer and the cohorts.
+
+### Deviations
+
+*None.*
+
+### Results
+
+*Not yet run.*

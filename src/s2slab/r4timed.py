@@ -27,6 +27,9 @@ from .r4sized import SizedStreamingSpeechToSpeech
 from .r4stream import TimedStart, planned_start
 from .r4streamdev import heard
 
+MARGIN_S = 0.05     # chosen on the 30 probe clips by the rule written before that run (docs/m37-log.md, entry 3;
+                    # runs/r4-gpu/timed-dev-l40s.json): the smallest of 0 to 500 ms with no stalled turn. Frozen for PR-017
+
 
 def second_window(first: int, block: int, left: int, right: int) -> int:
     """The second block's window, in codes (r4stream.windows_for): the one whose decode the start waits on."""
@@ -41,7 +44,7 @@ class TimedStreamingSpeechToSpeech(SizedStreamingSpeechToSpeech):
                    "the second block is due, by this turn's own code rate and the DiT's decode as timed at load, "
                    "less the first block's length, plus a margin; bf16, CUDA")
 
-    def __init__(self, model=None, *, margin_s: float, **stream):
+    def __init__(self, model=None, *, margin_s: float = MARGIN_S, **stream):
         super().__init__(model, **stream)
         self.margin_s = margin_s
 

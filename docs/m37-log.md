@@ -6,7 +6,9 @@ Kept as events happen. The earlier logs: `docs/m36-log.md` and those it names.
 | # | When | What ran | Outcome | Code change | Commit |
 |---|---|---|---|---|---|
 | 1 | 10-16 | — | the design (below); the author's go | — | — |
-| 2 | 10-16 | the tests, laptop: 1028 passed, 2 skipped (13 new) | a start checked at each code would have gained nothing: the planned start falls inside the second window's decode (about 520 ms, longer than the first block's 460), when the Talker's thread writes no code. So a timer hands the held pieces on, from a thread of its own; the simulation scores it as such, and a test shows the two agree | `r4stream` (the codes', pieces' and windows' times; `TimedStart`, `planned_start`), `r4streamdev.heard`, `r4timed.py`, `r4timeddev.py`, `::timeddev`, tests | this commit |
+| 2 | 10-16 | the tests, laptop: 1028 passed, 2 skipped (13 new) | a start checked at each code would have gained nothing: the planned start falls inside the second window's decode (about 520 ms, longer than the first block's 460), when the Talker's thread writes no code. So a timer hands the held pieces on, from a thread of its own; the simulation scores it as such, and a test shows the two agree | `r4stream` (the codes', pieces' and windows' times; `TimedStart`, `planned_start`), `r4streamdev.heard`, `r4timed.py`, `r4timeddev.py`, `::timeddev`, tests | fe65b94 |
+| 3 | 10-16 | `modal run modal_app/r4_bench.py::timeddev`, the author, at fe65b94 | one L40S (driver 610.57.04, the slower host), 407 s in the function, \$0.224; 29 turns on the 2,048-place cache, 1 on 6,144, none cut. The plan with no margin short by 12 ms (p50), 17 at most, and every turn stalled; **the margin 50 ms**, the smallest with no stalled turn: first sound 2,248 ms against the buffer's 2,670 (p50), 423 ms sooner. **GO** by the rule | — | — |
+| 4 | 10-16 | — | the margin frozen; the rung `r4-gpu-stream-timed` registered; **PR-017 registered** before any eval-set turn of it; PR-016's row, missing from the registry's table since M34, added | `r4timed.MARGIN_S`, `rungs`, `r4stream` (the plan's time kept), `pr017.py`, `::pr017`, `docs/preregistration.md`, tests | this commit |
 
 ## 1. The design
 
@@ -52,3 +54,29 @@ cost (about \$1.30): one live pass of the timed rung, today's rule computed from
 Then the demo, only if PR-017 is supported.
 
 **Run before the hand-over**, in a scratch copy of the tree on the laptop: the full suite, 1028 passed, 2 skipped.
+
+## 2. The development run (row 3)
+
+`runs/r4-gpu/timed-dev-l40s.json`: the sized stream with no hold on the 30 probe clips, every rule scored on the
+same turns.
+
+| start rule | first sound p50 ms | p90 | stalled turns |
+|---|---:|---:|---:|
+| today: the 0.5 s buffer | 2,670 | 3,092 | 0 |
+| timed, margin 0 ms | 2,198 | 2,618 | 30 |
+| **timed, margin 50 ms** (the rule's choice) | **2,248** | **2,668** | **0** |
+| timed, margin 100 ms | 2,298 | 2,718 | 0 |
+| a fixed wait after the first block, 1,100 ms (the smallest stall-free) | 2,612 | 3,032 | 0 |
+
+**What the plan rests on.** The second window (132 codes) decoded in 513.5 ms at load and 526 (p50), 532 at most,
+in the turns: about 12 ms slower, so the plan with no margin started every turn a little early and every turn
+stalled, by 15 ms at p90. The turn's own ms a code was 6.6 (p50) and 10.5 on the 6,144-place turn, which the plan
+followed: that turn needed 1,071 ms after its first block, the others about 698. With 50 ms every turn kept at
+least 33 ms in hand. Paired ratios against the buffer: 0.842 (95% interval 0.834 to 0.850) at p50, 0.863 (0.854
+to 0.932) at p90. **Timing from the turn is the gain**: a fixed wait had to cover the slow turn and gained 58 ms.
+
+The first window (36 codes) took 251 ms at load; the plan does not use it, counting from when the first block
+exists.
+
+**Then:** PR-017 registered (row 4), its run the author's: `modal run modal_app/r4_bench.py::pr017 --confirm
+PR-017`, one L40S, about \$0.80.

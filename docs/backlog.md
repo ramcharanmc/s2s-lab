@@ -3,14 +3,15 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-15, at commit `6e66acc`.
+Last updated 2026-10-16, at commit `fe65b94`.
 
 ## Chosen next: M37, a start rule timed from the turn
 
 The author's go, 2026-10-15, after M36. R4 streamed's start predicted from the turn's own code rate and first
 DiT window instead of the 0.5 s hold; on the development turns of M34 playback could start about 0.70 s after
 the first block on 29 of 30, against about 1.16 s today; a development run, then a registration (PR-017) before
-any eval run, then the demo.
+any eval run, then the demo. **Development** (`fe65b94`, \$0.224): GO by its rule, the margin 50 ms, first sound
+2,248 ms against the buffer's 2,670 (p50), no stall. **PR-017 registered**; its run (about \$0.80) is the author's.
 
 **Set aside, 2026-10-15: R4 streamed from the Thinker's first words.** On one GPU the time to the second block,
 which a stall-free start must wait for, is the Thinker's whole reply plus 120 Talker steps, both bound by

@@ -17,9 +17,10 @@ R4 on Modal: the S2S rung on an L40S, with R3 beside it in the same container.
     modal run modal_app/r4_bench.py::sizeddev                                M34, step 2: R4 streamed on a right-sized cache
     modal run modal_app/r4_bench.py::pr016 --confirm PR-016                  PR-016, once: both streams on the eval set
     modal run modal_app/r4_bench.py::timeddev                                M37, step 2: the timed start, probe clips
-The file has eleven entry points (main, pairs, profile, speed, streamdev, pr015, loopspeed, stepprofile, sizeddev,
-pr016, timeddev), so Modal needs the one named: ::main, ::pairs, ::profile, ::speed, ::streamdev, ::pr015,
-::loopspeed, ::stepprofile, ::sizeddev, ::pr016 or ::timeddev.
+    modal run modal_app/r4_bench.py::pr017 --confirm PR-017                  PR-017, once: the timed start on the eval set
+The file has twelve entry points (main, pairs, profile, speed, streamdev, pr015, loopspeed, stepprofile, sizeddev,
+pr016, timeddev, pr017), so Modal needs the one named: ::main, ::pairs, ::profile, ::speed, ::streamdev, ::pr015,
+::loopspeed, ::stepprofile, ::sizeddev, ::pr016, ::timeddev or ::pr017.
 
 What happens where:
   laptop   sends src/s2slab, the probe folder and the eval set; afterwards
@@ -326,6 +327,21 @@ def pr016_run(confirm: str) -> dict:
     os.chdir("/root")
     from s2slab.evalset import TARGET_SR
     from s2slab.pr016 import eval_clips, run
+    clips, cohorts = eval_clips(confirm)
+    t0 = time.perf_counter()
+    blob = run(clips, TARGET_SR, cohorts)
+    return {"gpu": _gpu_name(), "versions": _versions(), "run": blob, "seconds": time.perf_counter() - t0}
+
+
+# 200 clips through one rung (the timed stream, about 6 s a turn with its Thinker), each reply heard by Whisper:
+# about 25 min after the load. The timeout leaves room.
+@app.function(gpu="L40S", timeout=120 * 60, scaledown_window=60)
+def pr017_run(confirm: str) -> dict:
+    """PR-017's one run: r4-gpu-stream-timed as frozen on the 200 eval clips, the buffer's turn beside each (pr017.run)."""
+    import os
+    os.chdir("/root")
+    from s2slab.evalset import TARGET_SR
+    from s2slab.pr017 import eval_clips, run
     clips, cohorts = eval_clips(confirm)
     t0 = time.perf_counter()
     blob = run(clips, TARGET_SR, cohorts)
@@ -639,6 +655,32 @@ def pr016(confirm: str = ""):
             "versions": out["versions"], **out["run"]}
     path = save(blob, REPO / RUN)
     print(format_pr016(blob, criteria(blob)))
+    print(f"\nsaved -> {path.relative_to(REPO)}")
+    print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")
+
+
+@app.local_entrypoint()
+def pr017(confirm: str = ""):
+    """PR-017, once (docs/preregistration.md): refused without --confirm PR-017, if its run file exists, or from
+    a tree with uncommitted changes. Saves runs/r4-gpu/pr017.json and prints the criteria."""
+    from s2slab.pr017 import REGISTRATION, RUN, criteria, format_pr017, save
+    from s2slab.sidechannel import refuse_to_overwrite
+
+    if confirm != REGISTRATION:
+        raise SystemExit(f"add --confirm {REGISTRATION}: the eval set is its confirmation's, and it runs once")
+    refuse_to_overwrite(REPO / RUN)
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    if commit.endswith("-dirty"):
+        raise SystemExit(f"{commit}: commit first; {REGISTRATION} runs from a clean commit")
+    t0 = time.time()
+    out = pr017_run.remote(confirm)
+    wall = time.time() - t0
+    blob = {"registration": REGISTRATION, "commit": commit, "machine": f"Modal {out['gpu']}",
+            "versions": out["versions"], **out["run"]}
+    path = save(blob, REPO / RUN)
+    print(format_pr017(blob, criteria(blob)))
     print(f"\nsaved -> {path.relative_to(REPO)}")
     print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
           f"about ${wall / 3600 * L40S_DOLLARS_PER_HOUR:.3f} at the L40S rate. Modal's dashboard has the exact bill.")

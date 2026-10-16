@@ -430,7 +430,8 @@ class StreamingSpeechToSpeech(Rung):
                 out.cancel()
             raise
         self.last_codes, self.last_windows = streamer.codes, dec.windows
-        self.last_timing = {"code_ms": streamer.times, "made": made, "decode_ms": dec.decode_ms}
+        self.last_timing = {"code_ms": streamer.times, "made": made, "decode_ms": dec.decode_ms,
+                            "planned_ms": getattr(out, "at", None)}             # a planned start's time (M37)
         return Reply(None, OUT_SR, None, clean_for_speech(text))
 
 

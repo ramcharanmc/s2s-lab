@@ -369,3 +369,10 @@ def test_the_l40s_app_has_the_pr016_entry_point():
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     assert hasattr(mod.pr016_run, "remote") and hasattr(mod.pr016, "info")
+
+
+def test_the_l40s_app_has_the_pr017_entry_point():
+    spec = importlib.util.spec_from_file_location("r4_bench", ROOT / "modal_app" / "r4_bench.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert hasattr(mod.pr017_run, "remote") and hasattr(mod.pr017, "info")
