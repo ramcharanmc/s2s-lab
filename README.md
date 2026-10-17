@@ -7,7 +7,7 @@ The point is the measurement, not the demo. Each rung is thin: get it working, m
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
 **Status, 2026-10-14** (commit `d61c79d`): rungs R0 to R5 built and measured, and R4 streamed; three
-fine-tunes run; sixteen registrations, all reported, seven with a supported claim. A demo that shows
+fine-tunes run; seventeen registrations, all reported, eight with a supported claim. A demo that shows
 the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
 
 **https://ramcharanmc--s2s-lab-demo-web.modal.run**
@@ -19,7 +19,7 @@ the live tab needs an access code and stops at \$3 of GPU a day. R4 and R4 strea
 on one set of weights, and the streamed reply plays as it arrives (M32a), on a Talker cache sized to
 the turn (M34, PR-016).
 Every rung was also measured on one card, the L40S, R0 to R4 in one
-container (M28, below). About \$48 spent: \$24.12 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+container (M28, below). About \$49 spent: \$24.92 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 
@@ -71,7 +71,7 @@ Talker step had been attention over the cache's empty places.
 
 ## What was claimed, and what happened
 
-Sixteen registrations (`docs/preregistration.md`). Criteria are committed before the data is seen;
+Seventeen registrations (`docs/preregistration.md`). Criteria are committed before the data is seen;
 results are appended whatever they say.
 
 | | Question, in short | Outcome |
@@ -92,8 +92,9 @@ results are appended whatever they say.
 | PR-014 | Does voice activity projection end real turns better than T1b? | not run: no setting met its rule on development |
 | PR-015 | Does streaming R4 let the caller hear its reply sooner, without stalls? | **supported**: 3.3 s instead of 6.8 (p50), 3.7 instead of 11.8 (p90), no stall |
 | PR-016 | Does a cache sized to the turn let R4 streamed be heard sooner still? | **supported**: 2.6 s instead of 3.3 (p50), 3.0 instead of 3.7 (p90), no stall, the same words |
+| PR-017 | Does starting R4 streamed's playback when the turn says its second block is due beat a 0.5 s buffer? | **supported**: 2.27 s instead of 2.68 (p50), 2.70 instead of 3.11 (p90), no stall, on the same turns |
 
-All sixteen are reported. Eight were not supported, and one, PR-014 (voice activity projection on
+All seventeen are reported. Eight were not supported, and one, PR-014 (voice activity projection on
 real speech), was not run: no setting met its rule on the development recordings. Each entry says
 why.
 

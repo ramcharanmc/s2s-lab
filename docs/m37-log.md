@@ -8,7 +8,8 @@ Kept as events happen. The earlier logs: `docs/m36-log.md` and those it names.
 | 1 | 10-16 | — | the design (below); the author's go | — | — |
 | 2 | 10-16 | the tests, laptop: 1028 passed, 2 skipped (13 new) | a start checked at each code would have gained nothing: the planned start falls inside the second window's decode (about 520 ms, longer than the first block's 460), when the Talker's thread writes no code. So a timer hands the held pieces on, from a thread of its own; the simulation scores it as such, and a test shows the two agree | `r4stream` (the codes', pieces' and windows' times; `TimedStart`, `planned_start`), `r4streamdev.heard`, `r4timed.py`, `r4timeddev.py`, `::timeddev`, tests | fe65b94 |
 | 3 | 10-16 | `modal run modal_app/r4_bench.py::timeddev`, the author, at fe65b94 | one L40S (driver 610.57.04, the slower host), 407 s in the function, \$0.224; 29 turns on the 2,048-place cache, 1 on 6,144, none cut. The plan with no margin short by 12 ms (p50), 17 at most, and every turn stalled; **the margin 50 ms**, the smallest with no stalled turn: first sound 2,248 ms against the buffer's 2,670 (p50), 423 ms sooner. **GO** by the rule | — | — |
-| 4 | 10-16 | — | the margin frozen; the rung `r4-gpu-stream-timed` registered; **PR-017 registered** before any eval-set turn of it; PR-016's row, missing from the registry's table since M34, added | `r4timed.MARGIN_S`, `rungs`, `r4stream` (the plan's time kept), `pr017.py`, `::pr017`, `docs/preregistration.md`, tests | this commit |
+| 4 | 10-16 | — | the margin frozen; the rung `r4-gpu-stream-timed` registered; **PR-017 registered** before any eval-set turn of it; PR-016's row, missing from the registry's table since M34, added | `r4timed.MARGIN_S`, `rungs`, `r4stream` (the plan's time kept), `pr017.py`, `::pr017`, `docs/preregistration.md`, tests | eca9da1 |
+| 5 | 10-16 | `modal run modal_app/r4_bench.py::pr017 --confirm PR-017`, the author, at eca9da1 | one L40S (driver 610.57.04), 1,463 s in the function, \$0.800. **PR-017 supported**: first sound 0.846 of the buffer's at p50 [0.844, 0.849] and 0.867 at p90 [0.863, 0.875]: 2,269 ms against 2,681, 2,695 against 3,108; no turn stalled, every turn at least 44 ms in hand; the timer 1.0 ms after its plan (p50), 2.2 at most; the same audio on 200 of 200 | — | this commit |
 
 ## 1. The design
 
@@ -80,3 +81,21 @@ exists.
 
 **Then:** PR-017 registered (row 4), its run the author's: `modal run modal_app/r4_bench.py::pr017 --confirm
 PR-017`, one L40S, about \$0.80.
+
+## 3. PR-017 (row 5)
+
+**Supported**, all three criteria, close to the predictions (`docs/preregistration.md`, PR-017's Results):
+
+| first sound, ms | p50 | p90 | stalled turns |
+|---|---:|---:|---:|
+| the 0.5 s buffer, on the same turns | 2,681 | 3,108 | 0 |
+| **the timed start, 50 ms margin** | **2,269** | **2,695** | **0** |
+| ratio (95% interval) | 0.846 (0.844 to 0.849) | 0.867 (0.863 to 0.875) | |
+
+The caller hears R4 streamed about 0.41 s sooner, in every cohort. The plan held on the eval set: the second
+window's decode in the turns (521 ms p50, 547 at most) stayed within the margin of the load's (518.1); every turn
+kept at least 44 ms in hand. The timer handed on within 2.2 ms of its plan, and the simulation from the pieces'
+times matched the live first sound within 2.2 ms. M37 cost \$1.02 on Modal so far (\$0.224 and \$0.800).
+
+**Next (step 4):** the demo, as after PR-016: `r4-gpu-stream-timed` under "R4 streamed", its measured row from
+`runs/r4-gpu/pr017.json`; a `modal serve` check, then `modal deploy`, the author's.

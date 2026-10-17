@@ -31,7 +31,7 @@ Rules, from the v1 Research plan (§8):
 | PR-014 | On real speech, does an endpointer that ends the turn when a voice-activity-projection model (VAP) projects the system to speak next cut off fewer disfluent turns than T1b, without making clean speakers wait longer? | `ac3a932` | **Reported: not run: no θ met the registered rule on DEV, with a silent partner or with the system's prompt; VAP rated the speaker's own pauses above the end of the turn** |
 | PR-015 | On the eval set, does R4 streamed let the caller hear its reply sooner than R4, without stalling, a much longer turn or garbled words? | `e2a4b4e` | **Reported: supported** (first sound 0.49 of R4's at the median, 95% interval 0.47 to 0.50, and 0.32 at p90: 3.3 s against 6.8, 3.7 against 11.8; no turn stalled; Whisper's word error rate 1.1% against 1.3%; the turn 1.14 times as long) |
 | PR-016 | On the eval set, does a Talker cache sized to the turn let the caller hear R4 streamed's reply sooner still, at the median and in the tail, without stalling, a longer turn or other words? | `d65274d` | **Reported: supported** (first sound 0.787 of the stream's at the median, 95% interval 0.781 to 0.790, and 0.809 at p90: 2.6 s against 3.3, 3.0 against 3.7; no turn stalled; the same codes and words on 200 of 200) |
-| PR-017 | On the eval set, does starting R4 streamed's playback when the turn's own code rate says its second block is due, instead of after 0.5 s of audio, let the caller hear the reply sooner, without stalling? | The commit that adds this entry | Registered; not yet run |
+| PR-017 | On the eval set, does starting R4 streamed's playback when the turn's own code rate says its second block is due, instead of after 0.5 s of audio, let the caller hear the reply sooner, without stalling? | `eca9da1` | **Reported: supported** (first sound 0.846 of the buffer's at the median, 95% interval 0.844 to 0.849, and 0.867 at p90: 2.27 s against 2.68, 2.70 against 3.11; no turn stalled; the same audio on 200 of 200) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -3880,4 +3880,55 @@ first sound; first sound by cohort; the caches; Whisper's word error rate; the r
 
 ### Results
 
-*Not yet run.*
+**Run once**, by the author, 2026-10-16: `modal run modal_app/r4_bench.py::pr017 --confirm PR-017` at
+`eca9da1` (this entry's commit, clean), one L40S, 1,463 s in the function, \$0.800.
+`runs/r4-gpu/pr017.json`. The analysis's output, verbatim:
+
+```
+PR-017: r4-gpu-stream-timed (start planned from the turn, margin 50 ms) against the 0.5 s start buffer on the same turns; first block 24 codes, then 96; caches of 2048, 6144 places
+  commit eca9da1 · Modal NVIDIA L40S, 610.57.04 · torch 2.14.0+cu126, torchvision 0.29.0+cu126, transformers 5.17.0
+  paired bootstrap: 10000 resamples of 200 clips, seed 0
+
+V1 the same audio    PASS  the audio handed out is the audio made on 200 of 200; needs all
+V2 no reply cut      PASS  0 replies cut at their cache's end; needs <= 2
+S1 median            PASS  first-sound p50 ratio 0.846 [95% CI 0.844, 0.849]; needs upper end <= 0.9
+S2 tail              PASS  first-sound p90 ratio 0.867 [95% CI 0.863, 0.875]; needs upper end <= 0.92
+S3 stalls            PASS  0 turns stall (max 2), the longest 0 ms (max 100)
+
+SUPPORTED: all three criteria hold
+
+Descriptive, not criteria:
+  first sound, ms, p50 / p90: timed 2269 / 2695; the 0.5 s buffer 2681 / 3108; a fixed 1,100 ms wait 2630 / 3056 (0 turns stalled)
+  the buffer's turns stalled: 0; the turn's total p50 5609 ms (the same turn under both rules)
+  the second window decoded in 518.1 ms at load; in the turns p50 521, max 547 ms
+  the timer handed on after its plan by p50 1.0 ms, max 2.2; playback began before a stall would by p50 47 ms, min 44
+  the simulation from the pieces against the live first sound: off by p90 1.5 ms, max 2.2
+  first-sound p50 by cohort, timed vs buffer: clean 2276 vs 2687, accented 2256 vs 2671, disfluent 2285 vs 2698, slow 2267 vs 2678
+  the caches: 2048 places on 200 turns
+  stalls, timed: 0 turns
+  Whisper's word error rate on the replies: 1.1% (the same audio under both rules)
+```
+
+**SUPPORTED.** Both validity requirements and all three criteria hold.
+
+**Exploratory, not criteria:**
+
+- **As predicted.** S1 0.846 against a predicted 0.84, S2 0.867 against 0.86: the caller hears the reply
+  412 ms sooner at the median (2,269 ms against 2,681) and 413 at p90, about the 0.42 s the design expected.
+- **No turn came near a stall.** Every turn started playback at least 44 ms before a stall would have come
+  (47 at p50), more than development's 33: the second window decoded in 521 ms (p50) in the turns and 518.1 at
+  load, 547 at most.
+- **The timer kept time.** It handed the held audio on 1.0 ms after its plan (p50), 2.2 at most, while the
+  Talker's thread was decoding.
+- **The computed comparator is borne out.** The timed start simulated from the pieces' times matched the live
+  first sound within 1.5 ms at p90 and 2.2 at most: the method that gives the buffer's turns here (and every
+  development run's rules since M31) agrees with the live rung.
+- **The same gain in every cohort**: 411 to 415 ms, the timed start's first sound 2.26 to 2.29 s.
+- **Every turn took the 2,048-place cache**, as in PR-016. A fixed 1,100 ms wait, development's, gained 51 ms
+  here; a shorter fixed wait would have done on these turns, but not on development's turn on the 6,144-place
+  cache. The plan follows the turn, so it needs no such choice.
+- **The host was the slower one** (driver 610.57.04, development's), not PR-016's (580.95.05): the buffer's
+  first sound here, 2,681 ms, against the sized stream's 2,622 in PR-016. Hosts differ; the comparison above is
+  within one container.
+- **Against R4 itself**, across runs on the same eval set (descriptive only): R4's first sound was 6,806 ms at
+  p50 in PR-015; the timed start's here 2,269, about 0.33 of it.
