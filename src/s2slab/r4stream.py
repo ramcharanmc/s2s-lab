@@ -441,13 +441,16 @@ def _empty():
 
 
 def pair(model=None):
-    """The demo's L40S: r4-gpu-fast, r4-gpu-stream and r4-gpu-stream-sized (M34) on one FastOmni, one set of R4's weights (two sets,
+    """The demo's L40S: r4-gpu-fast, r4-gpu-stream, r4-gpu-stream-sized (M34) and r4-gpu-stream-timed (M37) on one FastOmni,
+    one set of R4's weights (two sets,
     22.5 GB each with their activations, would not fit the card's 48). Returns get(rung_id), as
     demo.Live takes it; each rung is made when it is asked for, both on the same model."""
     fast = model or FastOmni()
     from .r4sized import SizedStreamingSpeechToSpeech
+    from .r4timed import TimedStreamingSpeechToSpeech
     made = {"r4-gpu-fast": lambda: FastSpeechToSpeech(fast), "r4-gpu-stream": lambda: StreamingSpeechToSpeech(fast),
-            "r4-gpu-stream-sized": lambda: SizedStreamingSpeechToSpeech(fast)}
+            "r4-gpu-stream-sized": lambda: SizedStreamingSpeechToSpeech(fast),
+            "r4-gpu-stream-timed": lambda: TimedStreamingSpeechToSpeech(fast)}
 
     def get(rung_id: str):
         if rung_id not in made:

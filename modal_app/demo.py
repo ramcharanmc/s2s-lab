@@ -20,8 +20,9 @@ What happens where:
            renders a severity score onto Kokoro's speech (PR-009's voices, sentences and scores)
   hears    an A10: R3 (Qwen2-Audio hears the recording; 17 GB). Woken only when R3 is asked for
   speaks   an L40S: R4 and R4 streamed (Qwen2.5-Omni speaks the reply itself; 22.5 GB, more than an
-           A10 holds), both on one set of its weights (r4stream.pair); R4 streamed is r4-gpu-stream-sized
-           (M34, PR-016), its caches prepared at load. Woken only when one is asked for
+           A10 holds), both on one set of its weights (r4stream.pair); R4 streamed is r4-gpu-stream-timed
+           (M37, PR-017: M34's sized stream, its start timed from the turn), its caches prepared at load.
+           Woken only when one is asked for
   talks    a second A10: R5 (Moshi, full duplex; 16.6 GB, so not beside R3's 17). The recording
            is one side of a call, streamed as the eval clips were. Woken only when R5 is asked
            for. All three asleep 120 s after their last turn
@@ -76,14 +77,14 @@ ABOUT = {"R2": "slow tier small.en here; the measured R2 row is large-v3-turbo",
                "you sound included: it is not asked to, and nothing here checks what it says",
          "R4": "speech-to-speech: Qwen2.5-Omni hears the recording and speaks the reply itself; no recognizer, no TTS. Its "
                "Talker is compiled here, which on the eval set took 1.03 of R4's time (PR-015)",
-         "R4 streamed": "the same model and the same reply, decoded a block at a time and handed out, its first half second "
-                        "held, its Talker on a cache sized to the turn: on the eval set the caller heard it after 2.6 s, "
-                        "against 6.8 for R4 (PR-015, PR-016). This page plays each block as it arrives, and times the first "
-                        "in your browser",
+         "R4 streamed": "the same model and the same reply, decoded a block at a time and handed out, its Talker on a cache "
+                        "sized to the turn, its playback started when the turn's own pace says the next block is due: on the "
+                        "eval set the caller heard it after 2.3 s, against 6.8 for R4 (PR-015, PR-016, PR-017). This page "
+                        "plays each block as it arrives, times the first in your browser, and says if playback ran dry there",
          "R5": "full duplex: Moshi, no turns. Your recording is the caller's side of one call"}
 # The machines beside the T4, each woken only by a visitor who asks for its rung.
 OTHERS = {"a10": {"offered": {"R3": "r3-gpu"}, "says": "an A10", "rate": A10_DOLLARS_PER_HOUR},
-          "l40s": {"offered": {"R4": "r4-gpu-fast", "R4 streamed": "r4-gpu-stream-sized"}, "says": "an L40S",
+          "l40s": {"offered": {"R4": "r4-gpu-fast", "R4 streamed": "r4-gpu-stream-timed"}, "says": "an L40S",
                    "rate": L40S_DOLLARS_PER_HOUR},
           "moshi": {"offered": {"R5": "r5-moshi"}, "says": "a second A10", "rate": A10_DOLLARS_PER_HOUR}}
 
@@ -91,11 +92,11 @@ OTHERS = {"a10": {"offered": {"R3": "r3-gpu"}, "says": "an A10", "rate": A10_DOL
 # holds both to s2slab.demo.
 RUN_FILES = ("runs/r0-gpu/evalset-modal-t4-pr002.json", "runs/r1-gpu/evalset-modal-t4-pr002.json",
              "runs/r2-gpu-turbo/evalset-modal-t4-pr004.json", "runs/r3-gpu/evalset-modal-a10.json",
-             "runs/r4-gpu/evalset-modal-l40s.json", "runs/r4-gpu/pr016.json", "runs/r5-moshi/evalset-modal-a10.json",
+             "runs/r4-gpu/evalset-modal-l40s.json", "runs/r4-gpu/pr017.json", "runs/r5-moshi/evalset-modal-a10.json",
              "runs/r5-personaplex/evalset-modal-a10.json", "runs/ft2/pr011.json", "runs/prosody/pr006.json",
              "runs/bargein/pr003-70ms.json", "runs/ft1/pr010.json", "runs/severity/pr009.json", "runs/ft3/pr012.json",
              "runs/m26/pr013.json", "runs/turn-taking/pr014-dev-vap.json",
-             "runs/r4-gpu/pr015.json")
+             "runs/r4-gpu/pr015.json", "runs/r4-gpu/pr016.json")
 CLIPS = ("clean-07", "clean-11", "clean-23", "clean-37", "disfluent-29", "disfluent-42")
 
 # Every Hugging Face repo the four rungs load, and which files (None = all). The verbatim rung's

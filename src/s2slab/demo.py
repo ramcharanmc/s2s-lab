@@ -47,7 +47,7 @@ SILENT_PEAK = 1e-3
 CODE_ENV = "DEMO_ACCESS_CODE"
 MIN_CODE_LEN = 10                   # a shorter code is treated as none: it could be found by trying
 WRONG_CODES, LOCK_S = 30, 300.0     # this many wrong codes inside LOCK_S close the live part for LOCK_S (M32a)
-STREAMING_RUNGS = ("r4-gpu-stream", "r4-gpu-stream-sized")  # rungs whose pieces the page can play as they are made (M32a)
+STREAMING_RUNGS = ("r4-gpu-stream", "r4-gpu-stream-sized", "r4-gpu-stream-timed")  # pieces the page plays as they are made (M32a)
 NOT_LOADED = "This rung could not be loaded on this machine."
 NOT_ANSWERED = "This rung failed on this recording."
 NO_MACHINE = "The machine this rung runs on did not answer."
@@ -61,9 +61,10 @@ MEASURED = (
     ("R2", "two-tier: a slow recognizer (large-v3-turbo) drives the reply", "runs/r2-gpu-turbo/evalset-modal-t4-pr004.json"),
     ("R3", "speech-LLM: Qwen2-Audio hears the turn, no transcript in the loop", "runs/r3-gpu/evalset-modal-a10.json"),
     ("R4", "speech-to-speech, half duplex: Qwen2.5-Omni speaks the reply itself", "runs/r4-gpu/evalset-modal-l40s.json"),
-    ("R4 streamed", "the same model, its reply decoded a block at a time and handed out, its first half second held, its "
-                    "Talker on a cache sized to the turn; in its own run, beside it, R4 streamed as first built took 3.3 s "
-                    "to first sound (PR-016), and R4 6.8 in PR-015's", "runs/r4-gpu/pr016.json"),
+    ("R4 streamed", "the same model, its reply decoded a block at a time and handed out, its Talker on a cache sized to "
+                    "the turn, its playback started when the turn's own pace says the second block is due; on the same "
+                    "turns, holding the first half second took 2.7 s to first sound (PR-017), and R4 6.8 in PR-015's",
+                    "runs/r4-gpu/pr017.json"),
     ("R5 Moshi", "full duplex: no turns, the model decides when to talk", "runs/r5-moshi/evalset-modal-a10.json"),
     ("R5 PersonaPlex", "full duplex, with a role and a voice prompt before every call", "runs/r5-personaplex/evalset-modal-a10.json"),
 )
@@ -402,7 +403,8 @@ def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS
 # One panel a registration, from its committed run file. No audio: the barge-in set is the
 # author's own voice, and the renders are synthetic speech kept out of git.
 FINDINGS = ("runs/bargein/pr003-70ms.json", "runs/ft1/pr010.json", "runs/severity/pr009.json", "runs/ft3/pr012.json",
-            "runs/m26/pr013.json", "runs/turn-taking/pr014-dev-vap.json", "runs/r4-gpu/pr015.json", "runs/r4-gpu/pr016.json")
+            "runs/m26/pr013.json", "runs/turn-taking/pr014-dev-vap.json", "runs/r4-gpu/pr015.json", "runs/r4-gpu/pr016.json",
+            "runs/r4-gpu/pr017.json")
 BARGEIN_POLICIES = (("B0_duration_200ms", "stop after 200 ms of caller sound"), ("B0_duration_400ms", "after 400 ms"),
                     ("B0_duration_800ms", "after 800 ms"), ("B0_duration_1500ms", "after 1500 ms"),
                     ("B1_words", "stop when the recognizer has written words"), ("B2_speechlike", "stop when the words are not a backchannel"))
@@ -525,12 +527,35 @@ def _pr016(run: dict, rel: str) -> dict:
             "commit": run.get("commit"), "file": rel}
 
 
+def _pr017(run: dict, rel: str) -> dict:
+    from .pr017 import criteria
+    c = criteria(run)
+    d = c["describe"]
+    fs = d["first_sound"]
+    rows = [["first sound, the median: started from the turn's pace against the half-second hold, on the same turns",
+             f"{fs['timed'][0]:,.0f} ms against {fs['buffer'][0]:,.0f} ({fs['timed'][0] / fs['buffer'][0]:.2f} of it)"],
+            ["first sound, p90", f"{fs['timed'][1]:,.0f} ms against {fs['buffer'][1]:,.0f} ({fs['timed'][1] / fs['buffer'][1]:.2f})"],
+            ["turns where playback ran dry", f"{len(d['stalls'])} of {d['turns']}"],
+            ["the closest a turn came to running dry", f"{d['slack_ms'][1]:,.0f} ms in hand"],
+            ["the timer that starts playback, against its plan", f"{d['timer_late_ms'][0]:.1f} ms late at the median, "
+                                                                 f"{d['timer_late_ms'][1]:.1f} at most"]]
+    return {"registration": "PR-017", "title": "R4 streamed, its start timed from the turn",
+            "supported": c["verdict"].startswith("SUPPORTED"),
+            "question": "Does starting R4 streamed's playback when the turn's own pace says its second block is due let the "
+                        "caller hear it sooner than a half-second hold, without stalling?",
+            "rows": rows,
+            "note": "The same reply and the same audio: only the moment playback starts moved. The hold always waited for the "
+                    "second block; the timed start begins as the first block's audio will just meet it. Times on the server, "
+                    "one container, 200 clips; the hold's turns computed from the same pieces.",
+            "commit": run.get("commit"), "file": rel}
+
+
 def findings(root, files=FINDINGS) -> list[dict]:
     """The panels of what else was registered and run, each from its run file; a file that is
     not there is left out."""
     make = {"runs/bargein/pr003-70ms.json": _bargein, "runs/ft1/pr010.json": _ft1, "runs/m26/pr013.json": _quant,
             "runs/turn-taking/pr014-dev-vap.json": _pr014, "runs/r4-gpu/pr015.json": _pr015,
-            "runs/r4-gpu/pr016.json": _pr016,
+            "runs/r4-gpu/pr016.json": _pr016, "runs/r4-gpu/pr017.json": _pr017,
             "runs/severity/pr009.json": lambda run, rel: _severity(
                 run, rel, "PR-009", "A severity score, put onto speech",
                 "Does a severity score render onto neutral speech as the mapping says: lower, slower, flatter, with longer pauses?",

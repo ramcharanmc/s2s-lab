@@ -121,6 +121,11 @@ function wavFrom(chunks, sr) {                 // the pieces, joined, as a 16-bi
   let o = 44; for (const c of chunks) for (let i = 0; i < c.length; i++, o += 2) v.setInt16(o, Math.max(-32768, Math.min(32767, Math.round(c[i] * 32768))), true);
   return new Blob([buf], {type: "audio/wav"});
 }
+function schedule(p, now, duration) {           // when a piece plays: on arrival plus 50 ms, or when the one before ends.
+  const at = Math.max(now + 0.05, p.next);       // A piece that comes after the one before has ended is a gap the
+  if (p.next > 0) p.dry += at - p.next;          // listener hears: added to p.dry, in seconds (M37)
+  p.next = at + duration; return at;
+}
 // </stream-helpers>
 
 function bar(stages, total) {
@@ -411,11 +416,11 @@ async function streamGroup(g, form, code, slots, sent, ctx, onSummary) {
       if (ev.charged != null) { onSummary(ev); continue; }
       if (!ev.label) continue;
       const i = g.labels.indexOf(ev.label);
-      if (ev.start) { play[ev.label] = {sr: ev.sr, chunks: [], next: 0, heard: null}; continue; }
+      if (ev.start) { play[ev.label] = {sr: ev.sr, chunks: [], next: 0, dry: 0, heard: null}; continue; }
       if (ev.piece) {
         const p = play[ev.label], x = pcm16ToFloat(ev.piece), b = ctx.createBuffer(1, x.length, p.sr);
         b.copyToChannel(x, 0); const src = ctx.createBufferSource(); src.buffer = b; src.connect(ctx.destination);
-        const at = Math.max(ctx.currentTime + 0.05, p.next); src.start(at); p.next = at + b.duration; p.chunks.push(x);
+        const at = schedule(p, ctx.currentTime, b.duration); src.start(at); p.chunks.push(x);
         if (p.heard == null) { p.heard = performance.now() - sent + 1000 * (at - ctx.currentTime);
           slots[i].lastChild.textContent = "Playing: its first audio reached this browser " + ms(p.heard) + " after Send."; }
         continue;
@@ -424,7 +429,8 @@ async function streamGroup(g, form, code, slots, sent, ctx, onSummary) {
         const t = ev.done, p = play[ev.label], card = turnCard(t.label, t.rung + "  ·  on " + (t.machine || g.where)
           + (about[t.label] ? "  ·  " + about[t.label] : ""), Object.assign({kind: "turn"}, t));
         if (p) {
-          card.appendChild(el("p", "num", "In this browser: first audio after " + ms(p.heard) + ", counted from Send: the network and any wake are in it."));
+          card.appendChild(el("p", "num", "In this browser: first audio after " + ms(p.heard) + ", counted from Send: the network and any wake are in it. "
+            + (p.dry > 0.001 ? "Playback ran dry here for " + ms(1000 * p.dry) + "." : "Playback never ran dry here.")));
           const a = el("audio"); a.controls = true; a.src = URL.createObjectURL(wavFrom(p.chunks, p.sr)); card.appendChild(a);
         }
         slots[i].replaceWith(card);
