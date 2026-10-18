@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-18, at commit `d70c21a`.
+Last updated 2026-10-18, at commit `903a01a`.
 
 ## Chosen next: none
 
@@ -174,6 +174,26 @@ the earlier cost column mixed mean and median.
 | One sentence said two ways, through the voice card | the card's comparison has been made between two different sentences only |
 | A live turn with a reference, for the verbatim tier | in the demo's first live turn it wrote "uh" twice and "wanna" where three other recognizers wrote none; what was said is not known. The committed data says it adds no filler to read speech (`docs/m27-log.md`, entry 11). Still open: a recording whose words are known, a script read once plainly and once with fillers put in |
 
+## From the plans, not done
+
+What pages 16 (v1 Research) and 17 (v2 Engineering) asked for and has not been done, checked against both on
+2026-10-18. Week 8's leading silence and cold-start economics are in their own section below; publishing is under
+Owed.
+
+| What | Plan | State | Cost |
+|---|---|---|---|
+| P1b on real disfluent speech | v1 §8 | the frontier was measured on synthetic cohorts only (criterion not met there); the eval set's disfluent cohort is real SEP-28k audio and M30's harness reads real clips, but nothing was registered or run on it | \$0, the laptop; a registration first |
+| P2's controllability and a blinded preference test, duplex against cascade | v1 §8 | not run: it needs listeners, so P2 is undecided (only its latency part is measured) | listeners' time |
+| P2c in CI: the "severity monotonicity passing" badge | v1 §4, §10 | the test runs in the suite; the repository has no CI | free (GitHub Actions) |
+| P2c's disentanglement ablation | v1 §4 | not run: it needs listeners | listeners' time |
+| R5's "five conversations per A100" | v1 §4, v2 §8 | not measured | a few dollars |
+| Watermarking the synthetic voices | v1 §9 | renders are named and tagged synthetic; none is watermarked | \$0 |
+| Full-Duplex-Bench's protocol for the duplex numbers | v1 §7 | R5 was measured with this harness, not theirs | small |
+| "VAP is what Moshi learned implicitly" | v2 §3.1 | VAP built (M30), PR-014 not run: the engineered side of the comparison has no result | — |
+
+Recorded, nothing to do: v2's week 1 expected R1 to be "a 4× win" over R0; it was 26% sooner (PR-002, not
+supported). v1's P3 named TensorRT and F0 RMSE; PR-013 ran ONNX on a CPU and measured the median's shift.
+
 ## Raised by PR-013, none started
 
 | What | It would answer | Cost |
@@ -194,7 +214,7 @@ the earlier cost column mixed mean and median.
 
 | What | From |
 |---|---|
-| T4, the voice-activity-projection turn-taking model | v2 §3.1 |
+| ~~T4, the voice-activity-projection turn-taking model~~: built in M30 (VAP on real speech); PR-014 not run, no setting met its rule on development. Left: VAP on real two-party dialogue, or fine-tuned for it | v2 §3.1 |
 | A second FT-1, keeping dev checkpoints to see what the LoRA learns when | PR-010 |
 | R3 with streamed output (R4's is M31) | R3 |
 | ~~A Talker decode loop of our own, its whole step compiled~~: built in M32b (exact, stopped by its rule); the gain came from the cache's size (M33, M34, PR-016) | PR-015 |
@@ -208,5 +228,5 @@ the earlier cost column mixed mean and median.
 | emotion2vec features for the tone tagger | PR-005 |
 | MiniCPM-o as a third full-duplex model | set aside 2026-09-24 |
 | A splitter that also cuts long sentences without commas | PR-002 |
-| PR-001, registered and open | the turn-taking track |
+| ~~PR-001, registered and open~~: reported in M29, supported on whole-sentence turns | the turn-taking track |
 | The Vast kit's fixes, untested on a machine | FT-1 |

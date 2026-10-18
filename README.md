@@ -32,6 +32,7 @@ Every rung is defined by which information-destroying boundary it removes.
 | R2 | two-tier: a slow recognizer (large-v3-turbo) drives the reply | Modal T4 | 0.89 s | 8.6% | not measured |
 | R3 | speech-LLM: Qwen2-Audio hears the turn, no transcript in the loop | Modal A10 | 1.06 s | none in the loop | 17.0 GB |
 | R4 | speech-to-speech, half duplex: Qwen2.5-Omni speaks the reply itself | Modal L40S | 9.17 s | none in the loop | 22.5 GB |
+| R4 streamed | the same model and reply, handed out a block at a time, its start timed from the turn (PR-015, PR-016, PR-017) | Modal L40S | 2.07 s (heard 2.27 s) | none in the loop | R4's, plus its caches; not measured apart |
 | R5 | full duplex: Moshi; PersonaPlex | Modal A10 | 150 ms; 460 ms response gap | none in the loop | 16.6; 18.1 GB |
 
 **Read the table with care.** The rows come from different GPUs and different days, and the same
