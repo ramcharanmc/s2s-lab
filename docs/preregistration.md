@@ -32,7 +32,7 @@ Rules, from the v1 Research plan (§8):
 | PR-015 | On the eval set, does R4 streamed let the caller hear its reply sooner than R4, without stalling, a much longer turn or garbled words? | `e2a4b4e` | **Reported: supported** (first sound 0.49 of R4's at the median, 95% interval 0.47 to 0.50, and 0.32 at p90: 3.3 s against 6.8, 3.7 against 11.8; no turn stalled; Whisper's word error rate 1.1% against 1.3%; the turn 1.14 times as long) |
 | PR-016 | On the eval set, does a Talker cache sized to the turn let the caller hear R4 streamed's reply sooner still, at the median and in the tail, without stalling, a longer turn or other words? | `d65274d` | **Reported: supported** (first sound 0.787 of the stream's at the median, 95% interval 0.781 to 0.790, and 0.809 at p90: 2.6 s against 3.3, 3.0 against 3.7; no turn stalled; the same codes and words on 200 of 200) |
 | PR-017 | On the eval set, does starting R4 streamed's playback when the turn's own code rate says its second block is due, instead of after 0.5 s of audio, let the caller hear the reply sooner, without stalling? | `eca9da1` | **Reported: supported** (first sound 0.846 of the buffer's at the median, 95% interval 0.844 to 0.849, and 0.867 at p90: 2.27 s against 2.68, 2.70 against 3.11; no turn stalled; the same audio on 200 of 200) |
-| PR-018 | On the eval set, does cutting the leading silence of R1's first spoken clause (Kokoro's 320 ms of padding) let the caller hear its reply sooner, without stalling? | The commit that adds this entry | Registered; not yet run |
+| PR-018 | On the eval set, does cutting the leading silence of R1's first spoken clause (Kokoro's 320 ms of padding) let the caller hear its reply sooner, without stalling? | `39c5e1b` | **Reported: supported** (first sound 0.625 of R1's as it is at the median, 95% interval 0.617 to 0.636, and 0.729 at p90: 498 ms against 797, 751 against 1,029; no turn stalled; every cut at least 50 dB below its piece's loudest) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -4040,4 +4040,47 @@ first sound by cohort; the run's cost.
 
 ### Results
 
-*Not yet run.*
+**Run once**, by the author, 2026-10-18: `modal run modal_app/r0_bench.py::pr018 --confirm PR-018` at
+`39c5e1b` (this entry's commit, clean), one T4, 165 s in the function, \$0.028.
+`runs/r1-gpu-trim/pr018.json`. The analysis's output, verbatim:
+
+```
+PR-018: r1-gpu-trim (R1, its reply's first piece cut to 20 ms before its first frame within 50 dB) against R1 as it is on the same turns
+  commit 39c5e1b · Modal Tesla T4, 610.57.04
+  paired bootstrap: 10000 resamples of 200 clips, seed 0
+
+V1 the cut was silent  PASS  200 of 200 cuts at least 50 dB below their piece's loudest; needs all
+S1 median              PASS  first-sound p50 ratio 0.625 [95% CI 0.617, 0.636]; needs upper end <= 0.75
+S2 tail                PASS  first-sound p90 ratio 0.729 [95% CI 0.697, 0.736]; needs upper end <= 0.85
+S3 stalls              PASS  0 trimmed turns stall against 0 as is (max 4), the longest 0 ms (max 200)
+
+SUPPORTED: all three criteria hold
+
+Descriptive, not criteria:
+  first sound, ms, p50 / p90: trimmed 498 / 751; as is 797 / 1029; first audio p50 478
+  the trim cut 300 ms at the median, 346 at p90; the loudest cut -50.6 dB against its piece's loudest
+  the second piece ahead of when playback needed it, after the trim: p50 1703 ms, least 551; 95 replies a single piece
+  first-sound p50 by cohort, trimmed vs as is: clean 528 vs 830, accented 419 vs 726, disfluent 499 vs 794, slow 513 vs 812
+  stalls: trimmed 0 turns, as is 0
+```
+
+**SUPPORTED.** The validity requirement and all three criteria hold.
+
+**Exploratory, not criteria:**
+
+- **As predicted.** S1 0.625 against a predicted 0.63, S2 0.729 against 0.71: the caller hears R1's reply
+  299 ms sooner at the median (498 ms against 797) and 278 at p90 (751 against 1,029). Kokoro's padding was
+  more than a third of the wait R1's caller heard.
+- **No turn came near a stall.** The second piece came at least 551 ms before playback needed it (1,703 at
+  the median). 95 of the 200 replies were a single piece (development: 12 of 30): the eval set's replies are
+  shorter, as the bar for S3 allowed for, and a single piece cannot stall.
+- **The computed comparator is borne out across runs.** R1 as it is, computed from these turns, heard first
+  at 797 ms (p50) and 1,029 (p90); R1 itself, live on the same eval set and a T4 in PR-002's run, at 806 and
+  1,041. Different runs and hosts, so descriptive only; the comparison above is within one container.
+- **V1 held, by the least margin of the run at −50.6 dB** (the five loudest cuts −50.6 to −53.5;
+  development's loudest −56). V1 is close to the trim's own rule, which keeps everything from 20 ms before the
+  first frame within 50 dB: it checks that the cut did what it says, at 5 ms frames. That nothing heard was
+  lost rests, as registered, on that and on M38's check on the laptop.
+- **The same gain in every cohort**: 295 to 307 ms; the trimmed first sound 419 ms (accented) to 528 (clean).
+- **The cut**: 300 ms at the median, 346 at p90, as on development (298).
+- **Not changed**: when the first audio was made, 478 ms at the median: the trim moves only when it is heard.

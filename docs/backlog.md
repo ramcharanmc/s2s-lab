@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-18, at commit `ec3e4d7`.
+Last updated 2026-10-18, at commit `39c5e1b`.
 
 ## Chosen next: none
 
@@ -15,7 +15,20 @@ Candidates:
   that times when the response began and when each event came would say where.
 - **R4's own compile from the compile cache** (about 30 s of the L40S's wake), left alone in M36: loading the
   cache first once made R4's load 288 s.
+- **The trim in the demo's R1** (and in R2's first clause and R0's whole reply, the same Kokoro padding): PR-018's 0.3 s,
+  heard in the browser. A deploy; the live R1 turn to be measured before and after.
+- **The silence between R1's later clauses**, 320 ms each: the pause between clauses, left alone by PR-018;
+  whether a shorter one sounds rushed is a listening question first.
 - The repository made public, the author's call.
+
+## Done: M38, leading silence across TTS engines
+
+Kokoro, the TTS in R0, R1 and R2, puts 320 ms (p50) of silence before every clause: its duration predictor's
+padding before the first phoneme (350 ms). Piper and FastPitch put none, R4 200 ms; a trim to 20 ms before the
+first sound lost no first word on the laptop (step 1, `ec3e4d7`, \$0). In R1, the first clause trimmed
+(`ee15442`; development \$0.010, GO): **PR-018 supported** (`39c5e1b`, \$0.028): on the eval set first sound
+498 ms against R1's 797 on the same turns (p50), 751 against 1,029 (p90), no stall. About \$0.04
+(`docs/m38-log.md`).
 
 ## Done: M37, a start rule timed from the turn
 
@@ -207,7 +220,7 @@ supported). v1's P3 named TensorRT and F0 RMSE; PR-013 ran ONNX on a CPU and mea
 
 | What | Cost |
 |---|---|
-| ~~Leading silence across TTS engines~~: M38 step 1 (Kokoro 320 ms, Piper and FastPitch 0, R4 200; Kokoro's is its duration predictor's padding); step 2: the trim in R1, development GO (517 ms against 807), PR-018 registered | \$0.01 so far |
+| ~~Leading silence across TTS engines~~: M38 step 1 (Kokoro 320 ms, Piper and FastPitch 0, R4 200; Kokoro's is its duration predictor's padding); step 2: the trim in R1, **PR-018 supported** (0.50 s heard instead of 0.80) | \$0.04 |
 | Cold-start economics on Modal | a few dollars; the demo's L40S: M35 (phases), M36 (the compile cache) |
 
 ## Parked

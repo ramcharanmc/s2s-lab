@@ -6,8 +6,8 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-10-14** (commit `d61c79d`): rungs R0 to R5 built and measured, and R4 streamed; three
-fine-tunes run; seventeen registrations, all reported, eight with a supported claim. A demo that shows
+**Status, 2026-10-18** (commit `39c5e1b`, PR-018's run): rungs R0 to R5 built and measured, and R4 streamed; three
+fine-tunes run; eighteen registrations, all reported, nine with a supported claim. A demo that shows
 the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
 
 **https://ramcharanmc--s2s-lab-demo-web.modal.run**
@@ -19,7 +19,7 @@ the live tab needs an access code and stops at \$3 of GPU a day. R4 and R4 strea
 on one set of weights, and the streamed reply plays as it arrives (M32a), on a Talker cache sized to
 the turn (M34, PR-016), its start timed from the turn (M37, PR-017).
 Every rung was also measured on one card, the L40S, R0 to R4 in one
-container (M28, below). About \$50 spent: \$26.18 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+container (M28, below). About \$50 spent: \$26.21 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 
@@ -29,6 +29,7 @@ Every rung is defined by which information-destroying boundary it removes.
 |---|---|---|---:|---:|---:|
 | R0 | naive cascade: Whisper, then an LLM, then Kokoro, all blocking | Modal T4 | 0.66 s | 11.9% | 1.9 GB |
 | R1 | streaming cascade: the reply handed out clause by clause | Modal T4 | 0.49 s | 11.9% | 1.7 GB |
+| R1 trimmed | R1, its first clause's leading silence (Kokoro's padding, 0.3 s) cut (PR-018) | Modal T4 | 0.48 s (heard 0.50 s, against R1's 0.80) | 11.9% | R1's |
 | R2 | two-tier: a slow recognizer (large-v3-turbo) drives the reply | Modal T4 | 0.89 s | 8.6% | not measured |
 | R3 | speech-LLM: Qwen2-Audio hears the turn, no transcript in the loop | Modal A10 | 1.06 s | none in the loop | 17.0 GB |
 | R4 | speech-to-speech, half duplex: Qwen2.5-Omni speaks the reply itself | Modal L40S | 9.17 s | none in the loop | 22.5 GB |
@@ -72,7 +73,7 @@ Talker step had been attention over the cache's empty places.
 
 ## What was claimed, and what happened
 
-Seventeen registrations (`docs/preregistration.md`). Criteria are committed before the data is seen;
+Eighteen registrations (`docs/preregistration.md`). Criteria are committed before the data is seen;
 results are appended whatever they say.
 
 | | Question, in short | Outcome |
@@ -94,8 +95,9 @@ results are appended whatever they say.
 | PR-015 | Does streaming R4 let the caller hear its reply sooner, without stalls? | **supported**: 3.3 s instead of 6.8 (p50), 3.7 instead of 11.8 (p90), no stall |
 | PR-016 | Does a cache sized to the turn let R4 streamed be heard sooner still? | **supported**: 2.6 s instead of 3.3 (p50), 3.0 instead of 3.7 (p90), no stall, the same words |
 | PR-017 | Does starting R4 streamed's playback when the turn says its second block is due beat a 0.5 s buffer? | **supported**: 2.27 s instead of 2.68 (p50), 2.70 instead of 3.11 (p90), no stall, on the same turns |
+| PR-018 | Does cutting the silence Kokoro puts before R1's first clause let the caller hear R1 sooner? | **supported**: 0.50 s instead of 0.80 (p50), 0.75 instead of 1.03 (p90), no stall, on the same turns |
 
-All seventeen are reported. Eight were not supported, and one, PR-014 (voice activity projection on
+All eighteen are reported. Eight were not supported, and one, PR-014 (voice activity projection on
 real speech), was not run: no setting met its rule on the development recordings. Each entry says
 why.
 

@@ -10,7 +10,9 @@ Kept as events happen. The earlier logs: `docs/m37-log.md` and those it names.
 | 3 | 10-18 | the author's runs, laptop, \$0: `leadsilence render`, `src.ft3.leadsilence_fp`, `leadsilence analyze` | 200 first clauses through five engines; R4 from its run. **Kokoro 320 ms (p50), 360 (p90), the same through ONNX; its own padding 350 ms.** Piper and FastPitch's base voice 0 ms; FT-3's 9017 30 ms, its padding 46 against the base's 23; R4 200 ms. A trim cuts 300 ms from Kokoro at the median and loses no first word (194 of 200 heard after it, 193 before). **GO by the rule** | — | 9a86f5b |
 | 4 | 10-18 | the tests, laptop | step 2's design (section 3): `r1-gpu-trim`, R1 with its first piece's leading silence cut; a development run on the probe clips, the rule written first | `r1.py` (`_shape`, `FirstTrimmed`, `r1-trim`, `r1-gpu-trim`), `rungs`, `evalrun` (a rung's `turn_extra`), `r1trim.py`, `::trimdev`, tests | ee15442 |
 | 5 | 10-18 | `modal run modal_app/r0_bench.py::trimdev`, the author, at ee15442 | one T4, 53 s in the function, about \$0.010. On the 30 probe clips: first sound 517 ms (p50) and 807 (p90) trimmed, against 807 and 1,108 as is on the same turns (0.641, 0.728); no turn stalled either way; the cut 298 ms at the median, every cut at least 56 dB below its piece's loudest; the second piece still at least 0.9 s ahead of need. **GO by the rule** | — | — |
-| 6 | 10-18 | — | **PR-018 registered** before any eval-set turn of `r1-gpu-trim` | `pr018.py`, `::pr018`, `docs/preregistration.md`, tests | this commit |
+| 6 | 10-18 | — | **PR-018 registered** before any eval-set turn of `r1-gpu-trim` | `pr018.py`, `::pr018`, `docs/preregistration.md`, tests | 39c5e1b |
+| 7 | 10-18 | `modal run modal_app/r0_bench.py::pr018 --confirm PR-018`, the author, at 39c5e1b | one T4, 165 s in the function, \$0.028. **PR-018 supported**: on the 200 eval clips first sound 498 ms against R1's 797 on the same turns (p50, 0.625 [0.617, 0.636]), 751 against 1,029 (p90, 0.729 [0.697, 0.736]); no turn stalled; every cut at least 50 dB below its piece's loudest (the loudest −50.6) | — | — |
+| 8 | 10-18 | — | the results recorded verbatim (`docs/preregistration.md`); M38 closed | records | this commit |
 
 ## 1. The design
 
@@ -131,3 +133,27 @@ median); 12 of the 30 replies were a single piece. Every cut was at least 56 dB 
 
 **Then:** PR-018 registered (row 6), its run the author's: `modal run modal_app/r0_bench.py::pr018 --confirm PR-018`,
 one T4, about \$0.25.
+
+## 5. PR-018's run (row 7) and what M38 found
+
+`runs/r1-gpu-trim/pr018.json`: `r1-gpu-trim` on the 200 eval clips, R1 as it is computed from the same turns.
+
+| on the same turns | first sound p50 | p90 | stalled turns |
+|---|---:|---:|---:|
+| R1 as it is | 797 ms | 1,029 | 0 |
+| **first piece trimmed** | **498 ms** | **751** | **0** |
+| ratio [95% interval] | 0.625 [0.617, 0.636] | 0.729 [0.697, 0.736] | |
+
+**Supported**, as predicted: about 0.3 s sooner on every cohort. The verbatim output and the exploratory notes are
+under PR-018 in `docs/preregistration.md`.
+
+**What M38 found, in one paragraph.** Kokoro, the TTS in R0, R1 and R2, puts about 320 ms of silence before every
+clause, the padding its duration predictor gives the token before the first phoneme; Piper and FastPitch put
+none, R4 200 ms. Cutting it from R1's first clause, and only its first, loses no first word on the laptop's check
+and lets the caller hear R1 0.3 s sooner, 0.50 s instead of 0.80 at the median, with no stall. The silence before
+R1's later clauses is the pause between them, left alone.
+
+**Not done, kept in the backlog:** the trim in the demo's R1 (and in R2's first clause and R0's whole reply), and the silence
+between later clauses.
+
+M38 cost \$0.038 on Modal (rows 5 and 7); step 1 ran on the laptop.
