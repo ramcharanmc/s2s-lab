@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-18, at commit `903a01a`.
+Last updated 2026-10-18, at commit `ec3e4d7`.
 
 ## Chosen next: none
 
@@ -207,7 +207,7 @@ supported). v1's P3 named TensorRT and F0 RMSE; PR-013 ran ONNX on a CPU and mea
 
 | What | Cost |
 |---|---|
-| Leading silence across TTS engines | \$0 to small |
+| ~~Leading silence across TTS engines~~: M38 step 1 (Kokoro 320 ms, Piper and FastPitch 0, R4 200; Kokoro's is its duration predictor's padding); step 2, the trim in R1, follows | \$0 |
 | Cold-start economics on Modal | a few dollars; the demo's L40S: M35 (phases), M36 (the compile cache) |
 
 ## Parked

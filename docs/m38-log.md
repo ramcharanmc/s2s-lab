@@ -6,7 +6,8 @@ Kept as events happen. The earlier logs: `docs/m37-log.md` and those it names.
 | # | When | What ran | Outcome | Code change | Commit |
 |---|---|---|---|---|---|
 | 1 | 10-18 | — | the design (below); the author's go, Piper in. Asked for by both plans: v1's P3 and v2's week 8, the last of the roadmap not started | — | — |
-| 2 | 10-18 | the tests, laptop: 1056 passed, 2 skipped (17 new); a smoke render of three clauses through each engine, outside the repo | Kokoro and its ONNX copy 300 to 320 ms of leading silence, the same in both; Kokoro's own padding 325 to 400 ms, longer than the silence measured, so its first sound starts inside the padding; FastPitch (9017) 40 to 80 ms; Piper not yet installed | `leadsilence.py`, `ft/src/ft3/leadsilence_fp.py`, tests | this commit |
+| 2 | 10-18 | the tests, laptop: 1056 passed, 2 skipped (17 new); a smoke render of three clauses through each engine, outside the repo | Kokoro and its ONNX copy 300 to 320 ms of leading silence, the same in both; Kokoro's own padding 325 to 400 ms, longer than the silence measured, so its first sound starts inside the padding; FastPitch (9017) 40 to 80 ms; Piper not yet installed | `leadsilence.py`, `ft/src/ft3/leadsilence_fp.py`, tests | ec3e4d7 |
+| 3 | 10-18 | the author's runs, laptop, \$0: `leadsilence render`, `src.ft3.leadsilence_fp`, `leadsilence analyze` | 200 first clauses through five engines; R4 from its run. **Kokoro 320 ms (p50), 360 (p90), the same through ONNX; its own padding 350 ms.** Piper and FastPitch's base voice 0 ms; FT-3's 9017 30 ms, its padding 46 against the base's 23; R4 200 ms. A trim cuts 300 ms from Kokoro at the median and loses no first word (194 of 200 heard after it, 193 before). **GO by the rule** | — | this commit |
 
 ## 1. The design
 
@@ -60,3 +61,32 @@ M38 ends as a characterization.
     PYTHONPATH=src ~/.venvs/s2slab/bin/python -m s2slab.leadsilence render
     cd ft && PYTHONPATH=.:../src ~/.venvs/s2slab-ft3/bin/python -m src.ft3.leadsilence_fp && cd ..
     PYTHONPATH=src ~/.venvs/s2slab/bin/python -m s2slab.leadsilence analyze
+
+## 2. Leading silence, by engine (row 3)
+
+`runs/tts/leading-silence.json`, R1's 200 first clauses (R4: its own replies, from its eval-set run).
+
+| engine | leading silence, the rungs' measure, p50 / p90 | 5 ms frames, 30 dB | 50 dB | padding by its own durations | first word heard, as is / trimmed |
+|---|---:|---:|---:|---:|---:|
+| `kokoro` | **320 / 360 ms** | 325 / 375 | 320 / 366 | **350 / 425** | 193 / 194 |
+| `kokoro-onnx` | 320 / 360 | 325 / 375 | 320 / 360 | — | 193 / 193 |
+| `piper` | **0 / 0** | 15 / 25 | 0 / 0 | — | 189 / 189 |
+| `fastpitch-ljspeech` | **0 / 0** | 10 / 20 | 0 / 5 | 23 / 71 | 199 / 199 |
+| `fastpitch-9017` | 30 / 80 | 45 / 90 | 30 / 80 | 46 / 81 | 196 / 196 |
+| `r4-omni` | 200 / 220 | — | — | — | — |
+
+**Where Kokoro's silence comes from: its duration predictor.** The padding token it puts before the first phoneme
+gets about 14 of the model's 25 ms frames (350 ms at the median), and the first sound rises about 30 ms before that
+padding ends. The same through ONNX Runtime, so it is the model, not the runtime; the same whatever the clause's first
+sound (300 to 340 ms for vowels, sonorants, obstruents, stops and fricatives alike), so it is not speech that happens
+to be silent. Page 07 §1.1's "duration-predictor behaviour at utterance onset" is all of it here.
+
+**The spread is as page 07 said, large:** Piper and FastPitch's base voice start sounding at once; FT-3's
+fine-tune doubled its padding; R4 waits 200 ms.
+
+**The trim:** cut to 20 ms before the first frame within 50 dB, Kokoro loses 300 ms at the median and no first
+word. Whisper made one error more on 11 of its 200 trimmed clauses, none on the first word (28 in 1,828 words
+against 18); the ONNX copy, the same audio, showed no change. Read as Whisper's sensitivity to the leading
+silence, not as a clipped onset, but kept as a guardrail in what follows.
+
+By the rule written before the run (section 1), **step 2 follows: the trim in R1, and PR-018.** \$0.
