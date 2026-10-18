@@ -128,14 +128,20 @@ class StreamingCascade(NaiveCascade):
         with stage("asr", sink):
             transcript = self.asr.transcribe(audio)
         pieces: list[str] = []
+        first = True
         for clause in self._clauses(transcript, pieces, sink):
             text = clean_for_speech(clause)
             if not text:                           # a clause that was only markdown
                 continue
             with stage("tts", sink):
-                piece = self.tts.speak(text)
+                piece = self._shape(self.tts.speak(text), first)
+            first = False
             self.emit(piece)
         return Reply(None, self.tts.SR, transcript, "".join(pieces).strip())
+
+    def _shape(self, piece, first: bool):
+        """What a piece is before it is handed out: as spoken. r1-trim cuts the first one's silence (M38)."""
+        return piece
 
 
 
@@ -148,3 +154,48 @@ class StreamingCascadeGPU(StreamingCascade):
     def __init__(self):
         super().__init__(WhisperASR(device="cuda", compute_type="float16"),
                          StreamingQwenLLM(device="cuda"), KokoroTTS(device="cuda"))
+
+
+class FirstTrimmed:
+    """A reply's first piece cut to leadsilence.KEEP_MS before its first frame within 50 dB (M38): the padding
+    Kokoro's duration predictor puts before the first phoneme, 320 ms at the median (docs/m38-log.md). Later
+    pieces are left alone: their silence is the pause between clauses. turn_extra() says what was cut."""
+
+    last_trim_ms, last_cut_peak_db = 0.0, None
+
+    def _respond(self, audio, sr, sink):
+        self.last_trim_ms, self.last_cut_peak_db = 0.0, None
+        return super()._respond(audio, sr, sink)
+
+    def _shape(self, piece, first: bool):
+        if not first:
+            return piece
+        import numpy as np
+
+        from .leadsilence import trim
+        from .vad import frame_rms
+        out, cut_ms = trim(piece, self.tts.SR)
+        cut = len(piece) - len(out)
+        self.last_trim_ms = round(cut_ms, 1)
+        if cut:
+            whole, part = frame_rms(piece, self.tts.SR, 5.0), frame_rms(piece[:cut], self.tts.SR, 5.0)
+            if part.size and whole.size and whole.max() > 0:
+                self.last_cut_peak_db = round(float(20 * np.log10(part.max() / whole.max())), 1)
+        return out
+
+    def turn_extra(self) -> dict:
+        return {"trim_ms": self.last_trim_ms, "cut_peak_db": self.last_cut_peak_db}
+
+
+class TrimmedStreamingCascade(FirstTrimmed, StreamingCascade):
+    """R1 with its first piece's leading silence trimmed (M38), on the laptop's CPU."""
+
+    rung_id = "r1-trim"
+    description = "R1, its reply's first piece cut to 20 ms before its first sound (Kokoro's 320 ms padding)"
+
+
+class TrimmedStreamingCascadeGPU(FirstTrimmed, StreamingCascadeGPU):
+    """R1 on a CUDA GPU with its first piece's leading silence trimmed (M38)."""
+
+    rung_id = "r1-gpu-trim"
+    description = "R1 on a CUDA GPU (fp16), its reply's first piece cut to 20 ms before its first sound"

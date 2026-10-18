@@ -7,7 +7,8 @@ Kept as events happen. The earlier logs: `docs/m37-log.md` and those it names.
 |---|---|---|---|---|---|
 | 1 | 10-18 | — | the design (below); the author's go, Piper in. Asked for by both plans: v1's P3 and v2's week 8, the last of the roadmap not started | — | — |
 | 2 | 10-18 | the tests, laptop: 1056 passed, 2 skipped (17 new); a smoke render of three clauses through each engine, outside the repo | Kokoro and its ONNX copy 300 to 320 ms of leading silence, the same in both; Kokoro's own padding 325 to 400 ms, longer than the silence measured, so its first sound starts inside the padding; FastPitch (9017) 40 to 80 ms; Piper not yet installed | `leadsilence.py`, `ft/src/ft3/leadsilence_fp.py`, tests | ec3e4d7 |
-| 3 | 10-18 | the author's runs, laptop, \$0: `leadsilence render`, `src.ft3.leadsilence_fp`, `leadsilence analyze` | 200 first clauses through five engines; R4 from its run. **Kokoro 320 ms (p50), 360 (p90), the same through ONNX; its own padding 350 ms.** Piper and FastPitch's base voice 0 ms; FT-3's 9017 30 ms, its padding 46 against the base's 23; R4 200 ms. A trim cuts 300 ms from Kokoro at the median and loses no first word (194 of 200 heard after it, 193 before). **GO by the rule** | — | this commit |
+| 3 | 10-18 | the author's runs, laptop, \$0: `leadsilence render`, `src.ft3.leadsilence_fp`, `leadsilence analyze` | 200 first clauses through five engines; R4 from its run. **Kokoro 320 ms (p50), 360 (p90), the same through ONNX; its own padding 350 ms.** Piper and FastPitch's base voice 0 ms; FT-3's 9017 30 ms, its padding 46 against the base's 23; R4 200 ms. A trim cuts 300 ms from Kokoro at the median and loses no first word (194 of 200 heard after it, 193 before). **GO by the rule** | — | 9a86f5b |
+| 4 | 10-18 | the tests, laptop | step 2's design (section 3): `r1-gpu-trim`, R1 with its first piece's leading silence cut; a development run on the probe clips, the rule written first | `r1.py` (`_shape`, `FirstTrimmed`, `r1-trim`, `r1-gpu-trim`), `rungs`, `evalrun` (a rung's `turn_extra`), `r1trim.py`, `::trimdev`, tests | this commit |
 
 ## 1. The design
 
@@ -90,3 +91,24 @@ against 18); the ONNX copy, the same audio, showed no change. Read as Whisper's 
 silence, not as a clipped onset, but kept as a guardrail in what follows.
 
 By the rule written before the run (section 1), **step 2 follows: the trim in R1, and PR-018.** \$0.
+
+## 3. Step 2: the trim in R1 (row 4)
+
+**The rung.** `r1-gpu-trim` (`s2slab.r1`): R1 as it is, but its reply's **first** piece cut to 20 ms before its
+first frame within 50 dB (`leadsilence.trim`, step 1's trim). Later pieces are left alone: their silence is the pause
+between clauses, and trimming it is another question. Each turn records what was cut (`trim_ms`) and the loudest
+5 ms frame in the cut against the piece's loudest (`cut_peak_db`), so a cut that took sound shows. `r1-trim` is the
+same on the laptop's CPU.
+
+**The risk step 1 could not see: stalls.** R1 plays its pieces back to back while the next clause renders; a first
+piece 300 ms shorter must be followed 300 ms sooner.
+
+**Paired, as PR-017 was.** R1 as it is, on the very same turn, is computed from the turn's pieces: the first one
+longer by the cut, the leading silence longer by the same (the cut is below 50 dB of the piece's loudest, so silent by
+the rungs' 40 dB measure too). The same words: a trim changes when the first sound is heard, not what is said.
+
+**The development run.** `modal run modal_app/r0_bench.py::trimdev`: one T4, the 30 probe clips, about \$0.05.
+
+**The rule, written before the run** (`s2slab.r1trim`): **GO** to PR-018 if the trimmed first sound's p50 is at
+most **0.85** of R1's on the same turns **and** the trimmed turns that stall are no more than **2** above R1's;
+otherwise M38 stops here, nothing registered. PR-018's bars are set from this run.

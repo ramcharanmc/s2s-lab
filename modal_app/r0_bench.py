@@ -13,6 +13,7 @@ together with what it cost.
     modal run modal_app/r0_bench.py --rung r0-gpu,r1-gpu --evalset --tag pr002
                                                                 # the PR-002 run: same container, same GPU
     modal run modal_app/r0_bench.py --rung r1-gpu,r2-gpu,r2-gpu-turbo
+    modal run modal_app/r0_bench.py::trimdev                    # M38: R1 with its first piece trimmed, probe clips
                                                                 # R2's slow tier beside R1: probe clips                                                                
     
 What happens where:
@@ -172,6 +173,45 @@ def evaluate(rung_ids: list[str], commit: str, limit: int = 0) -> dict:
         results[rung_id]["commit"] = commit
         _free_gpu()
     return {"results": results, "seconds": time.perf_counter() - t0}
+
+
+@app.function(gpu="T4", timeout=20 * 60, scaledown_window=60)
+def trim_dev() -> dict:
+    """M38, step 2: r1-gpu-trim on the 30 probe clips, every turn's pieces and its trim kept (r1trim.run)."""
+    import os
+    os.chdir("/root")
+    from s2slab.probes import TARGET_SR
+    from s2slab.r1trim import run
+    from s2slab.rungs import probe_clips
+    t0 = time.perf_counter()
+    blob = run(probe_clips(), TARGET_SR)
+    return {"gpu": _gpu_name(), "dev": blob, "seconds": time.perf_counter() - t0}
+
+
+TRIM_DEV_PATH = REPO / "runs" / "r1-gpu" / "trim-dev-t4.json"    # M38, step 2 (s2slab.r1trim)
+
+
+@app.local_entrypoint()
+def trimdev():
+    """R1 with its first piece trimmed, development clips (M38, step 2): saves runs/r1-gpu/trim-dev-t4.json, never
+    overwritten, and prints the table and the rule's verdict."""
+    import json
+    refuse_to_overwrite([TRIM_DEV_PATH])
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    t0 = time.time()
+    out = trim_dev.remote()
+    wall = time.time() - t0
+    blob = {"run": "M38, step 2: r1-gpu-trim on the 30 probe clips (development)", "commit": commit,
+            "machine": f"Modal {out['gpu']}", **out["dev"]}
+    TRIM_DEV_PATH.parent.mkdir(parents=True, exist_ok=True)
+    TRIM_DEV_PATH.write_text(json.dumps(blob, indent=1) + "\n", encoding="utf-8")
+    sys.path.insert(0, str(REPO / "src"))
+    from s2slab.r1trim import format_dev
+    print(format_dev(blob))
+    print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {TRIM_DEV_PATH.relative_to(REPO)}")
+    print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * T4_DOLLARS_PER_HOUR:.3f} at the T4 rate. Modal's dashboard has the exact bill.")
 
 
 def results_path(rung_id: str, limit: int = 0, tag: str = "") -> pathlib.Path:

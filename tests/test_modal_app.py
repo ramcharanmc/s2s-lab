@@ -27,7 +27,7 @@ def r0_bench():
     return module
 
 
-GPU_RUNGS = ["r0-gpu", "r0-gpu-bigger", "r1-gpu", "r2-gpu", "r2-gpu-turbo"]      # r2-gpu-verbatim is the demo app's: it needs the volume ft2
+GPU_RUNGS = ["r0-gpu", "r0-gpu-bigger", "r1-gpu", "r1-gpu-trim", "r2-gpu", "r2-gpu-turbo"]      # r2-gpu-verbatim is the demo app's: it needs the volume ft2
 
 
 @pytest.mark.parametrize("rung_id", GPU_RUNGS)

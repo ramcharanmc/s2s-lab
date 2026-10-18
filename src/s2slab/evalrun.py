@@ -78,6 +78,7 @@ def run(rung, root=EVAL_ROOT, cohorts=None, limit: int | None = None, machine: s
     _peak_vram_mb(reset=True)
     load_ms = rung.load()
     hear = getattr(rung, "hear", None)
+    extra = getattr(rung, "turn_extra", None)          # what a rung adds to its turn's record (r1-gpu-trim's cut, M38)
     turns = {}
     for item in items:
         turn = rung.respond(item.audio, TARGET_SR)
@@ -93,6 +94,8 @@ def run(rung, root=EVAL_ROOT, cohorts=None, limit: int | None = None, machine: s
                           "first_sound_ms": _finite(round(turn.first_sound_ms, 1)),
                           "stall_ms": round(turn.stall_ms, 1),
                           "chunks": [[round(ms, 1), n] for ms, n in turn.chunks]}
+        if extra is not None:
+            turns[item.id].update(extra())
         if hear is not None:
             turns[item.id]["heard"] = hear(item.audio, TARGET_SR)
     return {"rung": rung.rung_id, "description": rung.description,
