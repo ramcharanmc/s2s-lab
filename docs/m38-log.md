@@ -12,7 +12,8 @@ Kept as events happen. The earlier logs: `docs/m37-log.md` and those it names.
 | 5 | 10-18 | `modal run modal_app/r0_bench.py::trimdev`, the author, at ee15442 | one T4, 53 s in the function, about \$0.010. On the 30 probe clips: first sound 517 ms (p50) and 807 (p90) trimmed, against 807 and 1,108 as is on the same turns (0.641, 0.728); no turn stalled either way; the cut 298 ms at the median, every cut at least 56 dB below its piece's loudest; the second piece still at least 0.9 s ahead of need. **GO by the rule** | — | — |
 | 6 | 10-18 | — | **PR-018 registered** before any eval-set turn of `r1-gpu-trim` | `pr018.py`, `::pr018`, `docs/preregistration.md`, tests | 39c5e1b |
 | 7 | 10-18 | `modal run modal_app/r0_bench.py::pr018 --confirm PR-018`, the author, at 39c5e1b | one T4, 165 s in the function, \$0.028. **PR-018 supported**: on the 200 eval clips first sound 498 ms against R1's 797 on the same turns (p50, 0.625 [0.617, 0.636]), 751 against 1,029 (p90, 0.729 [0.697, 0.736]); no turn stalled; every cut at least 50 dB below its piece's loudest (the loudest −50.6) | — | — |
-| 8 | 10-18 | — | the results recorded verbatim (`docs/preregistration.md`); M38 closed | records | this commit |
+| 8 | 10-18 | — | the results recorded verbatim (`docs/preregistration.md`); M38 closed | records | 2030ba2 |
+| 9 | 10-18 | — | the backlog checked against Notion pages 18 and 20: nine open items listed that only Notion had; the candidate "the silence between later clauses", which no plan or result asked for, withdrawn; the trim in the demo chosen next, R1 only (PR-018 tested R1 alone) | records | this commit |
 
 ## 1. The design
 
@@ -153,7 +154,6 @@ none, R4 200 ms. Cutting it from R1's first clause, and only its first, loses no
 and lets the caller hear R1 0.3 s sooner, 0.50 s instead of 0.80 at the median, with no stall. The silence before
 R1's later clauses is the pause between them, left alone.
 
-**Not done, kept in the backlog:** the trim in the demo's R1 (and in R2's first clause and R0's whole reply), and the silence
-between later clauses.
+**Next:** the trim in the demo's R1, M39 (`docs/backlog.md`). R0 and R2 keep their silence: PR-018 tested R1 alone.
 
 M38 cost \$0.038 on Modal (rows 5 and 7); step 1 ran on the laptop.

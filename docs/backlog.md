@@ -3,11 +3,15 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-18, at commit `39c5e1b`.
+Last updated 2026-10-18, at commit `2030ba2`.
 
-## Chosen next: none
+## Chosen next: M39, the trim in the demo's R1
 
-Candidates:
+The author's choice, 2026-10-18: the demo's R1 becomes `r1-gpu-trim`, PR-018's rung, so a visitor's R1 reply starts
+without Kokoro's 0.3 s of padding. R0 and R2 keep theirs: PR-018 tested R1 alone. A `modal serve` check, then
+`modal deploy`, the author's (`docs/m39-log.md`).
+
+Candidates after it:
 
 - **Hand the L40S the browser's recording as it came** (55 kB of WebM for 14 s, not 0.9 MB of 32-bit floats):
   the handoff took 1.9 s on a 14 s clip (`docs/m37-log.md`, entry 14). Measured before it is changed.
@@ -15,10 +19,6 @@ Candidates:
   that times when the response began and when each event came would say where.
 - **R4's own compile from the compile cache** (about 30 s of the L40S's wake), left alone in M36: loading the
   cache first once made R4's load 288 s.
-- **The trim in the demo's R1** (and in R2's first clause and R0's whole reply, the same Kokoro padding): PR-018's 0.3 s,
-  heard in the browser. A deploy; the live R1 turn to be measured before and after.
-- **The silence between R1's later clauses**, 320 ms each: the pause between clauses, left alone by PR-018;
-  whether a shorter one sounds rushed is a listening question first.
 - The repository made public, the author's call.
 
 ## Done: M38, leading silence across TTS engines
@@ -243,3 +243,18 @@ supported). v1's P3 named TensorRT and F0 RMSE; PR-013 ran ONNX on a CPU and mea
 | A splitter that also cuts long sentences without commas | PR-002 |
 | ~~PR-001, registered and open~~: reported in M29, supported on whole-sentence turns | the turn-taking track |
 | The Vast kit's fixes, untested on a machine | FT-1 |
+
+**Listed here 2026-10-18, after a check against Notion.** These were open on Notion pages 18 and 20 and missing from
+this file. Nothing is new: each comes from the result named.
+
+| What | From |
+|---|---|
+| Cap the reply length: R0's p90 is set by its reply's length (r = 0.97), and R1's first audio still is (r = 0.46) | PR-002 (page 20 §9) |
+| Accent apart from speaking style: the accented cohort is spontaneous speech (EdAcc), the clean one read (LibriSpeech); a third comparison, accented read speech or conversational US speech, would separate them | R0 on the eval set (page 20 §5) |
+| More speakers, or a corpus newer than the model, for the contamination question PR-006 left | PR-006, the own-voice set (page 20 §16) |
+| A sound shortly after an acknowledgement taking the acknowledgement's decision (fixes `cl02`, costs `sl05`) | PR-003 (page 20 §11) |
+| Silero in place of the energy VAD, and the sweep diffed: how much of the failure is the detector | the turn-taking track (page 18 §14, C) |
+| The clean cohort's tail cost: are T1's slow clean turns the ones that end on a function word? | the turn-taking track (page 18 §5, §14 A3) |
+| The frontier's stability across more unseen seeds | the turn-taking track (page 18 §14 A4) |
+| A development and evaluation split for T2's `slope_threshold`, tuned on the data it was evaluated on | the turn-taking track (page 18 §9, §14 A5) |
+| A completeness check that knows dictation (digit groups, spelled letters, lists), registered first and tested on fresh recordings | the endpointing probe set (page 18 §8, §14 H) |
