@@ -17,9 +17,10 @@ about 1.5 min to wake, the L40S the slowest), with what the visitor's voice carr
 a severity score rendered onto synthetic speech, to be heard. The measured tab is open to anyone;
 the live tab needs an access code and stops at \$3 of GPU a day. R4 and R4 streamed answer side by side,
 on one set of weights, and the streamed reply plays as it arrives (M32a), on a Talker cache sized to
-the turn (M34, PR-016), its start timed from the turn (M37, PR-017).
+the turn (M34, PR-016), its start timed from the turn (M37, PR-017). R1 starts its reply without Kokoro's
+0.3 s of leading silence (M39, PR-018).
 Every rung was also measured on one card, the L40S, R0 to R4 in one
-container (M28, below). About \$50 spent: \$26.21 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+container (M28, below). About \$50 spent: \$26.27 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 
@@ -132,7 +133,7 @@ On Modal (`requirements/modal.txt`, your own account; each command prints what i
 ```bash
 modal run modal_app/r0_bench.py --rung r0-gpu           # a T4, about \$0.01
 modal serve modal_app/demo.py                           # the demo, at a temporary URL; needs the secret `s2s-lab-demo`
-modal deploy modal_app/demo.py                          # the demo, at a lasting URL: the one above without `-dev`
+modal deploy modal_app/demo.py                          # the demo, at its lasting URL (above); serve's carries `-dev` and the region
 modal app stop s2s-lab-demo                             # the deployed demo taken down
 ```
 

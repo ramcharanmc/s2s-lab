@@ -3,15 +3,11 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-18, at commit `2030ba2`.
+Last updated 2026-10-18, at commit `3c54204`.
 
-## Chosen next: M39, the trim in the demo's R1
+## Chosen next: none
 
-The author's choice, 2026-10-18: the demo's R1 becomes `r1-gpu-trim`, PR-018's rung, so a visitor's R1 reply starts
-without Kokoro's 0.3 s of padding. R0, R2 and R3 keep theirs: PR-018 tested R1 alone. A `modal serve` check, then
-`modal deploy`, the author's (`docs/m39-log.md`).
-
-Candidates after it:
+Candidates:
 
 - **Hand the L40S the browser's recording as it came** (55 kB of WebM for 14 s, not 0.9 MB of 32-bit floats):
   the handoff took 1.9 s on a 14 s clip (`docs/m37-log.md`, entry 14). Measured before it is changed.
@@ -20,6 +16,13 @@ Candidates after it:
 - **R4's own compile from the compile cache** (about 30 s of the L40S's wake), left alone in M36: loading the
   cache first once made R4's load 288 s.
 - The repository made public, the author's call.
+
+## Done: M39, the trim in the demo's R1
+
+The demo's R1 is `r1-gpu-trim`, PR-018's rung (`3c54204`); R0, R2 and R3 keep Kokoro's silence, since PR-018 tested R1
+alone. Every turn card now shows first sound beside first audio, R1's what was cut; R1's measured row and a PR-018 panel
+come from the registered run. One live turn on Modal: R1's first sound 20 ms after its first audio, R0's 320. Deployed
+2026-10-18. About \$0.06 (`docs/m39-log.md`).
 
 ## Done: M38, leading silence across TTS engines
 
