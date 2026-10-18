@@ -3,17 +3,29 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-16, at commit `eca9da1`.
+Last updated 2026-10-18, at commit `d70c21a`.
 
-## Chosen next: M37, a start rule timed from the turn
+## Chosen next: none
 
-The author's go, 2026-10-15, after M36. R4 streamed's start predicted from the turn's own code rate and first
-DiT window instead of the 0.5 s hold; on the development turns of M34 playback could start about 0.70 s after
-the first block on 29 of 30, against about 1.16 s today; a development run, then a registration (PR-017) before
-any eval run, then the demo. **Development** (`fe65b94`, \$0.224): GO by its rule, the margin 50 ms, first sound
-2,248 ms against the buffer's 2,670 (p50), no stall. **PR-017 supported** (`eca9da1`, \$0.800): on the eval set
-2,269 ms against the buffer's 2,681 (p50), 2,695 against 3,108 (p90), no stall. Next, step 4: the timed rung under
-"R4 streamed" in the demo, a `modal serve` check and `modal deploy`, the author's.
+Candidates:
+
+- **Hand the L40S the browser's recording as it came** (55 kB of WebM for 14 s, not 0.9 MB of 32-bit floats):
+  the handoff took 1.9 s on a 14 s clip (`docs/m37-log.md`, entry 14). Measured before it is changed.
+- **The browser's first audio, later than a laptop client's** by 1.5 to 4.5 s on two turns, unexplained: a page
+  that times when the response began and when each event came would say where.
+- **R4's own compile from the compile cache** (about 30 s of the L40S's wake), left alone in M36: loading the
+  cache first once made R4's load 288 s.
+- The repository made public, the author's call.
+
+## Done: M37, a start rule timed from the turn
+
+R4 streamed's playback starts when the turn's own code rate says the second block is due, handed out by a timer
+(`fe65b94`). The margin, 50 ms, by a rule written before the development run (\$0.224, GO). **PR-017 supported**
+(`eca9da1`, \$0.800): on the eval set first sound 2,269 ms against the 0.5 s hold's 2,681 on the same turns (p50),
+2,695 against 3,108 (p90), no stall. In the demo (`0d9b0d9`), the page's new count of gaps found the stream
+reaching the browser in lumps; fixed by one request per Send (`d2af2d1`) and by declaring the streamed responses
+unencoded, against zstd at Modal's front door (`d70c21a`). Deployed 2026-10-18: playback never ran dry. About
+\$2.27 (`docs/m37-log.md`).
 
 **Set aside, 2026-10-15: R4 streamed from the Thinker's first words.** On one GPU the time to the second block,
 which a stall-free start must wait for, is the Thinker's whole reply plus 120 Talker steps, both bound by

@@ -19,7 +19,7 @@ the live tab needs an access code and stops at \$3 of GPU a day. R4 and R4 strea
 on one set of weights, and the streamed reply plays as it arrives (M32a), on a Talker cache sized to
 the turn (M34, PR-016), its start timed from the turn (M37, PR-017).
 Every rung was also measured on one card, the L40S, R0 to R4 in one
-container (M28, below). About \$50 spent: \$25.77 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+container (M28, below). About \$50 spent: \$26.17 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 

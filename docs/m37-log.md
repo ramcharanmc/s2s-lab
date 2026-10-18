@@ -16,7 +16,10 @@ Kept as events happen. The earlier logs: `docs/m36-log.md` and those it names.
 | 9 | 10-18 | the tests, laptop | the author's choice: **one request per Send**. `/api/send` asks every machine a recording needs at once and writes their answers into one stream (a streamed rung's pieces as they come, each other machine's answer whole, then one line of charges); `/api/live` and `/api/stream` kept, their bodies now helpers it shares; the page sends one request. The first piece's lead on the page 150 ms, not 50, for the jitter | `demoweb` (`whole`, `streamed`, `/api/send`), the page, tests | d2af2d1 |
 | 10 | 10-18 | `modal serve modal_app/demo.py`, the author: a cold and two warm Sends of R4 streamed with the T4's rungs, through `/api/send` | the T4 cards and the voice card as before; but R4 streamed's playback **still ran dry** in the browser, 341, 589 and 560 ms, and its first audio reached the browser about 2.3 s after the server made it (0.9 s the day before) | — | — |
 | 11 | 10-18 | two probes (`~/stream_probe6.py`, `7.py`), 16 warm Sends, then a scratch Modal app on a CPU (`~/compress_probe_app.py`, outside the repo; six candidate headers on a stream of random data) | **a second effect**. From a client that does not ask for zstd, `/api/send` let every piece through about 1 s after it was made, before or after the T4's answer, the voice measured or not: row 9 had fixed what row 8 found. But **asked for zstd, as Chrome asks, Modal's front door compresses the stream, and zstd holds each piece back until the next pushes it out** (the first two together at 3.41 s, not 2.95 and 3.38): the browser's first audio late by about one piece and gaps of about 0.5 s, as on the cards. Row 8's probes had not asked for zstd, so they saw only the first effect; the browser met both. On the scratch app the front door ignored `Cache-Control: no-transform` and left alone a response that declares `Content-Encoding: identity`, or is `text/event-stream`. This has held the demo's stream back since M32a | — | — |
-| 12 | 10-18 | the tests, laptop | `/api/send` and `/api/stream` declare `Content-Encoding: identity` (and `no-transform`, for any other proxy): the body is NDJSON, not an event stream, and nothing encodes it | `demoweb` (`UNCOMPRESSED`), tests | this commit |
+| 12 | 10-18 | the tests, laptop | `/api/send` and `/api/stream` declare `Content-Encoding: identity` (and `no-transform`, for any other proxy): the body is NDJSON, not an event stream, and nothing encodes it | `demoweb` (`UNCOMPRESSED`), tests | d70c21a |
+| 13 | 10-18 | `modal serve modal_app/demo.py`, the author: a cold and two warm Sends of R4 streamed with the T4's rungs | **playback never ran dry**, on all three. The L40S loaded in 92.3 s (the compile cache hit). Warm, R4 streamed's first audio 2.13 and 2.77 s on the server and 6.38 and 10.31 s in the browser | — | — |
+| 14 | 10-18 | two probes against `modal serve` (`~/stream_probe6.py` on a 14.3 s clip, `~/stream_probe8.py` on it as WAV and as WebM/Opus, through `/api/send` and `/api/stream`), 14 warm turns | on a long clip the first piece came about 3.1 s after it was made, against 1.0 s on a 3.2 s clip, the voice measured or not. Timed by stage, the same through `/api/send` and `/api/stream` and for WAV and WebM: the door, the upload and the decoding 1.1 s; **handing the recording to the L40S 1.9 s** (32-bit floats, about 0.9 MB, where the browser sent 55 kB); the L40S's set-up 0.23 s. The T4 asked beside it costs nothing. Not explained: the browser's first audio 1.5 to 4.5 s later still than a laptop client's, on two turns | — | — |
+| 15 | 10-18 | `modal deploy modal_app/demo.py`, the author; the deployed page read from the laptop | deployed: the page sends `/api/send`, R4 streamed is `r4-gpu-stream-timed`. M37 done | — | this commit |
 
 ## 1. The design
 
@@ -106,3 +109,21 @@ times matched the live first sound within 2.2 ms. M37 cost \$1.02 on Modal so fa
 
 **Next (step 4):** the demo, as after PR-016: `r4-gpu-stream-timed` under "R4 streamed", its measured row from
 `runs/r4-gpu/pr017.json`; a `modal serve` check, then `modal deploy`, the author's.
+
+## 4. The demo (rows 6 to 15)
+
+The timed rung went in as "R4 streamed" (row 6), and the page's new count of the gaps its listener would hear
+found what the 0.5 s hold had hidden since M32a: the stream reached the browser in lumps. Two effects, found one
+at a time:
+
+| what held the stream back | found by | fixed by |
+|---|---|---|
+| sharing the browser's one connection with another machine's answer still in flight | probes 3 to 5 (row 8) | one request per Send, `/api/send` (row 9) |
+| zstd, which Modal's front door applies when the browser asks for it, holding each piece until the next | probes 6 and 7, a scratch app (row 11) | `Content-Encoding: identity` on the streamed responses (row 12) |
+
+After both, playback never ran dry in the browser (row 13). What is left before the turn (row 14): about 1.1 s at
+the door and in decoding, and 1.9 s handing a 14 s recording to the L40S, the same as before M37; a browser's first
+audio came later still than a laptop client's, unexplained on two turns. Deployed 2026-10-18 (row 15).
+
+M37 cost about \$2.27 on Modal: development \$0.224 and PR-017 \$0.800, measured; the three demo sessions and their
+probes about \$1.25, estimated.
