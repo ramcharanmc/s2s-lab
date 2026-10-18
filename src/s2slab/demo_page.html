@@ -121,9 +121,9 @@ function wavFrom(chunks, sr) {                 // the pieces, joined, as a 16-bi
   let o = 44; for (const c of chunks) for (let i = 0; i < c.length; i++, o += 2) v.setInt16(o, Math.max(-32768, Math.min(32767, Math.round(c[i] * 32768))), true);
   return new Blob([buf], {type: "audio/wav"});
 }
-function schedule(p, now, duration) {           // when a piece plays: on arrival plus 50 ms, or when the one before ends.
-  const at = Math.max(now + 0.05, p.next);       // A piece that comes after the one before has ended is a gap the
-  if (p.next > 0) p.dry += at - p.next;          // listener hears: added to p.dry, in seconds (M37)
+function schedule(p, now, duration) {           // when a piece plays: the first 150 ms after it arrives, a later one
+  const at = Math.max(now + (p.next > 0 ? 0.05 : 0.15), p.next);   // 50 ms, or when the one before ends. A piece that
+  if (p.next > 0) p.dry += at - p.next;          // comes after that is a gap the listener hears: added to p.dry, in s (M37)
   p.next = at + duration; return at;
 }
 // </stream-helpers>
@@ -401,41 +401,31 @@ $("record").onclick = async () => {
     if (s >= limit && rec.state === "recording") rec.stop();
   }, 100);
 };
-// One request a machine, all sent at once: each machine's cards appear when it has answered, and no
-// request waits for another machine's wake. A machine with a rung heard as it is made streams: its
-// pieces are played as they arrive (Web Audio), and the first is timed here, in the browser.
-async function streamGroup(g, form, code, slots, sent, ctx, onSummary) {
-  const r = await fetch("api/stream", {method: "POST", body: form, headers: {"X-Access-Code": code}});
-  if (!r.ok) throw new Error((await r.json()).detail || "It did not work.");
-  const reader = r.body.getReader(), dec = new TextDecoder(), state = {buf: ""}, play = {};
-  for (;;) {
-    const {value, done} = await reader.read();
-    if (done) break;
-    for (const ev of ndjsonLines(state, dec.decode(value, {stream: true}))) {
-      if (ev.error) throw new Error(ev.error);
-      if (ev.charged != null) { onSummary(ev); continue; }
-      if (!ev.label) continue;
-      const i = g.labels.indexOf(ev.label);
-      if (ev.start) { play[ev.label] = {sr: ev.sr, chunks: [], next: 0, dry: 0, heard: null}; continue; }
-      if (ev.piece) {
-        const p = play[ev.label], x = pcm16ToFloat(ev.piece), b = ctx.createBuffer(1, x.length, p.sr);
-        b.copyToChannel(x, 0); const src = ctx.createBufferSource(); src.buffer = b; src.connect(ctx.destination);
-        const at = schedule(p, ctx.currentTime, b.duration); src.start(at); p.chunks.push(x);
-        if (p.heard == null) { p.heard = performance.now() - sent + 1000 * (at - ctx.currentTime);
-          slots[i].lastChild.textContent = "Playing: its first audio reached this browser " + ms(p.heard) + " after Send."; }
-        continue;
-      }
-      if (ev.done) {
-        const t = ev.done, p = play[ev.label], card = turnCard(t.label, t.rung + "  ·  on " + (t.machine || g.where)
-          + (about[t.label] ? "  ·  " + about[t.label] : ""), Object.assign({kind: "turn"}, t));
-        if (p) {
-          card.appendChild(el("p", "num", "In this browser: first audio after " + ms(p.heard) + ", counted from Send: the network and any wake are in it. "
-            + (p.dry > 0.001 ? "Playback ran dry here for " + ms(1000 * p.dry) + "." : "Playback never ran dry here.")));
-          const a = el("audio"); a.controls = true; a.src = URL.createObjectURL(wavFrom(p.chunks, p.sr)); card.appendChild(a);
-        }
-        slots[i].replaceWith(card);
-      }
+// One request for every machine a recording needs (M37): a browser sends a page's requests to one site
+// over one connection, and on it a stream was held back while another answer was in flight. The server
+// asks the machines at once and writes their answers into this one response as they come: each machine's
+// cards appear when it has answered, and none waits for another's wake. A machine with a rung heard as it
+// is made streams: its pieces are played as they arrive (Web Audio), and the first is timed here.
+function streamEvent(ev, play, slots, sent, ctx) {
+  const slot = slots.get(ev.label);
+  if (ev.start) { play[ev.label] = {sr: ev.sr, chunks: [], next: 0, dry: 0, heard: null}; return; }
+  if (ev.piece) {
+    const p = play[ev.label], x = pcm16ToFloat(ev.piece), b = ctx.createBuffer(1, x.length, p.sr);
+    b.copyToChannel(x, 0); const src = ctx.createBufferSource(); src.buffer = b; src.connect(ctx.destination);
+    const at = schedule(p, ctx.currentTime, b.duration); src.start(at); p.chunks.push(x);
+    if (p.heard == null) { p.heard = performance.now() - sent + 1000 * (at - ctx.currentTime);
+      slot.lastChild.textContent = "Playing: its first audio reached this browser " + ms(p.heard) + " after Send."; }
+    return;
+  }
+  if (ev.done) {
+    const t = ev.done, p = play[ev.label], card = turnCard(t.label, t.rung + "  ·  on " + t.machine
+      + (about[t.label] ? "  ·  " + about[t.label] : ""), Object.assign({kind: "turn"}, t));
+    if (p) {
+      card.appendChild(el("p", "num", "In this browser: first audio after " + ms(p.heard) + ", counted from Send: the network and any wake are in it. "
+        + (p.dry > 0.001 ? "Playback ran dry here for " + ms(1000 * p.dry) + "." : "Playback never ran dry here.")));
+      const a = el("audio"); a.controls = true; a.src = URL.createObjectURL(wavFrom(p.chunks, p.sr)); card.appendChild(a);
     }
+    slot.replaceWith(card); slots.set(ev.label, card);
   }
 }
 $("send").onclick = async () => {
@@ -446,8 +436,6 @@ $("send").onclick = async () => {
     const g = byMachine[i.dataset.machine] ||= {labels: [], where: i.dataset.machine, first: false, stream: false};
     g.labels.push(i.value); g.stream ||= i.dataset.streams === "1";
   }
-  for (const g of Object.values(byMachine)) if (g.stream)                        // the streamed rung first, as the machine answers it
-    g.labels.sort((a, b) => ($("more").querySelector(`input[value="${a}"]`).dataset.streams ? 0 : 1) - ($("more").querySelector(`input[value="${b}"]`).dataset.streams ? 0 : 1));
   const groups = [{labels: usual, where: "", first: true}].concat(Object.values(byMachine));
   sending = true; ready(); $("error").textContent = ""; $("wait").hidden = true;
   try {
@@ -455,34 +443,52 @@ $("send").onclick = async () => {
     if (!door.ok) { $("error").textContent = (await door.json()).detail || "It did not work."; return; }
     const box = $("answers"), head = el("p", "soft", "Sent."), carried = el("div"), sent = performance.now();
     box.replaceChildren(head, carried);
-    let charged = 0, clipS = null; const woken = [];
+    let charged = 0, clipS = null, woken = [];
     const say = () => { head.textContent = (clipS == null ? "Sent." : "One recording of " + clipS + " s.") + " Charged to today's budget so far: $" + charged.toFixed(4) + "."
       + woken.filter((w) => w.wake_s > 1).map((w) => " " + w.machine + " was asleep: " + w.wake_s.toFixed(0) + " s of its wait was waking it, not the rungs.").join("")
       + " Each machine answers when it is ready; on each, the rungs answered one after another, and each card's times are its own."; };
-    await Promise.all(groups.map(async (g) => {
-      const slots = g.labels.map((label) => box.appendChild(waitingCard(label, g.where ? "on " + g.where : "")));
-      const tick = setInterval(() => { for (const c of slots) c.lastChild.textContent = "Sent " + Math.round((performance.now() - sent) / 1000) + " s ago. "
-        + (g.first ? waitText : "It wakes for this, and loads its model first."); }, 1000);
-      try {
-        const form = new FormData(); form.append("audio", recording, "turn"); form.append("rungs", g.labels.join(",")); form.append("voice_too", g.first ? "1" : "0");
-        if (g.stream) {
-          clearInterval(tick);
-          for (const c of slots) c.lastChild.textContent = "Sent. It wakes for this if it is asleep, and loads its model first; the streamed reply plays as it arrives.";
-          await streamGroup(g, form, code, slots, sent, ctx, (s) => { charged += s.charged; woken.push(...(s.woken || [])); });
-          return;
+    const slots = new Map(), waiting = [], pending = new Set();                   // label -> its card; the waiting cards' texts; the labels unanswered
+    for (const g of groups) for (const label of g.labels) {
+      const c = box.appendChild(waitingCard(label, g.where ? "on " + g.where : ""));
+      slots.set(label, c); pending.add(label);
+      if (g.stream) c.lastChild.textContent = "Sent. It wakes for this if it is asleep, and loads its model first; the streamed reply plays as it arrives.";
+      else waiting.push([c, g.first ? waitText : "It wakes for this, and loads its model first."]);
+    }
+    const tick = setInterval(() => { for (const [c, text] of waiting) if (c.isConnected)
+      c.lastChild.textContent = "Sent " + Math.round((performance.now() - sent) / 1000) + " s ago. " + text; }, 1000);
+    const play = {}, form = new FormData();
+    form.append("audio", recording, "turn"); form.append("rungs", groups.slice(1).flatMap((g) => g.labels).join(",")); form.append("voice_too", "1");
+    const failed = (labels, message) => labels.filter((label) => pending.has(label)).forEach((label) => {
+      const card = turnCard(label, "", {error: message}); slots.get(label).replaceWith(card); slots.set(label, card); pending.delete(label); });
+    try {
+      const r = await fetch("api/send", {method: "POST", body: form, headers: {"X-Access-Code": code}});
+      if (!r.ok) throw new Error((await r.json()).detail || "It did not work.");
+      const reader = r.body.getReader(), dec = new TextDecoder(), state = {buf: ""};
+      for (;;) {
+        const {value, done} = await reader.read();
+        if (done) break;
+        for (const ev of ndjsonLines(state, dec.decode(value, {stream: true}))) {
+          if (ev.answer) {
+            const body = ev.answer;
+            clipS = body.clip_s;
+            body.turns.forEach((t) => { const s = slots.get(t.label);
+              const card = turnCard(t.label, t.rung + (ev.first || !t.machine ? "" : "  ·  on " + t.machine)
+                + (about[t.label] ? "  ·  " + about[t.label] : ""), Object.assign({kind: "turn"}, t));
+              s.replaceWith(card); slots.set(t.label, card); pending.delete(t.label); });
+            if (ev.first) carried.replaceWith(voiceCard(body.voice, body.turns, body.clip_s));
+            charged += body.charged; woken.push(...(body.woken || [])); say();
+          } else if (ev.failed) failed(ev.labels, ev.error);
+          else if (ev.charged != null) { charged = ev.charged; woken = ev.woken || []; say(); }
+          else if (ev.label) { streamEvent(ev, play, slots, sent, ctx); if (ev.done) pending.delete(ev.label); }
         }
-        const r = await fetch("api/live", {method: "POST", body: form, headers: {"X-Access-Code": code}});
-        const body = await r.json();
-        if (!r.ok) throw new Error(body.detail || "It did not work.");
-        charged += body.charged; clipS = body.clip_s; woken.push(...(body.woken || []));
-        body.turns.forEach((t, i) => slots[i].replaceWith(turnCard(t.label, t.rung + (g.first || !t.machine ? "" : "  ·  on " + t.machine)
-          + (about[t.label] ? "  ·  " + about[t.label] : ""), Object.assign({kind: "turn"}, t))));
-        if (g.first) carried.replaceWith(voiceCard(body.voice, body.turns, body.clip_s));
-      } catch (e) {
-        g.labels.forEach((label, i) => slots[i].replaceWith(turnCard(label, g.where ? "on " + g.where : "",
-          {error: e instanceof TypeError ? "The server did not answer for this machine." : e.message})));
-      } finally { clearInterval(tick); say(); }
-    }));
+      }
+    } catch (e) {
+      failed([...pending], e instanceof TypeError ? "The server did not answer." : e.message);
+    } finally {
+      clearInterval(tick);
+      failed([...pending], "The server did not answer for this machine.");       // any card still waiting
+      say();
+    }
     loadStatus();
   } catch (e) { $("error").textContent = "The server did not answer."; }
   finally { sending = false; ready(); }

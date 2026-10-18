@@ -72,11 +72,11 @@ console.log(JSON.stringify({{floats: Array.from(f), size: b.length, riff: tag(0)
 def test_the_page_counts_the_gaps_its_listener_would_hear(tmp_path):
     js = helpers() + """
 const p = {next: 0, dry: 0}, at = [];
-at.push(schedule(p, 0.0, 0.46));              // the first block: on arrival plus 50 ms
+at.push(schedule(p, 0.0, 0.46));              // the first block: on arrival plus 150 ms
 at.push(schedule(p, 0.40, 1.92));             // the second, before the first has ended: straight after it
-at.push(schedule(p, 3.00, 1.92));             // the third, 0.62 s after the second ended: a gap
+at.push(schedule(p, 3.00, 1.92));             // the third, 0.47 s after the second ended, plus 50 ms: a gap
 console.log(JSON.stringify({at, dry: p.dry, next: p.next}));
 """
     out = json.loads(run_js(js, tmp_path))
-    assert out["at"] == pytest.approx([0.05, 0.51, 3.05]) and out["dry"] == pytest.approx(0.62)
+    assert out["at"] == pytest.approx([0.15, 0.61, 3.05]) and out["dry"] == pytest.approx(0.52)
     assert out["next"] == pytest.approx(3.05 + 1.92)

@@ -196,7 +196,7 @@ def test_the_page_the_measured_data_and_only_the_clips_it_shows(web):
         assert client.get(f"/api/clip/{other}").status_code == 404
     assert client.get("/docs").status_code == 404 and client.get("/openapi.json").status_code == 404
     handlers = [r.endpoint for r in client.app.routes if getattr(r, "path", "").startswith("/api/") or getattr(r, "path", "") == "/"]
-    assert len(handlers) == 8 and not any(inspect.iscoroutinefunction(h) for h in handlers)   # blocking calls stay off the event loop
+    assert len(handlers) == 9 and not any(inspect.iscoroutinefunction(h) for h in handlers)   # blocking calls stay off the event loop
 
 
 def test_the_live_part_needs_the_code_answers_with_every_rung_and_charges_the_budget(web):
@@ -927,6 +927,89 @@ def test_a_stream_whose_machine_fails_says_so_and_still_charges(tree, monkeypatc
     assert events[0] == {"error": "the machine these rungs run on did not answer"} and "path" not in r.text
     assert events[-1]["charged"] > 0 and budget.spent(DAY) > 0
 
+
+
+# --------------------------------------------------------------------------- #
+# one request per Send (M37)
+# --------------------------------------------------------------------------- #
+class Slow(StubRung):
+    """The usual machine, slow to answer: what a T4 turn is beside a stream."""
+
+    def _respond(self, audio, sr, sink):
+        import time
+        time.sleep(0.4)
+        return super()._respond(audio, sr, sink)
+
+
+@pytest.fixture
+def sending_web(tree, monkeypatch):
+    pytest.importorskip("fastapi")
+    from fastapi.testclient import TestClient
+
+    from s2slab import demoweb
+    monkeypatch.setenv("TEST_DEMO_CODE", "open sesame")
+    budget = demo.Budget({}, cap_dollars=3.0, dollars_per_hour=0.59, machines={"l40s": (1.95, 120.0), "a10": (1.10, 120.0)})
+    first = demo.Live({"R0": "stub"}, get=lambda rung_id: Slow())
+    l40s = demo.Live({"R4": "r4-gpu-fast", "R4 streamed": "r4-gpu-stream"},
+                     get=lambda rung_id: Streamer() if rung_id == "r4-gpu-stream" else StubRung())
+    live = demo.Several(first, {"l40s": l40s, "a10": demo.Live({"R3": "r3-gpu"}, get=lambda rung_id: StubRung())},
+                        says={"l40s": "an L40S", "a10": "an A10"})
+    app = demoweb.create_app(live, budget, root=tree, machine="a test", code_env="TEST_DEMO_CODE", clock=lambda: DAY,
+                             clips=PICK, rows=ROWS, verbatim_clips=("dis-00", "dis-01"), verbatim_run="runs/v.json")
+    return TestClient(app), budget
+
+
+def test_one_send_answers_every_machine_in_one_stream_and_a_slow_one_holds_no_other_back(sending_web):
+    client, budget = sending_web
+    send = lambda code, rungs: client.post("/api/send", files={"audio": ("turn", wav(2.0), "audio/wav")}, data={"rungs": rungs},
+                                          headers={"X-Access-Code": code} if code else {})
+    assert send(None, "R4 streamed").status_code == 401 and budget.spent(DAY) == 0.0
+    assert send("open sesame", "R9").status_code == 400
+    r = send("open sesame", "R4 streamed,R4,R3")
+    assert r.status_code == 200 and r.headers["content-type"].startswith("application/x-ndjson")
+    events = [json.loads(line) for line in r.text.splitlines()]
+    first_piece = next(i for i, e in enumerate(events) if "piece" in e)
+    usual = next(i for i, e in enumerate(events) if "answer" in e and e["first"])
+    assert first_piece < usual                                               # the slow machine held no piece back
+    answers = [e for e in events if "answer" in e]
+    assert sorted(t["label"] for e in answers for t in e["answer"]["turns"]) == ["R0", "R3"]
+    assert [e["first"] for e in answers if e["answer"]["turns"][0]["label"] == "R3"] == [False]
+    assert [e["done"]["label"] for e in events if "done" in e] == ["R4 streamed", "R4"]
+    assert sum("charged" in e and "answer" not in e for e in events) == 1      # the stream's end folded into the last line
+    summary = events[-1]
+    assert set(summary) == {"charged", "budget_left", "woken"} and "billed_until:l40s" in budget.store
+    assert summary["charged"] > sum(e["answer"]["charged"] for e in answers) > 0
+    assert {w["machine"] for w in summary["woken"]} >= {"an L40S"}
+    again = [json.loads(line) for line in send("open sesame", "").text.splitlines()]            # the locks were let go
+    assert [list(e) for e in again] == [["answer", "first"], ["charged", "budget_left", "woken"]]
+
+
+def test_one_send_with_a_machine_that_fails_still_answers_the_others(tree, monkeypatch):
+    pytest.importorskip("fastapi")
+    from fastapi.testclient import TestClient
+
+    from s2slab import demoweb
+    monkeypatch.setenv("TEST_DEMO_CODE", "open sesame")
+    budget = demo.Budget({}, cap_dollars=3.0, dollars_per_hour=0.59, machines={"l40s": (1.95, 120.0)})
+
+    class Gone:
+        offered = {"R4 streamed": "r4-gpu-stream"}
+
+        def turns(self, labels, audio):
+            raise RuntimeError("no")
+
+        def stream(self, labels, audio):
+            raise RuntimeError("the container did not start: /a/path/nobody/should/see")
+
+    live = demo.Several(demo.Live({"R0": "stub"}, get=lambda rung_id: StubRung()), {"l40s": Gone()}, says={"l40s": "an L40S"})
+    client = TestClient(demoweb.create_app(live, budget, root=tree, code_env="TEST_DEMO_CODE", clock=lambda: DAY, clips=PICK, rows=ROWS,
+                                           verbatim_clips=("dis-00", "dis-01"), verbatim_run="runs/v.json"))
+    r = client.post("/api/send", files={"audio": ("turn", wav(2.0), "audio/wav")}, data={"rungs": "R4 streamed"},
+                    headers={"X-Access-Code": "open sesame"})
+    events = [json.loads(line) for line in r.text.splitlines()]
+    assert {"failed": "an L40S", "labels": ["R4 streamed"], "error": "the machine these rungs run on did not answer"} in events
+    assert any("answer" in e and e["first"] for e in events) and "path" not in r.text
+    assert events[-1]["charged"] > 0 and budget.spent(DAY) > 0
 
 def test_the_load_report_gives_each_rungs_seconds_and_its_phases():
     class Phased(StubRung):
