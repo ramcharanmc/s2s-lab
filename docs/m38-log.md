@@ -8,7 +8,9 @@ Kept as events happen. The earlier logs: `docs/m37-log.md` and those it names.
 | 1 | 10-18 | — | the design (below); the author's go, Piper in. Asked for by both plans: v1's P3 and v2's week 8, the last of the roadmap not started | — | — |
 | 2 | 10-18 | the tests, laptop: 1056 passed, 2 skipped (17 new); a smoke render of three clauses through each engine, outside the repo | Kokoro and its ONNX copy 300 to 320 ms of leading silence, the same in both; Kokoro's own padding 325 to 400 ms, longer than the silence measured, so its first sound starts inside the padding; FastPitch (9017) 40 to 80 ms; Piper not yet installed | `leadsilence.py`, `ft/src/ft3/leadsilence_fp.py`, tests | ec3e4d7 |
 | 3 | 10-18 | the author's runs, laptop, \$0: `leadsilence render`, `src.ft3.leadsilence_fp`, `leadsilence analyze` | 200 first clauses through five engines; R4 from its run. **Kokoro 320 ms (p50), 360 (p90), the same through ONNX; its own padding 350 ms.** Piper and FastPitch's base voice 0 ms; FT-3's 9017 30 ms, its padding 46 against the base's 23; R4 200 ms. A trim cuts 300 ms from Kokoro at the median and loses no first word (194 of 200 heard after it, 193 before). **GO by the rule** | — | 9a86f5b |
-| 4 | 10-18 | the tests, laptop | step 2's design (section 3): `r1-gpu-trim`, R1 with its first piece's leading silence cut; a development run on the probe clips, the rule written first | `r1.py` (`_shape`, `FirstTrimmed`, `r1-trim`, `r1-gpu-trim`), `rungs`, `evalrun` (a rung's `turn_extra`), `r1trim.py`, `::trimdev`, tests | this commit |
+| 4 | 10-18 | the tests, laptop | step 2's design (section 3): `r1-gpu-trim`, R1 with its first piece's leading silence cut; a development run on the probe clips, the rule written first | `r1.py` (`_shape`, `FirstTrimmed`, `r1-trim`, `r1-gpu-trim`), `rungs`, `evalrun` (a rung's `turn_extra`), `r1trim.py`, `::trimdev`, tests | ee15442 |
+| 5 | 10-18 | `modal run modal_app/r0_bench.py::trimdev`, the author, at ee15442 | one T4, 53 s in the function, about \$0.010. On the 30 probe clips: first sound 517 ms (p50) and 807 (p90) trimmed, against 807 and 1,108 as is on the same turns (0.641, 0.728); no turn stalled either way; the cut 298 ms at the median, every cut at least 56 dB below its piece's loudest; the second piece still at least 0.9 s ahead of need. **GO by the rule** | — | — |
+| 6 | 10-18 | — | **PR-018 registered** before any eval-set turn of `r1-gpu-trim` | `pr018.py`, `::pr018`, `docs/preregistration.md`, tests | this commit |
 
 ## 1. The design
 
@@ -112,3 +114,20 @@ the rungs' 40 dB measure too). The same words: a trim changes when the first sou
 **The rule, written before the run** (`s2slab.r1trim`): **GO** to PR-018 if the trimmed first sound's p50 is at
 most **0.85** of R1's on the same turns **and** the trimmed turns that stall are no more than **2** above R1's;
 otherwise M38 stops here, nothing registered. PR-018's bars are set from this run.
+
+## 4. The development run (row 5)
+
+`runs/r1-gpu/trim-dev-t4.json`: `r1-gpu-trim` on the 30 probe clips, R1 as it is computed from the same turns.
+
+| on the same turns | first sound p50 | p90 | stalled turns |
+|---|---:|---:|---:|
+| R1 as it is | 807 ms | 1,108 | 0 |
+| **first piece trimmed** | **517 ms** | **807** | **0** |
+| ratio | 0.641 | 0.728 | |
+
+The stall risk turned out small: R1 renders its second clause while the first plays, and the first clause plays
+long enough that, even 300 ms shorter, the second piece came at least 0.9 s before it was needed (2.7 s at the
+median); 12 of the 30 replies were a single piece. Every cut was at least 56 dB below its piece's loudest: silence.
+
+**Then:** PR-018 registered (row 6), its run the author's: `modal run modal_app/r0_bench.py::pr018 --confirm PR-018`,
+one T4, about \$0.25.

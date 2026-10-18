@@ -1,0 +1,638 @@
+{
+ "run": "M38, step 2: r1-gpu-trim on the 30 probe clips (development)",
+ "commit": "ee15442",
+ "machine": "Modal Tesla T4, 610.57.04",
+ "rung": "r1-gpu-trim",
+ "load_ms": 24101.4,
+ "clips": [
+  "f01",
+  "f02",
+  "f03",
+  "f04",
+  "f05",
+  "f06",
+  "f07",
+  "f08",
+  "f09",
+  "f10",
+  "f11",
+  "f12",
+  "c01",
+  "c02",
+  "c03",
+  "c04",
+  "c05",
+  "c06",
+  "c07",
+  "c08",
+  "c09",
+  "c10",
+  "c11",
+  "c12",
+  "n01",
+  "n02",
+  "n03",
+  "n04",
+  "n05",
+  "n06"
+ ],
+ "sr": 24000,
+ "turns": {
+  "f01": {
+   "reply_text": "Please provide me with your current shipping and billing addresses so I can update them accordingly.",
+   "total_ms": 648.6,
+   "first_audio_ms": 648.5,
+   "first_sound_ms": 668.5,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     648.5,
+     132000
+    ]
+   ],
+   "trim_ms": 275.0,
+   "cut_peak_db": -69.0
+  },
+  "f02": {
+   "reply_text": "The appointment is scheduled for 2:30 PM.",
+   "total_ms": 471.7,
+   "first_audio_ms": 471.7,
+   "first_sound_ms": 491.7,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     471.7,
+     76560
+    ]
+   ],
+   "trim_ms": 310.0,
+   "cut_peak_db": -59.6
+  },
+  "f03": {
+   "reply_text": "Your birthday matches your date's date of birth.",
+   "total_ms": 417.7,
+   "first_audio_ms": 417.7,
+   "first_sound_ms": 437.7,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     417.7,
+     67320
+    ]
+   ],
+   "trim_ms": 295.0,
+   "cut_peak_db": -57.0
+  },
+  "f04": {
+   "reply_text": "I'm sorry, but I can't assist with that.",
+   "total_ms": 457.0,
+   "first_audio_ms": 457.0,
+   "first_sound_ms": 477.0,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     457.0,
+     59400
+    ]
+   ],
+   "trim_ms": 300.0,
+   "cut_peak_db": -56.0
+  },
+  "f05": {
+   "reply_text": "I'm sorry to hear that. I'll need to check my records and see if there's any way to process the refund.",
+   "total_ms": 912.8,
+   "first_audio_ms": 390.7,
+   "first_sound_ms": 410.7,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     390.7,
+     38400
+    ],
+    [
+     912.7,
+     114000
+    ]
+   ],
+   "trim_ms": 300.0,
+   "cut_peak_db": -56.2
+  },
+  "f06": {
+   "reply_text": "I'm sorry to hear that you're taking this medication. It's important to follow your doctor's instructions carefully.",
+   "total_ms": 834.6,
+   "first_audio_ms": 526.5,
+   "first_sound_ms": 546.5,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     526.5,
+     74280
+    ],
+    [
+     834.6,
+     95400
+    ]
+   ],
+   "trim_ms": 305.0,
+   "cut_peak_db": -61.3
+  },
+  "f07": {
+   "reply_text": "I'm sorry to hear that you're experiencing delays with your technician. We understand the inconvenience and appreciate your patience. Please let me know if there's anything specific we can assist you with during this time.",
+   "total_ms": 1429.2,
+   "first_audio_ms": 608.4,
+   "first_sound_ms": 628.4,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     608.4,
+     100560
+    ],
+    [
+     929.0,
+     97200
+    ],
+    [
+     1429.2,
+     121200
+    ]
+   ],
+   "trim_ms": 310.0,
+   "cut_peak_db": -62.0
+  },
+  "f08": {
+   "reply_text": "The issue might be with your network configuration or firewall settings. Please check if there's an error message about the router restarting. If so, try resetting the router and reconfiguring it.",
+   "total_ms": 1335.4,
+   "first_audio_ms": 571.9,
+   "first_sound_ms": 591.9,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     571.9,
+     103441
+    ],
+    [
+     982.3,
+     103800
+    ],
+    [
+     1335.4,
+     90600
+    ]
+   ],
+   "trim_ms": 290.0,
+   "cut_peak_db": -64.7
+  },
+  "f09": {
+   "reply_text": "Please let us know if you require any assistance with your account.",
+   "total_ms": 508.1,
+   "first_audio_ms": 508.1,
+   "first_sound_ms": 528.1,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     508.1,
+     93600
+    ]
+   ],
+   "trim_ms": 275.0,
+   "cut_peak_db": -69.7
+  },
+  "f10": {
+   "reply_text": "Sure, I can help you with that. Please provide me with the name and address of your mother so we can arrange an appointment.",
+   "total_ms": 956.1,
+   "first_audio_ms": 445.0,
+   "first_sound_ms": 465.0,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     445.0,
+     45600
+    ],
+    [
+     956.1,
+     129000
+    ]
+   ],
+   "trim_ms": 250.0,
+   "cut_peak_db": -68.4
+  },
+  "f11": {
+   "reply_text": "I'm sorry to hear that. It sounds like you might have accidentally damaged the paint on your box during the lifting process.",
+   "total_ms": 927.0,
+   "first_audio_ms": 397.7,
+   "first_sound_ms": 417.7,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     397.7,
+     38400
+    ],
+    [
+     927.0,
+     139800
+    ]
+   ],
+   "trim_ms": 300.0,
+   "cut_peak_db": -56.3
+  },
+  "f12": {
+   "reply_text": "Absolutely! I'd be happy to schedule your appointment for the morning. Please let me know when you're available so we can set up the meeting.",
+   "total_ms": 1124.5,
+   "first_audio_ms": 310.8,
+   "first_sound_ms": 330.8,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     310.8,
+     30840
+    ],
+    [
+     694.5,
+     78000
+    ],
+    [
+     1124.4,
+     99000
+    ]
+   ],
+   "trim_ms": 365.0,
+   "cut_peak_db": -66.5
+  },
+  "c01": {
+   "reply_text": "Your account number is 472911.",
+   "total_ms": 482.7,
+   "first_audio_ms": 482.7,
+   "first_sound_ms": 502.7,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     482.7,
+     105720
+    ]
+   ],
+   "trim_ms": 295.0,
+   "cut_peak_db": -60.6
+  },
+  "c02": {
+   "reply_text": "Your phone number is 077 912436.",
+   "total_ms": 602.5,
+   "first_audio_ms": 602.5,
+   "first_sound_ms": 622.5,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     602.5,
+     126000
+    ]
+   ],
+   "trim_ms": 300.0,
+   "cut_peak_db": -59.2
+  },
+  "c03": {
+   "reply_text": "The address you provided is 42 Draw Lane, Croydon.",
+   "total_ms": 621.9,
+   "first_audio_ms": 501.2,
+   "first_sound_ms": 521.2,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     501.2,
+     73441
+    ],
+    [
+     621.9,
+     34800
+    ]
+   ],
+   "trim_ms": 290.0,
+   "cut_peak_db": -58.8
+  },
+  "c04": {
+   "reply_text": "Metformin 500 mg is the dosage for this medication.",
+   "total_ms": 563.0,
+   "first_audio_ms": 563.0,
+   "first_sound_ms": 583.0,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     563.0,
+     106920
+    ]
+   ],
+   "trim_ms": 295.0,
+   "cut_peak_db": -63.4
+  },
+  "c05": {
+   "reply_text": "David mentioned that he discussed the bill with you on Thursday.",
+   "total_ms": 484.8,
+   "first_audio_ms": 484.8,
+   "first_sound_ms": 504.8,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     484.8,
+     88200
+    ]
+   ],
+   "trim_ms": 325.0,
+   "cut_peak_db": -60.6
+  },
+  "c06": {
+   "reply_text": "Emily is your daughter, and you're her carer.",
+   "total_ms": 544.1,
+   "first_audio_ms": 341.6,
+   "first_sound_ms": 361.6,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     341.6,
+     38040
+    ],
+    [
+     544.1,
+     42000
+    ]
+   ],
+   "trim_ms": 315.0,
+   "cut_peak_db": -56.3
+  },
+  "c07": {
+   "reply_text": "The order was placed around 10 AM on Monday.",
+   "total_ms": 493.5,
+   "first_audio_ms": 493.5,
+   "first_sound_ms": 513.5,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     493.5,
+     68641
+    ]
+   ],
+   "trim_ms": 290.0,
+   "cut_peak_db": -60.7
+  },
+  "c08": {
+   "reply_text": "I'm sorry, but I need more information about the specific issue you're experiencing with your connection. Could you provide details such as the operating system, version of the software, and any relevant error messages? This will help me better understand and assist you.",
+   "total_ms": 1783.5,
+   "first_audio_ms": 784.7,
+   "first_sound_ms": 804.7,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     784.7,
+     146880
+    ],
+    [
+     1096.1,
+     89400
+    ],
+    [
+     1295.6,
+     48600
+    ],
+    [
+     1513.3,
+     60600
+    ],
+    [
+     1783.5,
+     77400
+    ]
+   ],
+   "trim_ms": 305.0,
+   "cut_peak_db": -62.9
+  },
+  "c09": {
+   "reply_text": "I'm sorry to hear that. I'll need more information to understand the situation better. Could you please provide details about what's been happening?",
+   "total_ms": 1045.3,
+   "first_audio_ms": 376.7,
+   "first_sound_ms": 396.7,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     376.7,
+     38400
+    ],
+    [
+     750.0,
+     96600
+    ],
+    [
+     1045.3,
+     84000
+    ]
+   ],
+   "trim_ms": 300.0,
+   "cut_peak_db": -57.1
+  },
+  "c10": {
+   "reply_text": "The flight number is Victor 2 7 8.",
+   "total_ms": 476.8,
+   "first_audio_ms": 476.8,
+   "first_sound_ms": 496.8,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     476.8,
+     63000
+    ]
+   ],
+   "trim_ms": 275.0,
+   "cut_peak_db": -59.9
+  },
+  "c11": {
+   "reply_text": "For your laptop with the silver charger, you can try using a USB-C charging cable that matches the specifications of your device. This will ensure compatibility and proper charging.",
+   "total_ms": 1209.7,
+   "first_audio_ms": 443.8,
+   "first_sound_ms": 483.8,
+   "leading_silence_ms": 40.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     443.8,
+     57960
+    ],
+    [
+     991.1,
+     150600
+    ],
+    [
+     1209.6,
+     84600
+    ]
+   ],
+   "trim_ms": 260.0,
+   "cut_peak_db": -59.1
+  },
+  "c12": {
+   "reply_text": "That's correct! The total amount is 84 pounds and 50 pence.",
+   "total_ms": 697.9,
+   "first_audio_ms": 310.0,
+   "first_sound_ms": 330.0,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     310.0,
+     31680
+    ],
+    [
+     697.9,
+     88800
+    ]
+   ],
+   "trim_ms": 330.0,
+   "cut_peak_db": -63.9
+  },
+  "n01": {
+   "reply_text": "The address you provided is for Evergreen Arches in Springfield, Oregon, United States.",
+   "total_ms": 739.4,
+   "first_audio_ms": 593.7,
+   "first_sound_ms": 613.7,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     593.7,
+     95641
+    ],
+    [
+     739.4,
+     52800
+    ]
+   ],
+   "trim_ms": 290.0,
+   "cut_peak_db": -60.3
+  },
+  "n02": {
+   "reply_text": "The sequence appears to be a random permutation of the digits from 1 to 9.",
+   "total_ms": 808.0,
+   "first_audio_ms": 808.0,
+   "first_sound_ms": 828.0,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     808.0,
+     115080
+    ]
+   ],
+   "trim_ms": 280.0,
+   "cut_peak_db": -63.1
+  },
+  "n03": {
+   "reply_text": "I understand you're looking into tracking your delivery. Please provide me with the current status of the package, including any delays or issues that may have occurred. This information will help me assist you better.",
+   "total_ms": 1478.9,
+   "first_audio_ms": 568.4,
+   "first_sound_ms": 588.4,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     568.4,
+     68880
+    ],
+    [
+     914.9,
+     85200
+    ],
+    [
+     1235.1,
+     85200
+    ],
+    [
+     1478.9,
+     79200
+    ]
+   ],
+   "trim_ms": 305.0,
+   "cut_peak_db": -59.1
+  },
+  "n04": {
+   "reply_text": "The symptoms you described sound very serious and should be taken seriously. Please seek medical attention immediately as these symptoms could indicate a more severe condition such as a brain tumor or other neurological issue.",
+   "total_ms": 1665.1,
+   "first_audio_ms": 878.3,
+   "first_sound_ms": 898.3,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     878.3,
+     113880
+    ],
+    [
+     1665.1,
+     238800
+    ]
+   ],
+   "trim_ms": 280.0,
+   "cut_peak_db": -64.5
+  },
+  "n05": {
+   "reply_text": "Val Key is pronounced \"V-A-L-K-E-R-I-S\" and was born on October 13, 1992.",
+   "total_ms": 1120.4,
+   "first_audio_ms": 918.1,
+   "first_sound_ms": 938.1,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     918.1,
+     125161
+    ],
+    [
+     1120.4,
+     45600
+    ]
+   ],
+   "trim_ms": 285.0,
+   "cut_peak_db": -66.2
+  },
+  "n06": {
+   "reply_text": "These products include ophthalmic solutions for eye care, phototherapy gel for skin conditions, and topical medications for neurological issues.",
+   "total_ms": 1447.4,
+   "first_audio_ms": 754.3,
+   "first_sound_ms": 774.3,
+   "leading_silence_ms": 20.0,
+   "stall_ms": 0.0,
+   "chunks": [
+    [
+     754.3,
+     82080
+    ],
+    [
+     1090.3,
+     69000
+    ],
+    [
+     1447.4,
+     85800
+    ]
+   ],
+   "trim_ms": 305.0,
+   "cut_peak_db": -59.8
+  }
+ }
+}

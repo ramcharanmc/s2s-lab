@@ -376,3 +376,9 @@ def test_the_ft3_data_stage_extracts_pitch_with_the_trainings_range(ft3_train):
     assert ft3_train.STATS.name == "stats_f30_512.json"                             # the first extract's stats.json is not read
     source = (ROOT / "modal_app" / "ft3_train.py").read_text(encoding="utf-8")
     assert "DATA / 'sup_data'" not in source and 'DATA / "stats.json"' not in source
+
+
+def test_the_t4_app_has_m38s_entry_points(r0_bench):
+    assert hasattr(r0_bench.trim_dev, "remote") and hasattr(r0_bench.trimdev, "info") and hasattr(r0_bench.pr018, "info")
+    assert r0_bench.TRIM_DEV_PATH == ROOT / "runs" / "r1-gpu" / "trim-dev-t4.json"
+    assert r0_bench.PR018_PATH == ROOT / "runs" / "r1-gpu-trim" / "pr018.json"

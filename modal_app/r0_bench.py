@@ -14,6 +14,7 @@ together with what it cost.
                                                                 # the PR-002 run: same container, same GPU
     modal run modal_app/r0_bench.py --rung r1-gpu,r2-gpu,r2-gpu-turbo
     modal run modal_app/r0_bench.py::trimdev                    # M38: R1 with its first piece trimmed, probe clips
+    modal run modal_app/r0_bench.py::pr018 --confirm PR-018     # PR-018, once: r1-gpu-trim on the eval set
                                                                 # R2's slow tier beside R1: probe clips                                                                
     
 What happens where:
@@ -210,6 +211,34 @@ def trimdev():
     from s2slab.r1trim import format_dev
     print(format_dev(blob))
     print(f"\ncommit {commit} · GPU {out['gpu']}\nsaved -> {TRIM_DEV_PATH.relative_to(REPO)}")
+    print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
+          f"about ${wall / 3600 * T4_DOLLARS_PER_HOUR:.3f} at the T4 rate. Modal's dashboard has the exact bill.")
+
+
+PR018_PATH = REPO / "runs" / "r1-gpu-trim" / "pr018.json"       # PR-018's one run (s2slab.pr018)
+
+
+@app.local_entrypoint()
+def pr018(confirm: str = ""):
+    """PR-018, once (docs/preregistration.md): refused without --confirm PR-018, if its run file exists, or from a tree
+    with uncommitted changes. r1-gpu-trim over the 200 eval clips on one T4 (evaluate); saves runs/r1-gpu-trim/pr018.json
+    and prints the criteria."""
+    if confirm != "PR-018":
+        raise SystemExit("add --confirm PR-018: the eval set is its confirmation's, and it runs once")
+    refuse_to_overwrite([PR018_PATH])
+    commit = subprocess.run(["git", "-C", str(REPO), "describe", "--always", "--dirty"],
+                            capture_output=True, text=True).stdout.strip()
+    if commit.endswith("-dirty"):
+        raise SystemExit(f"{commit}: commit first; PR-018 runs from a clean commit")
+    t0 = time.time()
+    out = evaluate.remote(["r1-gpu-trim"], commit)
+    wall = time.time() - t0
+    sys.path.insert(0, str(REPO / "src"))
+    from s2slab.pr018 import REGISTRATION, criteria, format_pr018, save
+    blob = {"registration": REGISTRATION, **out["results"]["r1-gpu-trim"]}
+    path = save(blob, PR018_PATH)
+    print(format_pr018(blob, criteria(blob)))
+    print(f"\nsaved -> {path.relative_to(REPO)}")
     print(f"{out['seconds']:.0f} s inside the function, {wall:.0f} s end to end (queue, cold start and run): "
           f"about ${wall / 3600 * T4_DOLLARS_PER_HOUR:.3f} at the T4 rate. Modal's dashboard has the exact bill.")
 

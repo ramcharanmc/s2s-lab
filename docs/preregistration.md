@@ -32,6 +32,7 @@ Rules, from the v1 Research plan (§8):
 | PR-015 | On the eval set, does R4 streamed let the caller hear its reply sooner than R4, without stalling, a much longer turn or garbled words? | `e2a4b4e` | **Reported: supported** (first sound 0.49 of R4's at the median, 95% interval 0.47 to 0.50, and 0.32 at p90: 3.3 s against 6.8, 3.7 against 11.8; no turn stalled; Whisper's word error rate 1.1% against 1.3%; the turn 1.14 times as long) |
 | PR-016 | On the eval set, does a Talker cache sized to the turn let the caller hear R4 streamed's reply sooner still, at the median and in the tail, without stalling, a longer turn or other words? | `d65274d` | **Reported: supported** (first sound 0.787 of the stream's at the median, 95% interval 0.781 to 0.790, and 0.809 at p90: 2.6 s against 3.3, 3.0 against 3.7; no turn stalled; the same codes and words on 200 of 200) |
 | PR-017 | On the eval set, does starting R4 streamed's playback when the turn's own code rate says its second block is due, instead of after 0.5 s of audio, let the caller hear the reply sooner, without stalling? | `eca9da1` | **Reported: supported** (first sound 0.846 of the buffer's at the median, 95% interval 0.844 to 0.849, and 0.867 at p90: 2.27 s against 2.68, 2.70 against 3.11; no turn stalled; the same audio on 200 of 200) |
+| PR-018 | On the eval set, does cutting the leading silence of R1's first spoken clause (Kokoro's 320 ms of padding) let the caller hear its reply sooner, without stalling? | The commit that adds this entry | Registered; not yet run |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -3932,3 +3933,111 @@ Descriptive, not criteria:
   within one container.
 - **Against R4 itself**, across runs on the same eval set (descriptive only): R4's first sound was 6,806 ms at
   p50 in PR-015; the timed start's here 2,269, about 0.33 of it.
+
+## PR-018 — R1 with its first clause's leading silence cut: the reply heard sooner, without stalls
+
+**Registered:** 2026-10-18, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+M38 measured the leading silence of five TTS engines on R1's 200 first clauses (`runs/tts/leading-silence.json`,
+`docs/m38-log.md`): Kokoro, R1's engine, puts **320 ms** (p50) of silence before every clause, nearly all of it the
+padding its duration predictor gives the token before the first phoneme (350 ms); Piper and FastPitch put none. Cut to
+20 ms before the first frame within 50 dB of the clause's loudest, Kokoro lost no first word (Whisper heard 194 of 200
+first words after the cut, 193 before).
+
+`r1-gpu-trim` (`src/s2slab/r1.py`) is R1 with that cut applied to its reply's **first** piece only; later pieces keep
+their silence, the pause between clauses. On the 30 probe clips (`runs/r1-gpu/trim-dev-t4.json`, development, at
+`ee15442`, one T4), by the rule written before that run: first sound 517 ms (p50) and 807 (p90) against R1's 807 and
+1,108 on the same turns, ratios 0.641 and 0.728; no turn stalled either way; the cut 298 ms at the median (250 to 365);
+every cut at least 56 dB below its piece's loudest; the second piece still ahead of when playback needed it by 0.9 s at
+least (2.7 s at the median; 12 of the 30 replies a single piece).
+
+### Question
+
+On the frozen eval set, does cutting the first clause's leading silence let the caller hear R1's reply sooner than R1
+as it is, at the median and in the tail, without stalling?
+
+### The rule and its comparator
+
+- **`r1-gpu-trim`**, as frozen in this commit: R1 (`r1-gpu`: Whisper base.en, Qwen2.5-0.5B streamed, Kokoro clause by
+  clause, on a T4), its first piece cut to 20 ms before its first 5 ms frame within 50 dB of the piece's loudest
+  (`leadsilence.trim`, `KEEP_MS = 20`). Each turn records what was cut and the cut's loudest frame.
+- **R1 as it is, on the same turns**: computed from each turn's pieces (`r1trim.as_is`): the first piece longer by what
+  was cut, its leading silence longer by the same. The cut is silent by V1, so the computed turn is R1's own. The same
+  words, the same pieces, the same host.
+
+### Test data
+
+The frozen eval set, 200 clips, 50 each of clean, accented, disfluent and slow. R1 has answered them (PR-002);
+`r1-gpu-trim` never has.
+
+### Validity requirements
+
+- **V1 · The cut was silent.** On all 200 turns the cut's loudest 5 ms frame is at least 50 dB below its piece's
+  loudest (development: at least 56 dB).
+- **V2 · Fixed before data.** This entry, the frozen rung, `src/s2slab/pr018.py` and the command are committed before
+  the run; the run records its commit.
+- **V3 · Once.** The run is refused without `--confirm PR-018`, if its file exists, or from a tree with uncommitted
+  changes.
+
+If V1 fails, the result is **not a valid test**. If V2 or V3 fails, it is **exploratory**. A turn with no first sound
+either way is not dropped: it is reported as a deviation.
+
+### Primary outcome
+
+First sound (`rungs.Turn.first_sound_ms`), trimmed against as is, on the same turn.
+
+### Success criteria — all three must hold
+
+| | Criterion |
+|---|---|
+| **S1 · Median** | The trimmed first sound's p50 ≤ **0.75** of R1's as it is. |
+| **S2 · Tail** | The trimmed first sound's p90 ≤ **0.85** of R1's as it is. |
+| **S3 · Stalls** | The trimmed turns that stall (`stall_ms > 0`) number at most **4** more than R1's as it is, and none stalls for more than **200 ms**. |
+
+**Confidence.** As PR-015 to PR-017: for S1 and S2 a paired bootstrap of the 200 clip ids (10,000 resamples, seed 0,
+percentile interval); the criterion holds only if the **upper end of the 95% interval** is at or below the bar. S3 is
+a count and a maximum, taken as observed. No multiplicity correction: success needs all three.
+
+**Why these bars.** The gain is about a fixed 0.3 s, so the ratio is about 1 − 0.3 / (R1's first sound). R1's first
+sound on the eval set (PR-002's run) is 806 ms at p50 and 1,041 at p90, which puts the ratios near 0.63 and 0.71;
+development gave 0.641 and 0.728. S1 fails only if R1's p50 passes about 1.2 s, S2 only if its p90 passes about 2 s.
+S3 allows a few stalls, since the eval set's replies may be shorter than development's, but not a rule that stalls as a
+habit. The words are the same by construction (only silence is cut, V1), so no criterion asks about them.
+
+### Predictions, recorded but not criteria
+
+- S1 about 0.63, S2 about 0.71; no turn stalled; first sound about 0.5 s at p50.
+- The cut about 300 ms on every cohort.
+
+### Reported alongside, descriptively
+
+The cut by percentile and its loudest frame; how far ahead of need the second piece came; replies of a single piece;
+first sound by cohort; the run's cost.
+
+### What this cannot show
+
+- **Processing time only**: no endpointer wait, no network, no audio device. Stalls are modelled from when each piece
+  existed.
+- **One container, one host.**
+- **The comparator is computed, not run**: R1 as it is comes from the same turns' pieces, not from a second live pass.
+- **Whisper is not run on the replies.** That the cut takes no word rests on V1 and on M38's check on the laptop
+  (no first word lost of 200).
+- **Only the first clause.** The silence before later clauses, 320 ms each, is the pause between them; cutting it is
+  another question.
+
+### Analysis plan
+
+1. Commit this entry, the frozen rung, `src/s2slab/pr018.py` and the command (V2).
+2. The one run: `modal run modal_app/r0_bench.py::pr018 --confirm PR-018`.
+3. The results below, verbatim; then, labelled exploratory, the cohorts and the stalls.
+
+### Deviations
+
+*None.*
+
+### Results
+
+*Not yet run.*
