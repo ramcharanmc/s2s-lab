@@ -891,6 +891,7 @@ def test_the_stream_passes_the_door_streams_the_machines_rungs_and_charges_it(st
     assert send("open sesame", "R4").status_code == 400                     # nor does a machine asked only for a whole turn
     r = send("open sesame", "R4 streamed,R4")
     assert r.status_code == 200 and r.headers["content-type"].startswith("application/x-ndjson")
+    assert r.headers["content-encoding"] == "identity" and "no-transform" in r.headers["cache-control"]   # never compressed
     events = [json.loads(line) for line in r.text.splitlines()]
     assert events[0] == {"cold": True} and events[1] == {"label": "R4 streamed", "start": True, "sr": 24_000}
     assert sum("piece" in e for e in events) == 3
@@ -967,6 +968,7 @@ def test_one_send_answers_every_machine_in_one_stream_and_a_slow_one_holds_no_ot
     assert send("open sesame", "R9").status_code == 400
     r = send("open sesame", "R4 streamed,R4,R3")
     assert r.status_code == 200 and r.headers["content-type"].startswith("application/x-ndjson")
+    assert r.headers["content-encoding"] == "identity" and "no-transform" in r.headers["cache-control"]   # never compressed
     events = [json.loads(line) for line in r.text.splitlines()]
     first_piece = next(i for i, e in enumerate(events) if "piece" in e)
     usual = next(i for i, e in enumerate(events) if "answer" in e and e["first"])

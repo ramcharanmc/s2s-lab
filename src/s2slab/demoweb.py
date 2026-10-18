@@ -23,6 +23,11 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Streamin
 from .demo import (CLIPS, CODE_ENV, MAX_CLIP_S, MAX_UPLOAD_BYTES, MEASURED, MIN_CODE_LEN, PAGE, SR, Budget, Door, Live, code_ok,
                    code_usable, decode, measured, registered_step, render_choices, voice)
 
+# A streamed response, declared unencoded: Modal's front door compresses a response a browser asks zstd for,
+# and zstd held each piece back until the next pushed it out. It leaves alone one that declares its encoding;
+# it ignores no-transform, kept for any other proxy on the way (M37, docs/m37-log.md).
+UNCOMPRESSED = {"Content-Encoding": "identity", "Cache-Control": "no-cache, no-transform"}
+
 
 def create_app(live: Live, budget: Budget, root=".", machine: str = "this machine", code_env: str = CODE_ENV, clock=time.time,
                clips=CLIPS, rows=MEASURED, about=None, **panel):
@@ -210,7 +215,7 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
         name = names.pop()
         clip = read_clip(audio)
         return StreamingResponse((json.dumps(ev) + "\n" for ev in streamed(name, wanted, clip, start)),
-                                 media_type="application/x-ndjson")
+                                 media_type="application/x-ndjson", headers=UNCOMPRESSED)
 
     @app.post("/api/send")
     def api_send(audio: UploadFile = File(...), rungs: str = Form(""), voice_too: str = Form("1"),
@@ -272,7 +277,7 @@ def create_app(live: Live, budget: Budget, root=".", machine: str = "this machin
                 yield json.dumps(ev) + "\n"
             yield json.dumps({"charged": round(charged, 4), "budget_left": round(budget.left(clock()), 3), "woken": woken}) + "\n"
 
-        return StreamingResponse(lines(), media_type="application/x-ndjson")
+        return StreamingResponse(lines(), media_type="application/x-ndjson", headers=UNCOMPRESSED)
 
     return app
 

@@ -91,6 +91,7 @@ one. A failed run is still a row, since it was still billed.
 | 2026-10-16 | `fe65b94` | `modal run modal_app/r4_bench.py::timeddev` | L40S | 407 s | 413 s | \$0.224 | **M37, step 2, development**: the sized stream with no hold on the 30 probe clips, every turn's times kept; the timed start's margin 50 ms, the smallest with no stalled turn: first sound 2,248 ms against the 0.5 s buffer's 2,670 (p50); GO (`docs/m37-log.md`, entry 3) |
 | 2026-10-16 | `eca9da1` | `modal run modal_app/r4_bench.py::pr017 --confirm PR-017` | L40S | 1,463 s | 1,478 s | \$0.800 | **the PR-017 run**: the timed start's first sound 2,269 ms against the 0.5 s buffer's 2,681 on the same turns (p50), 2,695 against 3,108 (p90), no turn stalled; supported (`docs/m37-log.md`, entry 5) |
 | 2026-10-18 | `0d9b0d9` | `modal serve modal_app/demo.py` (a cold and a warm turn), then three probes of `/api/stream` from the laptop, 20 warm turns | T4, L40S, and a CPU container for the page | — | 84.3 s (the cold stream) | ≈ \$0.45 (estimated from the GPU rates, the wakes and the idle windows) | **M37, the demo**: warm first audio 2.49 s in the browser; the stream held back when it shares the browser's connection with an answer in flight (`docs/m37-log.md`, entries 7 and 8) |
+| 2026-10-18 | `d2af2d1` | `modal serve modal_app/demo.py` (a cold and two warm Sends), two probes of `/api/send` from the laptop (16 warm Sends), then a scratch CPU app (`modal serve`, a minute) | T4, L40S, and CPU containers | — | 105.7 s (the cold Send, in the browser) | ≈ \$0.40 (estimated from the GPU rates, the wakes and the idle windows) | **M37, the demo**: `/api/send` clean from a client; zstd from Modal's front door holding the stream back in the browser; `Content-Encoding: identity` lets it through (`docs/m37-log.md`, entries 10 and 11) |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -99,5 +100,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$25.370 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
+| Modal | \$25.770 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
 | Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |
