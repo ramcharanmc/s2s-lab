@@ -599,11 +599,11 @@ def test_the_other_findings_are_read_from_their_committed_run_files_as_they_came
     import pathlib
     root = pathlib.Path(__file__).resolve().parents[1]
     by = {f["registration"]: f for f in demo.findings(root)}
-    assert list(by) == ["PR-003", "PR-010", "PR-009", "PR-012", "PR-013", "PR-014", "PR-015", "PR-016", "PR-017"]
+    assert list(by) == ["PR-003", "PR-010", "PR-009", "PR-012", "PR-013", "PR-014", "PR-015", "PR-016", "PR-017", "PR-018"]
     assert [f["file"] for f in by.values()] == list(demo.FINDINGS)
     assert {k: f["supported"] for k, f in by.items()} == {"PR-003": True, "PR-010": False, "PR-009": False, "PR-012": False,
                                                          "PR-013": True, "PR-014": False, "PR-015": True,
-                                                         "PR-016": True, "PR-017": True}
+                                                         "PR-016": True, "PR-017": True, "PR-018": True}
     assert by["PR-014"]["status"] == "not run" and "status" not in by["PR-013"]
     assert dict(by["PR-014"]["rows"])["setting 0.2"] == "16 of 30 turns cut off, a median wait of 1,480 ms"
     assert dict(by["PR-014"]["rows"])["the rule: the fewest cut-offs with a median wait of at most 1,000 ms"] == "no setting met it"
@@ -620,6 +620,11 @@ def test_the_other_findings_are_read_from_their_committed_run_files_as_they_came
         "2,269 ms against 2,681 (0.85 of it)"
     assert y["turns where playback ran dry"] == "0 of 200" and y["the closest a turn came to running dry"] == "44 ms in hand"
     assert by["PR-017"]["commit"] == "eca9da1"
+    x = dict(by["PR-018"]["rows"])
+    assert x["first sound, the median: the first clause trimmed against R1 as it was, on the same turns"] == \
+        "498 ms against 797 (0.63 of it)"
+    assert x["first sound, p90"] == "751 ms against 1,029 (0.73)" and x["turns where playback ran dry"] == "0 of 200"
+    assert x["the silence cut, the median"] == "300 ms (346 at p90)" and by["PR-018"]["commit"] == "39c5e1b"
     assert s["the whole reply, the median"] == "7,530 ms against 6,602 (1.14 times)" and s["R4 with its Talker compiled, not streamed"].startswith("7,010 ms")
     assert dict(by["PR-003"]["rows"])["after 1500 ms"] == "wrong on 8 of 20"
     assert dict(by["PR-003"]["rows"])["stop when the words are not a backchannel"] == "wrong on 1 of 20" and "not played" in by["PR-003"]["note"]
@@ -1038,3 +1043,30 @@ def test_something_can_run_just_before_a_given_rung_loads():
     live = demo.Live({"R4": "a", "R4 streamed": "b"}, get=lambda rung_id: Noted(rung_id))
     live.load_all(before={"R4 streamed": lambda: order.append("cache")})
     assert order == ["a", "cache", "b"]
+
+
+def test_the_measured_part_shows_r1_from_the_pr018_run_with_first_sound():
+    import pathlib
+    root = pathlib.Path(__file__).resolve().parents[1]
+    rows = {r["label"]: r for r in demo.measured(root)["rungs"]}
+    r1, r0 = rows["R1"], rows["R0"]
+    assert r1["file"] == "runs/r1-gpu-trim/pr018.json" and r1["turns_in_run"] == 200 and r1["commit"] == "39c5e1b"
+    assert r1["first_sound_p50_ms"] - r1["first_audio_p50_ms"] == pytest.approx(20.0, abs=5)    # 20 ms kept before the first sound
+    assert 280 < r0["first_sound_p50_ms"] - r0["first_audio_p50_ms"] < 340                       # R0 keeps Kokoro's padding
+    t = r1["turns"][0]
+    assert t["clip"] == demo.CLIPS[0] and t["trim_ms"] > 200 and t["first_sound_ms"] - t["first_audio_ms"] == pytest.approx(20.0)
+    assert r0["turns"][0]["trim_ms"] is None and "PR-018" in r1["what"]
+
+
+def test_a_live_turn_carries_what_a_trimmed_rung_cut():
+    from test_r1trim import REPLY, PaddedTTS
+    from test_r1 import FakeASR, FakeStreamingLLM
+
+    from s2slab.r1 import TrimmedStreamingCascade
+    live = demo.Live({"R1": "r1-trim"}, get=lambda rung_id: TrimmedStreamingCascade(FakeASR(), FakeStreamingLLM(REPLY), PaddedTTS()))
+    t = live.turn("R1", voice())
+    assert t["trim_ms"] == pytest.approx(300.0) and t["cut_peak_db"] < -100
+    assert t["first_sound_ms"] - t["first_audio_ms"] == pytest.approx(20.0, abs=1.0)
+    assert "trim_ms" not in demo.Live({"R0": "stub"}, get=lambda rung_id: StubRung()).turn("R0", voice())
+    page = demo.PAGE.read_text(encoding="utf-8")
+    assert "first sound " in page and "of the reply's silence cut (PR-018)" in page and "first sound p50 " in page

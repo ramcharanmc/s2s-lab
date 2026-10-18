@@ -69,7 +69,7 @@ def test_the_gpu_is_reached_only_with_the_code_and_inside_the_budget(app, monkey
     assert client.get("/").status_code == 200 and len(client.get("/api/measured").json()["rungs"]) == 8
     assert [f["registration"] for f in client.get("/api/measured").json()["findings"]] == ["PR-003", "PR-010", "PR-009", "PR-012",
                                                                                           "PR-013", "PR-014", "PR-015", "PR-016",
-                                                                                          "PR-017"]
+                                                                                          "PR-017", "PR-018"]
     send = lambda code, rungs="": client.post("/api/live", files={"audio": ("turn", wav(), "audio/wav")}, data={"rungs": rungs},
                                               headers={"X-Access-Code": code} if code else {})
     assert send(None).status_code == 401 and send("wrong").status_code == 401 and calls == []      # the T4 stays asleep
@@ -111,7 +111,7 @@ def test_r3_r4_and_r5_are_on_machines_of_their_own_that_hold_their_models(app):
     r3, r4, r4s = get("r3-gpu"), get("r4-gpu-fast"), get("r4-gpu-stream-timed")
     assert r3.llm.model_name in app.MODELS_A10 and f"voices/{r3.tts.voice}.pt" in app.MODELS_A10["hexgrad/Kokoro-82M"]
     assert r4.model.model_name in app.MODELS_L40S and r4s.model.model_name in app.MODELS_L40S
-    assert set(app.ABOUT) == set(app.OFFERED) - {"R0", "R1"} | {"R3", "R4", "R4 streamed", "R5"} and "no transcript" in app.ABOUT["R3"]
+    assert set(app.ABOUT) == set(app.OFFERED) - {"R0"} | {"R3", "R4", "R4 streamed", "R5"} and "no transcript" in app.ABOUT["R3"]
     assert "2.3 s" in app.ABOUT["R4 streamed"] and "PR-017" in app.ABOUT["R4 streamed"] and "1.03" in app.ABOUT["R4"]
     assert "ran dry" in app.ABOUT["R4 streamed"]
     assert "may describe you" in app.ABOUT["R3"] and "nothing here checks" in app.ABOUT["R3"]
@@ -226,3 +226,11 @@ def test_the_l40s_keeps_what_it_compiled_on_a_volume(app):
     assert 'before={"R4 streamed": load_cache}' in source                      # after R4, before R4 streamed
     assert source.index("compilecache.load(COMPILE_FILE)") < source.index("_load_rungs(") < source.index("compilecache.save(")
     assert "compile_cache.commit()" in source
+
+
+def test_the_demos_r1_is_pr018s_rung_and_the_others_keep_their_silence(app):
+    assert app.OFFERED["R1"] == "r1-gpu-trim" and get("r1-gpu-trim").rung_id == "r1-gpu-trim"
+    assert (app.OFFERED["R0"], app.OFFERED["R2"]) == ("r0-gpu", "r2-gpu")                  # PR-018 tested R1 alone
+    assert not hasattr(get("r2-gpu"), "turn_extra") and hasattr(get("r1-gpu-trim"), "turn_extra")
+    assert "0.50 s" in app.ABOUT["R1"] and "PR-018" in app.ABOUT["R1"] and "R1 alone" in app.ABOUT["R1"]
+    assert "runs/r1-gpu-trim/pr018.json" in app.RUN_FILES and "runs/r1-gpu/evalset-modal-t4-pr002.json" not in app.RUN_FILES

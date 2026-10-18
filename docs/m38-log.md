@@ -148,7 +148,7 @@ one T4, about \$0.25.
 **Supported**, as predicted: about 0.3 s sooner on every cohort. The verbatim output and the exploratory notes are
 under PR-018 in `docs/preregistration.md`.
 
-**What M38 found, in one paragraph.** Kokoro, the TTS in R0, R1 and R2, puts about 320 ms of silence before every
+**What M38 found, in one paragraph.** Kokoro, the TTS in R0 to R3, puts about 320 ms of silence before every
 clause, the padding its duration predictor gives the token before the first phoneme; Piper and FastPitch put
 none, R4 200 ms. Cutting it from R1's first clause, and only its first, loses no first word on the laptop's check
 and lets the caller hear R1 0.3 s sooner, 0.50 s instead of 0.80 at the median, with no stall. The silence before

@@ -8,7 +8,7 @@ Last updated 2026-10-18, at commit `2030ba2`.
 ## Chosen next: M39, the trim in the demo's R1
 
 The author's choice, 2026-10-18: the demo's R1 becomes `r1-gpu-trim`, PR-018's rung, so a visitor's R1 reply starts
-without Kokoro's 0.3 s of padding. R0 and R2 keep theirs: PR-018 tested R1 alone. A `modal serve` check, then
+without Kokoro's 0.3 s of padding. R0, R2 and R3 keep theirs: PR-018 tested R1 alone. A `modal serve` check, then
 `modal deploy`, the author's (`docs/m39-log.md`).
 
 Candidates after it:
@@ -23,7 +23,7 @@ Candidates after it:
 
 ## Done: M38, leading silence across TTS engines
 
-Kokoro, the TTS in R0, R1 and R2, puts 320 ms (p50) of silence before every clause: its duration predictor's
+Kokoro, the TTS in R0 to R3, puts 320 ms (p50) of silence before every clause: its duration predictor's
 padding before the first phoneme (350 ms). Piper and FastPitch put none, R4 200 ms; a trim to 20 ms before the
 first sound lost no first word on the laptop (step 1, `ec3e4d7`, \$0). In R1, the first clause trimmed
 (`ee15442`; development \$0.010, GO): **PR-018 supported** (`39c5e1b`, \$0.028): on the eval set first sound

@@ -70,8 +70,11 @@ EXPORT_NAME = "export-runs_train-f37d0df-20260926-235222_csv_version_0_adapters_
 EXPORT = f"{VOLUME}/export/{EXPORT_NAME}/ct2"
 
 # What a visitor sees -> the registered rung. R2 and R2 verbatim differ in the recognizer's LoRA alone.
-OFFERED = {"R0": "r0-gpu", "R1": "r1-gpu", "R2": "r2-gpu", "R2 verbatim": "r2-gpu-verbatim"}
-ABOUT = {"R2": "slow tier small.en here; the measured R2 row is large-v3-turbo",
+OFFERED = {"R0": "r0-gpu", "R1": "r1-gpu-trim", "R2": "r2-gpu", "R2 verbatim": "r2-gpu-verbatim"}
+ABOUT = {"R1": "its first clause starts without the 0.3 s of silence Kokoro puts before every clause: on the eval set "
+               "the caller heard R1's reply after 0.50 s, against 0.80 with it (PR-018). R0, R2 and R3 keep it: PR-018 "
+               "tested R1 alone",
+         "R2": "slow tier small.en here; the measured R2 row is large-v3-turbo",
          "R2 verbatim": "R2 with FT-2's LoRA on its recognizer (PR-011): one speaker's disfluency, not a visitor's",
          "R3": "speech-LLM: Qwen2-Audio hears the recording itself; no transcript reaches it. Its reply may describe you, how "
                "you sound included: it is not asked to, and nothing here checks what it says",
@@ -90,7 +93,7 @@ OTHERS = {"a10": {"offered": {"R3": "r3-gpu"}, "says": "an A10", "rate": A10_DOL
 
 # What the web container is sent, and nothing else of runs/ and evalset/. tests/test_modal_demo.py
 # holds both to s2slab.demo.
-RUN_FILES = ("runs/r0-gpu/evalset-modal-t4-pr002.json", "runs/r1-gpu/evalset-modal-t4-pr002.json",
+RUN_FILES = ("runs/r0-gpu/evalset-modal-t4-pr002.json", "runs/r1-gpu-trim/pr018.json",
              "runs/r2-gpu-turbo/evalset-modal-t4-pr004.json", "runs/r3-gpu/evalset-modal-a10.json",
              "runs/r4-gpu/evalset-modal-l40s.json", "runs/r4-gpu/pr017.json", "runs/r5-moshi/evalset-modal-a10.json",
              "runs/r5-personaplex/evalset-modal-a10.json", "runs/ft2/pr011.json", "runs/prosody/pr006.json",

@@ -57,7 +57,8 @@ PAGE = pathlib.Path(__file__).with_name("demo_page.html")
 # What the Measured part shows: one committed run per rung, and the same four clips for all of them.
 MEASURED = (
     ("R0", "naive cascade: recognizer, then LLM, then TTS, each waiting for the last", "runs/r0-gpu/evalset-modal-t4-pr002.json"),
-    ("R1", "streaming cascade: the reply handed out clause by clause", "runs/r1-gpu/evalset-modal-t4-pr002.json"),
+    ("R1", "streaming cascade: the reply handed out clause by clause, its first clause started without Kokoro's 0.3 s "
+           "of silence; on the same turns, with it, 0.80 s to first sound (PR-018)", "runs/r1-gpu-trim/pr018.json"),
     ("R2", "two-tier: a slow recognizer (large-v3-turbo) drives the reply", "runs/r2-gpu-turbo/evalset-modal-t4-pr004.json"),
     ("R3", "speech-LLM: Qwen2-Audio hears the turn, no transcript in the loop", "runs/r3-gpu/evalset-modal-a10.json"),
     ("R4", "speech-to-speech, half duplex: Qwen2.5-Omni speaks the reply itself", "runs/r4-gpu/evalset-modal-l40s.json"),
@@ -387,11 +388,13 @@ def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS
                                      "overlap": t["overlap"]})
         else:
             row.update(kind="turn", first_audio_p50_ms=_p50(t["first_audio_ms"] for t in turns.values()),
+                       first_sound_p50_ms=_p50(t.get("first_sound_ms") for t in turns.values()),
                        total_p50_ms=_p50(t["total_ms"] for t in turns.values()))
             for c in clips:
                 t = turns[c]
                 row["turns"].append({"clip": c, "transcript": t.get("transcript"), "reply_text": t["reply_text"],
                                      "stages_ms": t.get("stages_ms", {}), "first_audio_ms": t["first_audio_ms"],
+                                     "first_sound_ms": t.get("first_sound_ms"), "trim_ms": t.get("trim_ms"),
                                      "total_ms": t["total_ms"], "reply_s": t["reply_s"]})
         out["rungs"].append(row)
     return out
@@ -404,7 +407,7 @@ def measured(root=".", clips=CLIPS, rows=MEASURED, verbatim_clips=VERBATIM_CLIPS
 # author's own voice, and the renders are synthetic speech kept out of git.
 FINDINGS = ("runs/bargein/pr003-70ms.json", "runs/ft1/pr010.json", "runs/severity/pr009.json", "runs/ft3/pr012.json",
             "runs/m26/pr013.json", "runs/turn-taking/pr014-dev-vap.json", "runs/r4-gpu/pr015.json", "runs/r4-gpu/pr016.json",
-            "runs/r4-gpu/pr017.json")
+            "runs/r4-gpu/pr017.json", "runs/r1-gpu-trim/pr018.json")
 BARGEIN_POLICIES = (("B0_duration_200ms", "stop after 200 ms of caller sound"), ("B0_duration_400ms", "after 400 ms"),
                     ("B0_duration_800ms", "after 800 ms"), ("B0_duration_1500ms", "after 1500 ms"),
                     ("B1_words", "stop when the recognizer has written words"), ("B2_speechlike", "stop when the words are not a backchannel"))
@@ -550,12 +553,36 @@ def _pr017(run: dict, rel: str) -> dict:
             "commit": run.get("commit"), "file": rel}
 
 
+def _pr018(run: dict, rel: str) -> dict:
+    from .pr018 import criteria
+    c = criteria(run)
+    d = c["describe"]
+    fs = d["first_sound"]
+    ahead = d["second_piece_ahead_ms"]
+    rows = [["first sound, the median: the first clause trimmed against R1 as it was, on the same turns",
+             f"{fs['trimmed'][0]:,.0f} ms against {fs['as_is'][0]:,.0f} ({fs['trimmed'][0] / fs['as_is'][0]:.2f} of it)"],
+            ["first sound, p90", f"{fs['trimmed'][1]:,.0f} ms against {fs['as_is'][1]:,.0f} ({fs['trimmed'][1] / fs['as_is'][1]:.2f})"],
+            ["turns where playback ran dry", f"{len(d['stalls']['trimmed'])} of {d['turns']}"],
+            ["the silence cut, the median", f"{d['trim_ms'][0]:,.0f} ms ({d['trim_ms'][1]:,.0f} at p90)"],
+            ["the loudest moment cut, against its clause's loudest", f"{d['loudest_cut_db']:.1f} dB"],
+            ["the second clause, ahead of when playback needed it", f"{ahead[1]:,.0f} ms at the least"]]
+    return {"registration": "PR-018", "title": "R1, its first clause's silence cut",
+            "supported": c["verdict"].startswith("SUPPORTED"),
+            "question": "Does cutting the silence Kokoro puts before R1's first clause let the caller hear R1's reply sooner, "
+                        "without stalling?",
+            "rows": rows,
+            "note": "The same words and the same voice: Kokoro starts every clause with about 0.3 s of silence, the padding "
+                    "it gives the moment before the first sound, and only the first clause's was cut. Times on the server, "
+                    "one container, 200 clips; R1 as it was computed from the same turns.",
+            "commit": run.get("commit"), "file": rel}
+
+
 def findings(root, files=FINDINGS) -> list[dict]:
     """The panels of what else was registered and run, each from its run file; a file that is
     not there is left out."""
     make = {"runs/bargein/pr003-70ms.json": _bargein, "runs/ft1/pr010.json": _ft1, "runs/m26/pr013.json": _quant,
             "runs/turn-taking/pr014-dev-vap.json": _pr014, "runs/r4-gpu/pr015.json": _pr015,
-            "runs/r4-gpu/pr016.json": _pr016, "runs/r4-gpu/pr017.json": _pr017,
+            "runs/r4-gpu/pr016.json": _pr016, "runs/r4-gpu/pr017.json": _pr017, "runs/r1-gpu-trim/pr018.json": _pr018,
             "runs/severity/pr009.json": lambda run, rel: _severity(
                 run, rel, "PR-009", "A severity score, put onto speech",
                 "Does a severity score render onto neutral speech as the mapping says: lower, slower, flatter, with longer pauses?",
@@ -778,7 +805,11 @@ class Live:
             t = rung.respond(audio, SR)
         except Exception as e:
             return self._failed(label, "answering", e, NOT_ANSWERED)
-        return self._record(label, t)
+        out = self._record(label, t)
+        extra = getattr(rung, "turn_extra", None)                   # what a rung adds to its turn (r1-gpu-trim's cut, M38)
+        if extra is not None:
+            out.update(extra())
+        return out
 
     def _record(self, label: str, t, wav: bool = True) -> dict:
         """A turn as the page shows it; with the reply as a WAV, unless its pieces were already sent."""

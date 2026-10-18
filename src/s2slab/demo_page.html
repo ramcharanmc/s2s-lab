@@ -163,7 +163,10 @@ function turnCard(title, sub, t) {
         + "The words below are the model's own text stream, which skips pieces."));
     }
   } else {
-    c.appendChild(el("p", "num", "First audio " + ms(t.first_audio_ms) + "  ·  whole reply " + ms(t.total_ms)));
+    c.appendChild(el("p", "num", "First audio " + ms(t.first_audio_ms)
+      + (t.first_sound_ms == null ? "" : "  ·  first sound " + ms(t.first_sound_ms)) + "  ·  whole reply " + ms(t.total_ms)));
+    if (t.trim_ms) c.appendChild(el("p", "soft", "The first " + ms(t.trim_ms) + " of the reply's silence cut (PR-018): "
+      + "first sound is when the reply's own audio stops being silence."));
     c.appendChild(bar(t.stages_ms, t.total_ms));
     c.appendChild(el("p", "soft", Object.entries(t.stages_ms).map(([k, v]) => k + " " + ms(v)).join("  ·  ")));
     c.appendChild(el("p", "soft", t.transcript == null ? "No transcript exists in this rung: the audio goes straight to the model."
@@ -184,7 +187,8 @@ function showMeasured() {
     if (r.missing) { box.appendChild(turnCard(r.label, r.what + " (run file not here)", {kind: "duplex", gap_ms: null})); continue; }
     const t = Object.assign({kind: r.kind}, r.turns.find((x) => x.clip === clip));
     const over = r.kind === "duplex" ? "answered " + r.answered + " of " + r.turns_in_run + "; gap p50 " + ms(r.gap_p50_ms)
-                                     : "first audio p50 " + ms(r.first_audio_p50_ms) + " over " + r.turns_in_run + " turns";
+                                     : "first audio p50 " + ms(r.first_audio_p50_ms) + ", first sound p50 " + ms(r.first_sound_p50_ms)
+                                       + " over " + r.turns_in_run + " turns";
     const card = turnCard(r.label, r.what, t);
     card.appendChild(el("p", "soft", over + "  ·  " + r.machine + "  ·  commit " + r.commit + "  ·  " + r.file));
     box.appendChild(card);
