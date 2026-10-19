@@ -3,11 +3,16 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-18, at commit `bc6f795`.
+Last updated 2026-10-18, at commit `40e8701`.
 
-## Chosen next: none
+## Chosen next: M40, P1b on real disfluent speech
 
-Candidates:
+The author's choice after the plan review, 2026-10-18: v1 §8's P1b on recorded disfluent speech. Not on SEP-28k,
+which the plan named: its clips are 3-second windows with no turn ends and no words, and its audio is the podcasts'.
+On DisfluencySpeech's validation split (DEV) and test split (TEST), \$0 on the laptop; a DEV run against a rule
+written first, then PR-019 (`docs/m40-log.md`).
+
+Candidates after it:
 
 - **Hand the L40S the browser's recording as it came** (55 kB of WebM for 14 s, not 0.9 MB of 32-bit floats):
   the handoff took 1.9 s on a 14 s clip (`docs/m37-log.md`, entry 14). Measured before it is changed.
@@ -198,7 +203,7 @@ Owed.
 
 | What | Plan | State | Cost |
 |---|---|---|---|
-| P1b on real disfluent speech | v1 §8 | the frontier was measured on synthetic cohorts only (criterion not met there); the eval set's disfluent cohort is real SEP-28k audio and M30's harness reads real clips, but nothing was registered or run on it | \$0, the laptop; a registration first |
+| P1b on real disfluent speech | v1 §8 | the frontier was measured on synthetic cohorts only (criterion not met there). Corrected 2026-10-18: the eval set's disfluent cohort is DisfluencySpeech, one speaker performing disfluent phone calls, not SEP-28k as this row said; SEP-28k's 3-second clips have no turn ends. **M40, in progress** | \$0, the laptop; a registration first |
 | P2's controllability and a blinded preference test, duplex against cascade | v1 §8 | not run: it needs listeners, so P2 is undecided (only its latency part is measured) | listeners' time |
 | P2c in CI: the "severity monotonicity passing" badge | v1 §4, §10 | the test runs in the suite; the repository has no CI | free (GitHub Actions) |
 | P2c's disentanglement ablation | v1 §4 | not run: it needs listeners | listeners' time |
