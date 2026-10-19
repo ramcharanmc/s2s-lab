@@ -9,7 +9,9 @@ Kept as events happen. The earlier logs: `docs/m39-log.md` and those it names.
 | 2 | 10-18 | the tests, laptop | DisfluencySpeech's validation and test splits as endpointing turns; the DEV sweep and its rule, written before it | `dsturns.py`, tests | 28657de |
 | 3 | 10-18 | `python -m s2slab.dsturns build`, the author, laptop | DEV (the validation split): 215 clips, 74.1 MB fetched; TEST (the test split): 207 clips, 70.8 MB, 50 of them the eval set's; none outside 3 to 15 s. The manifests: `probes/disfluencyspeech/manifest-{dev,test}.json` | — | — |
 | 4 | 10-18 | `python -m s2slab.dsturns dev`, the author, laptop, \$0 | 215 DEV turns, 29 settings (section 2). T0 at 300 ms cut off 155 (72.1%): **GO by the rule**. The run file's commit reads `28657de-dirty`: the stamp counts untracked files, and the only ones were the manifests the build had just written; no tracked file differed | — | — |
-| 5 | 10-18 | — | **PR-019 registered** before any test turn was read; T2's setting from DEV by the entry's rule | `pr019.py`, `docs/preregistration.md`, tests | this commit |
+| 5 | 10-18 | — | **PR-019 registered** before any test turn was read; T2's setting from DEV by the entry's rule | `pr019.py`, `docs/preregistration.md`, tests | 39e4d7c |
+| 6 | 10-19 | `python -m s2slab.pr019 --confirm PR-019`, the author, laptop, \$0, at 39e4d7c | **PR-019 not supported**: T2 cut off 1 of 207 turns (S1 holds, under 5%), but T0 at 900 ms cut off none (S2 fails); the median wait the same, 900 ms (S3 fails) | — | — |
+| 7 | 10-19 | — | the results recorded verbatim (`docs/preregistration.md`); M40 closed | records | this commit |
 
 ## 1. The design
 
@@ -79,3 +81,24 @@ qualify (one fewer cut-off, the same median); the 20 Hz/s slope has the lowest p
 against T0 at 900 ms**.
 
 **Then:** PR-019's one run, the author's, on the laptop: `python -m s2slab.pr019 --confirm PR-019`.
+
+## 3. PR-019's run (row 6) and what M40 found
+
+`runs/turn-taking/pr019.json`: 207 turns of DisfluencySpeech's test split.
+
+| on the same turns | cut off | median wait | p90 |
+|---|---:|---:|---:|
+| T0 at 900 ms | **0** | 900 ms | 900 |
+| T2 at 900 ms, 20 Hz/s | 1 | 900 ms | 1,160 |
+
+**Not supported**: T2 kept under 5% but did not dominate. Its one cut-off was a falling pitch at the end of a
+sentence, followed by another sentence after 860 ms; its pitch cue answered sooner on 55 turns and later on 96.
+
+**What M40 found, in one paragraph.** On one speaker's recorded, performed disfluencies, a fixed threshold of
+700 to 900 ms cuts off almost no one (2.9% and 0%), because the pauses are short; the synthetic cohort's long pauses
+had made the same threshold fail half the time. A falling pitch is not a turn's end on real speech: speakers fall at
+every sentence's end, so the prosodic endpointer that waited less after a fall cut off a turn the fixed one kept, and
+gained nothing at the median. P1b is not met, on synthetic or on real speech; what is left untested is real
+stuttering, whose blocks and prolongations this data does not have.
+
+M40 cost \$0: every run on the laptop.

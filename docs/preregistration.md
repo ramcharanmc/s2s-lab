@@ -33,7 +33,7 @@ Rules, from the v1 Research plan (§8):
 | PR-016 | On the eval set, does a Talker cache sized to the turn let the caller hear R4 streamed's reply sooner still, at the median and in the tail, without stalling, a longer turn or other words? | `d65274d` | **Reported: supported** (first sound 0.787 of the stream's at the median, 95% interval 0.781 to 0.790, and 0.809 at p90: 2.6 s against 3.3, 3.0 against 3.7; no turn stalled; the same codes and words on 200 of 200) |
 | PR-017 | On the eval set, does starting R4 streamed's playback when the turn's own code rate says its second block is due, instead of after 0.5 s of audio, let the caller hear the reply sooner, without stalling? | `eca9da1` | **Reported: supported** (first sound 0.846 of the buffer's at the median, 95% interval 0.844 to 0.849, and 0.867 at p90: 2.27 s against 2.68, 2.70 against 3.11; no turn stalled; the same audio on 200 of 200) |
 | PR-018 | On the eval set, does cutting the leading silence of R1's first spoken clause (Kokoro's 320 ms of padding) let the caller hear its reply sooner, without stalling? | `39c5e1b` | **Reported: supported** (first sound 0.625 of R1's as it is at the median, 95% interval 0.617 to 0.636, and 0.729 at p90: 498 ms against 797, 751 against 1,029; no turn stalled; every cut at least 50 dB below its piece's loudest) |
-| PR-019 | P1b on real disfluent speech: does T2, the prosodic endpointer, dominate the fixed threshold on DisfluencySpeech's test split at a setting that cuts off under 5% of turns? | The commit that adds this entry | Registered; not yet run |
+| PR-019 | P1b on real disfluent speech: does T2, the prosodic endpointer, dominate the fixed threshold on DisfluencySpeech's test split at a setting that cuts off under 5% of turns? | `39e4d7c` | **Reported: not supported** (T2 cut off 1 of 207 turns, 95% interval 0.1 to 2.7%, but T0 cut off none, so S2 failed; the median wait the same, 900 ms, ratio 1.000 [1.000, 1.178], so S3 failed) |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -4193,4 +4193,77 @@ rise, a hold, no pitch); the turns cut off, by id; the turns' longest pauses.
 
 ### Results
 
-*Not yet run.*
+**Run once**, by the author, 2026-10-19: `PYTHONPATH=src python -m s2slab.pr019 --confirm PR-019` at `39e4d7c`
+(this entry's commit, clean), on the laptop's CPU, \$0. `runs/turn-taking/pr019.json`. The analysis's output,
+verbatim:
+
+```
+PR-019: T2_prosodic_900ms_s20 against T0_fixed_900ms, DisfluencySpeech's test split
+  commit 39e4d7c · laptop CPU · 207 turns
+  paired bootstrap: 10000 resamples of the turns both end, seed 0
+
+S1 under 5%            PASS  T2 cut off 1 of 207 (0.5%, 95% interval 0.1 to 2.7%); needs the upper end below 5%
+S2 no more cut-offs    FAIL  only T2 cut 1, only T0 cut 0 (T0 cut 0 of 207); needs only T2 <= only T0
+S3 strictly better     FAIL  fewer cut-offs: McNemar p = 1.000 (needs < 0.05 with fewer); median wait, T2 over T0 on the 206 turns both end: 1.000 [95% CI 1.000, 1.178] (needs the upper end below 1)
+
+NOT SUPPORTED: failed S2 no more cut-offs, S3 strictly better
+
+Descriptive, not criteria:
+  cut off: T2 1, T0 0 of 207; only T2 1, only T0 0
+  wait, ms, p50 / p90 on the turns both end: T2 900 / 1160; T0 900 / 900
+  what T2 read at the end of the turns it did not cut: hold 75, hold+hold 8, hold+yield 13, plain 55, yield 55
+  the turns' longest pause, the median: 360 ms
+
+The whole DEV sweep on the test turns:
+  T0_fixed_150ms           cut 207 of 207  p50   nan  p90   nan
+  T0_fixed_300ms           cut 141 of 207  p50   300  p90   300
+  T0_fixed_500ms           cut  47 of 207  p50   500  p90   500
+  T0_fixed_700ms           cut   6 of 207  p50   700  p90   700
+  T0_fixed_900ms           cut   0 of 207  p50   900  p90   900
+  T0_fixed_1100ms          cut   0 of 207  p50  1100  p90  1100
+  T0_fixed_1300ms          cut   0 of 207  p50  1300  p90  1300
+  T0_fixed_1500ms          cut   0 of 207  p50  1500  p90  1500
+  T1_semantic_300ms        cut 115 of 207  p50   300  p90   700
+  T1_semantic_500ms        cut  38 of 207  p50   500  p90   900
+  T1_semantic_700ms        cut   6 of 207  p50   700  p90  1100
+  T1_semantic_900ms        cut   0 of 207  p50   900  p90  1300
+  T2_prosodic_300ms_s20    cut 138 of 207  p50   300  p90   460
+  T2_prosodic_300ms_s40    cut 135 of 207  p50   300  p90   460
+  T2_prosodic_300ms_s80    cut 123 of 207  p50   300  p90   460
+  T2_prosodic_500ms_s20    cut  42 of 207  p50   500  p90   760
+  T2_prosodic_500ms_s40    cut  41 of 207  p50   500  p90   760
+  T2_prosodic_500ms_s80    cut  38 of 207  p50   500  p90   868
+  T2_prosodic_700ms_s20    cut   5 of 207  p50   700  p90   960
+  T2_prosodic_700ms_s40    cut   5 of 207  p50   700  p90   960
+  T2_prosodic_700ms_s80    cut   5 of 207  p50   700  p90  1050
+  T2_prosodic_900ms_s20    cut   1 of 207  p50   900  p90  1160
+  T2_prosodic_900ms_s40    cut   1 of 207  p50   900  p90  1160
+  T2_prosodic_900ms_s80    cut   0 of 207  p50   900  p90  1276
+  T3_decision_r2           cut 151 of 207  p50   280  p90   280
+  T3_decision_r4           cut  80 of 207  p50   400  p90   400
+  T3_decision_r8           cut  36 of 207  p50   540  p90   540
+  T3_decision_r16          cut   8 of 207  p50   680  p90   680
+  T3_decision_r32          cut   1 of 207  p50   840  p90   840
+```
+
+**NOT SUPPORTED.** S1 holds; S2 and S3 fail. v1 §8's P1b is not met on real disfluent speech either, as it was not
+on the synthetic cohort.
+
+**Exploratory, not criteria:**
+
+- **The one turn T2 cut off**, `ds-test-005`, one of the eval set's 50: "Yeah, I think it's getting better, not
+  worse. Well, I should probably get back to my job." An 860 ms pause between the two sentences, after a falling
+  pitch: T2 took the fall for a yield and ended the turn 150 ms early, at 750 ms of silence. This is the failure
+  Notion page 18 §9 named before any real speech had been run: speakers drop their pitch at a sentence's end inside
+  a turn, and on the synthetic cohort the only sharp fall was at the true end.
+- **The cue moves the wait both ways.** Of the 206 turns T2 ended correctly, it answered sooner on 55 (760 ms,
+  after a fall), the same on 55 (900 ms), and later on 96 (1,060 ms after a rise; 1,160 to 1,460 ms when T1's hold
+  on an unfinished word joined in). So its median is T0's, 900 ms, and its p90 later, 1,160 against 900.
+- **A fixed threshold is hard to beat on this speech.** T0 at 900 ms cut off no test turn, at 700 ms six (2.9%).
+  This speaker's performed disfluencies pause for about a third of a second (the longest 360 ms at the median),
+  where the synthetic cohort's pauses had made a fixed 700 ms cut off 49%.
+- **The predictions, scored.** S1 held, as predicted (one cut-off). S2 failed, against the prediction: T0 was
+  predicted to cut off one to four turns, and cut off none. S3 failed, as predicted (the median ratio 1.000). T2's
+  tail stayed above 1,100 ms, as predicted (1,160).
+- **The rest of the sweep**, on the test turns, matches DEV's: no T2 setting answers sooner at the median than T0
+  at its own base; T2 at 900 ms with an 80 Hz/s slope cut off none, as T0 at 900 did, with a later tail (1,276 ms).

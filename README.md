@@ -6,8 +6,8 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-10-18** (commit `bc6f795`, M39): rungs R0 to R5 built and measured, and R4 streamed; three
-fine-tunes run; eighteen registrations, all reported, nine with a supported claim. A demo that shows
+**Status, 2026-10-19** (commit `39e4d7c`, PR-019's run): rungs R0 to R5 built and measured, and R4 streamed; three
+fine-tunes run; nineteen registrations, all reported, nine with a supported claim. A demo that shows
 the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
 
 **https://ramcharanmc--s2s-lab-demo-web.modal.run**
@@ -74,7 +74,7 @@ Talker step had been attention over the cache's empty places.
 
 ## What was claimed, and what happened
 
-Eighteen registrations (`docs/preregistration.md`). Criteria are committed before the data is seen;
+Nineteen registrations (`docs/preregistration.md`). Criteria are committed before the data is seen;
 results are appended whatever they say.
 
 | | Question, in short | Outcome |
@@ -97,8 +97,9 @@ results are appended whatever they say.
 | PR-016 | Does a cache sized to the turn let R4 streamed be heard sooner still? | **supported**: 2.6 s instead of 3.3 (p50), 3.0 instead of 3.7 (p90), no stall, the same words |
 | PR-017 | Does starting R4 streamed's playback when the turn says its second block is due beat a 0.5 s buffer? | **supported**: 2.27 s instead of 2.68 (p50), 2.70 instead of 3.11 (p90), no stall, on the same turns |
 | PR-018 | Does cutting the silence Kokoro puts before R1's first clause let the caller hear R1 sooner? | **supported**: 0.50 s instead of 0.80 (p50), 0.75 instead of 1.03 (p90), no stall, on the same turns |
+| PR-019 | On real disfluent speech, does the prosodic endpointer beat a fixed threshold at under 5% cut off? | not supported: 1 cut off of 207 against the fixed 900 ms's none, the same median wait (P1b, one speaker) |
 
-All eighteen are reported. Eight were not supported, and one, PR-014 (voice activity projection on
+All nineteen are reported. Nine were not supported, and one, PR-014 (voice activity projection on
 real speech), was not run: no setting met its rule on the development recordings. Each entry says
 why.
 
