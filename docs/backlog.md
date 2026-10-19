@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-19, at commit `39e4d7c`.
+Last updated 2026-10-19, at commit `4f1e998`.
 
 ## Chosen next: none
 
@@ -16,6 +16,12 @@ Candidates:
 - **R4's own compile from the compile cache** (about 30 s of the L40S's wake), left alone in M36: loading the
   cache first once made R4's load 288 s.
 - The repository made public, the author's call.
+
+## Done: M41, the cold-start write-up
+
+v1's and v2's "cold-start economics", from the runs already made (`docs/cold-start.md`, \$0): a cold turn costs
+about \$0.06 on the T4 and \$0.10 to 0.11 on the L40S, mostly its idle window; the L40S's wake is mostly compiling;
+a warm T4 would cost what about 250 cold turns do. What is not measured is listed there (`docs/m41-log.md`).
 
 ## Done: M40, P1b on real disfluent speech
 
@@ -238,7 +244,7 @@ on 2026-10-18, after M39.
 | What | Cost |
 |---|---|
 | ~~Leading silence across TTS engines~~: M38 step 1 (Kokoro 320 ms, Piper and FastPitch 0, R4 200; Kokoro's is its duration predictor's padding); step 2: the trim in R1, **PR-018 supported** (0.50 s heard instead of 0.80) | \$0.04 |
-| Cold-start economics on Modal: the demo's wakes measured and cut (the L40S 251 s to 72 to 93 s, M35 and M36); a write-up of what a wake costs on each machine not done | \$0, from the runs already made |
+| ~~Cold-start economics on Modal~~: **written up in M41**, `docs/cold-start.md`: each machine's wake and what changed it, a cold turn's cost (mostly the idle window), cold against warm | \$0 |
 
 ## Parked
 
