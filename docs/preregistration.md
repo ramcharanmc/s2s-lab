@@ -33,6 +33,7 @@ Rules, from the v1 Research plan (§8):
 | PR-016 | On the eval set, does a Talker cache sized to the turn let the caller hear R4 streamed's reply sooner still, at the median and in the tail, without stalling, a longer turn or other words? | `d65274d` | **Reported: supported** (first sound 0.787 of the stream's at the median, 95% interval 0.781 to 0.790, and 0.809 at p90: 2.6 s against 3.3, 3.0 against 3.7; no turn stalled; the same codes and words on 200 of 200) |
 | PR-017 | On the eval set, does starting R4 streamed's playback when the turn's own code rate says its second block is due, instead of after 0.5 s of audio, let the caller hear the reply sooner, without stalling? | `eca9da1` | **Reported: supported** (first sound 0.846 of the buffer's at the median, 95% interval 0.844 to 0.849, and 0.867 at p90: 2.27 s against 2.68, 2.70 against 3.11; no turn stalled; the same audio on 200 of 200) |
 | PR-018 | On the eval set, does cutting the leading silence of R1's first spoken clause (Kokoro's 320 ms of padding) let the caller hear its reply sooner, without stalling? | `39c5e1b` | **Reported: supported** (first sound 0.625 of R1's as it is at the median, 95% interval 0.617 to 0.636, and 0.729 at p90: 498 ms against 797, 751 against 1,029; no turn stalled; every cut at least 50 dB below its piece's loudest) |
+| PR-019 | P1b on real disfluent speech: does T2, the prosodic endpointer, dominate the fixed threshold on DisfluencySpeech's test split at a setting that cuts off under 5% of turns? | The commit that adds this entry | Registered; not yet run |
 ---
 
 ## PR-000 — retroactive record (not a valid pre-registration)
@@ -4084,3 +4085,112 @@ Descriptive, not criteria:
 - **The same gain in every cohort**: 295 to 307 ms; the trimmed first sound 419 ms (accented) to 528 (clean).
 - **The cut**: 300 ms at the median, 346 at p90, as on development (298).
 - **Not changed**: when the first audio was made, 478 ms at the median: the trim moves only when it is heard.
+
+## PR-019 — P1b on real disfluent speech: does the prosodic endpointer dominate the fixed threshold?
+
+**Registered:** 2026-10-18, by the commit that adds this entry.
+**Author:** Ram Charan
+
+### Background
+
+v1 §8's P1b, written before any data: "Prosodic policy dominates the fixed threshold on the SEP-28k slice at some
+operating point with cutoff rate < 5%." It was tested on the synthetic disfluent cohort only, where it was not met
+(28% at best; Notion page 18 §7).
+
+**A deviation from the plan, recorded before any test data:** not SEP-28k. Its audio is not distributed (it is
+fetched from the podcasts, which keep their copyright), its labels are CC BY-NC, its clips are 3-second windows
+whose end is where the window stopped rather than where a speaker finished, and it has no words for T1 to read.
+An endpointer is scored against a turn's end. The speech here is **DisfluencySpeech** (Apache-2.0, the eval set's
+pin `b7da294`): one speaker re-performing Switchboard utterances with their fillers, repetitions and restarts.
+Real recorded speech, each clip one whole utterance; performed, not clinical (`docs/m40-log.md`, section 1).
+
+**Development** (`runs/turn-taking/p1b-dev.json`, the validation split, 215 turns; `docs/m40-log.md`, section 2):
+the pauses are short (the longest 360 ms at the median), so T0 at 700 ms cut off 2.8% and at 900 ms 0.9%. T2's
+median wait equalled its base threshold at every setting; at 700 ms it cut off more than T0 (9 to 13 against 6), at
+900 ms one fewer (1 against 2), with a later tail (p90 1,160 to 1,300 ms against 900).
+
+### Question
+
+On DisfluencySpeech's test split, does T2 at the setting DEV chose dominate T0 at the same threshold: under 5% of
+turns cut off, no more cut-offs than T0, and strictly better, cut-offs or wait, beyond chance?
+
+### The rule and its comparator
+
+- **T2, `T2_prosodic_900ms_s20`**: end the turn after 900 ms of silence; 400 ms longer when the last word cannot end
+  an English turn (T1's list); 150 ms sooner after a pitch fall steeper than 20 Hz/s, 150 ms later after a rise as
+  steep (`policies.ProsodicThreshold`).
+- **T0, `T0_fixed_900ms`**: end the turn after 900 ms of silence.
+- **Chosen on DEV, by this rule:** among the T2 settings that cut off under 5% of DEV turns and are at least as safe
+  and at least as fast at the median as T0 at the same base, better in one, the lowest median wait, then the fewest
+  cut-offs, then the lowest p90. Only the three at 900 ms qualify; 20 Hz/s has the lowest p90.
+
+### Test data
+
+DisfluencySpeech's test split by the eval set's disfluent rules: **207 turns** (`probes/disfluencyspeech/manifest-test.json`),
+the eval set's 50 among them; the other 157 never used here. Built as M30's real turns (`realturns.turn`): cropped
+before the first speech, ended at the last stretch of speech the policies' VAD finds, padded 2.5 s with noise at
+the clip's own floor; words from faster-whisper base.en with word times.
+
+### Validity requirements
+
+- **V1 · The frozen split.** Every test clip matches its manifest's SHA-256 (`dsturns.turns` refuses otherwise).
+- **V2 · Fixed before data.** This entry, `src/s2slab/pr019.py`, `src/s2slab/dsturns.py` and the DEV run are
+  committed before the run; the run records its commit.
+- **V3 · Once.** The run is refused without `--confirm PR-019`, if its file exists, or from a tree with any change
+  or untracked file.
+
+If V2 or V3 fails, the result is **exploratory**. A turn neither policy ends is not dropped: it is reported as a
+deviation.
+
+### Primary outcomes
+
+Each turn, for each policy: cut off (ended before the turn's end) or not; and the wait after the end, when not.
+
+### Success criteria — all three must hold
+
+| | Criterion |
+|---|---|
+| **S1 · Under 5%** | T2's cut-off rate's Wilson 95% interval has its upper end below **5%**. |
+| **S2 · No more cut-offs** | The turns only T2 cuts off are no more than the turns only T0 cuts off. |
+| **S3 · Strictly better** | Fewer cut-offs by an exact McNemar test, **p < 0.05**; or a lower median wait on the turns both end correctly, the paired bootstrap 95% interval of T2's over T0's entirely **below 1**. |
+
+**Confidence.** S3's wait is a paired bootstrap of the turns both policies end correctly (10,000 resamples, seed 0,
+percentile interval). No multiplicity correction: success needs all three.
+
+**Why these bars.** S1 is v1's 5%, as an interval's upper end so that it is evidence rather than a point; 207 turns
+allow at most four cut-offs. S2 and S3 are "dominates" as the frontier means it, at least as safe and better in one
+way, with the better shown beyond chance: on DEV, T2 led T0 by a single turn, which is not evidence of anything.
+
+### Predictions, recorded but not criteria
+
+- **Not supported.** S1 holds (one to three cut-offs); S2 holds; S3 fails: the median wait the same (a ratio of
+  1.000) and one or two turns between them.
+- T0 at 900 ms cuts off one to four turns. T2's later tail stays (p90 above 1,100 ms).
+
+### Reported alongside, descriptively
+
+Every DEV setting on the test turns, as a sweep; what T2 read at the end of the turns it did not cut (a fall, a
+rise, a hold, no pitch); the turns cut off, by id; the turns' longest pauses.
+
+### What this cannot show
+
+- **One speaker, performing.** Not SEP-28k, not clinical stuttering, not spontaneous speech. Blocks and
+  prolongations, which stuttering has, are not in this data.
+- **Ends from the VAD.** A turn's end is the last stretch of speech the policies' own energy VAD finds, not a label.
+- **Words from a recognizer that hears the whole clip**, a little better than a streaming one's.
+- **The setting was chosen on the same speaker's other utterances.** It says nothing about another voice.
+- **Disfluent speech only, as P1b asks.** What either policy costs a clean speaker is not measured here.
+
+### Analysis plan
+
+1. Commit this entry, the DEV run, the manifests and `src/s2slab/pr019.py` (V2).
+2. The one run: `PYTHONPATH=src python -m s2slab.pr019 --confirm PR-019`.
+3. The results below, verbatim; then, labelled exploratory, the sweep and T2's readings.
+
+### Deviations
+
+*None.*
+
+### Results
+
+*Not yet run.*

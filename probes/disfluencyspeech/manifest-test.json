@@ -1,0 +1,1888 @@
+{
+ "set": "disfluencyspeech",
+ "split": "test",
+ "dataset_split": "test",
+ "built": "2026-10-19",
+ "source": {
+  "repo": "amaai-lab/DisfluencySpeech",
+  "revision": "b7da294fe3a70dd96df6640893f2a5dfc2c87638",
+  "license": "Apache-2.0"
+ },
+ "rules": {
+  "duration_s": [
+   3.0,
+   15.0
+  ],
+  "text": "evalset.candidates('disfluent'), in file order"
+ },
+ "skipped": {
+  "under_3_s": 0,
+  "over_15_s": 0
+ },
+ "fetched_mb": 70.8,
+ "items": [
+  {
+   "id": "ds-test-000",
+   "source_id": "data/test-00000-of-00001.parquet#0/0",
+   "in_evalset": false,
+   "text": "Yeah. Well, rabbits are darling. That would be fun if you could get them trained. Otherwise they're pretty smelly.",
+   "text_fluent": "Yeah. rabbits are darling. That would be fun if you could get them trained. Otherwise they're pretty smelly.",
+   "duration_s": 7.843,
+   "wav_sha256": "0998a8be6825a0cc65cd8be130bb57bb4c3e5dda102e0b8b5863d0837dda072b"
+  },
+  {
+   "id": "ds-test-001",
+   "source_id": "data/test-00000-of-00001.parquet#0/1",
+   "in_evalset": false,
+   "text": "Well, McNeil. Neil-, and Lehrer, I guess he's leaving, one of them is leaving.",
+   "text_fluent": "McNeil, and Lehrer, I guess he's leaving, one of them is leaving.",
+   "duration_s": 5.119,
+   "wav_sha256": "54db6e889ef95c37ad61c25e1f579def45ff8b124c166192819ffd27e9af1242"
+  },
+  {
+   "id": "ds-test-002",
+   "source_id": "data/test-00000-of-00001.parquet#0/2",
+   "in_evalset": false,
+   "text": "Well, I don't want to, I don't want this to be a unilateral conversation but, yes, we do.",
+   "text_fluent": "I don't want this to be a unilateral conversation but, yes, we do.",
+   "duration_s": 6.872,
+   "wav_sha256": "d2b33e6d03533ef528996f5169a05ea839d141d4bcccac60eada73c6573efa17"
+  },
+  {
+   "id": "ds-test-003",
+   "source_id": "data/test-00000-of-00001.parquet#0/3",
+   "in_evalset": false,
+   "text": "Well, what about, uh, papyrus, you know, made out of bam-, you know, bamboo stuff, from the from the banks of the Nile.",
+   "text_fluent": "what about, papyrus, made out of bamboo stuff, from the banks of the Nile.",
+   "duration_s": 7.138,
+   "wav_sha256": "4cfaef1c2286c7b51e7a66aa3059169daba66d58e2183173267bc7681af916ad"
+  },
+  {
+   "id": "ds-test-004",
+   "source_id": "data/test-00000-of-00001.parquet#0/4",
+   "in_evalset": false,
+   "text": "Because women are in every field now, I mean I can't think of a field that they're not involved in.",
+   "text_fluent": "Because women are in every field now, I can't think of a field that they're not involved in.",
+   "duration_s": 5.782,
+   "wav_sha256": "d16af4ca9458223498741efdcbd7d9879f63ab5e20a426fa554a1f606ed8d9a1"
+  },
+  {
+   "id": "ds-test-005",
+   "source_id": "data/test-00000-of-00001.parquet#0/5",
+   "in_evalset": true,
+   "text": "Yeah, I think it's getting better, not worse. Well, I should probably get back to my job.",
+   "text_fluent": "Yeah, I think it's getting better, not worse. I should probably get back to my job.",
+   "duration_s": 6.279,
+   "wav_sha256": "e93196438945ee2a344efa0a346ef89e75a5d7ce4536d2ed23a9a6d051f33623"
+  },
+  {
+   "id": "ds-test-006",
+   "source_id": "data/test-00000-of-00001.parquet#0/6",
+   "in_evalset": false,
+   "text": "They go, well they got a lot of benefits that would go with it so.",
+   "text_fluent": "They go, they got a lot of benefits that would go with it so.",
+   "duration_s": 4.023,
+   "wav_sha256": "e8d47bb25b7518e21a4ec8a60e81ddbb9c140103978868fd4d551662688937f4"
+  },
+  {
+   "id": "ds-test-007",
+   "source_id": "data/test-00000-of-00001.parquet#0/7",
+   "in_evalset": false,
+   "text": "what it is for us to make mark off models, you know. It's like, Jesus Christ.",
+   "text_fluent": "what it is for us to make mark off models, It's like, Jesus Christ.",
+   "duration_s": 5.903,
+   "wav_sha256": "e3dbb2c47fac8c6d53e2194f8db800629db9666896eded86481a014cfb10f4a7"
+  },
+  {
+   "id": "ds-test-008",
+   "source_id": "data/test-00000-of-00001.parquet#0/9",
+   "in_evalset": true,
+   "text": "And, uh, the baby just screams. I mean, the baby is like seventeen months and she just screams.",
+   "text_fluent": "And, the baby just screams. the baby is seventeen months and she just screams.",
+   "duration_s": 5.761,
+   "wav_sha256": "bf5d4bc5ac2b7206e5aa8c1295348a119c7a22419c5b5fc4ca0068511b5ecf75"
+  },
+  {
+   "id": "ds-test-009",
+   "source_id": "data/test-00000-of-00001.parquet#0/11",
+   "in_evalset": true,
+   "text": "And, and someone's got to do it, and be able to do it right, and that's, that's the whole thing.",
+   "text_fluent": "and someone's got to do it, and be able to do it right, that's the whole thing.",
+   "duration_s": 5.329,
+   "wav_sha256": "2e99b8dbe50aac1823de94ccb604be5bb5cedbcd38bdf7240c27d25d0ee51202"
+  },
+  {
+   "id": "ds-test-010",
+   "source_id": "data/test-00000-of-00001.parquet#0/13",
+   "in_evalset": false,
+   "text": "No we, Well, I, And, of course you know you have the, uh, the weeds that come up in between the bricks or, and things like that.",
+   "text_fluent": "No we, I, And, of course you have the weeds that come up in between the bricks and things like that.",
+   "duration_s": 7.722,
+   "wav_sha256": "cefcec0825b47a154f4ab0f511ae3ebca0368f8f0cac6b1a0aa3b34d9bba7b4d"
+  },
+  {
+   "id": "ds-test-011",
+   "source_id": "data/test-00000-of-00001.parquet#0/14",
+   "in_evalset": false,
+   "text": "Or, you know, what, whatever the case may be. And, and may not have any idea of what, what the standard punishment would be for it.",
+   "text_fluent": "Or, whatever the case may be. and may not have any idea of what the standard punishment would be for it.",
+   "duration_s": 7.608,
+   "wav_sha256": "4717bd69d64eef3675c5cae86d71a0ab700ff9492e7fac32bc95c78063dda224"
+  },
+  {
+   "id": "ds-test-012",
+   "source_id": "data/test-00000-of-00001.parquet#0/15",
+   "in_evalset": false,
+   "text": "See, uh, uh, I, I, when I went, I thought the food was not good.",
+   "text_fluent": "when I went, I thought the food was not good.",
+   "duration_s": 4.329,
+   "wav_sha256": "f6654492b55d23181fc4095caaf03a9297f7a526397704df79f680227aec64c7"
+  },
+  {
+   "id": "ds-test-013",
+   "source_id": "data/test-00000-of-00001.parquet#0/16",
+   "in_evalset": false,
+   "text": "But it, well, I, I've always thought I'd like to. I've never wanted to bad enough to make any effort to do it, you know.",
+   "text_fluent": "But it, I've always thought I'd like to. I've never wanted to bad enough to make any effort to do it,",
+   "duration_s": 8.002,
+   "wav_sha256": "3d90771348bebe4605657867bdd114a24495c23a3ba01a7ee038571323c99833"
+  },
+  {
+   "id": "ds-test-014",
+   "source_id": "data/test-00000-of-00001.parquet#0/17",
+   "in_evalset": false,
+   "text": "If you had, uh, no financial requirements, if you could buy any car in the entire world, no matter what it cost, what would you buy?",
+   "text_fluent": "If you had, no financial requirements, if you could buy any car in the entire world, no matter what it cost, what would you buy?",
+   "duration_s": 6.57,
+   "wav_sha256": "7fddb0475241fce9dcdf970af927a52c90c5a7bac5d1d3b994b39082a5567571"
+  },
+  {
+   "id": "ds-test-015",
+   "source_id": "data/test-00000-of-00001.parquet#0/18",
+   "in_evalset": false,
+   "text": "I'll be thinking in mind the address is. um, is there anything you can do about that like give out a phony phone number?",
+   "text_fluent": "I'll be thinking in mind the address is, is there anything you can do about that like give out a phony phone number?",
+   "duration_s": 7.186,
+   "wav_sha256": "a8d8d61a3ba09180dd4a2070ed65502ddab902531fcedaa53ae6e45b9e95d709"
+  },
+  {
+   "id": "ds-test-016",
+   "source_id": "data/test-00000-of-00001.parquet#0/19",
+   "in_evalset": false,
+   "text": "Uh, uh, uh, well, not that much. Just, uh, I mean, I wasn't a great asset to them or anything.",
+   "text_fluent": "not that much. Just, I wasn't a great asset to them or anything.",
+   "duration_s": 7.008,
+   "wav_sha256": "12eccc1e1a344a77a5d9fd0d2c5f7145516e620ebf83349a06dd439fbd3c21aa"
+  },
+  {
+   "id": "ds-test-017",
+   "source_id": "data/test-00000-of-00001.parquet#0/20",
+   "in_evalset": false,
+   "text": " Well , To tell you the truth I haven't paid too much attention to that.",
+   "text_fluent": ", To tell you the truth I haven't paid too much attention to that.",
+   "duration_s": 4.838,
+   "wav_sha256": "d8a2f242576b006675aa6e2a7aebb8b54002b3ea1841d5679c57a3fa5c9e5750"
+  },
+  {
+   "id": "ds-test-018",
+   "source_id": "data/test-00000-of-00001.parquet#0/21",
+   "in_evalset": true,
+   "text": "Uh, actually one thing we have done quite a bit through the holidays, just because it's a, real easy, is just baked potato dinners.",
+   "text_fluent": "actually one thing we have done quite a bit through the holidays, just because it's real easy, is just baked potato dinners.",
+   "duration_s": 7.662,
+   "wav_sha256": "5205041187c2ed34e1e26c665c397bef4df565ad714a8f953745d5e511d47e04"
+  },
+  {
+   "id": "ds-test-019",
+   "source_id": "data/test-00000-of-00001.parquet#0/23",
+   "in_evalset": true,
+   "text": "Yeah, Well first of all I, I ha-, have to ask you how, how old you are?",
+   "text_fluent": "Yeah, first of all I have to ask you how old you are?",
+   "duration_s": 4.747,
+   "wav_sha256": "32e63c50b648a5b22b8c7c57e2a7c205c6759e9ef84bf280e9b0e7306f249ec3"
+  },
+  {
+   "id": "ds-test-020",
+   "source_id": "data/test-00000-of-00001.parquet#0/25",
+   "in_evalset": false,
+   "text": "Uh, when you get to be my age and you start abusing your systems, you get blown away.",
+   "text_fluent": "when you get to be my age and you start abusing your systems, you get blown away.",
+   "duration_s": 4.443,
+   "wav_sha256": "edda319916651bc346d02c59938a56e2389571daa4bb3ff28484947977c27335"
+  },
+  {
+   "id": "ds-test-021",
+   "source_id": "data/test-00000-of-00001.parquet#0/26",
+   "in_evalset": true,
+   "text": "For instance, that, and I could, you know, I could envision a society where that would happen and make an interesting, uh, uh, story or whatever.",
+   "text_fluent": "For instance, that, and I could envision a society where that would happen and make an interesting, story or whatever.",
+   "duration_s": 8.244,
+   "wav_sha256": "d5cab38c50ba1257e0c7c6c16805c12da1daf7a429402fc92536a466f777d0d7"
+  },
+  {
+   "id": "ds-test-022",
+   "source_id": "data/test-00000-of-00001.parquet#0/27",
+   "in_evalset": true,
+   "text": "And, uh, that I was able to do, when I could go in and go down and actually pick them off the bottom.",
+   "text_fluent": "And, that I was able to do, when I could go in and go down and actually pick them off the bottom.",
+   "duration_s": 4.944,
+   "wav_sha256": "f95e4c7677e564260ae0b840967e9f49c6a6989ede2f3a884bcddd259501449c"
+  },
+  {
+   "id": "ds-test-023",
+   "source_id": "data/test-00000-of-00001.parquet#0/31",
+   "in_evalset": false,
+   "text": "Uh well, well DOW JONES for example have the, cause the That's interesting.",
+   "text_fluent": "DOW JONES for example cause the That's interesting.",
+   "duration_s": 4.797,
+   "wav_sha256": "34c520f8f8b54b6ba38a76f94b5e011516e52e7f4afbc0ab03ea0dd747f0ed40"
+  },
+  {
+   "id": "ds-test-024",
+   "source_id": "data/test-00000-of-00001.parquet#0/32",
+   "in_evalset": false,
+   "text": "And she finally learned that you just cannot do this, you know. So now she finds the basement sales and, just like, you know, everybody else.",
+   "text_fluent": "And she finally learned that you just cannot do this, So now she finds the basement sales just like, everybody else.",
+   "duration_s": 7.038,
+   "wav_sha256": "41e65ea443017100137afdc98eff741f568c30a95aea62df1d3ec96eea433b8e"
+  },
+  {
+   "id": "ds-test-025",
+   "source_id": "data/test-00000-of-00001.parquet#0/33",
+   "in_evalset": false,
+   "text": "Yeah, Steve's mom finally, uh, finally sa-, you know, said that, that God will take care of us when it's our time.",
+   "text_fluent": "Yeah, Steve's mom finally said that God will take care of us when it's our time.",
+   "duration_s": 6.431,
+   "wav_sha256": "2523a47f08f6e5bf01cb0799ee45294fa75ac2912a865618d69ffb9a8810488e"
+  },
+  {
+   "id": "ds-test-026",
+   "source_id": "data/test-00000-of-00001.parquet#0/35",
+   "in_evalset": false,
+   "text": "once, once you seen one that's a suspenseful type movie like that, then it's, it's not good for a second watching particularly.",
+   "text_fluent": "once you seen one that's a suspenseful type movie like that, then it's not good for a second watching particularly.",
+   "duration_s": 7.141,
+   "wav_sha256": "089bd6102328abc8241fddbf887c616cb76b6c07f7aa842d0381bb2ac5fa8287"
+  },
+  {
+   "id": "ds-test-027",
+   "source_id": "data/test-00000-of-00001.parquet#0/36",
+   "in_evalset": true,
+   "text": "And that's it. You just mix it all together and pop it in the oven just to, you know, heat it through.",
+   "text_fluent": "And that's it. You just mix it all together and pop it in the oven just to, heat it through.",
+   "duration_s": 5.028,
+   "wav_sha256": "1fbab88f744011717744e6fc5d0b54648c176e59a299c47e7b0a1c79e09ee8b7"
+  },
+  {
+   "id": "ds-test-028",
+   "source_id": "data/test-00000-of-00001.parquet#0/37",
+   "in_evalset": false,
+   "text": "So, uh, we've had experience with that, too. Oh, yeah. Well, how we it may, it may help their tip, may not, huh.",
+   "text_fluent": "we've had experience with that, too. yeah. how we it may help their tip, may not,",
+   "duration_s": 9.562,
+   "wav_sha256": "e322aa64580c1bab02448c2f7674cbe0f9d482a182d5b29e3baf0dc6d7c111e9"
+  },
+  {
+   "id": "ds-test-029",
+   "source_id": "data/test-00000-of-00001.parquet#0/38",
+   "in_evalset": false,
+   "text": "And we go to, uh, places out in, uh, uh, let's see what's that, what's that state north of us, that state yeah. that one. That one.",
+   "text_fluent": "And we go to, places out in, let's see what's that state north of us, that state yeah. that one. That one.",
+   "duration_s": 7.413,
+   "wav_sha256": "1ab8b8dd1b82a86e92b0d4131c32e8aa1d4f2d2cd0efe223089d3c0296d3c47c"
+  },
+  {
+   "id": "ds-test-030",
+   "source_id": "data/test-00000-of-00001.parquet#0/39",
+   "in_evalset": false,
+   "text": "Uh, the story was, uh, though it tended to be a little one sided uh, it was good. Uh, it was, it was believable.",
+   "text_fluent": "the story was, though it tended to be a little one sided it was good. it was believable.",
+   "duration_s": 8.533,
+   "wav_sha256": "0ca846d202061689f70b344370ef04911d53c06d333a3774883bcfcea4d2d9b7"
+  },
+  {
+   "id": "ds-test-031",
+   "source_id": "data/test-00000-of-00001.parquet#0/40",
+   "in_evalset": false,
+   "text": "I, I guess we just, it came on after something we used to watch",
+   "text_fluent": "I guess we just, it came on after something we used to watch",
+   "duration_s": 4.217,
+   "wav_sha256": "bba81a1200fa9586d2ea98e6827565f8b02f490976226b1a80500ba241bc53cb"
+  },
+  {
+   "id": "ds-test-032",
+   "source_id": "data/test-00000-of-00001.parquet#0/41",
+   "in_evalset": false,
+   "text": " Is Plano beginning to experience the, the kinds of things that are more common in the metropolitan, you know, in the urban area?",
+   "text_fluent": "Is Plano beginning to experience the kinds of things that are more common in the urban area?",
+   "duration_s": 7.595,
+   "wav_sha256": "9480048fec34b62641cbeb2880833da3a136f89adf0706146dd9e1b31f877b06"
+  },
+  {
+   "id": "ds-test-033",
+   "source_id": "data/test-00000-of-00001.parquet#0/42",
+   "in_evalset": false,
+   "text": "Uh, I, I like all kinds. I like, I like different things about each one of them.",
+   "text_fluent": "I like all kinds. I like different things about each one of them.",
+   "duration_s": 5.82,
+   "wav_sha256": "68a1beb50444191e3b11698e5ad4dad4a0d82bd8e2decc50f730983f37947e43"
+  },
+  {
+   "id": "ds-test-034",
+   "source_id": "data/test-00000-of-00001.parquet#0/43",
+   "in_evalset": false,
+   "text": "Uh, the, the attitude of the staff as you said is really very very important.",
+   "text_fluent": "the attitude of the staff as you said is really very very important.",
+   "duration_s": 4.942,
+   "wav_sha256": "b714baf0e887ab108d0fd20258e265e6000fb6cd7baa647ce000e2e0c3b49e7b"
+  },
+  {
+   "id": "ds-test-035",
+   "source_id": "data/test-00000-of-00001.parquet#0/44",
+   "in_evalset": false,
+   "text": "Do, do you feel as though there should be, uh, more, uh, was or, or more, uh, you might say transgressions that would be enforceable by, uh, by, uh, uh, capital punishment?",
+   "text_fluent": "do you feel as though there should be, more, you might say transgressions that would be enforceable by, capital punishment?",
+   "duration_s": 10.676,
+   "wav_sha256": "f0a8896f5dd368f924d54ba5228a30032122981bde450200bb91a7c40a2a6d57"
+  },
+  {
+   "id": "ds-test-036",
+   "source_id": "data/test-00000-of-00001.parquet#0/45",
+   "in_evalset": false,
+   "text": "But it's the fact that I have enough of a, of a cushion in the bank so that when they come, I can pay them in full.",
+   "text_fluent": "But it's the fact that I have enough of a cushion in the bank so that when they come, I can pay them in full.",
+   "duration_s": 5.658,
+   "wav_sha256": "77cabed6f43c1aadcc806da9a6535f15f7130b1710e1c0c9d6cead9daad2206a"
+  },
+  {
+   "id": "ds-test-037",
+   "source_id": "data/test-00000-of-00001.parquet#0/46",
+   "in_evalset": true,
+   "text": "So, that, that's really strange. I, I was wondering why we had somebody from Maryland though. I was saying, God, do we have a TI in Maryland or,",
+   "text_fluent": "that's really strange. I was wondering why we had somebody from Maryland though. I was saying, God, do we have a TI in Maryland or,",
+   "duration_s": 9.099,
+   "wav_sha256": "e4a79a9d5cb2bc7aacaf3187f99046f3699e1466754ad648c3e466a0aaf60409"
+  },
+  {
+   "id": "ds-test-038",
+   "source_id": "data/test-00000-of-00001.parquet#0/48",
+   "in_evalset": false,
+   "text": "I had, uh, a Mazda R X Seven before that and that was the worse car I've ever driven in my life.",
+   "text_fluent": "I had, a Mazda R X Seven before that and that was the worse car I've ever driven in my life.",
+   "duration_s": 6.665,
+   "wav_sha256": "7fd637da72c88c9639d8c65c6a2504f8de90b02eacd4f5f4a2f9a2a51cddcd6b"
+  },
+  {
+   "id": "ds-test-039",
+   "source_id": "data/test-00000-of-00001.parquet#0/49",
+   "in_evalset": false,
+   "text": " That's right. You know that's, it, it's, it's amazing and, and when you stop and look at it, I mean, the judges, the, they're all former lawyers.",
+   "text_fluent": "That's right. it's amazing and when you stop and look at it, the judges, they're all former lawyers.",
+   "duration_s": 9.483,
+   "wav_sha256": "f9d7601a38087969e4e15f9c128fe7b3bde7b8ca9d70a76dddef0d2165a37f9c"
+  },
+  {
+   "id": "ds-test-040",
+   "source_id": "data/test-00000-of-00001.parquet#0/50",
+   "in_evalset": false,
+   "text": "And then he was gaining weight again, was just getting healthy, and, uh, he put on about fifteen to twenty pounds after the thing and then he got hit by a Cadillac.",
+   "text_fluent": "And then he was gaining weight again, was just getting healthy, and, he put on about fifteen to twenty pounds after the thing and then he got hit by a Cadillac.",
+   "duration_s": 8.71,
+   "wav_sha256": "42c69bcdd3c026a70a15fefd853e4225991f41eae48b9886c7f496e41186a8df"
+  },
+  {
+   "id": "ds-test-041",
+   "source_id": "data/test-00000-of-00001.parquet#0/51",
+   "in_evalset": false,
+   "text": "Uh, not at all. In fact, I'm graduating from college in about a week and this past semester I've taken two criminal justice classes and have discussed a lot on trials.",
+   "text_fluent": "not at all. In fact, I'm graduating from college in about a week and this past semester I've taken two criminal justice classes and have discussed a lot on trials.",
+   "duration_s": 9.303,
+   "wav_sha256": "919d00a9e135d29269e87bbc45a703f52ef17dd6326eb3f8234c026191d04307"
+  },
+  {
+   "id": "ds-test-042",
+   "source_id": "data/test-00000-of-00001.parquet#0/53",
+   "in_evalset": false,
+   "text": "Uh, my husband and I had this great desire to go see a comedy and, and, uh, we ended up going to see GREEN CARD.",
+   "text_fluent": "my husband and I had this great desire to go see a comedy and, we ended up going to see GREEN CARD.",
+   "duration_s": 6.419,
+   "wav_sha256": "eb37d3c31034d0165df8f32fb92e7e65dc060ac1cccb98f73e3bfd482a7486ea"
+  },
+  {
+   "id": "ds-test-043",
+   "source_id": "data/test-00000-of-00001.parquet#0/54",
+   "in_evalset": true,
+   "text": "But, uh, yeah. I like to watch rock and roll videos and any kind of videos.",
+   "text_fluent": "But, yeah. I like to watch rock and roll videos and any kind of videos.",
+   "duration_s": 4.331,
+   "wav_sha256": "e7d8b677e9933141e287e57ac46809718e05f716f48e6219782f267e81014135"
+  },
+  {
+   "id": "ds-test-044",
+   "source_id": "data/test-00000-of-00001.parquet#0/56",
+   "in_evalset": true,
+   "text": "Yeah. We all went to high school together and, uh, and we're still in contact with each other.",
+   "text_fluent": "Yeah. We all went to high school together and we're still in contact with each other.",
+   "duration_s": 5.176,
+   "wav_sha256": "59d60ca2e055eed7819deb46d2eedc0859b6bc616cd05e6cf01172e3c226c61e"
+  },
+  {
+   "id": "ds-test-045",
+   "source_id": "data/test-00000-of-00001.parquet#0/58",
+   "in_evalset": false,
+   "text": "Well, he always he waits until it gets about seventeen below up here and then he calls us, it's seventy degrees here in the sunshine.",
+   "text_fluent": "he always he waits until it gets about seventeen below up here and then he calls us, it's seventy degrees here in the sunshine.",
+   "duration_s": 7.749,
+   "wav_sha256": "d4e76ddc8a2ec6f94fc0d3f3e64025f1acc75d6c8027b13799958a759672a501"
+  },
+  {
+   "id": "ds-test-046",
+   "source_id": "data/test-00000-of-00001.parquet#0/59",
+   "in_evalset": true,
+   "text": "Uh , but, You know, they're not very old, so they couldn't do a whole lot, yet.",
+   "text_fluent": ", but, they're not very old, so they couldn't do a whole lot, yet.",
+   "duration_s": 4.921,
+   "wav_sha256": "f2f347da408acba491d4c7c1d2e7f99127204b69406709f62bd4ccf54359fbc1"
+  },
+  {
+   "id": "ds-test-047",
+   "source_id": "data/test-00000-of-00001.parquet#0/60",
+   "in_evalset": false,
+   "text": "And if you try to take anybody, you know, go to the show or go out for supper, and you go as a foursome,",
+   "text_fluent": "And if you try to take anybody, go to the show or go out for supper, and you go as a foursome,",
+   "duration_s": 5.615,
+   "wav_sha256": "82a6287166a905416c5204fd008b278a6d4c0d6e731818203e6a90c2d2118bed"
+  },
+  {
+   "id": "ds-test-048",
+   "source_id": "data/test-00000-of-00001.parquet#0/61",
+   "in_evalset": true,
+   "text": "Yeah, I think it was by her, now that you mention it, because someone had given it to me, and I thought, well, this will be great, and it was.",
+   "text_fluent": "Yeah, I think it was by her, now that you mention it, because someone had given it to me, and I thought, this will be great, and it was.",
+   "duration_s": 7.737,
+   "wav_sha256": "45c635651a4fd2f9484b704578bb7f6cc13057b8989d6a4c8734ea0eb1d372a4"
+  },
+  {
+   "id": "ds-test-049",
+   "source_id": "data/test-00000-of-00001.parquet#0/62",
+   "in_evalset": false,
+   "text": "So, you know, he's real happy there. As far as the Rangers are concerned, I think, I think they need some, definitely need some pitching.",
+   "text_fluent": "So, he's real happy there. As far as the Rangers are concerned, I think they definitely need some pitching.",
+   "duration_s": 6.769,
+   "wav_sha256": "3d8e74c9e60cc8cbba49722732c721bc81f533096d06bdbe649c82ceef3e42ed"
+  },
+  {
+   "id": "ds-test-050",
+   "source_id": "data/test-00000-of-00001.parquet#0/64",
+   "in_evalset": false,
+   "text": "Yeah, well, I really like Vivaldi. Uh, he's, uh, definitely one of the, one of the top of that era.",
+   "text_fluent": "Yeah, I really like Vivaldi. he's, definitely one of the top of that era.",
+   "duration_s": 6.007,
+   "wav_sha256": "4c723aad41debb2f3d88e3007a34f8276060c927b1588ee8c61020cd8e37ecbf"
+  },
+  {
+   "id": "ds-test-051",
+   "source_id": "data/test-00000-of-00001.parquet#0/65",
+   "in_evalset": false,
+   "text": "Like this week I've been just holding my breath and hoping they'll call me in but they probably won't because next week the kids have school vacation.",
+   "text_fluent": "this week I've been just holding my breath and hoping they'll call me in but they probably won't because next week the kids have school vacation.",
+   "duration_s": 8.558,
+   "wav_sha256": "7c19c4346db9ef0a01f84d782aa8a00ca2b80a5455005c59f2fcd7a13d49f055"
+  },
+  {
+   "id": "ds-test-052",
+   "source_id": "data/test-00000-of-00001.parquet#0/69",
+   "in_evalset": false,
+   "text": "To deny that, at least the majority of it is true. So, you know, it depends on how you look at it.",
+   "text_fluent": "To deny that, at least the majority of it is true. So, it depends on how you look at it.",
+   "duration_s": 6.613,
+   "wav_sha256": "1449e9424440170a888d9a4d5044165bc53a38f4a209ccd825df2e3726a53c48"
+  },
+  {
+   "id": "ds-test-053",
+   "source_id": "data/test-00000-of-00001.parquet#0/70",
+   "in_evalset": false,
+   "text": "and you have, the, that kind of a pressure from the pockets of air, uh, usually they say caused by exhaust.",
+   "text_fluent": "and you have, that kind of a pressure from the pockets of air, usually they say caused by exhaust.",
+   "duration_s": 6.161,
+   "wav_sha256": "18df3782223b1fddd0a4c41219c12797c84981e07dddf41e48ee7e2262728bc1"
+  },
+  {
+   "id": "ds-test-054",
+   "source_id": "data/test-00000-of-00001.parquet#0/75",
+   "in_evalset": false,
+   "text": "Well I was talking to a lady last evening, and we were talking about fishing, and, uh, we were cut off, well, we were told to quit.",
+   "text_fluent": "I was talking to a lady last evening, and we were talking about fishing, and, we were cut off, we were told to quit.",
+   "duration_s": 6.803,
+   "wav_sha256": "3bf50a1dbaed06df3ee207b7db70b92448f49ad6274116ebec09e99fe63d3c18"
+  },
+  {
+   "id": "ds-test-055",
+   "source_id": "data/test-00000-of-00001.parquet#0/77",
+   "in_evalset": false,
+   "text": "Uh-huh. Well, that's good. Some people enjoy the travel but I don't think I'd like it, if he traveled a lot.",
+   "text_fluent": "Uh-huh. that's good. Some people enjoy the travel but I don't think I'd like it, if he traveled a lot.",
+   "duration_s": 7.08,
+   "wav_sha256": "d4dbeb8be3e74042fd3686c82428ff54b683f7cb9255a0ceadf7d6f6d87bb7da"
+  },
+  {
+   "id": "ds-test-056",
+   "source_id": "data/test-00000-of-00001.parquet#0/78",
+   "in_evalset": false,
+   "text": "But I, I guess one that, that I really like, that I haven't made in awhile, and it's, it's called a fruit pizza.",
+   "text_fluent": "But I guess one that I really like, that I haven't made in awhile, and it's called a fruit pizza.",
+   "duration_s": 7.066,
+   "wav_sha256": "89d0f4f087790c2abf0630c1510ddbdb4841bb80b2d66539197f6be65fd8a787"
+  },
+  {
+   "id": "ds-test-057",
+   "source_id": "data/test-00000-of-00001.parquet#0/80",
+   "in_evalset": true,
+   "text": "So it's, um, real easy access from, from south of Baltimore like, um, like the airport or more importantly for the Orioles from Washington D C.",
+   "text_fluent": "So it's, real easy access from south of Baltimore like the airport or more importantly for the Orioles from Washington D C.",
+   "duration_s": 9.13,
+   "wav_sha256": "e3a8d5a01ec214dbc2893aae868cf61317cd90bfc6f0325971c7d55eb36c191f"
+  },
+  {
+   "id": "ds-test-058",
+   "source_id": "data/test-00000-of-00001.parquet#0/81",
+   "in_evalset": true,
+   "text": "You know, it's right there on, which this is on a highway, too. But it's set back, enough to, There's a difference.",
+   "text_fluent": "it's right there on, which this is on a highway, too. But it's set back, enough to, There's a difference.",
+   "duration_s": 7.296,
+   "wav_sha256": "564bb3c8f3bedf481b8a31d5d2e91a673f3258fc1606fc5c329cd343805123d5"
+  },
+  {
+   "id": "ds-test-059",
+   "source_id": "data/test-00000-of-00001.parquet#0/83",
+   "in_evalset": false,
+   "text": "Um, so it's really, you know, it's, it's fun to, to do that. Uh, I think that's unbelievable.",
+   "text_fluent": "so it's really, it's fun to do that. I think that's unbelievable.",
+   "duration_s": 6.141,
+   "wav_sha256": "72169e14d94a0f2494780f76e8f67472c624938fcd68ffc7ecdb661b6a28bab9"
+  },
+  {
+   "id": "ds-test-060",
+   "source_id": "data/test-00000-of-00001.parquet#0/84",
+   "in_evalset": false,
+   "text": "There was, uh, I understand there was a really good basketball b-, book called, uh, A SEASON ON THE BRINK.",
+   "text_fluent": "I understand there was a really good basketball book called, A SEASON ON THE BRINK.",
+   "duration_s": 7.019,
+   "wav_sha256": "3f6a292f8b2b728c1578f5a858c13544076df438679f7a73b6114a3a0472a560"
+  },
+  {
+   "id": "ds-test-061",
+   "source_id": "data/test-00000-of-00001.parquet#0/85",
+   "in_evalset": false,
+   "text": "It's a mud dog. It's, uh, a cross between a catfish and, uh, I don't know what, a salamander.",
+   "text_fluent": "It's a mud dog. It's, a cross between a catfish and, I don't know what, a salamander.",
+   "duration_s": 6.396,
+   "wav_sha256": "df8a5cf16cfefbfaa2707dd6058192224249577cd3fac427deab30fa89c8a3af"
+  },
+  {
+   "id": "ds-test-062",
+   "source_id": "data/test-00000-of-00001.parquet#0/86",
+   "in_evalset": true,
+   "text": "I've heard that Sam's has a really good lasagna in fact I think I had it at a, at a party once.",
+   "text_fluent": "I've heard that Sam's has a really good lasagna in fact I think I had it at a party once.",
+   "duration_s": 5.388,
+   "wav_sha256": "5dd51e498f01e666255b158272a8c699b4a326a02bb40100c86460100596a866"
+  },
+  {
+   "id": "ds-test-063",
+   "source_id": "data/test-00000-of-00001.parquet#0/88",
+   "in_evalset": false,
+   "text": "But, oh, and, and I haven't told you I'm going to be at a different school this year, now.",
+   "text_fluent": "and I haven't told you I'm going to be at a different school this year,",
+   "duration_s": 4.929,
+   "wav_sha256": "a45294bdf4a362cb8bf196865e4e19e4a526406c4132db9989165a654bd3880e"
+  },
+  {
+   "id": "ds-test-064",
+   "source_id": "data/test-00000-of-00001.parquet#0/89",
+   "in_evalset": false,
+   "text": "Oh, I like it better doing it. Well one, it cuts down on my mow time anyway that's true.",
+   "text_fluent": "I like it better doing it. one, it cuts down on my mow time anyway that's true.",
+   "duration_s": 6.376,
+   "wav_sha256": "94559eb913a2d03950db6804030aca5dc261cddf943d447e75bcadb98e4b175c"
+  },
+  {
+   "id": "ds-test-065",
+   "source_id": "data/test-00000-of-00001.parquet#0/90",
+   "in_evalset": true,
+   "text": "Now, I've always done those kinds of things because I just didn't like messes, and",
+   "text_fluent": "I've always done those kinds of things because I just didn't like messes, and",
+   "duration_s": 5.351,
+   "wav_sha256": "eb2b678b0c74f1d5a777d165c363f728eb7c59f5d15a456023a5d2acb36034ef"
+  },
+  {
+   "id": "ds-test-066",
+   "source_id": "data/test-00000-of-00001.parquet#0/91",
+   "in_evalset": true,
+   "text": " Well, my sister is the seamstress of the two of us. And, but she doesn't china paint so we both have our expertise side.",
+   "text_fluent": "my sister is the seamstress of the two of us. but she doesn't china paint so we both have our expertise side.",
+   "duration_s": 8.127,
+   "wav_sha256": "7c0fad901b721a0ce41533d61d09d9736a796650ae06771d67dae2a9dbbf603f"
+  },
+  {
+   "id": "ds-test-067",
+   "source_id": "data/test-00000-of-00001.parquet#0/92",
+   "in_evalset": true,
+   "text": "Not all, I, you know, I don't know if you've ever been to Washington D C.",
+   "text_fluent": "Not all, I don't know if you've ever been to Washington D C.",
+   "duration_s": 4.79,
+   "wav_sha256": "000a912719191067c76e20a05b4fceebfe20df2b15ab735f18599ac9f17c98a6"
+  },
+  {
+   "id": "ds-test-068",
+   "source_id": "data/test-00000-of-00001.parquet#0/93",
+   "in_evalset": true,
+   "text": "And then, and then, uh, , uh, the blond headed girl that used to be on NEWHART.",
+   "text_fluent": "and then,, the blond headed girl that used to be on NEWHART.",
+   "duration_s": 5.601,
+   "wav_sha256": "31c40a9cd613b5194ae736a7d78fbfb97f9923263d0efa2dc06b8979ffda733e"
+  },
+  {
+   "id": "ds-test-069",
+   "source_id": "data/test-00000-of-00001.parquet#0/94",
+   "in_evalset": false,
+   "text": "Part of the problem is we don't loan from ourselves. We, we buy from intimate international banking. That's why we have interest.",
+   "text_fluent": "Part of the problem is we don't loan from ourselves. we buy from intimate international banking. That's why we have interest.",
+   "duration_s": 6.589,
+   "wav_sha256": "33ef32fd244b29b418f6e1a789de2e20bd9219a02357a0a7d0b1d0ce28587864"
+  },
+  {
+   "id": "ds-test-070",
+   "source_id": "data/test-00000-of-00001.parquet#0/95",
+   "in_evalset": false,
+   "text": "Yeah, well, it's funny because when, you know, they interview you before you go on the jury and for capital murder, I was interviewed by four attorneys for about five hours.",
+   "text_fluent": "Yeah, it's funny because when, they interview you before you go on the jury for capital murder, I was interviewed by four attorneys for about five hours.",
+   "duration_s": 8.995,
+   "wav_sha256": "72a6d135ed7e51797dbc22f7e3c6567219f94c48080654d73afa5bc5ea618981"
+  },
+  {
+   "id": "ds-test-071",
+   "source_id": "data/test-00000-of-00001.parquet#0/97",
+   "in_evalset": false,
+   "text": "Uh-huh. Well, I thought was funny that they kept pushing the three eighty-six S X even though the, the price difference is about ten dollars.",
+   "text_fluent": "Uh-huh. I thought was funny that they kept pushing the three eighty-six S X even though the price difference is about ten dollars.",
+   "duration_s": 8.09,
+   "wav_sha256": "3fca8cf09da3b1457c68ee38ad8235a44af4301ec49fd160d3e4c3bbbef1193b"
+  },
+  {
+   "id": "ds-test-072",
+   "source_id": "data/test-00000-of-00001.parquet#0/98",
+   "in_evalset": false,
+   "text": "I've got a Bachelor's in electrical engineering so, And I'm not, like, a hugely advanced degree or any of that stuff.",
+   "text_fluent": "I've got a Bachelor's in electrical engineering so, And I'm not, a hugely advanced degree or any of that stuff.",
+   "duration_s": 7.041,
+   "wav_sha256": "f8557a88a94456f937a17b69dd80d8494315878fcab36f6302d449970b0f0682"
+  },
+  {
+   "id": "ds-test-073",
+   "source_id": "data/test-00000-of-00001.parquet#0/99",
+   "in_evalset": false,
+   "text": "But, but it is hard, once they get that age, I mean, their friends are the most important thing there is.",
+   "text_fluent": "but it is hard, once they get that age, their friends are the most important thing there is.",
+   "duration_s": 6.586,
+   "wav_sha256": "1dbf10b2829f4da0136054f9e7af874616c64ea5970b543757794cd5bf47f236"
+  },
+  {
+   "id": "ds-test-074",
+   "source_id": "data/test-00000-of-00001.parquet#1/0",
+   "in_evalset": true,
+   "text": "Well, that's part of it yeah, part of it is, like you said, I don't have time.",
+   "text_fluent": "that's part of it yeah, part of it is, like you said, I don't have time.",
+   "duration_s": 4.566,
+   "wav_sha256": "8ff408c37a09009f67d54528d31018bbeb2f8585b74ffb60527f06a5ed372bb0"
+  },
+  {
+   "id": "ds-test-075",
+   "source_id": "data/test-00000-of-00001.parquet#1/2",
+   "in_evalset": false,
+   "text": "So, uh, we do have a very low tax rate, but you know, combined with the federal income tax. I think that Americans generally do pay too much in taxes and.",
+   "text_fluent": "So, we do have a very low tax rate, but combined with the federal income tax. I think that Americans generally do pay too much in taxes and.",
+   "duration_s": 9.752,
+   "wav_sha256": "df0001ea876375262de8cefff08a3973ec65510e24d51a4bef5fbf39d975d74d"
+  },
+  {
+   "id": "ds-test-076",
+   "source_id": "data/test-00000-of-00001.parquet#1/3",
+   "in_evalset": false,
+   "text": "I'm not sure executing them, uh, does anymore than keeping them in jail, but, uh, it doesn't but, it costs less.",
+   "text_fluent": "I'm not sure executing them, does anymore than keeping them in jail, but, it doesn't but, it costs less.",
+   "duration_s": 6.901,
+   "wav_sha256": "d61de635e7e027af5015d8c8ae3bd3ffe3e5cdc4d6d43372161d108a0a1ddd39"
+  },
+  {
+   "id": "ds-test-077",
+   "source_id": "data/test-00000-of-00001.parquet#1/4",
+   "in_evalset": false,
+   "text": "That thing, that thing will last forever I mean. Oh, yeah, that thing's, uh, it's got a boat engine in it.",
+   "text_fluent": "that thing will last forever, yeah, that thing's, it's got a boat engine in it.",
+   "duration_s": 7.19,
+   "wav_sha256": "2590b1d24a06825a544c30a6e8916f338ee625f3542aa4110612f2aaee3989f0"
+  },
+  {
+   "id": "ds-test-078",
+   "source_id": "data/test-00000-of-00001.parquet#1/5",
+   "in_evalset": true,
+   "text": "This is pretty un-, unseasonal, but, uh, at least, we, you know, it, it, it feels good, it gets, uh, everybody doesn't have cabin fever today. It's nice to get, out and about.",
+   "text_fluent": "This is pretty unseasonal, but, at least, we, it feels good, it gets, everybody doesn't have cabin fever today. It's nice to get, out and about.",
+   "duration_s": 10.525,
+   "wav_sha256": "9a4ebbb25cea8d348eeb608ab6298f9d79ab259c168aba7ff986770b590ef711"
+  },
+  {
+   "id": "ds-test-079",
+   "source_id": "data/test-00000-of-00001.parquet#1/6",
+   "in_evalset": false,
+   "text": "Well, I figured with Texas Instruments they'd probably have a few, uh, Texans on the line now and then.",
+   "text_fluent": "I figured with Texas Instruments they'd probably have a few, Texans on the line now and then.",
+   "duration_s": 6.256,
+   "wav_sha256": "0857e80d0b23ceb44dcd12d353e1ebce9ba6b2e2d12efe164b4f23b837d1d6af"
+  },
+  {
+   "id": "ds-test-080",
+   "source_id": "data/test-00000-of-00001.parquet#1/7",
+   "in_evalset": false,
+   "text": "Whenever they , they made that into a movie, I was thinking oh, my gosh if they show that, I'll just die. For some reason that scared me more than anything.",
+   "text_fluent": "Whenever, they made that into a movie, I was thinking my gosh if they show that, I'll just die. For some reason that scared me more than anything.",
+   "duration_s": 9.082,
+   "wav_sha256": "3b1d238e857529b5f6967d2945d6f82d2fedc81c7e779a4f72271d98d8990654"
+  },
+  {
+   "id": "ds-test-081",
+   "source_id": "data/test-00000-of-00001.parquet#1/8",
+   "in_evalset": false,
+   "text": "Well, I guess, um, down in, kind of in North Dallas, there is a place that will take almost anything.",
+   "text_fluent": "I guess, down kind of in North Dallas, there is a place that will take almost anything.",
+   "duration_s": 6.188,
+   "wav_sha256": "c91207022f25513f55c90f784d788c585d184f9b9ede8da4e488a4d1a6df52b6"
+  },
+  {
+   "id": "ds-test-082",
+   "source_id": "data/test-00000-of-00001.parquet#1/9",
+   "in_evalset": false,
+   "text": "And so, uh, the things that, like a vacation. We have a vacation fund. We have a fund for the things we need. And then a, for the things that we want.",
+   "text_fluent": "And so, the things like a vacation. We have a vacation fund. We have a fund for the things we need. And then for the things that we want.",
+   "duration_s": 9.871,
+   "wav_sha256": "c32b946abc2fb81f174f64819b551f07e826b0723a7ba43d6278b5a0dfdf2303"
+  },
+  {
+   "id": "ds-test-083",
+   "source_id": "data/test-00000-of-00001.parquet#1/10",
+   "in_evalset": false,
+   "text": "You know, if we go out and pick up a bunch of cans from people, sure they'll save them for us, there's no problem there.",
+   "text_fluent": "if we go out and pick up a bunch of cans from people, sure they'll save them for us, there's no problem there.",
+   "duration_s": 5.66,
+   "wav_sha256": "95eab1df34ef078f3731d73135403301c490071bfd7d338726fbcd284760a134"
+  },
+  {
+   "id": "ds-test-084",
+   "source_id": "data/test-00000-of-00001.parquet#1/11",
+   "in_evalset": false,
+   "text": "Well, I spent a year and a half in Japan also and I've seen how their school system works and I, they go by a complete rote system, you just memorize everything.",
+   "text_fluent": "I spent a year and a half in Japan also and I've seen how their school system works and I, they go by a complete rote system, you just memorize everything.",
+   "duration_s": 9.615,
+   "wav_sha256": "f007cf3bb84771ddff07a321cce1f08d1fc704789bf94bddc47ab742574fbb60"
+  },
+  {
+   "id": "ds-test-085",
+   "source_id": "data/test-00000-of-00001.parquet#1/12",
+   "in_evalset": false,
+   "text": "Well, I mean, if, if you know what your routine is, you can do that by yourself, and you probably do.",
+   "text_fluent": "if you know what your routine is, you can do that by yourself, and you probably do.",
+   "duration_s": 5.66,
+   "wav_sha256": "31f67a7b29c4aaeac0e931bb81e007a1e373bfa9516811fcefeb44812ff11974"
+  },
+  {
+   "id": "ds-test-086",
+   "source_id": "data/test-00000-of-00001.parquet#1/13",
+   "in_evalset": false,
+   "text": "I do crochet and a lot of, uh, things like that, and I have very little of my own stuff, and it's kind of embarrassing. People say let me see some of your work.",
+   "text_fluent": "I do crochet and a lot of, things like that, and I have very little of my own stuff, and it's kind of embarrassing. People say let me see some of your work.",
+   "duration_s": 8.826,
+   "wav_sha256": "e9534e59c62da4b5078f34806b6f52a8c246dd58b840d3206d8786da8ececc08"
+  },
+  {
+   "id": "ds-test-087",
+   "source_id": "data/test-00000-of-00001.parquet#1/14",
+   "in_evalset": true,
+   "text": "I'm not, I mean, I, I like all ranges of movies, but I like that where they run tense.",
+   "text_fluent": "I'm not, I like all ranges of movies, but I like that where they run tense.",
+   "duration_s": 6.8,
+   "wav_sha256": "cf272db7a9c6421551659e215d915ac957eb6e25925bd13397fd93310eeac998"
+  },
+  {
+   "id": "ds-test-088",
+   "source_id": "data/test-00000-of-00001.parquet#1/15",
+   "in_evalset": false,
+   "text": "I know, because we can go spend fifteen dollars just getting in And then if you want popcorn and stuff You know popcorn is not that expensive.",
+   "text_fluent": "I know, because we can go spend fifteen dollars just getting in And then if you want popcorn and stuff popcorn is not that expensive.",
+   "duration_s": 7.329,
+   "wav_sha256": "af7006103252b9433d2a139e32ca78a2ce4bd78ec2809aacbb9f5060ef0c012b"
+  },
+  {
+   "id": "ds-test-089",
+   "source_id": "data/test-00000-of-00001.parquet#1/16",
+   "in_evalset": false,
+   "text": "and we've already started about, you know, I mean, how young can they start T-Ball and soccer?.",
+   "text_fluent": "and we've already started about, how young can they start T-Ball and soccer?.",
+   "duration_s": 5.812,
+   "wav_sha256": "aba03aea0245bfa809ab4e8be380593a037699852d9c1e266829b02c472c3a3d"
+  },
+  {
+   "id": "ds-test-090",
+   "source_id": "data/test-00000-of-00001.parquet#1/18",
+   "in_evalset": false,
+   "text": "And then, you know, it never did, like if I didn't want somebody to come, then I just wouldn't send them one of the questionnaires.",
+   "text_fluent": "And then, it never did, if I didn't want somebody to come, then I just wouldn't send them one of the questionnaires.",
+   "duration_s": 6.891,
+   "wav_sha256": "471824980e9a4c4aee078b275d5fdbd38cbe1cfe56acd1692c8aef6eaec2c17e"
+  },
+  {
+   "id": "ds-test-091",
+   "source_id": "data/test-00000-of-00001.parquet#1/19",
+   "in_evalset": false,
+   "text": "You know, and it kind of scares me especially with all the shootings that have been going on, in L A, on the freeways, that's crazy.",
+   "text_fluent": "and it kind of scares me especially with all the shootings that have been going on, in L A, on the freeways, that's crazy.",
+   "duration_s": 7.045,
+   "wav_sha256": "dc0f3eead4b867ddf5d333ba4b18368aba57c220432ccda4af3855d6afd8906f"
+  },
+  {
+   "id": "ds-test-092",
+   "source_id": "data/test-00000-of-00001.parquet#1/20",
+   "in_evalset": true,
+   "text": " So so it And they're And you know, I feel guilty cause I'm driving a ,",
+   "text_fluent": "so And they're And I feel guilty cause I'm driving a,",
+   "duration_s": 6.331,
+   "wav_sha256": "a1c20611676bb9cc651ee42b097d2a356c8c0a3db641274b1c90229f43807b60"
+  },
+  {
+   "id": "ds-test-093",
+   "source_id": "data/test-00000-of-00001.parquet#1/21",
+   "in_evalset": false,
+   "text": "Yeah, hope I'm going to do it this year because, um, uh, having a kid this fall, so it's like so much for going to lots of baseball games.",
+   "text_fluent": "Yeah, hope I'm going to do it this year because, having a kid this fall, so it's like so much for going to lots of baseball games.",
+   "duration_s": 8.258,
+   "wav_sha256": "23374016995f2bfa483e3c80136cded3bd332308f6aaeb3a207e19baa2729119"
+  },
+  {
+   "id": "ds-test-094",
+   "source_id": "data/test-00000-of-00001.parquet#1/22",
+   "in_evalset": false,
+   "text": "Um, you've probably seen him and just, an, you know, oh, that's who the guy is.",
+   "text_fluent": "you've probably seen him and just, an, that's who the guy is.",
+   "duration_s": 5.992,
+   "wav_sha256": "c8189d7d971aa36df458cb29b802991987e364174bdef807253de3e44cf3bd80"
+  },
+  {
+   "id": "ds-test-095",
+   "source_id": "data/test-00000-of-00001.parquet#1/25",
+   "in_evalset": true,
+   "text": "Or, you know, to find a job where they can learn how to support themselves, I mean, I guess we're getting kind of off the subject, , here, but.",
+   "text_fluent": "Or, to find a job where they can learn how to support themselves, I guess we're getting kind of off the subject,, here, but.",
+   "duration_s": 7.971,
+   "wav_sha256": "8182bc77672cda69009dc950309d814f6b54e5b1127115b78a2b69e1ff32bcd7"
+  },
+  {
+   "id": "ds-test-096",
+   "source_id": "data/test-00000-of-00001.parquet#1/26",
+   "in_evalset": false,
+   "text": "You have a lot of discipline. They make it really easy for people to, uh, to get credit cards, especially college students.",
+   "text_fluent": "You have a lot of discipline. They make it really easy for people to get credit cards, especially college students.",
+   "duration_s": 6.526,
+   "wav_sha256": "1a8b54a0a3106f78fe9eb1c20846023ba85f8692427ae47bee776a904c92c479"
+  },
+  {
+   "id": "ds-test-097",
+   "source_id": "data/test-00000-of-00001.parquet#1/28",
+   "in_evalset": false,
+   "text": "Uh, that's neat. I haven't, uh, I haven't had something like that happen, just, uh, just getting the one guy, from the lab.",
+   "text_fluent": "that's neat. I haven't had something like that happen, just getting the one guy, from the lab.",
+   "duration_s": 7.53,
+   "wav_sha256": "137c222e28a6cea9ef2af6f02b0d7519ca7356614eb2db802614863902145edf"
+  },
+  {
+   "id": "ds-test-098",
+   "source_id": "data/test-00000-of-00001.parquet#1/29",
+   "in_evalset": false,
+   "text": "People are being a little more, oh, I don't know, a little le-, a little less bigoted in some ways, I don't know seems to me.",
+   "text_fluent": "People are being a little less bigoted in some ways, I don't know seems to me.",
+   "duration_s": 7.444,
+   "wav_sha256": "63acd808702788b16777d6df451efaf082e5a2e684e7b69b1824e752d572ef10"
+  },
+  {
+   "id": "ds-test-099",
+   "source_id": "data/test-00000-of-00001.parquet#1/30",
+   "in_evalset": true,
+   "text": " Well, I think I would start with about, with getting rid of about two-thirds of the administrators.",
+   "text_fluent": "I think I would start with getting rid of about two-thirds of the administrators.",
+   "duration_s": 6.446,
+   "wav_sha256": "797a251229c87561966085201794f47598c74c8fe6bf156030ff1f24863a1d08"
+  },
+  {
+   "id": "ds-test-100",
+   "source_id": "data/test-00000-of-00001.parquet#1/31",
+   "in_evalset": true,
+   "text": "And, uh, this year it's been so hot and, uh, sunny it, it's really quite, uh, quite amazing.",
+   "text_fluent": "And, this year it's been so hot and, sunny it's really quite amazing.",
+   "duration_s": 6.658,
+   "wav_sha256": "72e25282ed129cbc2a32d3fb61d0eb00f6996bfa48e7419549b3428738443bc1"
+  },
+  {
+   "id": "ds-test-101",
+   "source_id": "data/test-00000-of-00001.parquet#1/33",
+   "in_evalset": false,
+   "text": "And we, and we had, we had almost, I'd say about half of the roof off, and it did this.",
+   "text_fluent": "we had almost, I'd say about half of the roof off, and it did this.",
+   "duration_s": 5.78,
+   "wav_sha256": "6225820646a9eef752ea94dddcca3b0c846bf84a4be64e606b44750707a23c0f"
+  },
+  {
+   "id": "ds-test-102",
+   "source_id": "data/test-00000-of-00001.parquet#1/34",
+   "in_evalset": false,
+   "text": "Yeah. It, but, you know, I'm sure you're familiar with that living, here.",
+   "text_fluent": "Yeah. It, but, I'm sure you're familiar with that living, here.",
+   "duration_s": 4.015,
+   "wav_sha256": "8b0a98313ed17a6d5a3b7c6fac03e1de08a12b0681014d14591621b9fb52034c"
+  },
+  {
+   "id": "ds-test-103",
+   "source_id": "data/test-00000-of-00001.parquet#1/35",
+   "in_evalset": false,
+   "text": "Yeah. Because I, I think I was, I think I read it in college, or had to write it, read it in high school or college, but I don't remember it.",
+   "text_fluent": "Yeah. Because I think I read it in college, or had to read it in high school or college, but I don't remember it.",
+   "duration_s": 8.708,
+   "wav_sha256": "626dcb3285a8c58c7ab0d7cd63d244a852f649e98f74b54c21a23967e37f066a"
+  },
+  {
+   "id": "ds-test-104",
+   "source_id": "data/test-00000-of-00001.parquet#1/36",
+   "in_evalset": false,
+   "text": "No, I, I never keep a budget. My budget or philosophy, I guess, is spend as little as possible.",
+   "text_fluent": "No, I never keep a budget. My budget or philosophy, I guess, is spend as little as possible.",
+   "duration_s": 6.569,
+   "wav_sha256": "0b4c4391461af3500a76678e89be20769de5b4575c7de703acdf6c722d275846"
+  },
+  {
+   "id": "ds-test-105",
+   "source_id": "data/test-00000-of-00001.parquet#1/37",
+   "in_evalset": false,
+   "text": "and, uh, you know, there's, so there's only a few that I, that I like to watch routinely.",
+   "text_fluent": "and, there's only a few that I like to watch routinely.",
+   "duration_s": 5.171,
+   "wav_sha256": "0e6d1067845c3a421446da90c4362f91cd180630e0b55c609041dc73f1d40fb2"
+  },
+  {
+   "id": "ds-test-106",
+   "source_id": "data/test-00000-of-00001.parquet#1/38",
+   "in_evalset": false,
+   "text": "Well, you have, you have a lot of vacation areas you can go to then.",
+   "text_fluent": "you have a lot of vacation areas you can go to then.",
+   "duration_s": 3.9,
+   "wav_sha256": "30d397f7c5bac6a5159894b585b54ab192c66942b5bb89b11206919285bcadf6"
+  },
+  {
+   "id": "ds-test-107",
+   "source_id": "data/test-00000-of-00001.parquet#1/39",
+   "in_evalset": true,
+   "text": "Are, are we paying too much in taxes, and are we getting what we pay for? What's your opinion?",
+   "text_fluent": "are we paying too much in taxes, and are we getting what we pay for? What's your opinion?",
+   "duration_s": 6.014,
+   "wav_sha256": "9a441319fffb764349caded07dd5ad70479a9beca843febcee7f72718141a103"
+  },
+  {
+   "id": "ds-test-108",
+   "source_id": "data/test-00000-of-00001.parquet#1/40",
+   "in_evalset": false,
+   "text": "Yeah, escape. But it's beautiful, it's, you know, it's Eastern Hardwood, uh, forest, there are a lot of pine trees, but it's mostly oaks and.",
+   "text_fluent": "Yeah, escape. But it's beautiful, it's Eastern Hardwood, forest, there are a lot of pine trees, but it's mostly oaks and.",
+   "duration_s": 9.341,
+   "wav_sha256": "567c4cf75ef88301c89e384b85a5bb7a5d96b165f6260f6b56ccbfae8abe74f6"
+  },
+  {
+   "id": "ds-test-109",
+   "source_id": "data/test-00000-of-00001.parquet#1/41",
+   "in_evalset": false,
+   "text": "Yeah, he was pretty, pretty much a, he didn't mind having people bumped off for certain things, you know.",
+   "text_fluent": "Yeah, he was pretty much a, he didn't mind having people bumped off for certain things,",
+   "duration_s": 5.245,
+   "wav_sha256": "c1df6e6e635d18a4c36ae04031e3ff489ff40bd4f2be60b9ccb2cccc39248bc4"
+  },
+  {
+   "id": "ds-test-110",
+   "source_id": "data/test-00000-of-00001.parquet#1/42",
+   "in_evalset": true,
+   "text": "You know, I've, I've gone out and had a, had a beer at lunch time, but not to excess in any case.",
+   "text_fluent": "I've gone out and had a beer at lunch time, but not to excess in any case.",
+   "duration_s": 6.16,
+   "wav_sha256": "3db0e259dfd35aea43e176225434887116baa61189ab007885779a7a555fad3f"
+  },
+  {
+   "id": "ds-test-111",
+   "source_id": "data/test-00000-of-00001.parquet#1/43",
+   "in_evalset": false,
+   "text": "Well, considering you moved here from California, I guess, the rain for the past few weeks has been different than what you have down there.",
+   "text_fluent": "considering you moved here from California, I guess, the rain for the past few weeks has been different than what you have down there.",
+   "duration_s": 6.972,
+   "wav_sha256": "f6b2f22ae74aa71ef9facb487b1bf65b18d795487aeec5b68a442749f128cf9e"
+  },
+  {
+   "id": "ds-test-112",
+   "source_id": "data/test-00000-of-00001.parquet#1/44",
+   "in_evalset": false,
+   "text": "Oh yeah, Well, like, um, how does it compare to the ones in your neighborhood?.",
+   "text_fluent": "yeah, how does it compare to the ones in your neighborhood?.",
+   "duration_s": 4.806,
+   "wav_sha256": "2428265dfb8cfc064936154ffa2c473e4e9327342fef165dab4eca75d2b3eb67"
+  },
+  {
+   "id": "ds-test-113",
+   "source_id": "data/test-00000-of-00001.parquet#1/45",
+   "in_evalset": false,
+   "text": "And we don't even know where the twin, we have virtually no, no background on, on her on the twin.",
+   "text_fluent": "And we don't even know where the twin, we have virtually no background on the twin.",
+   "duration_s": 5.773,
+   "wav_sha256": "4b289dd20d85c86d8eeec464d32acbd5a91baf7db69cb1dacf5804dd0473821e"
+  },
+  {
+   "id": "ds-test-114",
+   "source_id": "data/test-00000-of-00001.parquet#1/46",
+   "in_evalset": false,
+   "text": "I brush it on, I haven't tried a, a spray varnish. I use just a wood sealer.",
+   "text_fluent": "I brush it on, I haven't tried a spray varnish. I use just a wood sealer.",
+   "duration_s": 5.148,
+   "wav_sha256": "859c9f075d6909fe063e913288d8ad5d1aeba5ccc4f2b6e02f3bd5ee847219b9"
+  },
+  {
+   "id": "ds-test-115",
+   "source_id": "data/test-00000-of-00001.parquet#1/47",
+   "in_evalset": false,
+   "text": "Uh, the city has dropped their charges against him because their, the attorney has presented enough evidence of doubt to convince the judge. So I don't know.",
+   "text_fluent": "the city has dropped their charges against him because the attorney has presented enough evidence of doubt to convince the judge. So I don't know.",
+   "duration_s": 9.428,
+   "wav_sha256": "da2f09f71c205563e087680208d72af730993ed35fe0f39e8ab043bdc2ca6925"
+  },
+  {
+   "id": "ds-test-116",
+   "source_id": "data/test-00000-of-00001.parquet#1/48",
+   "in_evalset": false,
+   "text": "Uh, That, you're right. I think you've put your finger on the one benefit that I, that I would most like to see, uh, changed. Uh, the, uh, parental leave.",
+   "text_fluent": "That, you're right. I think you've put your finger on the one benefit that I would most like to see, changed. the, parental leave.",
+   "duration_s": 10.081,
+   "wav_sha256": "8b13ea652e9b69752f03f880e800950736beafa4072c241229fcc3fa8084d543"
+  },
+  {
+   "id": "ds-test-117",
+   "source_id": "data/test-00000-of-00001.parquet#1/49",
+   "in_evalset": true,
+   "text": "Is it, is it hard to keep track of it or does it work out pretty well?",
+   "text_fluent": "is it hard to keep track of it or does it work out pretty well?",
+   "duration_s": 3.893,
+   "wav_sha256": "717ed2597a85f8dff36990a268350e176a08d83e1596c6b9cd88a856335746ac"
+  },
+  {
+   "id": "ds-test-118",
+   "source_id": "data/test-00000-of-00001.parquet#1/50",
+   "in_evalset": true,
+   "text": "Oh, I'm with you, I have to check T NEWS every, every day. It's my noontime dose of facts.",
+   "text_fluent": "I'm with you, I have to check T NEWS every day. It's my noontime dose of facts.",
+   "duration_s": 6.287,
+   "wav_sha256": "3d00ead0bb0c12953a8e0ddfc76620811f3b8bf710b4b3b9783e059e9e758046"
+  },
+  {
+   "id": "ds-test-119",
+   "source_id": "data/test-00000-of-00001.parquet#1/51",
+   "in_evalset": false,
+   "text": "Yeah, I always, I use everything with my Visa, and I pay it all off.",
+   "text_fluent": "Yeah, I use everything with my Visa, and I pay it all off.",
+   "duration_s": 4.929,
+   "wav_sha256": "4550c6388da0e5637d6a67b67886d090d763ad6f3b43201c2bc32492b7d9880d"
+  },
+  {
+   "id": "ds-test-120",
+   "source_id": "data/test-00000-of-00001.parquet#1/52",
+   "in_evalset": true,
+   "text": "And he'll go pick them up because he just can't stand that. He, he, that's great.",
+   "text_fluent": "And he'll go pick them up because he just can't stand that. he, that's great.",
+   "duration_s": 4.696,
+   "wav_sha256": "742d53ff7f83bea0b14cda3b9ef6c609345fed41e299b7601218b763dcb1eb04"
+  },
+  {
+   "id": "ds-test-121",
+   "source_id": "data/test-00000-of-00001.parquet#1/53",
+   "in_evalset": false,
+   "text": "Uh, I get kind of bored watching T V actually, when I watch the news on T V because I do, I do, too.",
+   "text_fluent": "I get kind of bored watching T V actually, when I watch the news on T V because I do, too.",
+   "duration_s": 5.277,
+   "wav_sha256": "fb98987a1c9fd609e289d2e5038877f80083f49d26e4c0d3a72e4040237b7fb1"
+  },
+  {
+   "id": "ds-test-122",
+   "source_id": "data/test-00000-of-00001.parquet#1/54",
+   "in_evalset": true,
+   "text": "Well, you know, why they actually held them off? None of the Yankees wanted to listen to their kind of luted grammar.",
+   "text_fluent": "why they actually held them off? None of the Yankees wanted to listen to their kind of luted grammar.",
+   "duration_s": 6.852,
+   "wav_sha256": "9b1636d889912ed31f05df8d7032d0b112b65ed6b4425b243f344dca00596987"
+  },
+  {
+   "id": "ds-test-123",
+   "source_id": "data/test-00000-of-00001.parquet#1/55",
+   "in_evalset": false,
+   "text": "I mean, This guy's smart and he's suave and he's all the charac-, all the,",
+   "text_fluent": "This guy's smart and he's suave and he's all the,",
+   "duration_s": 6.098,
+   "wav_sha256": "3e246ef2515c3531ccece6bfbddf760b3bbbe0799053a974dc014d27db67677a"
+  },
+  {
+   "id": "ds-test-124",
+   "source_id": "data/test-00000-of-00001.parquet#1/56",
+   "in_evalset": false,
+   "text": "I just don't hear much about it anymore. Like I say, I don't even know what programs are, are even ongoing now, you know.",
+   "text_fluent": "I just don't hear much about it anymore. Like I say, I don't even know what programs are even ongoing now,",
+   "duration_s": 7.145,
+   "wav_sha256": "cbfcd4fe8374ec8fd666f302c0aa6eaa3d4935cace4f1873442af9251786cea0"
+  },
+  {
+   "id": "ds-test-125",
+   "source_id": "data/test-00000-of-00001.parquet#1/57",
+   "in_evalset": false,
+   "text": "Yeah, we you'd have to just sit and wait while someone else was using the printer.",
+   "text_fluent": "Yeah, you'd have to just sit and wait while someone else was using the printer.",
+   "duration_s": 4.711,
+   "wav_sha256": "2461eb6c7c496bc8514d9607467c9fca6f89fa063b24d258495bd6ec42c99dc2"
+  },
+  {
+   "id": "ds-test-126",
+   "source_id": "data/test-00000-of-00001.parquet#1/58",
+   "in_evalset": false,
+   "text": "I agree, I, I, agree, you know, I, oh, I do too, I do too.",
+   "text_fluent": "I, agree, I, I do too, I do too.",
+   "duration_s": 4.595,
+   "wav_sha256": "aef1f0694a8c03ae5bb4efef91a4630567a36865c11261b6fa746d2f4a35fb1c"
+  },
+  {
+   "id": "ds-test-127",
+   "source_id": "data/test-00000-of-00001.parquet#1/59",
+   "in_evalset": false,
+   "text": "And he's taken them and, and raped them and then brought them right back and just kind of thrown them out of the car in their front yard.",
+   "text_fluent": "And he's taken them and raped them and then brought them right back and just kind of thrown them out of the car in their front yard.",
+   "duration_s": 6.573,
+   "wav_sha256": "8e4ef757b5a503fa4eabed12f4df6cb8bbd8939db0f75087c7725c386be81d2b"
+  },
+  {
+   "id": "ds-test-128",
+   "source_id": "data/test-00000-of-00001.parquet#1/60",
+   "in_evalset": true,
+   "text": "Because too often the acute hospitals will, are sending them out much faster than what they're really able to.",
+   "text_fluent": "Because too often the acute hospitals are sending them out much faster than what they're really able to.",
+   "duration_s": 6.741,
+   "wav_sha256": "51cefb2722aa246633f77d617ebcb6e169300cebd3797819bee4c8d921bb8316"
+  },
+  {
+   "id": "ds-test-129",
+   "source_id": "data/test-00000-of-00001.parquet#1/61",
+   "in_evalset": true,
+   "text": "And, and go ahead and get the punishment phase out of the way, because it doesn't do the criminal or the victim's family, Anybody,",
+   "text_fluent": "and go ahead and get the punishment phase out of the way, because it doesn't do the criminal or the victim's family, Anybody,",
+   "duration_s": 6.324,
+   "wav_sha256": "eebdf73e1a042c81749a7ef59a646db6b8ca8c8b66e165cbcb6b7217f02b6bee"
+  },
+  {
+   "id": "ds-test-130",
+   "source_id": "data/test-00000-of-00001.parquet#1/62",
+   "in_evalset": false,
+   "text": "you know, again. And the, I'm a little bit fearful of trying that just women.",
+   "text_fluent": "again. And I'm a little bit fearful of trying that just women.",
+   "duration_s": 5.491,
+   "wav_sha256": "b2614c9ee9b66fedaecc906aa7900064a43b90acc3e1240acf51942406e341cf"
+  },
+  {
+   "id": "ds-test-131",
+   "source_id": "data/test-00000-of-00001.parquet#1/63",
+   "in_evalset": true,
+   "text": "Yeah. They, uh, yeah, they had to choose between the better of the two, two bad situations, and, uh, I don't know what I've would have done in the situation.",
+   "text_fluent": "Yeah. they had to choose between the better of the two bad situations, and, I don't know what I've would have done in the situation.",
+   "duration_s": 9.933,
+   "wav_sha256": "dc3d3041eecaa0c8c26d3b507165525ab58493d131d6ccd9312f4df678e30e18"
+  },
+  {
+   "id": "ds-test-132",
+   "source_id": "data/test-00000-of-00001.parquet#1/64",
+   "in_evalset": true,
+   "text": "But you cut, you know, the, the kid's having to give up his, quote, play time to pay his debt for what he did wrong.",
+   "text_fluent": "But you cut, the kid's having to give up his, quote, play time to pay his debt for what he did wrong.",
+   "duration_s": 7.422,
+   "wav_sha256": "9016c53a62db09f35e184fa2b0f940419523210c0ccf30eec67e928431018dc4"
+  },
+  {
+   "id": "ds-test-133",
+   "source_id": "data/test-00000-of-00001.parquet#1/65",
+   "in_evalset": false,
+   "text": "And I could, uh, go down to a bar that's about three minutes from my house and hear people doing covers better than him not making nearly as much money.",
+   "text_fluent": "And I could, go down to a bar that's about three minutes from my house and hear people doing covers better than him not making nearly as much money.",
+   "duration_s": 8.921,
+   "wav_sha256": "c285e7ded234f6a2d51850c314f686df25a001be3e8ecc23ba44c35f631ae0c7"
+  },
+  {
+   "id": "ds-test-134",
+   "source_id": "data/test-00000-of-00001.parquet#1/66",
+   "in_evalset": false,
+   "text": "And, uh, she said, Hey, go for the swimming pool. She says you get just as much if you did the aerobics on the floor. She says in fact you get more.",
+   "text_fluent": "And, she said, go for the swimming pool. She says you get just as much if you did the aerobics on the floor. She says in fact you get more.",
+   "duration_s": 8.148,
+   "wav_sha256": "36ebeec862ddd4791e06d5bdbb9f49432c364399802f7f8506f2d26c06d91649"
+  },
+  {
+   "id": "ds-test-135",
+   "source_id": "data/test-00000-of-00001.parquet#1/67",
+   "in_evalset": false,
+   "text": "And in a like a, oh, what do you call it? Like Pyrex or something like that, kind of bowl that would go in the microwave.",
+   "text_fluent": "in a, what do you call it? Pyrex or something like that, kind of bowl that would go in the microwave.",
+   "duration_s": 7.095,
+   "wav_sha256": "3518138e0ac5ea06aa2f04889b4caae192883e96044163bb36b700910471ba76"
+  },
+  {
+   "id": "ds-test-136",
+   "source_id": "data/test-00000-of-00001.parquet#1/69",
+   "in_evalset": false,
+   "text": "Um, I had a friend who went to Colombia and I used to go up and visit her.",
+   "text_fluent": "I had a friend who went to Colombia and I used to go up and visit her.",
+   "duration_s": 4.47,
+   "wav_sha256": "c1c0348346a25f438d5c85306dc53772e71b7dc5d621a33577541f0fb076c855"
+  },
+  {
+   "id": "ds-test-137",
+   "source_id": "data/test-00000-of-00001.parquet#1/70",
+   "in_evalset": false,
+   "text": "So I had never listened to it bef-, till then, but now I listen to it well, whenever she does. And even every once in a while I put it on myself, you know.",
+   "text_fluent": "So I had never listened to it till then, but now I listen to it whenever she does. And even every once in a while I put it on myself,",
+   "duration_s": 9.214,
+   "wav_sha256": "f30ffb97d4db0c2372aea5fe41040605f624bcae762f30902f7658669d8a7e2c"
+  },
+  {
+   "id": "ds-test-138",
+   "source_id": "data/test-00000-of-00001.parquet#1/72",
+   "in_evalset": false,
+   "text": "Uh, there's a number that you call, it's the same number that you, that you call to make a call.",
+   "text_fluent": "there's a number that you call, it's the same number that you call to make a call.",
+   "duration_s": 5.074,
+   "wav_sha256": "d236c1a7699565d49d1c2ad0d87f7a66bc11369d86951e798a62d207e1240405"
+  },
+  {
+   "id": "ds-test-139",
+   "source_id": "data/test-00000-of-00001.parquet#1/73",
+   "in_evalset": false,
+   "text": "Yeah, and you don't want to stay in the very, very, very exclusive, because you don't really even get a flavor of the country if you're,",
+   "text_fluent": "Yeah, and you don't want to stay in the very exclusive, because you don't really even get a flavor of the country if you're,",
+   "duration_s": 7.314,
+   "wav_sha256": "c914aff02e28d2279bb800807c30783652e9954f997e9d3e1f975030e3f5168b"
+  },
+  {
+   "id": "ds-test-140",
+   "source_id": "data/test-00000-of-00001.parquet#1/74",
+   "in_evalset": false,
+   "text": "But it, it was not necessarily local, it was, But I, I mean, so what's,.",
+   "text_fluent": "But it was not necessarily local, it was, But so what's,,",
+   "duration_s": 5.636,
+   "wav_sha256": "1bc009fa99583a1f54a59f8096452a5f7bef161364bc961c4a0e2d750a4073a6"
+  },
+  {
+   "id": "ds-test-141",
+   "source_id": "data/test-00000-of-00001.parquet#1/75",
+   "in_evalset": false,
+   "text": "And, and, uh, at no point did anybody from the nursing home come in. And we were there in the same room with the man for a half hour.",
+   "text_fluent": "and, at no point did anybody from the nursing home come in. And we were there in the same room with the man for a half hour.",
+   "duration_s": 7.952,
+   "wav_sha256": "2c8cd4e46c79a75cbb9cd29800f868b0e0c82e97649954df2d9c6ea92f58492b"
+  },
+  {
+   "id": "ds-test-142",
+   "source_id": "data/test-00000-of-00001.parquet#1/76",
+   "in_evalset": false,
+   "text": "Uh-huh. What do you think you'll, uh, what kind of a car do you think you'll buy next?",
+   "text_fluent": "Uh-huh. what kind of a car do you think you'll buy next?",
+   "duration_s": 5.79,
+   "wav_sha256": "3384d6f5aa5ab08ce7896c6ac3677fddbf5e4b797b1df1971a1fc5474eeba635"
+  },
+  {
+   "id": "ds-test-143",
+   "source_id": "data/test-00000-of-00001.parquet#1/77",
+   "in_evalset": false,
+   "text": "Yeah, well, I guess, um, ours probably isn't that big. Our family is dwindling, for one thing.",
+   "text_fluent": "Yeah, I guess, ours probably isn't that big. Our family is dwindling, for one thing.",
+   "duration_s": 5.932,
+   "wav_sha256": "463a4cc15aa186dd317ba85f2321154b0e82d01651b6de6dc1aaf7cd1c567858"
+  },
+  {
+   "id": "ds-test-144",
+   "source_id": "data/test-00000-of-00001.parquet#1/78",
+   "in_evalset": false,
+   "text": "I mean, if your husband did that to you, and you did that to your husband, you would always be trying to please each other and not yourself.",
+   "text_fluent": "if your husband did that to you, and you did that to your husband, you would always be trying to please each other and not yourself.",
+   "duration_s": 6.942,
+   "wav_sha256": "190e3b13bea7b2b925b937094f75b32ff3b833bb7df88d8140af2df74fecba96"
+  },
+  {
+   "id": "ds-test-145",
+   "source_id": "data/test-00000-of-00001.parquet#1/79",
+   "in_evalset": true,
+   "text": "Oh, I used to have box turtles, um, well, years ago, when I was growing up I, I really like them.",
+   "text_fluent": "I used to have box turtles, years ago, when I was growing up I really like them.",
+   "duration_s": 5.724,
+   "wav_sha256": "10b56e25e6798c0f03d6a3b67d1a07a767bb7872b119b6c8c624e57aecaaad2c"
+  },
+  {
+   "id": "ds-test-146",
+   "source_id": "data/test-00000-of-00001.parquet#1/81",
+   "in_evalset": false,
+   "text": "So what do you guys having up there? I haven't been up there since, oh, Lord, forty-eight, I guess.",
+   "text_fluent": "So what do you guys having up there? I haven't been up there since, forty-eight, I guess.",
+   "duration_s": 5.668,
+   "wav_sha256": "0208249034be81a8d63b9017f546b64dfb4f18da3de9ddbb16cbb9cfe13ca0a4"
+  },
+  {
+   "id": "ds-test-147",
+   "source_id": "data/test-00000-of-00001.parquet#1/83",
+   "in_evalset": false,
+   "text": "Uh, stay in a dormitory if you can. Go to classes, talk to faculty members and students.",
+   "text_fluent": "stay in a dormitory if you can. Go to classes, talk to faculty members and students.",
+   "duration_s": 5.451,
+   "wav_sha256": "737a62185707783356fab7e971f015f77f8571f5f6f426b9381c7e5cf97e297d"
+  },
+  {
+   "id": "ds-test-148",
+   "source_id": "data/test-00000-of-00001.parquet#1/84",
+   "in_evalset": false,
+   "text": "So when we get like, uh, uh, a twelve pack, then that's like twelve cents back.",
+   "text_fluent": "So when we get a twelve pack, then that's twelve cents back.",
+   "duration_s": 5.866,
+   "wav_sha256": "36c6bffdfd8b33289791361c0599774738b543f1188b9f955cc710ad80e4728c"
+  },
+  {
+   "id": "ds-test-149",
+   "source_id": "data/test-00000-of-00001.parquet#1/85",
+   "in_evalset": false,
+   "text": "Oh, yeah, well, mine is, uh, down at U T Austin at college and the other one is in high school.",
+   "text_fluent": "yeah, mine is, down at U T Austin at college and the other one is in high school.",
+   "duration_s": 6.309,
+   "wav_sha256": "de86b19a8d793cac6a7fa0c55d4198f825bfcb48b6166eaaa57eb722b4cd1e69"
+  },
+  {
+   "id": "ds-test-150",
+   "source_id": "data/test-00000-of-00001.parquet#1/86",
+   "in_evalset": false,
+   "text": "Uh, and it's, uh, I guess what they call a story and a half. Because it's not a full two story.",
+   "text_fluent": "and it's, I guess what they call a story and a half. Because it's not a full two story.",
+   "duration_s": 5.859,
+   "wav_sha256": "8526c6672f1a9c4142a539216383aacb45516762ba2df67025b73be3a016b2bc"
+  },
+  {
+   "id": "ds-test-151",
+   "source_id": "data/test-00000-of-00001.parquet#1/87",
+   "in_evalset": true,
+   "text": "But, but she enjoys it. She likes keeping track of all that stuff and, uh, so that's sort of related to her field a little bit.",
+   "text_fluent": "but she enjoys it. She likes keeping track of all that stuff and, so that's sort of related to her field a little bit.",
+   "duration_s": 8.0,
+   "wav_sha256": "3f4da7ffebb1a76fd611ca816d548186150e5eca14aff12d8703a62bbcff279e"
+  },
+  {
+   "id": "ds-test-152",
+   "source_id": "data/test-00000-of-00001.parquet#1/88",
+   "in_evalset": false,
+   "text": "Yeah. I, I've always liked that. The, you know, I, we don't have much yard but I built a small deck in the back.",
+   "text_fluent": "Yeah. I've always liked that. The, we don't have much yard but I built a small deck in the back.",
+   "duration_s": 7.368,
+   "wav_sha256": "43bf65babc138489290be4117274f3f01762b850966a8ceaea4a819e9713e339"
+  },
+  {
+   "id": "ds-test-153",
+   "source_id": "data/test-00000-of-00001.parquet#1/89",
+   "in_evalset": false,
+   "text": "Well, right now I'm a student, and campus housing does not even allow thinking about that.",
+   "text_fluent": "right now I'm a student, and campus housing does not even allow thinking about that.",
+   "duration_s": 5.974,
+   "wav_sha256": "e2f8a7c5c8b9356c7d3ee92778ccb75450305eac2764219f7f30cb2146cb47b6"
+  },
+  {
+   "id": "ds-test-154",
+   "source_id": "data/test-00000-of-00001.parquet#1/90",
+   "in_evalset": true,
+   "text": "Yeah, see that is kind of what happened with ours. That is why we have not had one in a long time.",
+   "text_fluent": "Yeah, that is kind of what happened with ours. That is why we have not had one in a long time.",
+   "duration_s": 5.952,
+   "wav_sha256": "084d95f05a711d4a3cb1cdd1eb5c99f3794ebbd8eb373f5bcc4f35c4d00bfd55"
+  },
+  {
+   "id": "ds-test-155",
+   "source_id": "data/test-00000-of-00001.parquet#1/91",
+   "in_evalset": false,
+   "text": "with the age span that we have, you know, like the older kids love playing board games and that kind of thing but the young kids don't understand it",
+   "text_fluent": "with the age span that we have, the older kids love playing board games and that kind of thing but the young kids don't understand it",
+   "duration_s": 7.62,
+   "wav_sha256": "0993238b4e5d6336af611a888810fa466775928efd7d5efcdd033f68974ede53"
+  },
+  {
+   "id": "ds-test-156",
+   "source_id": "data/test-00000-of-00001.parquet#1/92",
+   "in_evalset": false,
+   "text": "But only thing I'm concerned about is potential for injury to your knees you know, that and movement of going up on the step you know, that could create a problem.",
+   "text_fluent": "But only thing I'm concerned about is potential for injury to your knees and movement of going up on the step that could create a problem.",
+   "duration_s": 8.937,
+   "wav_sha256": "b3389f9838a19e189b2b300e367da80264d9798f0bb132c407d6b8cab46b31ea"
+  },
+  {
+   "id": "ds-test-157",
+   "source_id": "data/test-00000-of-00001.parquet#1/94",
+   "in_evalset": true,
+   "text": "I mean I'm not, not saying at all that Hussein wasn't quite willing to ge-, enter that fight.",
+   "text_fluent": "I'm not saying at all that Hussein wasn't quite willing to enter that fight.",
+   "duration_s": 5.887,
+   "wav_sha256": "7c6a506d567872fe0bb54b1ec1abdcf6dd52571c0eb0b0675ccba2ae656d3cbd"
+  },
+  {
+   "id": "ds-test-158",
+   "source_id": "data/test-00000-of-00001.parquet#1/95",
+   "in_evalset": false,
+   "text": "I guess that's alwa-, that's been the big role of government, I guess. I mean generally.",
+   "text_fluent": "I guess that's been the big role of government, I guess. generally.",
+   "duration_s": 5.495,
+   "wav_sha256": "b65f8efb32f10c65f1832f3379b997596f43671cf3d631e2cb5b9cd9a7cdec57"
+  },
+  {
+   "id": "ds-test-159",
+   "source_id": "data/test-00000-of-00001.parquet#1/96",
+   "in_evalset": true,
+   "text": "And, uh, they have a policy for, uh, testing. If you, if they make you an offer, then they'll test you right before you start.",
+   "text_fluent": "And, they have a policy for, testing. if they make you an offer, then they'll test you right before you start.",
+   "duration_s": 7.304,
+   "wav_sha256": "9c7eb2a5ff2a13485f3e2301dedb6488cedaad702da419e7a2d05bb5834a5c6c"
+  },
+  {
+   "id": "ds-test-160",
+   "source_id": "data/test-00000-of-00001.parquet#1/97",
+   "in_evalset": false,
+   "text": "And I don't think I would have thought about that. I think that's a good idea on your part. I don't typically feel intruded on, on the things, uh, the sense of finding out information.",
+   "text_fluent": "And I don't think I would have thought about that. I think that's a good idea on your part. I don't typically feel intruded on the things, the sense of finding out information.",
+   "duration_s": 9.766,
+   "wav_sha256": "a73181f22228d3de259cfd9e3ed18c44c5e9e55e4d531c2daa4ff9e0c42d3970"
+  },
+  {
+   "id": "ds-test-161",
+   "source_id": "data/test-00000-of-00001.parquet#1/98",
+   "in_evalset": false,
+   "text": "You know, that has been her dream. And so, we did that. And, uh, she was really pleased with it. So it came really great so.",
+   "text_fluent": "that has been her dream. And so, we did that. And, she was really pleased with it. So it came really great",
+   "duration_s": 7.927,
+   "wav_sha256": "d7e24216e6bb66ff050b5b120496322a1a7bfa2fdc8247a906806ead87067d7e"
+  },
+  {
+   "id": "ds-test-162",
+   "source_id": "data/test-00000-of-00001.parquet#1/99",
+   "in_evalset": false,
+   "text": "That's on Plano Road, uh, it's like in Richardson you go up Plano Road, it's like a little bit past Campbell and Plano Road.",
+   "text_fluent": "That's on Plano Road, it's like in Richardson you go up Plano Road, it's a little bit past Campbell and Plano Road.",
+   "duration_s": 7.138,
+   "wav_sha256": "8e7df0b79c39c47aba585a5885f94028112354c575abb0234f7af06c6c9e1102"
+  },
+  {
+   "id": "ds-test-163",
+   "source_id": "data/test-00000-of-00001.parquet#2/0",
+   "in_evalset": false,
+   "text": "Yeah, I would think it, but it's like, they'll try something and then they throw it out, and get something else, you know, and you get tired of that.",
+   "text_fluent": "Yeah, I would think it, but it's like, they'll try something and then they throw it out, and get something else, and you get tired of that.",
+   "duration_s": 7.658,
+   "wav_sha256": "f80f2004f56bd13748e810fe08432d27efcf3b6bfa48097f2d83799a5c6d2c4b"
+  },
+  {
+   "id": "ds-test-164",
+   "source_id": "data/test-00000-of-00001.parquet#2/1",
+   "in_evalset": false,
+   "text": "So, and the, and he was trying to keep, uh, uh, I can't even think of the guy's name, either, the coach of the Vikings.",
+   "text_fluent": "and he was trying to keep, I can't even think of the guy's name, either, the coach of the Vikings.",
+   "duration_s": 7.343,
+   "wav_sha256": "f1dd2c157ee639b1be0a44670c3cd0735a3252673b5b6b1c6120c716e6d4ba76"
+  },
+  {
+   "id": "ds-test-165",
+   "source_id": "data/test-00000-of-00001.parquet#2/2",
+   "in_evalset": false,
+   "text": "But, uh, but, boy, once it gets over seventy, seventy-five degrees that, it just dries up, shrivels up and dies. But anyway.",
+   "text_fluent": "but, once it gets over seventy, seventy-five degrees it just dries up, shrivels up and dies. But anyway.",
+   "duration_s": 9.668,
+   "wav_sha256": "f6f82d0dd2eb52ad22fcae7396df3561a3678a54b5b98f988e20e3ad9da99e5e"
+  },
+  {
+   "id": "ds-test-166",
+   "source_id": "data/test-00000-of-00001.parquet#2/3",
+   "in_evalset": false,
+   "text": "I mean, and then of course you have some changes to make, and do the whole thing over. You take out a sentence, on a computer you take it out, bleep, print it out, fine.",
+   "text_fluent": "and then of course you have some changes to make, and do the whole thing over. You take out a sentence, on a computer you take it out, print it out, fine.",
+   "duration_s": 9.61,
+   "wav_sha256": "9ae16591799ff6e9a1ac484d19b6e8b85eea92f6b3eee538f162a020d4c03b7f"
+  },
+  {
+   "id": "ds-test-167",
+   "source_id": "data/test-00000-of-00001.parquet#2/4",
+   "in_evalset": false,
+   "text": "My wife used to plant a few snow peas. I don't really care for snow peas. Well, she just plants a few for herself.",
+   "text_fluent": "My wife used to plant a few snow peas. I don't really care for snow peas. she just plants a few for herself.",
+   "duration_s": 6.341,
+   "wav_sha256": "8d4e8606729918dba8a7f5afaf87dc8a81d43f90158823ea892c4942b190c5dc"
+  },
+  {
+   "id": "ds-test-168",
+   "source_id": "data/test-00000-of-00001.parquet#2/5",
+   "in_evalset": true,
+   "text": "And, uh, I had sandy loam hauled in. I had a dump truck come and dump it.",
+   "text_fluent": "And, I had sandy loam hauled in. I had a dump truck come and dump it.",
+   "duration_s": 4.41,
+   "wav_sha256": "190570b82c987cebfee780761b2fc14b2d631f8de2feb838eec720fcadbcac45"
+  },
+  {
+   "id": "ds-test-169",
+   "source_id": "data/test-00000-of-00001.parquet#2/6",
+   "in_evalset": true,
+   "text": "I have enjoyed aerobics in the past, and I enjoy that because I like the group association, you know, like exercising with other people.",
+   "text_fluent": "I have enjoyed aerobics in the past, and I enjoy that because I like the group association, like exercising with other people.",
+   "duration_s": 7.238,
+   "wav_sha256": "be18027bc097b0837a152a638989a32088cc43696639151d520ecc6eb761a469"
+  },
+  {
+   "id": "ds-test-170",
+   "source_id": "data/test-00000-of-00001.parquet#2/7",
+   "in_evalset": false,
+   "text": "Yeah, well see I, and I forgot about the one in the chamber.",
+   "text_fluent": "Yeah, I, and I forgot about the one in the chamber.",
+   "duration_s": 4.358,
+   "wav_sha256": "1bfba555b72d082209cf77c808d0c306b30c54d1d3a7c484369cb5154a967f1b"
+  },
+  {
+   "id": "ds-test-171",
+   "source_id": "data/test-00000-of-00001.parquet#2/9",
+   "in_evalset": true,
+   "text": "Uh-huh. And I was losing jobs just from doing a poor job, you know.",
+   "text_fluent": "Uh-huh. And I was losing jobs just from doing a poor job,",
+   "duration_s": 4.5,
+   "wav_sha256": "a15e4953e24672da7793b26fa12f3a8f22de3db2858a01e973ef2a1ea9c9bf33"
+  },
+  {
+   "id": "ds-test-172",
+   "source_id": "data/test-00000-of-00001.parquet#2/10",
+   "in_evalset": true,
+   "text": "If it's a limited edition usually, no matter what it is, if it's a limited edition, it's usually worth something later on.",
+   "text_fluent": "no matter what it is, if it's a limited edition, it's usually worth something later on.",
+   "duration_s": 6.452,
+   "wav_sha256": "0f730533e89dfeee50e2eb4102cde5b998607a22fbae14f8ca5f7bc2a1f2362d"
+  },
+  {
+   "id": "ds-test-173",
+   "source_id": "data/test-00000-of-00001.parquet#2/11",
+   "in_evalset": false,
+   "text": "Um, oh gosh, I don-, I can't think off my head. Do you know which one yours was?",
+   "text_fluent": "gosh, I can't think off my head. Do you know which one yours was?",
+   "duration_s": 6.771,
+   "wav_sha256": "5ad348521b8a4c22a05bfa68461693cb9dc8bd5a0af1b87f29570d2e61b35d0a"
+  },
+  {
+   "id": "ds-test-174",
+   "source_id": "data/test-00000-of-00001.parquet#2/12",
+   "in_evalset": false,
+   "text": "And, um, I don't know if you like this kind, but I thought PRETTY WOMAN was a really good movie, too.",
+   "text_fluent": "And, I don't know if you like this kind, but I thought PRETTY WOMAN was a really good movie, too.",
+   "duration_s": 5.124,
+   "wav_sha256": "7fbb0f05551d3da4ccd521101bbb126c2c557cd0cf03bf9001d0265b60db4e44"
+  },
+  {
+   "id": "ds-test-175",
+   "source_id": "data/test-00000-of-00001.parquet#2/13",
+   "in_evalset": false,
+   "text": "Oh, that's really too bad, that's awful, well, and I knew we were going to find him, you know, and when we didn't it was, like, oh, no,. So I don't know.",
+   "text_fluent": "that's really too bad, that's awful, and I knew we were going to find him, and when we didn't it was, like, no,. So I don't know.",
+   "duration_s": 10.003,
+   "wav_sha256": "b2bda340ad92acdaf661867820e36571b9ef610c543ad58827840f6c2d66db0c"
+  },
+  {
+   "id": "ds-test-176",
+   "source_id": "data/test-00000-of-00001.parquet#2/14",
+   "in_evalset": true,
+   "text": "Well, uh, I, I don't do it as much as I should. I try to walk.",
+   "text_fluent": "I don't do it as much as I should. I try to walk.",
+   "duration_s": 4.732,
+   "wav_sha256": "f7dbc471a260af0e5e381970bfd4240f12bdf83cbe75283112fc7302b336cfff"
+  },
+  {
+   "id": "ds-test-177",
+   "source_id": "data/test-00000-of-00001.parquet#2/16",
+   "in_evalset": false,
+   "text": "And that we-, I, I've never been on a jury, I've never had that experience, I'm not sure I'd look forward to making that kind of decision about a man's life.",
+   "text_fluent": "And that we, I've never been on a jury, I've never had that experience, I'm not sure I'd look forward to making that kind of decision about a man's life.",
+   "duration_s": 8.312,
+   "wav_sha256": "00a33c5139ec304dd2e1f33586ef267dadb7a36a357987564e8e82b373e7bf16"
+  },
+  {
+   "id": "ds-test-178",
+   "source_id": "data/test-00000-of-00001.parquet#2/18",
+   "in_evalset": false,
+   "text": "And we have advent calendars still, from the time that they came, you know, to,",
+   "text_fluent": "And we have advent calendars still, from the time that they came, to,",
+   "duration_s": 4.192,
+   "wav_sha256": "6dc9b27fe82a185ac8069a0b2d3573beb823e57ce13ffc5c023c91470e46a53f"
+  },
+  {
+   "id": "ds-test-179",
+   "source_id": "data/test-00000-of-00001.parquet#2/19",
+   "in_evalset": false,
+   "text": "And I go to a br-, a campus of the University of Maryland that is just, less than a mile from my house. So I, I'm actually in Baltimore, you could say I'm in Baltimore.",
+   "text_fluent": "And I go to a campus of the University of Maryland that is just, less than a mile from my house. So I'm actually in Baltimore, you could say I'm in Baltimore.",
+   "duration_s": 10.078,
+   "wav_sha256": "cb6c4a7dadff321d71112a4f964ecdc12f43ee02b6809ab96dd2b31026cdd710"
+  },
+  {
+   "id": "ds-test-180",
+   "source_id": "data/test-00000-of-00001.parquet#2/20",
+   "in_evalset": false,
+   "text": "Just that. you know, you don't feel guilty when you eat that cake after dinner,.",
+   "text_fluent": "Just that, you don't feel guilty when you eat that cake after dinner,.",
+   "duration_s": 4.935,
+   "wav_sha256": "1fb6c9378919859cd0f98cff7cd7fb2366f3490a46d06e95dfd66d90c2c60210"
+  },
+  {
+   "id": "ds-test-181",
+   "source_id": "data/test-00000-of-00001.parquet#2/21",
+   "in_evalset": false,
+   "text": "Right. Or the, or the jackets, the team like the Raiders and the caps.",
+   "text_fluent": "Right. or the jackets, the team like the Raiders and the caps.",
+   "duration_s": 4.226,
+   "wav_sha256": "535d1c55260bb87757349ca2c5c84cba2a0ae64eece97c939cc5f4c0ba4f39d0"
+  },
+  {
+   "id": "ds-test-182",
+   "source_id": "data/test-00000-of-00001.parquet#2/22",
+   "in_evalset": false,
+   "text": "Her cookbook and she talks about catering and, uh, you know, goes into, goes into all that and the different types of, uh, uh, different types of parties, you know, different types of foods.",
+   "text_fluent": "Her cookbook and she talks about catering and, goes into all that and the different types of parties, different types of foods.",
+   "duration_s": 9.959,
+   "wav_sha256": "601bbac24383f54799da825f41770f6707dacfb59ac4fdca38aba3b4a9f2e858"
+  },
+  {
+   "id": "ds-test-183",
+   "source_id": "data/test-00000-of-00001.parquet#2/23",
+   "in_evalset": false,
+   "text": "Um, and we're given, you know, a good bit of flexibility in what we do. We can kind of pursue our own interests in terms of the research areas that we study.",
+   "text_fluent": "and we're given, a good bit of flexibility in what we do. We can kind of pursue our own interests in terms of the research areas that we study.",
+   "duration_s": 8.786,
+   "wav_sha256": "06deba3a5d0eb11596f52c3cd860c8cb43fcd295cb9cb02c3b7b8a3c4e2ff192"
+  },
+  {
+   "id": "ds-test-184",
+   "source_id": "data/test-00000-of-00001.parquet#2/24",
+   "in_evalset": false,
+   "text": "You know, in case, you know, in case you ever need to bail out.",
+   "text_fluent": "in case you ever need to bail out.",
+   "duration_s": 4.285,
+   "wav_sha256": "d5db0a1cb47093be1a8f6275d571f82b69cac0eca05aecba6ae3d7a37ba8990b"
+  },
+  {
+   "id": "ds-test-185",
+   "source_id": "data/test-00000-of-00001.parquet#2/25",
+   "in_evalset": false,
+   "text": "You know, they've gotten to the point that where they don't weigh very much and the the surface materials on the pads is so good.",
+   "text_fluent": "they've gotten to the point that they don't weigh very much and the surface materials on the pads is so good.",
+   "duration_s": 6.997,
+   "wav_sha256": "f3c069f9d795828e4104ceb00957321bff1609246ac83297331f68ca0c1ab15e"
+  },
+  {
+   "id": "ds-test-186",
+   "source_id": "data/test-00000-of-00001.parquet#2/26",
+   "in_evalset": false,
+   "text": "No, I just, I noticed it Iowa and other cities like that, it's a nickel per aluminum can.",
+   "text_fluent": "No, I noticed it Iowa and other cities like that, it's a nickel per aluminum can.",
+   "duration_s": 5.302,
+   "wav_sha256": "37258efe48c84e457a07efc99427a1c24b6b79eccb22222838ec0e8da90a0461"
+  },
+  {
+   "id": "ds-test-187",
+   "source_id": "data/test-00000-of-00001.parquet#2/27",
+   "in_evalset": false,
+   "text": "That's why I like to to, to work a couple days, I think it's, uh, it gives me a break.",
+   "text_fluent": "That's why I like to work a couple days, I think it gives me a break.",
+   "duration_s": 6.342,
+   "wav_sha256": "e51b5d0ff548686f16ed645396aa05d0f1bac6eafe55ac224c6df9819ac0f0db"
+  },
+  {
+   "id": "ds-test-188",
+   "source_id": "data/test-00000-of-00001.parquet#2/28",
+   "in_evalset": false,
+   "text": "Well, you know, in the next year or so, you'll see so many instances where, you know, he'll mimic something that you've done, and you see, you know, everything I'm doing, he's learning from.",
+   "text_fluent": "in the next year or so, you'll see so many instances where, he'll mimic something that you've done, and everything I'm doing, he's learning from.",
+   "duration_s": 10.426,
+   "wav_sha256": "fd9a9c26016c9cfa52e06b1ead1b1a362b31caf06df23554d3a00bb84432ec66"
+  },
+  {
+   "id": "ds-test-189",
+   "source_id": "data/test-00000-of-00001.parquet#2/29",
+   "in_evalset": true,
+   "text": "Well, that, that makes sense, it really does. I mean, oh, we went to Panama too.",
+   "text_fluent": "that makes sense, it really does. we went to Panama too.",
+   "duration_s": 5.342,
+   "wav_sha256": "99dbaab163a0f9919d31ff807b3dc84047898fb1911e10888e7b0a5466eb4199"
+  },
+  {
+   "id": "ds-test-190",
+   "source_id": "data/test-00000-of-00001.parquet#2/30",
+   "in_evalset": false,
+   "text": "Can you tell ho-, no-, but can you tell how, how fast you're going to hit it?",
+   "text_fluent": "Can you tell but can you tell how fast you're going to hit it?",
+   "duration_s": 4.642,
+   "wav_sha256": "5df0d1c9865ed68e0ac9a41ec9daae33f9207a2070ca6774726eca747414803b"
+  },
+  {
+   "id": "ds-test-191",
+   "source_id": "data/test-00000-of-00001.parquet#2/31",
+   "in_evalset": false,
+   "text": "You are forced to. And, uh, you also don't see the litter there. People just, that's true.",
+   "text_fluent": "You are forced to. And, you also don't see the litter there. People just, that's true.",
+   "duration_s": 5.651,
+   "wav_sha256": "3a1cc37a0de5dfc1a023c6b62745bb514b07d98266657d600c1ecfb5166bcff5"
+  },
+  {
+   "id": "ds-test-192",
+   "source_id": "data/test-00000-of-00001.parquet#2/33",
+   "in_evalset": false,
+   "text": "Right. They did, they had like, um, the, the crawlers, the babies that didn't walk in one room.",
+   "text_fluent": "Right. they had the babies that didn't walk in one room.",
+   "duration_s": 5.994,
+   "wav_sha256": "d83102abf851d63f522c8f4ff8ceb8470b5413cee02039b73c684bffaa222b86"
+  },
+  {
+   "id": "ds-test-193",
+   "source_id": "data/test-00000-of-00001.parquet#2/34",
+   "in_evalset": false,
+   "text": "I doubt about that. Are, are, is America, I mean are we pretty, pretty steep compared to most countries?",
+   "text_fluent": "I doubt about that. are we pretty steep compared to most countries?",
+   "duration_s": 6.653,
+   "wav_sha256": "804f12c003e47755c7333bea760a248620a716e5f5514e89183886ff77796da0"
+  },
+  {
+   "id": "ds-test-194",
+   "source_id": "data/test-00000-of-00001.parquet#2/35",
+   "in_evalset": false,
+   "text": "So, I co-, I think in terms of computer terminology, I look at, you know, price performance and things like that.",
+   "text_fluent": "I think in terms of computer terminology, I look at, price performance and things like that.",
+   "duration_s": 6.039,
+   "wav_sha256": "ce9885b7971f7d56bd13f17c3a99bc7bce67642c6998ca9b127eeac944892887"
+  },
+  {
+   "id": "ds-test-195",
+   "source_id": "data/test-00000-of-00001.parquet#2/37",
+   "in_evalset": false,
+   "text": "Well, part of the problem with recycling them in the past has been the covers are made with a clay based paper.",
+   "text_fluent": "part of the problem with recycling them in the past has been the covers are made with a clay based paper.",
+   "duration_s": 6.093,
+   "wav_sha256": "0a47c7a471b47801c697fc2cbcfed466f8e5ff5ddfa26080c79f785aacc142cb"
+  },
+  {
+   "id": "ds-test-196",
+   "source_id": "data/test-00000-of-00001.parquet#2/38",
+   "in_evalset": false,
+   "text": "Oh yes, Jessica Tandy won best actress and, uh, that's right. It, it might have one best picture, too.",
+   "text_fluent": "yes, Jessica Tandy won best actress and, that's right. it might have one best picture, too.",
+   "duration_s": 6.309,
+   "wav_sha256": "db6984a7af422f4cbe831810000cc7fec023be142a189ae5b2037682f8abfebf"
+  },
+  {
+   "id": "ds-test-197",
+   "source_id": "data/test-00000-of-00001.parquet#2/39",
+   "in_evalset": false,
+   "text": "I will admit I work with, uh, someone who's Iranian, and he definitely has a very different slant on the news.",
+   "text_fluent": "I will admit I work with, someone who's Iranian, and he definitely has a very different slant on the news.",
+   "duration_s": 6.656,
+   "wav_sha256": "1a17018f7d29fe8de4deb4e6180b3e41df24003b86dac012b918f8f6906082b8"
+  },
+  {
+   "id": "ds-test-198",
+   "source_id": "data/test-00000-of-00001.parquet#2/40",
+   "in_evalset": false,
+   "text": "I mean, I got probably the biggest, if not the biggest yard, I've got pretty close to it, in the entire neighborhood.",
+   "text_fluent": "I got probably the biggest, if not the biggest yard, I've got pretty close to it, in the entire neighborhood.",
+   "duration_s": 6.171,
+   "wav_sha256": "df13a9e1dc8402648feeac305281215849a953c526835ccb9569156b845f8ac8"
+  },
+  {
+   "id": "ds-test-199",
+   "source_id": "data/test-00000-of-00001.parquet#2/41",
+   "in_evalset": false,
+   "text": "Oh, well. Well but we like L A LAW. We like, that. We're just, I'm sorry they're breaking the team up, because we liked all the ones that were on there.",
+   "text_fluent": "but we like L A LAW. We like, that. We're just, I'm sorry they're breaking the team up, because we liked all the ones that were on there.",
+   "duration_s": 8.374,
+   "wav_sha256": "a0f10cc8e3eb3fb91d8c64e063f3877068e85fa33760e529cdb84254cd1f7367"
+  },
+  {
+   "id": "ds-test-200",
+   "source_id": "data/test-00000-of-00001.parquet#2/42",
+   "in_evalset": true,
+   "text": "Um, I also, uh, handle most of the calls from our users and other programmers who need to find out something connected,",
+   "text_fluent": "I also, handle most of the calls from our users and other programmers who need to find out something connected,",
+   "duration_s": 6.537,
+   "wav_sha256": "93995fd5ab3e14c2b7fdcb57244c2309c64baeb7cad87fa00c8eb4e21cb30108"
+  },
+  {
+   "id": "ds-test-201",
+   "source_id": "data/test-00000-of-00001.parquet#2/43",
+   "in_evalset": false,
+   "text": "So, in some ways I think the, the day schools do serve those purposes.",
+   "text_fluent": "So, in some ways I think the day schools do serve those purposes.",
+   "duration_s": 4.462,
+   "wav_sha256": "2e5c41a9a316b16a17c4e8bbb0f41532b04321854ea5854e0463e9cd3958368d"
+  },
+  {
+   "id": "ds-test-202",
+   "source_id": "data/test-00000-of-00001.parquet#2/44",
+   "in_evalset": false,
+   "text": "um, but as far as a musical art form, I just don't see a whole lot of art to it.",
+   "text_fluent": "but as far as a musical art form, I just don't see a whole lot of art to it.",
+   "duration_s": 5.335,
+   "wav_sha256": "50d202fffff2743d45d892f6a2c9c5875f326c9c052e88666122ca2f533bb743"
+  },
+  {
+   "id": "ds-test-203",
+   "source_id": "data/test-00000-of-00001.parquet#2/45",
+   "in_evalset": false,
+   "text": "I do too. DIRTY DANCING and CROSSING DELANCY are two of my favorite. So, well what business are you in?",
+   "text_fluent": "I do too. DIRTY DANCING and CROSSING DELANCY are two of my favorite. what business are you in?",
+   "duration_s": 7.736,
+   "wav_sha256": "7f1e0f47c500b9488f27b5caf5c87cf2aaa8d01bb9b75cbfa3747b059d53c1a6"
+  },
+  {
+   "id": "ds-test-204",
+   "source_id": "data/test-00000-of-00001.parquet#2/47",
+   "in_evalset": true,
+   "text": "And, uh, so I guess you just have to take the two problems and see which is worse.",
+   "text_fluent": "so I guess you just have to take the two problems and see which is worse.",
+   "duration_s": 4.277,
+   "wav_sha256": "1bc5912bd7a7396b6378a58c4a8857879b95de95cb5633be75fe73faed7c6b5d"
+  },
+  {
+   "id": "ds-test-205",
+   "source_id": "data/test-00000-of-00001.parquet#2/48",
+   "in_evalset": false,
+   "text": "the, uh, Governor, you know, has been trying to decide whether he's going to commute it or not.",
+   "text_fluent": "the, Governor, has been trying to decide whether he's going to commute it or not.",
+   "duration_s": 5.591,
+   "wav_sha256": "e4b27a2f5704b0834e3eba41d57bfceb5a08afee00066afd49f838b557122975"
+  },
+  {
+   "id": "ds-test-206",
+   "source_id": "data/test-00000-of-00001.parquet#2/49",
+   "in_evalset": false,
+   "text": "So that's, I think that's good. To keep the equal as far as, as, uh, not, nex-, nex-, uh, necessarily by sex type thing.",
+   "text_fluent": "So I think that's good. To keep the equal as far as, not, necessarily by sex type thing.",
+   "duration_s": 8.952,
+   "wav_sha256": "130e12ab84036ac4a710cef2bfb5c8e13870e38f01a15bf42d58bcb7c590410e"
+  }
+ ]
+}

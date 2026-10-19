@@ -10,6 +10,7 @@ acoustics, real pitch and a real VAD do at those pauses.
 | **Endpointing** | 30 | Turn-taking, T0–T3 and PR-001 | **Now** |
 | Prosody | 30 | R3 speech-LLM probe (sincere vs distressed delivery) | Before R3 |
 | **Barge-in** | 20 | R1 part 2: stop for an interruption, keep going for a backchannel | **Now** |
+| DisfluencySpeech turns | 215 + 207 | P1b on real disfluent speech (M40, PR-019): not recorded here, a corpus split by rule | M40 |
 
 ## Rules
 
@@ -724,3 +725,12 @@ either way, and its words do not change. On dev it had looked like
 flattening (5 against 11); on the test pairs that did not survive. By the
 plan's own sentence, on this measure the rung bought nothing. The 39 pairs
 are now spent for R4's delivery as well.
+
+## DisfluencySpeech turns (M40)
+
+Not hand-recorded: two splits of amaai-lab/DisfluencySpeech (Apache-2.0, the eval set's pin `b7da294`), one speaker
+re-performing Switchboard utterances with their fillers, repetitions and restarts, chosen by the eval set's
+disfluent rules (`s2slab.dsturns`). The validation split, 215 clips, is DEV; the test split, 207 clips (the eval
+set's 50 among them), is PR-019's. `python -m s2slab.dsturns build` downloads them once; the audio stays out of git
+in `disfluencyspeech/audio/`, and `disfluencyspeech/manifest-{dev,test}.json` hold every clip's source row, text
+and SHA-256. Why not SEP-28k: `docs/m40-log.md`, section 1.
