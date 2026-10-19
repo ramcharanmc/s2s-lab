@@ -6,7 +6,7 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-10-18** (commit `39c5e1b`, PR-018's run): rungs R0 to R5 built and measured, and R4 streamed; three
+**Status, 2026-10-18** (commit `bc6f795`, M39): rungs R0 to R5 built and measured, and R4 streamed; three
 fine-tunes run; eighteen registrations, all reported, nine with a supported claim. A demo that shows
 the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
 
@@ -173,12 +173,20 @@ The fine-tunes are their own project with their own environment: `ft/README.md`.
 
 - **No clinical validity is claimed and no diagnostic capability is implied.** The severity render
   maps a score to acoustic targets and measures whether the audio reached them. Every synthesized
-  file is named and tagged synthetic.
+  file is named and tagged synthetic; none is watermarked.
+- **Continuous dimensions, not labels.** A system that renders disorders as discrete labels produces
+  caricatures a clinician rejects on first listen. The render here maps a PHQ-9 or YMRS score to
+  continuous acoustic targets, and makes no claim that the result sounds like any person with the condition.
 - **No patient data, ever.** Every dataset is public; each licence is named where the data is used.
 - **Latency is measured server-side** with a synthetic audio driver. The client transport is out of
   scope: Modal offers HTTP and WebSocket, not WebRTC.
 - **One speaker's voice** is in the hand-recorded probe sets, the author's.
-- **Not built:** T4, the voice-activity-projection turn-taking model.
+- **The cascades' language model is small.** The plans named a 7 to 8B model (AWQ, on an A10) and a
+  large-v3-turbo recognizer; R0 to R2 run Qwen2.5-0.5B-Instruct and base.en on one T4 (Qwen2.5-1.5B and
+  small.en were tried on Colab, `r0-gpu-bigger`). Every cascade latency here is for that model. In the demo it
+  refused four of eight harmless questions (`docs/m27-log.md`, entry 31).
+- **T4, voice activity projection, was built (M30) but gave no result:** on real speech it rated the
+  speaker's own pauses above the end of the turn, and PR-014 was not run.
 
 ## Licences
 

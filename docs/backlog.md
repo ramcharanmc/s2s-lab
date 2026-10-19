@@ -3,7 +3,7 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-18, at commit `3c54204`.
+Last updated 2026-10-18, at commit `bc6f795`.
 
 ## Chosen next: none
 
@@ -206,9 +206,16 @@ Owed.
 | Watermarking the synthetic voices | v1 §9 | renders are named and tagged synthetic; none is watermarked | \$0 |
 | Full-Duplex-Bench's protocol for the duplex numbers | v1 §7 | R5 was measured with this harness, not theirs | small |
 | "VAP is what Moshi learned implicitly" | v2 §3.1 | VAP built (M30), PR-014 not run: the engineered side of the comparison has no result | — |
+| The cascade at the plans' sizes: a large-v3-turbo recognizer (int8, L4) and a 7 to 8B LLM (AWQ, A10) | v1 §4 (P1 W1), v2 §3 | built with base.en and Qwen2.5-0.5B on one T4; 1.5B and small.en tried on Colab only. Every cascade number is for the small model, which refused four of eight harmless questions in the demo (`docs/m27-log.md`, entry 31) | a few dollars |
+| The harness's entity-F1, B-WER against U-WER, and partial flicker rate | v1 §2 | not built; WER raw and normalized, per-stage latency, first audio and first sound, leading silence, RTF and the overlap ratio are | \$0 |
+| P1c's latency criterion: the side-channel adds under 30 ms | v1 §8 | not measured (PR-005: "no latency measured"); one eGeMAPS pass takes about 0.1 s on the laptop's CPU, not timed on a GPU | \$0 to a few cents |
 
 Recorded, nothing to do: v2's week 1 expected R1 to be "a 4× win" over R0; it was 26% sooner (PR-002, not
-supported). v1's P3 named TensorRT and F0 RMSE; PR-013 ran ONNX on a CPU and measured the median's shift.
+supported). v1's P3 named TensorRT and F0 RMSE; PR-013 ran ONNX on a CPU and measured the median's shift. v1 §7's
+data: CANDOR gave way to DailyTalk (FT-1's reference, page 20 §22) and Common Voice to EdAcc (the accented cohort,
+page 20 §5); MentalChat16K, listed there, was never needed and not used. v2 §6.3's prosody probe came from CREMA-D
+pairs and an own-voice mini set rather than 30 recorded takes (page 20 §13, §16). Checked against both plans in full
+on 2026-10-18, after M39.
 
 ## Raised by PR-013, none started
 
@@ -224,7 +231,7 @@ supported). v1's P3 named TensorRT and F0 RMSE; PR-013 ran ONNX on a CPU and mea
 | What | Cost |
 |---|---|
 | ~~Leading silence across TTS engines~~: M38 step 1 (Kokoro 320 ms, Piper and FastPitch 0, R4 200; Kokoro's is its duration predictor's padding); step 2: the trim in R1, **PR-018 supported** (0.50 s heard instead of 0.80) | \$0.04 |
-| Cold-start economics on Modal | a few dollars; the demo's L40S: M35 (phases), M36 (the compile cache) |
+| Cold-start economics on Modal: the demo's wakes measured and cut (the L40S 251 s to 72 to 93 s, M35 and M36); a write-up of what a wake costs on each machine not done | \$0, from the runs already made |
 
 ## Parked
 

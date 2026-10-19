@@ -9,7 +9,8 @@ Kept as events happen. The earlier logs: `docs/m38-log.md` and those it names.
 | 2 | 10-18 | the tests, laptop | the demo's R1 is `r1-gpu-trim`; its measured row and a PR-018 panel from the registered run; first sound on every turn card | `modal_app/demo.py`, `demo.py`, `demo_page.html`, tests | 3c54204 |
 | 3 | 10-18 | `modal serve modal_app/demo.py`, the author, at 3c54204: the Measured tab, then one live turn through the T4's four rungs | the T4 loaded the four in 37.7 s (R1 4.8 s), the cold Send 48.8 s. R1's card: first audio 351 ms, first sound 371, 325 ms of silence cut; R0's 402 and 722, R2's 470 and 750, R2 verbatim's 403 and 703; no rung failed. The Measured tab: R1's row from PR-018's run, its panel beside PR-015 to PR-017's. **The rule holds** | — | — |
 | 4 | 10-18 | `modal deploy modal_app/demo.py`, the author | deployed at https://ramcharanmc--s2s-lab-demo-web.modal.run; its `/api/measured` and `/api/status` read from the laptop: R1's row from `runs/r1-gpu-trim/pr018.json`, PR-018's panel supported, R1's note served | — | — |
-| 5 | 10-18 | — | M39 closed: these records | records | this commit |
+| 5 | 10-18 | — | M39 closed: these records | records | bc6f795 |
+| 6 | 10-18 | — | the plans (Notion pages 16 and 17) checked in full against what was built: the README's "Not built: T4" corrected (built in M30); its Limits name the cascades' 0.5B model and the caricature risk (v1 §9); three v1 items the backlog lacked listed (the plans' model sizes, three harness metrics, P1c's latency); the data the plans named and did not use recorded | records | this commit |
 
 ## 1. The design
 
