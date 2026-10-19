@@ -1,0 +1,20 @@
+# Everything the test suite imports: what CI installs (.github/workflows/tests.yml), and what the laptop's
+# environment holds (WSL, Python 3.10). Written 2026-10-19 (M42) from that environment, whose pip freeze had
+# five packages no requirements file named; they are pinned below at the versions the suite passes with.
+#
+# Install torch FIRST, the CPU build (requirements/r0.txt says why):
+#   pip install torch==2.14.0 --index-url https://download.pytorch.org/whl/cpu
+-r base.txt
+-r r0.txt
+-r affect.txt
+-r data.txt
+-r demo.txt
+-r modal.txt
+# M26's quantization ladder: Kokoro's ONNX copies
+onnxruntime==1.23.2
+# M38's leading silence: the Piper engine
+piper-tts==1.8.0
+# the demo's tests: FastAPI's test client
+httpx==0.28.1
+# the demo: decoding what a browser records (as in modal_app/demo.py's web image)
+av==17.1.0

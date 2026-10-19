@@ -3,11 +3,14 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-19, at commit `4f1e998`.
+Last updated 2026-10-19, at commit `12ac0bc`.
 
-## Chosen next: none
+## Chosen next: M42, CI and the severity badge
 
-Candidates:
+The author's choice, 2026-10-19: v1's "severity monotonicity passing" badge, and the suite in CI. GitHub Actions on
+the author's account; `requirements/test.txt` writes down the environment the suite needs (`docs/m42-log.md`).
+
+Candidates after it:
 
 - **Hand the L40S the browser's recording as it came** (55 kB of WebM for 14 s, not 0.9 MB of 32-bit floats):
   the handoff took 1.9 s on a 14 s clip (`docs/m37-log.md`, entry 14). Measured before it is changed.
@@ -213,7 +216,7 @@ Owed.
 |---|---|---|---|
 | ~~P1b on real disfluent speech~~ | v1 §8 | **done in M40: PR-019 not supported**, on DisfluencySpeech (one speaker, performed; not SEP-28k, whose 3-second clips have no turn ends): T2 cut off one turn the fixed threshold kept, at the same median wait. Real stuttering is still untested | \$0 |
 | P2's controllability and a blinded preference test, duplex against cascade | v1 §8 | not run: it needs listeners, so P2 is undecided (only its latency part is measured) | listeners' time |
-| P2c in CI: the "severity monotonicity passing" badge | v1 §4, §10 | the test runs in the suite; the repository has no CI | free (GitHub Actions) |
+| P2c in CI: the "severity monotonicity passing" badge | v1 §4, §10 | **M42, in progress**: two workflows, the suite and the severity test; `requirements/test.txt` | free (GitHub Actions) |
 | P2c's disentanglement ablation | v1 §4 | not run: it needs listeners | listeners' time |
 | R5's "five conversations per A100" | v1 §4, v2 §8 | not measured | a few dollars |
 | Watermarking the synthetic voices | v1 §9 | renders are named and tagged synthetic; none is watermarked | \$0 |

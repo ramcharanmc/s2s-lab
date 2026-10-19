@@ -241,6 +241,7 @@ def test_importing_the_eval_set_needs_no_download_library():
     assert proc.stdout.strip() == "[]", proc.stderr
 
 
-@pytest.mark.skipif(not (EVAL_ROOT / MANIFEST).exists(), reason="the eval set is not built on this machine")
+@pytest.mark.skipif(not (EVAL_ROOT / MANIFEST).exists() or not any((EVAL_ROOT / "audio").glob("*.wav")),
+                    reason="the eval set's audio is not on this machine")
 def test_the_built_eval_set_still_matches_its_manifest():
     assert verify() == []

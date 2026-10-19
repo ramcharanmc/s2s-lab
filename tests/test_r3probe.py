@@ -138,6 +138,9 @@ def test_the_wordings_are_four_the_first_is_the_side_channels_question_and_one_i
 # --------------------------------------------------------------------------- #
 
 
+@pytest.mark.skipif(not (r3probe.PROSODY_ROOT / "manifest.json").exists()
+                    or not any((r3probe.PROSODY_ROOT / "audio").glob("*.wav")),
+                    reason="the prosody set is not on this machine")             # verify() runs before the lock
 def test_the_test_clips_cannot_be_prepared_for_sending_without_a_registration():
     with pytest.raises(PermissionError, match="preregistration"):
         clips_for("test")

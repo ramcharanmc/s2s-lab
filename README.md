@@ -1,5 +1,8 @@
 # s2s-lab
 
+[![tests](https://github.com/ramcharanmc/s2s-lab/actions/workflows/tests.yml/badge.svg)](https://github.com/ramcharanmc/s2s-lab/actions/workflows/tests.yml)
+[![severity monotonicity](https://github.com/ramcharanmc/s2s-lab/actions/workflows/severity.yml/badge.svg)](https://github.com/ramcharanmc/s2s-lab/actions/workflows/severity.yml)
+
 Six speech-to-speech architectures, from a naive batch cascade to a full-duplex model with a LoRA,
 built and measured against one frozen benchmark, with every claim registered before its test.
 
@@ -108,7 +111,9 @@ why.
 Python 3.10, Linux or WSL. The tests and the CPU track need no GPU and no account. The packages
 are pinned in `requirements/`, one file per purpose, each with a header that says what it is for:
 `base.txt` and `r0.txt` for the library and its models (CPU torch first), `affect.txt`, `data.txt`,
-`demo.txt` and `modal.txt` as needed.
+`demo.txt` and `modal.txt` as needed; `test.txt` is all of them, everything the test suite imports. CI runs the
+suite on every push (`.github/workflows/tests.yml`), and the severity monotonicity test on its own with
+`base.txt` alone (`severity.yml`): the two badges above.
 
 ```bash
 PYTHONPATH=src python -m pytest -q                      # the tests; the models are faked
