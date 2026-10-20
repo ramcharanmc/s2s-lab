@@ -1,12 +1,14 @@
 """
 M43's development check, on the laptop, free: does the watermark stay findable, stay out of what was never marked,
-and leave the severity render as it was? Against a rule written before the check (docs/m43-log.md, section 1).
+and leave the severity render as it was? Against a rule written before the check (docs/m43-log.md).
 
-    PYTHONPATH=src python -m s2slab.watermarkdev       Kokoro, the dev renders, the eval set; runs/watermark/dev.json
+    PYTHONPATH=src python -m s2slab.watermarkdev           step 1a: the full mark on the dev set (recorded: STOP)
+    PYTHONPATH=src python -m s2slab.watermarkdev alpha     step 1b: weaker marks on the dev set; the rule picks one
+    PYTHONPATH=src python -m s2slab.watermarkdev confirm   step 1c: that mark, once, on PR-009's held-out set
 
-THE MATERIAL. severity's development set: its two dev voices, its four dev sentences, every one of its twelve dev
-scores (both scales), as PR-009's dev work rendered them: 8 neutral clips and 96 renders, at 24 kHz. And as
-controls never marked, those same clips unmarked and the eval set's 200 real clips (16 kHz).
+THE MATERIAL. severity's renders: on DEV its two dev voices and four dev sentences, on the CONFIRMATION PR-009's two
+held-out voices and eight held-out sentences; every one of the twelve scores (both scales), at 24 kHz. As controls
+never marked: the same clips unmarked, and the eval set's 200 real clips (16 kHz).
 
 FOR EACH RENDER, marked as the demo will mark it (the neutral clip and the render, each on its own):
   * severity's four measures (severity.achieved) on the marked pair against the unmarked pair;
@@ -16,13 +18,18 @@ FOR EACH RENDER, marked as the demo will mark it (the neutral clip and the rende
 FOR EACH NEUTRAL CLIP as Kokoro spoke it, untrimmed (a cascade's reply): the leading silence the rungs measure
 (rungs.silence_before_speech_ms), marked against unmarked.
 
-THE RULE (gate): GO to wiring the mark in if, on every clip,
+THE GATE (unchanged since step 1a): on every clip,
   * every marked render and neutral clip reads as marked after the 16-bit WAV and after the trip through 16 kHz;
   * nothing unmarked reads as marked: the renders, the neutral clips, the eval set's 200;
   * the pitch offset moves under 0.3 Hz, and the pitch range, the rate and the pauses under 1%: a tenth of
     PR-009's own tolerances (3 Hz; 10%);
   * a reply's leading silence moves under 20 ms, one of the measure's frames.
-Otherwise STOP: nothing is wired in, and why is recorded.
+
+STEP 1a: the full mark (alpha 1) on DEV. Recorded: STOP, the pitch offset and range over their bars.
+STEP 1b, the rule written before it: the gate for each weaker mark in ALPHAS on DEV; the mark CHOSEN is the
+  strongest that passes in full (a stronger mark is the harder to strip). None passes: STOP, nothing wired in.
+STEP 1c, the rule written before it: the chosen mark, once, on PR-009's held-out voices and sentences, the same gate.
+  GO: the mark is wired in at that strength. Otherwise STOP, nothing wired in.
 """
 
 from __future__ import annotations
@@ -31,12 +38,16 @@ import io
 import json
 import math
 import pathlib
+import subprocess
 
 import numpy as np
 
 RUN = pathlib.Path("runs/watermark/dev.json")
+ALPHA_RUN = pathlib.Path("runs/watermark/alpha-dev.json")
+CONFIRM_RUN = pathlib.Path("runs/watermark/confirm.json")
 OFFSET_HZ_MAX, REL_MAX, SILENCE_MS_MAX = 0.3, 0.01, 20.0
 RELATIVE = ("f0_dev_scale", "rate", "pause_scale")
+ALPHAS = (0.5, 0.3, 0.2, 0.1)           # step 1b, strongest first
 
 
 def quantize16(x) -> np.ndarray:
@@ -76,45 +87,57 @@ def _num(x):
     return None if x is None or (isinstance(x, float) and math.isnan(x)) else round(float(x), 4)
 
 
-def run(speak, wm, controls, opus: bool = True) -> dict:
-    """The check. speak(text, voice) -> float32 at 24 kHz; wm: a loaded watermark.Watermarker; controls:
-    [(id, audio, sr)], clips never marked."""
+def _readings(wm, x, sr: int, opus: bool) -> dict:
+    from .watermark import to_rate
+    out = {"as_written": wm.detect(x, sr), "wav16": wm.detect(quantize16(x), sr),
+           "via16k": wm.detect(to_rate(x, sr, 16_000), 16_000)}
+    if opus:
+        out["opus"] = wm.detect(*opus_roundtrip(x, sr))
+    return out
+
+
+def marked_sets(speak, wm, alphas, voices=None, sentences=None, opus: bool = True) -> dict:
+    """{alpha: {"neutrals": [...], "renders": [...]}}: every clip spoken and rendered once, then marked at each alpha."""
     from . import severity
     from .rungs import silence_before_speech_ms
-    from .watermark import MARK_RATE, level_db, to_rate
+    from .watermark import MARK_RATE, level_db
     sr = severity.KOKORO_SR
     assert sr == MARK_RATE
-    neutrals, renders = [], []
-    for voice in severity.DEV_VOICES:
-        for sid, text in severity.DEV_SENTENCES.items():
+    voices = severity.DEV_VOICES if voices is None else voices
+    sentences = severity.DEV_SENTENCES if sentences is None else sentences
+    out = {a: {"neutrals": [], "renders": []} for a in alphas}
+    for voice in voices:
+        for sid, text in sentences.items():
             raw = speak(text, voice)
-            raw_marked = wm.embed(raw, sr)
             neutral = severity.trim(raw, sr)
-            neutral_marked = wm.embed(neutral, sr)
             nid = f"{voice}-{sid}"
-            neutrals.append({"id": nid, "silence_ms": [_num(silence_before_speech_ms(raw, sr)),
-                                                       _num(silence_before_speech_ms(raw_marked, sr))],
-                             "unmarked": wm.detect(neutral, sr), "as_written": wm.detect(neutral_marked, sr),
-                             "wav16": wm.detect(quantize16(neutral_marked), sr),
-                             "via16k": wm.detect(to_rate(neutral_marked, sr, 16_000), 16_000)})
+            plain_silence, neutral_unmarked = _num(silence_before_speech_ms(raw, sr)), wm.detect(neutral, sr)
+            renders = []
             for condition, scores in severity.SCORES.items():
                 for score in scores:
                     t = severity.CONDITIONS[condition](score)
                     r = severity.render(neutral, sr, t)
-                    marked = severity.Render(wm.embed(r.audio, sr), r.pauses_in, r.pauses_out)
-                    plain, got = severity.achieved(neutral, r, sr), severity.achieved(neutral_marked, marked, sr)
-                    row = {"id": f"{nid}-{condition}-{score:g}",
-                           "plain": {f: _num(getattr(plain, f)) for f in severity.FIELDS},
-                           "marked_measures": {f: _num(getattr(got, f)) for f in severity.FIELDS},
-                           "level_db": level_db(r.audio, marked.audio),
-                           "unmarked": wm.detect(r.audio, sr), "as_written": wm.detect(marked.audio, sr),
-                           "wav16": wm.detect(quantize16(marked.audio), sr),
-                           "via16k": wm.detect(to_rate(marked.audio, sr, 16_000), 16_000)}
-                    if opus:
-                        row["opus"] = wm.detect(*opus_roundtrip(marked.audio, sr))
-                    renders.append(row)
-    return {"neutrals": neutrals, "renders": renders,
-            "controls": [{"id": cid, **wm.detect(audio, csr)} for cid, audio, csr in controls]}
+                    renders.append((f"{nid}-{condition}-{score:g}", r, severity.achieved(neutral, r, sr),
+                                    wm.detect(r.audio, sr)))
+            for a in alphas:
+                neutral_marked = wm.embed(neutral, sr, alpha=a)
+                out[a]["neutrals"].append({"id": nid, "silence_ms": [plain_silence,
+                                                                     _num(silence_before_speech_ms(wm.embed(raw, sr, alpha=a), sr))],
+                                           "unmarked": neutral_unmarked, **_readings(wm, neutral_marked, sr, False)})
+                for rid, r, plain, unmarked in renders:
+                    marked = severity.Render(wm.embed(r.audio, sr, alpha=a), r.pauses_in, r.pauses_out)
+                    got = severity.achieved(neutral_marked, marked, sr)
+                    out[a]["renders"].append({"id": rid, "plain": {f: _num(getattr(plain, f)) for f in severity.FIELDS},
+                                              "marked_measures": {f: _num(getattr(got, f)) for f in severity.FIELDS},
+                                              "level_db": level_db(r.audio, marked.audio), "unmarked": unmarked,
+                                              **_readings(wm, marked.audio, sr, opus)})
+    return out
+
+
+def run(speak, wm, controls, opus: bool = True) -> dict:
+    """Step 1a: the full mark on DEV. controls: [(id, audio, sr)], clips never marked."""
+    one = marked_sets(speak, wm, (1.0,), opus=opus)[1.0]
+    return {**one, "controls": [{"id": cid, **wm.detect(audio, csr)} for cid, audio, csr in controls]}
 
 
 def moved(row: dict) -> dict:
@@ -132,7 +155,7 @@ def moved(row: dict) -> dict:
 
 
 def gate(blob: dict) -> dict:
-    """The rule written before the check (module docstring)."""
+    """The gate (module docstring), on {"neutrals", "renders", "controls"}."""
     marked = blob["neutrals"] + blob["renders"]
     lost = [r["id"] for r in marked if not (r["wav16"]["marked"] and r["via16k"]["marked"])]
     alarms = ([r["id"] for r in marked if r["unmarked"]["marked"]] + [c["id"] for c in blob["controls"] if c["marked"]])
@@ -156,17 +179,22 @@ def gate(blob: dict) -> dict:
     return {"go": go, "checks": checks, "lost": lost, "alarms": alarms, "worst": worst, "silence_ms": silence}
 
 
-def format_dev(blob: dict) -> str:
-    g = gate(blob)
+def at(blob: dict, alpha) -> dict:
+    """One strength of a step-1b or step-1c blob, as gate() takes it."""
+    return {**blob["alphas"][f"{float(alpha):g}"], "controls": blob["controls"]}
+
+
+def choose(blob: dict) -> float | None:
+    """Step 1b's rule: the strongest mark in ALPHAS that passes the gate in full; None if none does."""
+    passing = [a for a in ALPHAS if f"{a:g}" in blob["alphas"] and gate(at(blob, a))["go"]]
+    return max(passing) if passing else None
+
+
+def _describe(blob: dict) -> list[str]:
     R = blob["renders"]
     p = lambda v, q: float(np.percentile(v, q)) if v else float("nan")             # noqa: E731
-    lines = [f"M43, the watermark's development check: {len(blob['neutrals'])} neutral clips and {len(R)} renders "
-             f"(severity's dev set, 24 kHz), {len(blob['controls'])} eval-set clips never marked", ""]
-    lines += [f"{name:<18} {'PASS' if ok else 'FAIL'}  {detail}" for name, (ok, detail) in g["checks"].items()]
-    lines += ["", f"The rule (written before the check): {'GO: wire the mark in' if g['go'] else 'STOP: nothing wired in'}",
-              "", "Descriptive, not the rule:",
-              f"  the mark below the speech: {p([r['level_db'] for r in R], 50):.1f} dB at the median "
-              f"({min(r['level_db'] for r in R):.1f} to {max(r['level_db'] for r in R):.1f})"]
+    lines = [f"  the mark below the speech: {p([r['level_db'] for r in R], 50):.1f} dB at the median "
+             f"({min(r['level_db'] for r in R):.1f} to {max(r['level_db'] for r in R):.1f})"]
     for k, what in (("as_written", "as written"), ("wav16", "after a 16-bit WAV"), ("via16k", "after 16 kHz"),
                     ("opus", "after WebM/Opus (reported only)")):
         rows = [r[k] for r in R if k in r]
@@ -175,31 +203,98 @@ def format_dev(blob: dict) -> str:
                          f"{p([x['share'] for x in rows], 50):.3f}, all 16 bits on {sum(x['bits'] == 16 for x in rows)}")
     ctrl = [c["share"] for c in blob["controls"]] + [r["unmarked"]["share"] for r in R]
     lines.append(f"  unmarked clips: the share at most {max(ctrl, default=0.0):.3f}")
+    return lines
+
+
+def format_dev(blob: dict) -> str:
+    g = gate(blob)
+    lines = [f"M43, the watermark's development check: {len(blob['neutrals'])} neutral clips and {len(blob['renders'])} "
+             f"renders (severity's dev set, 24 kHz), {len(blob['controls'])} eval-set clips never marked", ""]
+    lines += [f"{name:<18} {'PASS' if ok else 'FAIL'}  {detail}" for name, (ok, detail) in g["checks"].items()]
+    lines += ["", f"The rule (written before the check): {'GO: wire the mark in' if g['go'] else 'STOP: nothing wired in'}",
+              "", "Descriptive, not the rule:"] + _describe(blob)
     return "\n".join(lines)
 
 
+def format_alphas(blob: dict) -> str:
+    chosen = choose(blob)
+    lines = [f"M43, step 1b: weaker marks on the dev set, {len(blob['controls'])} eval-set clips never marked", ""]
+    for a in ALPHAS:
+        if f"{a:g}" not in blob["alphas"]:
+            continue
+        one = at(blob, a)
+        g = gate(one)
+        lines += [f"alpha {a:g}: {'PASS' if g['go'] else 'FAIL'}"]
+        lines += [f"  {name:<18} {'PASS' if ok else 'FAIL'}  {detail}" for name, (ok, detail) in g["checks"].items()]
+        lines += _describe(one) + [""]
+    lines.append("The rule (written before the run): " + (f"CHOSEN alpha {chosen:g}, the strongest that passes; "
+                                                          f"confirm it once on PR-009's held-out set" if chosen is not None
+                                                          else "STOP: no weaker mark passes; nothing wired in"))
+    return "\n".join(lines)
+
+
+def format_confirm(blob: dict) -> str:
+    one = at(blob, blob["alpha"])
+    g = gate(one)
+    lines = [f"M43, step 1c: alpha {blob['alpha']:g} once on PR-009's held-out set: {len(one['neutrals'])} neutral clips "
+             f"and {len(one['renders'])} renders, {len(blob['controls'])} eval-set clips never marked", ""]
+    lines += [f"{name:<18} {'PASS' if ok else 'FAIL'}  {detail}" for name, (ok, detail) in g["checks"].items()]
+    lines += ["", f"The rule (written before the run): {'GO: wire the mark in at alpha ' + format(blob['alpha'], 'g') if g['go'] else 'STOP: nothing wired in'}",
+              "", "Descriptive, not the rule:"] + _describe(one)
+    return "\n".join(lines)
+
+
+def _committed(path: pathlib.Path) -> bool:
+    return subprocess.run(["git", "ls-files", "--error-unmatch", str(path)], capture_output=True).returncode == 0
+
+
 def main(argv=None) -> None:
+    import argparse
     import warnings
 
+    from . import severity
     from .evalset import load, verify
-    from .severity import kokoro_speaker
     from .sweep import _git_commit
     from .watermark import TAG, Watermarker
     warnings.filterwarnings("ignore")
-    if RUN.exists():
-        raise SystemExit(f"{RUN} exists: the check is recorded once")
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("step", nargs="?", default="full", choices=["full", "alpha", "confirm"])
+    a = ap.parse_args(argv)
+    path = {"full": RUN, "alpha": ALPHA_RUN, "confirm": CONFIRM_RUN}[a.step]
+    if path.exists():
+        raise SystemExit(f"{path} exists: each step is recorded once")
+    chosen = None
+    if a.step == "confirm":
+        if not ALPHA_RUN.exists() or not _committed(ALPHA_RUN):
+            raise SystemExit(f"{ALPHA_RUN} must be run and committed first: the strength is fixed before the confirmation")
+        chosen = choose(json.loads(ALPHA_RUN.read_text(encoding="utf-8")))
+        if chosen is None:
+            raise SystemExit("step 1b chose no strength: nothing to confirm")
     problems = verify()
     if problems:
         raise SystemExit("the eval set is not the frozen set:\n  " + "\n  ".join(problems[:10]))
     wm = Watermarker().load()
     wm.embed(np.zeros(24_000, np.float32), 24_000)                   # the first mark compiles AudioSeal's layers
     controls = [(it.id, it.audio, 16_000) for it in load()]
-    blob = {"run": "M43, the watermark's development check", "commit": _git_commit(), "watermark": TAG,
-            **run(kokoro_speaker(), wm, controls)}
-    RUN.parent.mkdir(parents=True, exist_ok=True)
-    RUN.write_text(json.dumps(blob, indent=1) + "\n", encoding="utf-8")
-    print(format_dev(blob))
-    print(f"\nsaved -> {RUN}")
+    head = {"commit": _git_commit(), "watermark": TAG}
+    speak = severity.kokoro_speaker()
+    if a.step == "full":
+        blob = {"run": "M43, the watermark's development check", **head, **run(speak, wm, controls)}
+        text = format_dev
+    else:
+        alphas = ALPHAS if a.step == "alpha" else (chosen,)
+        voices, sentences = ((None, None) if a.step == "alpha" else (severity.TEST_VOICES, severity.TEST_SENTENCES))
+        sets = marked_sets(speak, wm, alphas, voices, sentences)
+        blob = {"run": f"M43, step {'1b: weaker marks on the dev set' if a.step == 'alpha' else '1c: the confirmation'}",
+                **head, "alphas": {f"{k:g}": v for k, v in sets.items()},
+                "controls": [{"id": cid, **wm.detect(audio, csr)} for cid, audio, csr in controls]}
+        if a.step == "confirm":
+            blob["alpha"] = chosen
+        text = format_alphas if a.step == "alpha" else format_confirm
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(blob, indent=1) + "\n", encoding="utf-8")
+    print(text(blob))
+    print(f"\nsaved -> {path}")
 
 
 if __name__ == "__main__":

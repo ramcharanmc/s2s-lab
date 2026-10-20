@@ -66,12 +66,12 @@ class FakeNets:
 class FakeMark:
     """The same stand-in mark, at the level the check calls it: embed(audio, sr) and detect(audio, sr)."""
 
-    def embed(self, audio, sr):
+    def embed(self, audio, sr, alpha=1.0):
         assert sr == MARK_RATE
-        return (np.asarray(audio, np.float32) + tone(len(audio))).astype(np.float32)
+        return (np.asarray(audio, np.float32) + alpha * tone(len(audio))).astype(np.float32)
 
     def detect(self, audio, sr):
-        found = tone_level(to_rate(audio, sr)) > TONE_AMP / 2
+        found = tone_level(to_rate(audio, sr)) > TONE_AMP / 3              # found at half strength, lost at 0.3
         return {"share": 1.0 if found else 0.0, "bits": 16 if found else 0, "marked": found}
 
 
@@ -95,7 +95,7 @@ def test_the_check_on_a_synthetic_voice_says_go_and_each_failure_says_stop(monke
     monkeypatch.setattr(severity, "DEV_VOICES", ("v1",))
     monkeypatch.setattr(severity, "DEV_SENTENCES", {"d1": "one sentence. And another."})
     monkeypatch.setattr(severity, "SCORES", {"depression": (0, 15), "mania": (0, 26)})
-    noise = np.random.default_rng(0).normal(0, 0.05, 32_000).astype(np.float32)
+    noise = np.random.default_rng(0).normal(0, 0.01, 32_000).astype(np.float32)
     blob = watermarkdev.run(lambda text, v: voice(), FakeMark(), [("eval-0", noise, 16_000)], opus=False)
     assert [r["id"] for r in blob["renders"]] == ["v1-d1-depression-0", "v1-d1-depression-15", "v1-d1-mania-0",
                                                   "v1-d1-mania-26"]
@@ -116,6 +116,31 @@ def test_the_check_on_a_synthetic_voice_says_go_and_each_failure_says_stop(monke
     assert not watermarkdev.gate({**blob, "renders": [slow]})["checks"]["render unchanged"][0]
     late = {**blob, "neutrals": [dict(blob["neutrals"][0], silence_ms=[320.0, 340.0])]}
     assert not watermarkdev.gate(late)["checks"]["silence unchanged"][0]
+
+
+def test_the_strongest_weaker_mark_that_passes_is_chosen_and_confirmed_on_other_material(monkeypatch, tmp_path):
+    monkeypatch.setattr(severity, "DEV_VOICES", ("v1",))
+    monkeypatch.setattr(severity, "DEV_SENTENCES", {"d1": "one sentence. And another."})
+    monkeypatch.setattr(severity, "SCORES", {"depression": (0, 15), "mania": (0, 26)})
+    noise = np.random.default_rng(0).normal(0, 0.01, 32_000).astype(np.float32)
+    sets = watermarkdev.marked_sets(lambda text, v: voice(), FakeMark(), watermarkdev.ALPHAS, opus=False)
+    blob = {"alphas": {f"{a:g}": s for a, s in sets.items()}, "controls": [{"id": "eval-0", **FakeMark().detect(noise, 16_000)}]}
+    assert len(blob["alphas"]["0.5"]["renders"]) == 4 and len(blob["alphas"]["0.5"]["neutrals"]) == 1
+    assert watermarkdev.gate(watermarkdev.at(blob, 0.5))["go"]                   # the stand-in is found at half strength
+    assert not watermarkdev.gate(watermarkdev.at(blob, 0.3))["checks"]["found"][0]   # and lost below it
+    assert watermarkdev.choose(blob) == 0.5
+    assert "CHOSEN alpha 0.5, the strongest that passes" in watermarkdev.format_alphas(blob)
+    assert watermarkdev.choose({"alphas": {k: v for k, v in blob["alphas"].items() if k != "0.5"},
+                                "controls": blob["controls"]}) is None
+    held = watermarkdev.marked_sets(lambda text, v: voice(f0=150.0), FakeMark(), (0.5,), voices=("h1", "h2"),
+                                    sentences={"t1": "x. y."}, opus=False)
+    confirm = {"alpha": 0.5, "alphas": {"0.5": held[0.5]}, "controls": blob["controls"]}
+    assert [n["id"] for n in held[0.5]["neutrals"]] == ["h1-t1", "h2-t1"]
+    assert "GO: wire the mark in at alpha 0.5" in watermarkdev.format_confirm(confirm)
+    monkeypatch.setattr(watermarkdev, "CONFIRM_RUN", tmp_path / "confirm.json")
+    monkeypatch.setattr(watermarkdev, "ALPHA_RUN", tmp_path / "alpha-dev.json")
+    with pytest.raises(SystemExit, match="must be run and committed first"):
+        watermarkdev.main(["confirm"])
 
 
 def test_a_16_bit_wav_is_what_its_samples_read_back_as():

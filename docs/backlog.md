@@ -228,7 +228,7 @@ Owed.
 | ~~P2c in CI: the "severity monotonicity passing" badge~~ | v1 §4, §10 | **done in M42**: the severity test in CI in 30 s, its badge in the README; the whole suite in CI too | free |
 | P2c's disentanglement ablation | v1 §4 | not run: it needs listeners | listeners' time |
 | R5's "five conversations per A100" | v1 §4, v2 §8 | not measured | a few dollars |
-| Watermarking the synthetic voices | v1 §9 | renders are named and tagged synthetic; **M43, in progress**: AudioSeal, a development check first | \$0, the demo's check about \$0.06 |
+| Watermarking the synthetic voices | v1 §9 | renders are named and tagged synthetic; **M43, in progress**: the full AudioSeal mark found everywhere but moved the render's pitch over its bars (STOP); a weaker mark next, confirmed on PR-009's held-out set | \$0, the demo's check about \$0.06 |
 | Full-Duplex-Bench's protocol for the duplex numbers | v1 §7 | R5 was measured with this harness, not theirs | small |
 | "VAP is what Moshi learned implicitly" | v2 §3.1 | VAP built (M30), PR-014 not run: the engineered side of the comparison has no result | — |
 | The cascade at the plans' sizes: a large-v3-turbo recognizer (int8, L4) and a 7 to 8B LLM (AWQ, A10) | v1 §4 (P1 W1), v2 §3 | built with base.en and Qwen2.5-0.5B on one T4; 1.5B and small.en tried on Colab only. Every cascade number is for the small model, which refused four of eight harmless questions in the demo (`docs/m27-log.md`, entry 31) | a few dollars |

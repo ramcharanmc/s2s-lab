@@ -58,8 +58,9 @@ class Watermarker:
             self._det = AudioSeal.load_detector(DETECTOR).to(self.device).eval()
         return self
 
-    def embed(self, audio, sr: int) -> np.ndarray:
-        """The audio with the mark added: the same length, clipped to [-1, 1]. Only at MARK_RATE."""
+    def embed(self, audio, sr: int, alpha: float = 1.0) -> np.ndarray:
+        """The audio with the mark added, scaled by `alpha` (AudioSeal's own tune-down ratio): the same length,
+        clipped to [-1, 1]. Only at MARK_RATE."""
         import torch
         if sr != MARK_RATE:
             raise ValueError(f"marks are made at {MARK_RATE} Hz, the rate Kokoro speaks at, not {sr}")
@@ -71,7 +72,7 @@ class Watermarker:
         msg = torch.tensor([MESSAGE], dtype=torch.long, device=self.device)
         with torch.inference_mode():
             mark = self._gen.get_watermark(t, message=msg)
-        return (t + mark).clamp(-1.0, 1.0).view(-1).cpu().numpy().astype(np.float32)
+        return (t + alpha * mark).clamp(-1.0, 1.0).view(-1).cpu().numpy().astype(np.float32)
 
     def detect(self, audio, sr: int) -> dict:
         """{"share": of frames flagged, "bits": of MESSAGE read back, "marked": share >= THRESHOLD}, read at

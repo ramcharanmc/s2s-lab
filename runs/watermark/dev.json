@@ -1,0 +1,5363 @@
+{
+ "run": "M43, the watermark's development check",
+ "commit": "b45bd26",
+ "watermark": "AudioSeal 0.2.0 watermark (audioseal_wm_16bits, message 0x5332)",
+ "neutrals": [
+  {
+   "id": "af_heart-d1",
+   "silence_ms": [
+    320.0,
+    320.0
+   ],
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d2",
+   "silence_ms": [
+    320.0,
+    320.0
+   ],
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d3",
+   "silence_ms": [
+    300.0,
+    300.0
+   ],
+   "unmarked": {
+    "share": 0.0,
+    "bits": 6,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d4",
+   "silence_ms": [
+    300.0,
+    300.0
+   ],
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d1",
+   "silence_ms": [
+    400.0,
+    400.0
+   ],
+   "unmarked": {
+    "share": 0.0,
+    "bits": 10,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d2",
+   "silence_ms": [
+    400.0,
+    400.0
+   ],
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d3",
+   "silence_ms": [
+    380.0,
+    380.0
+   ],
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d4",
+   "silence_ms": [
+    420.0,
+    420.0
+   ],
+   "unmarked": {
+    "share": 0.001,
+    "bits": 10,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  }
+ ],
+ "renders": [
+  {
+   "id": "af_heart-d1-depression-0",
+   "plain": {
+    "f0_offset_hz": -5.7856,
+    "f0_dev_scale": 1.0374,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "marked_measures": {
+    "f0_offset_hz": -5.5722,
+    "f0_dev_scale": 1.0481,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "level_db": -26.2,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d1-depression-5",
+   "plain": {
+    "f0_offset_hz": -9.3069,
+    "f0_dev_scale": 0.8238,
+    "rate": 0.908,
+    "pause_scale": 1.5556
+   },
+   "marked_measures": {
+    "f0_offset_hz": -9.0095,
+    "f0_dev_scale": 0.8348,
+    "rate": 0.908,
+    "pause_scale": 1.5556
+   },
+   "level_db": -26.3,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d1-depression-10",
+   "plain": {
+    "f0_offset_hz": -12.5982,
+    "f0_dev_scale": 0.745,
+    "rate": 0.8137,
+    "pause_scale": 2.0833
+   },
+   "marked_measures": {
+    "f0_offset_hz": -12.6146,
+    "f0_dev_scale": 0.7372,
+    "rate": 0.8137,
+    "pause_scale": 2.0833
+   },
+   "level_db": -26.3,
+   "unmarked": {
+    "share": 0.0017,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d1-depression-15",
+   "plain": {
+    "f0_offset_hz": -16.2088,
+    "f0_dev_scale": 0.6864,
+    "rate": 0.7232,
+    "pause_scale": 2.6667
+   },
+   "marked_measures": {
+    "f0_offset_hz": -16.0357,
+    "f0_dev_scale": 0.6956,
+    "rate": 0.7232,
+    "pause_scale": 2.6667
+   },
+   "level_db": -25.1,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d1-depression-20",
+   "plain": {
+    "f0_offset_hz": -18.0337,
+    "f0_dev_scale": 0.6788,
+    "rate": 0.6294,
+    "pause_scale": 3.1944
+   },
+   "marked_measures": {
+    "f0_offset_hz": -17.8154,
+    "f0_dev_scale": 0.6873,
+    "rate": 0.6294,
+    "pause_scale": 3.1944
+   },
+   "level_db": -25.6,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d1-depression-27",
+   "plain": {
+    "f0_offset_hz": -23.7718,
+    "f0_dev_scale": 0.4854,
+    "rate": 0.5,
+    "pause_scale": 3.9722
+   },
+   "marked_measures": {
+    "f0_offset_hz": -23.5214,
+    "f0_dev_scale": 0.4935,
+    "rate": 0.5,
+    "pause_scale": 3.9722
+   },
+   "level_db": -25.0,
+   "unmarked": {
+    "share": 0.0146,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d1-mania-0",
+   "plain": {
+    "f0_offset_hz": -0.8156,
+    "f0_dev_scale": 1.1333,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "marked_measures": {
+    "f0_offset_hz": -0.8088,
+    "f0_dev_scale": 1.1179,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "level_db": -26.1,
+   "unmarked": {
+    "share": 0.0006,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d1-mania-12",
+   "plain": {
+    "f0_offset_hz": 9.3354,
+    "f0_dev_scale": 1.1644,
+    "rate": 1.1602,
+    "pause_scale": 0.8611
+   },
+   "marked_measures": {
+    "f0_offset_hz": 9.3163,
+    "f0_dev_scale": 1.176,
+    "rate": 1.1602,
+    "pause_scale": 0.8611
+   },
+   "level_db": -26.5,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d1-mania-20",
+   "plain": {
+    "f0_offset_hz": 14.9608,
+    "f0_dev_scale": 1.1296,
+    "rate": 1.2685,
+    "pause_scale": 0.7778
+   },
+   "marked_measures": {
+    "f0_offset_hz": 15.1997,
+    "f0_dev_scale": 1.1503,
+    "rate": 1.2685,
+    "pause_scale": 0.7778
+   },
+   "level_db": -26.6,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d1-mania-26",
+   "plain": {
+    "f0_offset_hz": 19.7026,
+    "f0_dev_scale": 1.2474,
+    "rate": 1.3461,
+    "pause_scale": 0.6944
+   },
+   "marked_measures": {
+    "f0_offset_hz": 19.9451,
+    "f0_dev_scale": 1.2629,
+    "rate": 1.3461,
+    "pause_scale": 0.6944
+   },
+   "level_db": -26.2,
+   "unmarked": {
+    "share": 0.0158,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d1-mania-40",
+   "plain": {
+    "f0_offset_hz": 30.3914,
+    "f0_dev_scale": 1.3904,
+    "rate": 1.5315,
+    "pause_scale": 0.5278
+   },
+   "marked_measures": {
+    "f0_offset_hz": 30.583,
+    "f0_dev_scale": 1.4106,
+    "rate": 1.5315,
+    "pause_scale": 0.5278
+   },
+   "level_db": -25.2,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d1-mania-60",
+   "plain": {
+    "f0_offset_hz": 46.9788,
+    "f0_dev_scale": 1.7164,
+    "rate": 1.791,
+    "pause_scale": 0.2778
+   },
+   "marked_measures": {
+    "f0_offset_hz": 47.0336,
+    "f0_dev_scale": 1.7362,
+    "rate": 1.791,
+    "pause_scale": 0.2778
+   },
+   "level_db": -26.4,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d2-depression-0",
+   "plain": {
+    "f0_offset_hz": -5.1684,
+    "f0_dev_scale": 0.9451,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "marked_measures": {
+    "f0_offset_hz": -5.2761,
+    "f0_dev_scale": 0.9429,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "level_db": -26.9,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d2-depression-5",
+   "plain": {
+    "f0_offset_hz": -9.0505,
+    "f0_dev_scale": 0.8446,
+    "rate": 0.9074,
+    "pause_scale": 1.55
+   },
+   "marked_measures": {
+    "f0_offset_hz": -9.1172,
+    "f0_dev_scale": 0.8284,
+    "rate": 0.9074,
+    "pause_scale": 1.55
+   },
+   "level_db": -26.3,
+   "unmarked": {
+    "share": 0.0057,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d2-depression-10",
+   "plain": {
+    "f0_offset_hz": -12.7972,
+    "f0_dev_scale": 0.7882,
+    "rate": 0.8148,
+    "pause_scale": 2.1
+   },
+   "marked_measures": {
+    "f0_offset_hz": -12.8744,
+    "f0_dev_scale": 0.7797,
+    "rate": 0.8148,
+    "pause_scale": 2.1
+   },
+   "level_db": -26.4,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d2-depression-15",
+   "plain": {
+    "f0_offset_hz": -16.2133,
+    "f0_dev_scale": 0.6385,
+    "rate": 0.7222,
+    "pause_scale": 2.65
+   },
+   "marked_measures": {
+    "f0_offset_hz": -16.3085,
+    "f0_dev_scale": 0.6363,
+    "rate": 0.7222,
+    "pause_scale": 2.65
+   },
+   "level_db": -26.4,
+   "unmarked": {
+    "share": 0.0015,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d2-depression-20",
+   "plain": {
+    "f0_offset_hz": -19.7951,
+    "f0_dev_scale": 0.5691,
+    "rate": 0.6295,
+    "pause_scale": 3.2
+   },
+   "marked_measures": {
+    "f0_offset_hz": -19.8749,
+    "f0_dev_scale": 0.568,
+    "rate": 0.6295,
+    "pause_scale": 3.2
+   },
+   "level_db": -26.4,
+   "unmarked": {
+    "share": 0.0013,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d2-depression-27",
+   "plain": {
+    "f0_offset_hz": -24.4698,
+    "f0_dev_scale": 0.5455,
+    "rate": 0.5,
+    "pause_scale": 3.975
+   },
+   "marked_measures": {
+    "f0_offset_hz": -24.5486,
+    "f0_dev_scale": 0.5443,
+    "rate": 0.5,
+    "pause_scale": 3.975
+   },
+   "level_db": -25.8,
+   "unmarked": {
+    "share": 0.1001,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d2-mania-0",
+   "plain": {
+    "f0_offset_hz": 0.0111,
+    "f0_dev_scale": 0.963,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "marked_measures": {
+    "f0_offset_hz": -0.0609,
+    "f0_dev_scale": 0.9592,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "level_db": -26.1,
+   "unmarked": {
+    "share": 0.0003,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d2-mania-12",
+   "plain": {
+    "f0_offset_hz": 8.6061,
+    "f0_dev_scale": 1.124,
+    "rate": 1.1584,
+    "pause_scale": 0.85
+   },
+   "marked_measures": {
+    "f0_offset_hz": 8.5244,
+    "f0_dev_scale": 1.1194,
+    "rate": 1.1584,
+    "pause_scale": 0.85
+   },
+   "level_db": -27.3,
+   "unmarked": {
+    "share": 0.0005,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d2-mania-20",
+   "plain": {
+    "f0_offset_hz": 14.8501,
+    "f0_dev_scale": 1.2778,
+    "rate": 1.2682,
+    "pause_scale": 0.775
+   },
+   "marked_measures": {
+    "f0_offset_hz": 14.7611,
+    "f0_dev_scale": 1.2728,
+    "rate": 1.2682,
+    "pause_scale": 0.775
+   },
+   "level_db": -26.7,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d2-mania-26",
+   "plain": {
+    "f0_offset_hz": 18.9375,
+    "f0_dev_scale": 1.2332,
+    "rate": 1.3472,
+    "pause_scale": 0.7
+   },
+   "marked_measures": {
+    "f0_offset_hz": 18.9279,
+    "f0_dev_scale": 1.2223,
+    "rate": 1.3472,
+    "pause_scale": 0.7
+   },
+   "level_db": -27.0,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d2-mania-40",
+   "plain": {
+    "f0_offset_hz": 29.9738,
+    "f0_dev_scale": 1.511,
+    "rate": 1.5375,
+    "pause_scale": 0.55
+   },
+   "marked_measures": {
+    "f0_offset_hz": 29.8946,
+    "f0_dev_scale": 1.5305,
+    "rate": 1.5375,
+    "pause_scale": 0.55
+   },
+   "level_db": -25.9,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d2-mania-60",
+   "plain": {
+    "f0_offset_hz": 44.1951,
+    "f0_dev_scale": 1.7778,
+    "rate": 1.7988,
+    "pause_scale": 0.3
+   },
+   "marked_measures": {
+    "f0_offset_hz": 44.0797,
+    "f0_dev_scale": 1.7564,
+    "rate": 1.7988,
+    "pause_scale": 0.3
+   },
+   "level_db": -25.9,
+   "unmarked": {
+    "share": 0.0379,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d3-depression-0",
+   "plain": {
+    "f0_offset_hz": -4.668,
+    "f0_dev_scale": 0.9608,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "marked_measures": {
+    "f0_offset_hz": -4.6695,
+    "f0_dev_scale": 0.9609,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "level_db": -24.7,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d3-depression-5",
+   "plain": {
+    "f0_offset_hz": -8.4992,
+    "f0_dev_scale": 0.8537,
+    "rate": 0.9066,
+    "pause_scale": 1.5507
+   },
+   "marked_measures": {
+    "f0_offset_hz": -8.5245,
+    "f0_dev_scale": 0.8502,
+    "rate": 0.9066,
+    "pause_scale": 1.5507
+   },
+   "level_db": -26.9,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 0.9999,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d3-depression-10",
+   "plain": {
+    "f0_offset_hz": -12.0801,
+    "f0_dev_scale": 0.7381,
+    "rate": 0.8135,
+    "pause_scale": 2.1014
+   },
+   "marked_measures": {
+    "f0_offset_hz": -12.1019,
+    "f0_dev_scale": 0.7365,
+    "rate": 0.8135,
+    "pause_scale": 2.1014
+   },
+   "level_db": -25.7,
+   "unmarked": {
+    "share": 0.0001,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d3-depression-15",
+   "plain": {
+    "f0_offset_hz": -15.7321,
+    "f0_dev_scale": 0.6322,
+    "rate": 0.7207,
+    "pause_scale": 2.6522
+   },
+   "marked_measures": {
+    "f0_offset_hz": -15.8159,
+    "f0_dev_scale": 0.6285,
+    "rate": 0.7207,
+    "pause_scale": 2.6522
+   },
+   "level_db": -25.7,
+   "unmarked": {
+    "share": 0.0001,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d3-depression-20",
+   "plain": {
+    "f0_offset_hz": -19.5977,
+    "f0_dev_scale": 0.5774,
+    "rate": 0.6269,
+    "pause_scale": 3.1884
+   },
+   "marked_measures": {
+    "f0_offset_hz": -19.6742,
+    "f0_dev_scale": 0.5766,
+    "rate": 0.6269,
+    "pause_scale": 3.1884
+   },
+   "level_db": -24.7,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d3-depression-27",
+   "plain": {
+    "f0_offset_hz": -23.9286,
+    "f0_dev_scale": 0.4197,
+    "rate": 0.4993,
+    "pause_scale": 3.9855
+   },
+   "marked_measures": {
+    "f0_offset_hz": -24.002,
+    "f0_dev_scale": 0.4197,
+    "rate": 0.4993,
+    "pause_scale": 3.9855
+   },
+   "level_db": -25.4,
+   "unmarked": {
+    "share": 0.0099,
+    "bits": 6,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d3-mania-0",
+   "plain": {
+    "f0_offset_hz": 0.3615,
+    "f0_dev_scale": 0.9466,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "marked_measures": {
+    "f0_offset_hz": 0.4536,
+    "f0_dev_scale": 0.9393,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "level_db": -25.5,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d3-mania-12",
+   "plain": {
+    "f0_offset_hz": 9.3325,
+    "f0_dev_scale": 1.0898,
+    "rate": 1.1666,
+    "pause_scale": 0.8841
+   },
+   "marked_measures": {
+    "f0_offset_hz": 9.3171,
+    "f0_dev_scale": 1.0893,
+    "rate": 1.1666,
+    "pause_scale": 0.8841
+   },
+   "level_db": -26.7,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d3-mania-20",
+   "plain": {
+    "f0_offset_hz": 15.2883,
+    "f0_dev_scale": 1.2244,
+    "rate": 1.2719,
+    "pause_scale": 0.7826
+   },
+   "marked_measures": {
+    "f0_offset_hz": 15.2407,
+    "f0_dev_scale": 1.2233,
+    "rate": 1.2719,
+    "pause_scale": 0.7826
+   },
+   "level_db": -27.4,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d3-mania-26",
+   "plain": {
+    "f0_offset_hz": 20.1198,
+    "f0_dev_scale": 1.3033,
+    "rate": 1.3463,
+    "pause_scale": 0.6957
+   },
+   "marked_measures": {
+    "f0_offset_hz": 20.0934,
+    "f0_dev_scale": 1.3029,
+    "rate": 1.3463,
+    "pause_scale": 0.6957
+   },
+   "level_db": -25.6,
+   "unmarked": {
+    "share": 0.0004,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d3-mania-40",
+   "plain": {
+    "f0_offset_hz": 30.6712,
+    "f0_dev_scale": 1.4615,
+    "rate": 1.5347,
+    "pause_scale": 0.5362
+   },
+   "marked_measures": {
+    "f0_offset_hz": 30.7008,
+    "f0_dev_scale": 1.4609,
+    "rate": 1.5347,
+    "pause_scale": 0.5362
+   },
+   "level_db": -27.0,
+   "unmarked": {
+    "share": 0.0146,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d3-mania-60",
+   "plain": {
+    "f0_offset_hz": 46.6475,
+    "f0_dev_scale": 1.6314,
+    "rate": 1.8029,
+    "pause_scale": 0.3043
+   },
+   "marked_measures": {
+    "f0_offset_hz": 46.5886,
+    "f0_dev_scale": 1.6404,
+    "rate": 1.8029,
+    "pause_scale": 0.3043
+   },
+   "level_db": -27.1,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 10,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d4-depression-0",
+   "plain": {
+    "f0_offset_hz": -3.1959,
+    "f0_dev_scale": 0.9746,
+    "rate": 0.9975,
+    "pause_scale": 0.9792
+   },
+   "marked_measures": {
+    "f0_offset_hz": -3.0855,
+    "f0_dev_scale": 0.9748,
+    "rate": 0.9975,
+    "pause_scale": 0.9792
+   },
+   "level_db": -28.8,
+   "unmarked": {
+    "share": 0.0003,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d4-depression-5",
+   "plain": {
+    "f0_offset_hz": -7.8679,
+    "f0_dev_scale": 0.8706,
+    "rate": 0.9045,
+    "pause_scale": 1.5208
+   },
+   "marked_measures": {
+    "f0_offset_hz": -7.6599,
+    "f0_dev_scale": 0.8743,
+    "rate": 0.9045,
+    "pause_scale": 1.5208
+   },
+   "level_db": -29.1,
+   "unmarked": {
+    "share": 0.0007,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d4-depression-10",
+   "plain": {
+    "f0_offset_hz": -12.779,
+    "f0_dev_scale": 0.778,
+    "rate": 0.8133,
+    "pause_scale": 2.0833
+   },
+   "marked_measures": {
+    "f0_offset_hz": -12.6443,
+    "f0_dev_scale": 0.7788,
+    "rate": 0.8133,
+    "pause_scale": 2.0833
+   },
+   "level_db": -28.9,
+   "unmarked": {
+    "share": 0.0019,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d4-depression-15",
+   "plain": {
+    "f0_offset_hz": -15.6666,
+    "f0_dev_scale": 0.6596,
+    "rate": 0.7205,
+    "pause_scale": 2.625
+   },
+   "marked_measures": {
+    "f0_offset_hz": -15.591,
+    "f0_dev_scale": 0.657,
+    "rate": 0.7205,
+    "pause_scale": 2.625
+   },
+   "level_db": -28.6,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 0.9911,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d4-depression-20",
+   "plain": {
+    "f0_offset_hz": -18.4919,
+    "f0_dev_scale": 0.5576,
+    "rate": 0.6278,
+    "pause_scale": 3.1667
+   },
+   "marked_measures": {
+    "f0_offset_hz": -18.275,
+    "f0_dev_scale": 0.5582,
+    "rate": 0.6278,
+    "pause_scale": 3.1667
+   },
+   "level_db": -27.4,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d4-depression-27",
+   "plain": {
+    "f0_offset_hz": -23.3818,
+    "f0_dev_scale": 0.4114,
+    "rate": 0.4981,
+    "pause_scale": 3.9167
+   },
+   "marked_measures": {
+    "f0_offset_hz": -23.5999,
+    "f0_dev_scale": 0.4088,
+    "rate": 0.4981,
+    "pause_scale": 3.9167
+   },
+   "level_db": -27.1,
+   "unmarked": {
+    "share": 0.0012,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d4-mania-0",
+   "plain": {
+    "f0_offset_hz": 1.4781,
+    "f0_dev_scale": 0.9653,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "marked_measures": {
+    "f0_offset_hz": 1.2689,
+    "f0_dev_scale": 0.9659,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "level_db": -28.1,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d4-mania-12",
+   "plain": {
+    "f0_offset_hz": 12.3944,
+    "f0_dev_scale": 1.118,
+    "rate": 1.1557,
+    "pause_scale": 0.8333
+   },
+   "marked_measures": {
+    "f0_offset_hz": 12.5321,
+    "f0_dev_scale": 1.1182,
+    "rate": 1.1557,
+    "pause_scale": 0.8333
+   },
+   "level_db": -28.6,
+   "unmarked": {
+    "share": 0.0007,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d4-mania-20",
+   "plain": {
+    "f0_offset_hz": 14.694,
+    "f0_dev_scale": 1.2454,
+    "rate": 1.2634,
+    "pause_scale": 0.75
+   },
+   "marked_measures": {
+    "f0_offset_hz": 14.8387,
+    "f0_dev_scale": 1.2453,
+    "rate": 1.2634,
+    "pause_scale": 0.75
+   },
+   "level_db": -28.6,
+   "unmarked": {
+    "share": 0.0012,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d4-mania-26",
+   "plain": {
+    "f0_offset_hz": 22.2522,
+    "f0_dev_scale": 1.2759,
+    "rate": 1.3446,
+    "pause_scale": 0.6875
+   },
+   "marked_measures": {
+    "f0_offset_hz": 23.1366,
+    "f0_dev_scale": 1.2503,
+    "rate": 1.3446,
+    "pause_scale": 0.6875
+   },
+   "level_db": -28.0,
+   "unmarked": {
+    "share": 0.0012,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d4-mania-40",
+   "plain": {
+    "f0_offset_hz": 37.4959,
+    "f0_dev_scale": 1.462,
+    "rate": 1.5295,
+    "pause_scale": 0.5208
+   },
+   "marked_measures": {
+    "f0_offset_hz": 37.5351,
+    "f0_dev_scale": 1.4625,
+    "rate": 1.5295,
+    "pause_scale": 0.5208
+   },
+   "level_db": -28.5,
+   "unmarked": {
+    "share": 0.0008,
+    "bits": 10,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "af_heart-d4-mania-60",
+   "plain": {
+    "f0_offset_hz": 52.4349,
+    "f0_dev_scale": 1.6987,
+    "rate": 1.7957,
+    "pause_scale": 0.2917
+   },
+   "marked_measures": {
+    "f0_offset_hz": 52.8731,
+    "f0_dev_scale": 1.7006,
+    "rate": 1.7957,
+    "pause_scale": 0.2917
+   },
+   "level_db": -27.1,
+   "unmarked": {
+    "share": 0.0126,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d1-depression-0",
+   "plain": {
+    "f0_offset_hz": -4.6324,
+    "f0_dev_scale": 0.9086,
+    "rate": 1.0028,
+    "pause_scale": 1.0196
+   },
+   "marked_measures": {
+    "f0_offset_hz": -4.4143,
+    "f0_dev_scale": 0.9094,
+    "rate": 1.0028,
+    "pause_scale": 1.0196
+   },
+   "level_db": -24.9,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d1-depression-5",
+   "plain": {
+    "f0_offset_hz": -9.0377,
+    "f0_dev_scale": 0.8025,
+    "rate": 0.9038,
+    "pause_scale": 1.5294
+   },
+   "marked_measures": {
+    "f0_offset_hz": -9.0801,
+    "f0_dev_scale": 0.8277,
+    "rate": 0.9038,
+    "pause_scale": 1.5294
+   },
+   "level_db": -26.3,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d1-depression-10",
+   "plain": {
+    "f0_offset_hz": -12.3085,
+    "f0_dev_scale": 0.7302,
+    "rate": 0.8127,
+    "pause_scale": 2.098
+   },
+   "marked_measures": {
+    "f0_offset_hz": -12.6617,
+    "f0_dev_scale": 0.756,
+    "rate": 0.8127,
+    "pause_scale": 2.098
+   },
+   "level_db": -25.2,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d1-depression-15",
+   "plain": {
+    "f0_offset_hz": -16.2474,
+    "f0_dev_scale": 0.6249,
+    "rate": 0.7184,
+    "pause_scale": 2.6275
+   },
+   "marked_measures": {
+    "f0_offset_hz": -16.2996,
+    "f0_dev_scale": 0.6283,
+    "rate": 0.7198,
+    "pause_scale": 2.6471
+   },
+   "level_db": -24.3,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d1-depression-20",
+   "plain": {
+    "f0_offset_hz": -19.7606,
+    "f0_dev_scale": 0.5372,
+    "rate": 0.6261,
+    "pause_scale": 3.1765
+   },
+   "marked_measures": {
+    "f0_offset_hz": -19.7644,
+    "f0_dev_scale": 0.5414,
+    "rate": 0.6261,
+    "pause_scale": 3.1765
+   },
+   "level_db": -23.7,
+   "unmarked": {
+    "share": 0.0038,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d1-depression-27",
+   "plain": {
+    "f0_offset_hz": -24.8938,
+    "f0_dev_scale": 0.3992,
+    "rate": 0.4965,
+    "pause_scale": 3.9216
+   },
+   "marked_measures": {
+    "f0_offset_hz": -24.8957,
+    "f0_dev_scale": 0.4017,
+    "rate": 0.4972,
+    "pause_scale": 3.9412
+   },
+   "level_db": -23.6,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 11,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d1-mania-0",
+   "plain": {
+    "f0_offset_hz": 0.2558,
+    "f0_dev_scale": 0.9704,
+    "rate": 1.0028,
+    "pause_scale": 1.0196
+   },
+   "marked_measures": {
+    "f0_offset_hz": 0.3184,
+    "f0_dev_scale": 0.9696,
+    "rate": 1.0028,
+    "pause_scale": 1.0196
+   },
+   "level_db": -26.9,
+   "unmarked": {
+    "share": 0.0014,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 0.9985,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d1-mania-12",
+   "plain": {
+    "f0_offset_hz": 9.1649,
+    "f0_dev_scale": 1.0978,
+    "rate": 1.1568,
+    "pause_scale": 0.8431
+   },
+   "marked_measures": {
+    "f0_offset_hz": 9.014,
+    "f0_dev_scale": 1.0956,
+    "rate": 1.1568,
+    "pause_scale": 0.8431
+   },
+   "level_db": -25.7,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 10,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d1-mania-20",
+   "plain": {
+    "f0_offset_hz": 14.3496,
+    "f0_dev_scale": 1.1473,
+    "rate": 1.2663,
+    "pause_scale": 0.7647
+   },
+   "marked_measures": {
+    "f0_offset_hz": 14.2556,
+    "f0_dev_scale": 1.1762,
+    "rate": 1.2663,
+    "pause_scale": 0.7647
+   },
+   "level_db": -25.0,
+   "unmarked": {
+    "share": 0.0016,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d1-mania-26",
+   "plain": {
+    "f0_offset_hz": 18.8957,
+    "f0_dev_scale": 1.2344,
+    "rate": 1.3492,
+    "pause_scale": 0.7059
+   },
+   "marked_measures": {
+    "f0_offset_hz": 18.8677,
+    "f0_dev_scale": 1.2274,
+    "rate": 1.3492,
+    "pause_scale": 0.7059
+   },
+   "level_db": -25.0,
+   "unmarked": {
+    "share": 0.0009,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d1-mania-40",
+   "plain": {
+    "f0_offset_hz": 29.9937,
+    "f0_dev_scale": 1.4097,
+    "rate": 1.539,
+    "pause_scale": 0.549
+   },
+   "marked_measures": {
+    "f0_offset_hz": 30.0605,
+    "f0_dev_scale": 1.4289,
+    "rate": 1.539,
+    "pause_scale": 0.549
+   },
+   "level_db": -25.7,
+   "unmarked": {
+    "share": 0.0011,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 0.9986,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d1-mania-60",
+   "plain": {
+    "f0_offset_hz": 44.9704,
+    "f0_dev_scale": 1.6507,
+    "rate": 1.8076,
+    "pause_scale": 0.3137
+   },
+   "marked_measures": {
+    "f0_offset_hz": 45.0066,
+    "f0_dev_scale": 1.6508,
+    "rate": 1.8076,
+    "pause_scale": 0.3137
+   },
+   "level_db": -28.1,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d2-depression-0",
+   "plain": {
+    "f0_offset_hz": -4.1338,
+    "f0_dev_scale": 0.9161,
+    "rate": 0.9946,
+    "pause_scale": 0.963
+   },
+   "marked_measures": {
+    "f0_offset_hz": -4.6356,
+    "f0_dev_scale": 0.9393,
+    "rate": 0.9946,
+    "pause_scale": 0.963
+   },
+   "level_db": -27.3,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d2-depression-5",
+   "plain": {
+    "f0_offset_hz": -7.0342,
+    "f0_dev_scale": 0.8114,
+    "rate": 0.9057,
+    "pause_scale": 1.537
+   },
+   "marked_measures": {
+    "f0_offset_hz": -7.6017,
+    "f0_dev_scale": 0.8166,
+    "rate": 0.9057,
+    "pause_scale": 1.537
+   },
+   "level_db": -26.0,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d2-depression-10",
+   "plain": {
+    "f0_offset_hz": -11.1053,
+    "f0_dev_scale": 0.7452,
+    "rate": 0.8102,
+    "pause_scale": 2.0556
+   },
+   "marked_measures": {
+    "f0_offset_hz": -11.7518,
+    "f0_dev_scale": 0.7523,
+    "rate": 0.812,
+    "pause_scale": 2.0741
+   },
+   "level_db": -26.4,
+   "unmarked": {
+    "share": 0.0013,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d2-depression-15",
+   "plain": {
+    "f0_offset_hz": -15.5943,
+    "f0_dev_scale": 0.626,
+    "rate": 0.7217,
+    "pause_scale": 2.6481
+   },
+   "marked_measures": {
+    "f0_offset_hz": -16.2277,
+    "f0_dev_scale": 0.6261,
+    "rate": 0.7217,
+    "pause_scale": 2.6481
+   },
+   "level_db": -26.7,
+   "unmarked": {
+    "share": 0.0001,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d2-depression-20",
+   "plain": {
+    "f0_offset_hz": -19.3935,
+    "f0_dev_scale": 0.5273,
+    "rate": 0.6283,
+    "pause_scale": 3.1852
+   },
+   "marked_measures": {
+    "f0_offset_hz": -19.9394,
+    "f0_dev_scale": 0.5345,
+    "rate": 0.6283,
+    "pause_scale": 3.1852
+   },
+   "level_db": -25.7,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d2-depression-27",
+   "plain": {
+    "f0_offset_hz": -24.3438,
+    "f0_dev_scale": 0.3832,
+    "rate": 0.4973,
+    "pause_scale": 3.9074
+   },
+   "marked_measures": {
+    "f0_offset_hz": -24.9992,
+    "f0_dev_scale": 0.3765,
+    "rate": 0.4973,
+    "pause_scale": 3.9074
+   },
+   "level_db": -24.9,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d2-mania-0",
+   "plain": {
+    "f0_offset_hz": 1.4877,
+    "f0_dev_scale": 0.9725,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "marked_measures": {
+    "f0_offset_hz": 0.8288,
+    "f0_dev_scale": 0.9767,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "level_db": -27.1,
+   "unmarked": {
+    "share": 0.0007,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d2-mania-12",
+   "plain": {
+    "f0_offset_hz": 8.9715,
+    "f0_dev_scale": 1.0095,
+    "rate": 1.1584,
+    "pause_scale": 0.8519
+   },
+   "marked_measures": {
+    "f0_offset_hz": 8.3387,
+    "f0_dev_scale": 1.0113,
+    "rate": 1.1584,
+    "pause_scale": 0.8519
+   },
+   "level_db": -27.4,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d2-mania-20",
+   "plain": {
+    "f0_offset_hz": 16.9187,
+    "f0_dev_scale": 1.0876,
+    "rate": 1.2649,
+    "pause_scale": 0.7593
+   },
+   "marked_measures": {
+    "f0_offset_hz": 16.2574,
+    "f0_dev_scale": 1.0986,
+    "rate": 1.2649,
+    "pause_scale": 0.7593
+   },
+   "level_db": -27.3,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 6,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d2-mania-26",
+   "plain": {
+    "f0_offset_hz": 21.8453,
+    "f0_dev_scale": 1.1698,
+    "rate": 1.3435,
+    "pause_scale": 0.6852
+   },
+   "marked_measures": {
+    "f0_offset_hz": 21.195,
+    "f0_dev_scale": 1.1765,
+    "rate": 1.3435,
+    "pause_scale": 0.6852
+   },
+   "level_db": -27.7,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d2-mania-40",
+   "plain": {
+    "f0_offset_hz": 31.0958,
+    "f0_dev_scale": 1.3009,
+    "rate": 1.5342,
+    "pause_scale": 0.537
+   },
+   "marked_measures": {
+    "f0_offset_hz": 30.3937,
+    "f0_dev_scale": 1.4074,
+    "rate": 1.5342,
+    "pause_scale": 0.537
+   },
+   "level_db": -26.8,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d2-mania-60",
+   "plain": {
+    "f0_offset_hz": 48.5267,
+    "f0_dev_scale": 1.5024,
+    "rate": 1.806,
+    "pause_scale": 0.3148
+   },
+   "marked_measures": {
+    "f0_offset_hz": 47.8945,
+    "f0_dev_scale": 1.519,
+    "rate": 1.806,
+    "pause_scale": 0.3148
+   },
+   "level_db": -27.0,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 10,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 0.9972,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d3-depression-0",
+   "plain": {
+    "f0_offset_hz": -3.967,
+    "f0_dev_scale": 0.9574,
+    "rate": 0.9973,
+    "pause_scale": 0.9867
+   },
+   "marked_measures": {
+    "f0_offset_hz": -4.3755,
+    "f0_dev_scale": 0.9576,
+    "rate": 0.9973,
+    "pause_scale": 0.9867
+   },
+   "level_db": -27.5,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d3-depression-5",
+   "plain": {
+    "f0_offset_hz": -7.9572,
+    "f0_dev_scale": 0.8898,
+    "rate": 0.9037,
+    "pause_scale": 1.5333
+   },
+   "marked_measures": {
+    "f0_offset_hz": -8.3752,
+    "f0_dev_scale": 0.8903,
+    "rate": 0.9059,
+    "pause_scale": 1.5467
+   },
+   "level_db": -28.0,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d3-depression-10",
+   "plain": {
+    "f0_offset_hz": -11.9643,
+    "f0_dev_scale": 0.7774,
+    "rate": 0.8124,
+    "pause_scale": 2.0933
+   },
+   "marked_measures": {
+    "f0_offset_hz": -12.29,
+    "f0_dev_scale": 0.7723,
+    "rate": 0.8124,
+    "pause_scale": 2.0933
+   },
+   "level_db": -26.4,
+   "unmarked": {
+    "share": 0.0063,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d3-depression-15",
+   "plain": {
+    "f0_offset_hz": -15.5847,
+    "f0_dev_scale": 0.6523,
+    "rate": 0.7208,
+    "pause_scale": 2.6533
+   },
+   "marked_measures": {
+    "f0_offset_hz": -15.8821,
+    "f0_dev_scale": 0.6532,
+    "rate": 0.7208,
+    "pause_scale": 2.6533
+   },
+   "level_db": -27.0,
+   "unmarked": {
+    "share": 0.0026,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d3-depression-20",
+   "plain": {
+    "f0_offset_hz": -19.1749,
+    "f0_dev_scale": 0.562,
+    "rate": 0.6268,
+    "pause_scale": 3.1867
+   },
+   "marked_measures": {
+    "f0_offset_hz": -19.3988,
+    "f0_dev_scale": 0.5644,
+    "rate": 0.6268,
+    "pause_scale": 3.1867
+   },
+   "level_db": -26.1,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d3-depression-27",
+   "plain": {
+    "f0_offset_hz": -24.643,
+    "f0_dev_scale": 0.4103,
+    "rate": 0.4973,
+    "pause_scale": 3.9467
+   },
+   "marked_measures": {
+    "f0_offset_hz": -24.912,
+    "f0_dev_scale": 0.4117,
+    "rate": 0.4973,
+    "pause_scale": 3.9467
+   },
+   "level_db": -25.5,
+   "unmarked": {
+    "share": 0.0014,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d3-mania-0",
+   "plain": {
+    "f0_offset_hz": 0.5617,
+    "f0_dev_scale": 0.9569,
+    "rate": 1.0027,
+    "pause_scale": 1.0133
+   },
+   "marked_measures": {
+    "f0_offset_hz": 0.4618,
+    "f0_dev_scale": 0.941,
+    "rate": 1.0027,
+    "pause_scale": 1.0133
+   },
+   "level_db": -27.7,
+   "unmarked": {
+    "share": 0.0049,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d3-mania-12",
+   "plain": {
+    "f0_offset_hz": 10.5842,
+    "f0_dev_scale": 1.1728,
+    "rate": 1.1618,
+    "pause_scale": 0.8667
+   },
+   "marked_measures": {
+    "f0_offset_hz": 10.4198,
+    "f0_dev_scale": 1.1788,
+    "rate": 1.1618,
+    "pause_scale": 0.8667
+   },
+   "level_db": -27.6,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d3-mania-20",
+   "plain": {
+    "f0_offset_hz": 15.9993,
+    "f0_dev_scale": 1.2198,
+    "rate": 1.2645,
+    "pause_scale": 0.76
+   },
+   "marked_measures": {
+    "f0_offset_hz": 15.7824,
+    "f0_dev_scale": 1.2277,
+    "rate": 1.2645,
+    "pause_scale": 0.76
+   },
+   "level_db": -27.9,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d3-mania-26",
+   "plain": {
+    "f0_offset_hz": 22.1382,
+    "f0_dev_scale": 1.3331,
+    "rate": 1.3503,
+    "pause_scale": 0.7067
+   },
+   "marked_measures": {
+    "f0_offset_hz": 21.9303,
+    "f0_dev_scale": 1.3362,
+    "rate": 1.3503,
+    "pause_scale": 0.7067
+   },
+   "level_db": -27.4,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d3-mania-40",
+   "plain": {
+    "f0_offset_hz": 34.1582,
+    "f0_dev_scale": 1.4704,
+    "rate": 1.5333,
+    "pause_scale": 0.5333
+   },
+   "marked_measures": {
+    "f0_offset_hz": 33.904,
+    "f0_dev_scale": 1.4785,
+    "rate": 1.5333,
+    "pause_scale": 0.5333
+   },
+   "level_db": -26.6,
+   "unmarked": {
+    "share": 0.0013,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d3-mania-60",
+   "plain": {
+    "f0_offset_hz": 49.2711,
+    "f0_dev_scale": 1.819,
+    "rate": 1.7957,
+    "pause_scale": 0.2933
+   },
+   "marked_measures": {
+    "f0_offset_hz": 49.0544,
+    "f0_dev_scale": 1.8277,
+    "rate": 1.7957,
+    "pause_scale": 0.2933
+   },
+   "level_db": -28.4,
+   "unmarked": {
+    "share": 0.0006,
+    "bits": 11,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d4-depression-0",
+   "plain": {
+    "f0_offset_hz": -3.6272,
+    "f0_dev_scale": 1.0709,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "marked_measures": {
+    "f0_offset_hz": -3.6101,
+    "f0_dev_scale": 1.0658,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "level_db": -27.1,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d4-depression-5",
+   "plain": {
+    "f0_offset_hz": -7.5201,
+    "f0_dev_scale": 0.8808,
+    "rate": 0.9093,
+    "pause_scale": 1.5763
+   },
+   "marked_measures": {
+    "f0_offset_hz": -7.1524,
+    "f0_dev_scale": 0.8884,
+    "rate": 0.9093,
+    "pause_scale": 1.5763
+   },
+   "level_db": -27.0,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d4-depression-10",
+   "plain": {
+    "f0_offset_hz": -11.4323,
+    "f0_dev_scale": 0.8477,
+    "rate": 0.8148,
+    "pause_scale": 2.1186
+   },
+   "marked_measures": {
+    "f0_offset_hz": -11.3349,
+    "f0_dev_scale": 0.8489,
+    "rate": 0.8148,
+    "pause_scale": 2.1186
+   },
+   "level_db": -26.0,
+   "unmarked": {
+    "share": 0.0034,
+    "bits": 11,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d4-depression-15",
+   "plain": {
+    "f0_offset_hz": -15.1456,
+    "f0_dev_scale": 0.7168,
+    "rate": 0.721,
+    "pause_scale": 2.661
+   },
+   "marked_measures": {
+    "f0_offset_hz": -15.0834,
+    "f0_dev_scale": 0.7122,
+    "rate": 0.721,
+    "pause_scale": 2.661
+   },
+   "level_db": -26.2,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d4-depression-20",
+   "plain": {
+    "f0_offset_hz": -19.2946,
+    "f0_dev_scale": 0.5693,
+    "rate": 0.6288,
+    "pause_scale": 3.2203
+   },
+   "marked_measures": {
+    "f0_offset_hz": -19.2632,
+    "f0_dev_scale": 0.5697,
+    "rate": 0.6297,
+    "pause_scale": 3.2373
+   },
+   "level_db": -25.1,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d4-depression-27",
+   "plain": {
+    "f0_offset_hz": -24.3792,
+    "f0_dev_scale": 0.4353,
+    "rate": 0.4994,
+    "pause_scale": 4.0
+   },
+   "marked_measures": {
+    "f0_offset_hz": -24.3482,
+    "f0_dev_scale": 0.4443,
+    "rate": 0.4994,
+    "pause_scale": 4.0
+   },
+   "level_db": -24.9,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 7,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d4-mania-0",
+   "plain": {
+    "f0_offset_hz": 0.8367,
+    "f0_dev_scale": 1.0486,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "marked_measures": {
+    "f0_offset_hz": 0.9351,
+    "f0_dev_scale": 1.0453,
+    "rate": 1.0,
+    "pause_scale": 1.0
+   },
+   "level_db": -27.1,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d4-mania-12",
+   "plain": {
+    "f0_offset_hz": 11.1575,
+    "f0_dev_scale": 1.2203,
+    "rate": 1.164,
+    "pause_scale": 0.8814
+   },
+   "marked_measures": {
+    "f0_offset_hz": 10.6932,
+    "f0_dev_scale": 1.1693,
+    "rate": 1.164,
+    "pause_scale": 0.8814
+   },
+   "level_db": -25.3,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d4-mania-20",
+   "plain": {
+    "f0_offset_hz": 16.0233,
+    "f0_dev_scale": 1.2869,
+    "rate": 1.2696,
+    "pause_scale": 0.7797
+   },
+   "marked_measures": {
+    "f0_offset_hz": 16.0036,
+    "f0_dev_scale": 1.2779,
+    "rate": 1.2696,
+    "pause_scale": 0.7797
+   },
+   "level_db": -27.0,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 8,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d4-mania-26",
+   "plain": {
+    "f0_offset_hz": 19.4657,
+    "f0_dev_scale": 1.3435,
+    "rate": 1.3463,
+    "pause_scale": 0.6949
+   },
+   "marked_measures": {
+    "f0_offset_hz": 19.4641,
+    "f0_dev_scale": 1.3389,
+    "rate": 1.3463,
+    "pause_scale": 0.6949
+   },
+   "level_db": -26.9,
+   "unmarked": {
+    "share": 0.0005,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d4-mania-40",
+   "plain": {
+    "f0_offset_hz": 32.915,
+    "f0_dev_scale": 1.5362,
+    "rate": 1.5366,
+    "pause_scale": 0.5424
+   },
+   "marked_measures": {
+    "f0_offset_hz": 32.927,
+    "f0_dev_scale": 1.5285,
+    "rate": 1.5366,
+    "pause_scale": 0.5424
+   },
+   "level_db": -26.9,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  },
+  {
+   "id": "am_michael-d4-mania-60",
+   "plain": {
+    "f0_offset_hz": 48.8277,
+    "f0_dev_scale": 1.8647,
+    "rate": 1.8032,
+    "pause_scale": 0.3051
+   },
+   "marked_measures": {
+    "f0_offset_hz": 48.8112,
+    "f0_dev_scale": 1.8597,
+    "rate": 1.8032,
+    "pause_scale": 0.3051
+   },
+   "level_db": -27.5,
+   "unmarked": {
+    "share": 0.0,
+    "bits": 9,
+    "marked": false
+   },
+   "as_written": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "wav16": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "via16k": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   },
+   "opus": {
+    "share": 1.0,
+    "bits": 16,
+    "marked": true
+   }
+  }
+ ],
+ "controls": [
+  {
+   "id": "clean-00",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "clean-01",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "clean-02",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "clean-03",
+   "share": 0.0143,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "clean-04",
+   "share": 0.029,
+   "bits": 11,
+   "marked": false
+  },
+  {
+   "id": "clean-05",
+   "share": 0.004,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "clean-06",
+   "share": 0.0201,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-07",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "clean-08",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-09",
+   "share": 0.0,
+   "bits": 10,
+   "marked": false
+  },
+  {
+   "id": "clean-10",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "clean-11",
+   "share": 0.0096,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-12",
+   "share": 0.0022,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "clean-13",
+   "share": 0.0013,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "clean-14",
+   "share": 0.0018,
+   "bits": 11,
+   "marked": false
+  },
+  {
+   "id": "clean-15",
+   "share": 0.0014,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "clean-16",
+   "share": 0.0006,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "clean-17",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-18",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "clean-19",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-20",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-21",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "clean-22",
+   "share": 0.011,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-23",
+   "share": 0.0005,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "clean-24",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "clean-25",
+   "share": 0.002,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "clean-26",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-27",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "clean-28",
+   "share": 0.0,
+   "bits": 4,
+   "marked": false
+  },
+  {
+   "id": "clean-29",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-30",
+   "share": 0.0028,
+   "bits": 11,
+   "marked": false
+  },
+  {
+   "id": "clean-31",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "clean-32",
+   "share": 0.0019,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-33",
+   "share": 0.0005,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "clean-34",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-35",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "clean-36",
+   "share": 0.0538,
+   "bits": 4,
+   "marked": false
+  },
+  {
+   "id": "clean-37",
+   "share": 0.0055,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "clean-38",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-39",
+   "share": 0.0005,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "clean-40",
+   "share": 0.0003,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-41",
+   "share": 0.0012,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "clean-42",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "clean-43",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "clean-44",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "clean-45",
+   "share": 0.0,
+   "bits": 10,
+   "marked": false
+  },
+  {
+   "id": "clean-46",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "clean-47",
+   "share": 0.0057,
+   "bits": 10,
+   "marked": false
+  },
+  {
+   "id": "clean-48",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "clean-49",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "accented-00",
+   "share": 0.0,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "accented-01",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "accented-02",
+   "share": 0.0102,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "accented-03",
+   "share": 0.0321,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-04",
+   "share": 0.0096,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-05",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-06",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-07",
+   "share": 0.1699,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "accented-08",
+   "share": 0.0081,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "accented-09",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-10",
+   "share": 0.0014,
+   "bits": 5,
+   "marked": false
+  },
+  {
+   "id": "accented-11",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-12",
+   "share": 0.0066,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "accented-13",
+   "share": 0.0538,
+   "bits": 4,
+   "marked": false
+  },
+  {
+   "id": "accented-14",
+   "share": 0.0,
+   "bits": 5,
+   "marked": false
+  },
+  {
+   "id": "accented-15",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "accented-16",
+   "share": 0.011,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "accented-17",
+   "share": 0.0366,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-18",
+   "share": 0.0454,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-19",
+   "share": 0.0004,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "accented-20",
+   "share": 0.0,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "accented-21",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "accented-22",
+   "share": 0.0,
+   "bits": 10,
+   "marked": false
+  },
+  {
+   "id": "accented-23",
+   "share": 0.0026,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "accented-24",
+   "share": 0.0139,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "accented-25",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-26",
+   "share": 0.0118,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-27",
+   "share": 0.0426,
+   "bits": 5,
+   "marked": false
+  },
+  {
+   "id": "accented-28",
+   "share": 0.0018,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-29",
+   "share": 0.0019,
+   "bits": 4,
+   "marked": false
+  },
+  {
+   "id": "accented-30",
+   "share": 0.0003,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "accented-31",
+   "share": 0.0016,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-32",
+   "share": 0.0025,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-33",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-34",
+   "share": 0.0112,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-35",
+   "share": 0.0473,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-36",
+   "share": 0.0456,
+   "bits": 3,
+   "marked": false
+  },
+  {
+   "id": "accented-37",
+   "share": 0.0078,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "accented-38",
+   "share": 0.002,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-39",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-40",
+   "share": 0.0035,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-41",
+   "share": 0.0008,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "accented-42",
+   "share": 0.008,
+   "bits": 5,
+   "marked": false
+  },
+  {
+   "id": "accented-43",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-44",
+   "share": 0.0003,
+   "bits": 5,
+   "marked": false
+  },
+  {
+   "id": "accented-45",
+   "share": 0.0077,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "accented-46",
+   "share": 0.0,
+   "bits": 10,
+   "marked": false
+  },
+  {
+   "id": "accented-47",
+   "share": 0.0071,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "accented-48",
+   "share": 0.0,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "accented-49",
+   "share": 0.0353,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "disfluent-00",
+   "share": 0.0061,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-01",
+   "share": 0.0,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "disfluent-02",
+   "share": 0.0002,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-03",
+   "share": 0.0007,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-04",
+   "share": 0.0008,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "disfluent-05",
+   "share": 0.0181,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "disfluent-06",
+   "share": 0.0119,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-07",
+   "share": 0.0016,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-08",
+   "share": 0.0097,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-09",
+   "share": 0.0093,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-10",
+   "share": 0.0139,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-11",
+   "share": 0.0142,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-12",
+   "share": 0.0212,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "disfluent-13",
+   "share": 0.0007,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-14",
+   "share": 0.0056,
+   "bits": 10,
+   "marked": false
+  },
+  {
+   "id": "disfluent-15",
+   "share": 0.0044,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "disfluent-16",
+   "share": 0.0038,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-17",
+   "share": 0.0032,
+   "bits": 10,
+   "marked": false
+  },
+  {
+   "id": "disfluent-18",
+   "share": 0.0049,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-19",
+   "share": 0.0012,
+   "bits": 5,
+   "marked": false
+  },
+  {
+   "id": "disfluent-20",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-21",
+   "share": 0.0386,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-22",
+   "share": 0.0125,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "disfluent-23",
+   "share": 0.0039,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-24",
+   "share": 0.0115,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-25",
+   "share": 0.0045,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-26",
+   "share": 0.0033,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "disfluent-27",
+   "share": 0.0197,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-28",
+   "share": 0.0136,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "disfluent-29",
+   "share": 0.0006,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-30",
+   "share": 0.0004,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-31",
+   "share": 0.0066,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-32",
+   "share": 0.0004,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-33",
+   "share": 0.044,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "disfluent-34",
+   "share": 0.0103,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-35",
+   "share": 0.0003,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-36",
+   "share": 0.0018,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "disfluent-37",
+   "share": 0.0002,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-38",
+   "share": 0.0047,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-39",
+   "share": 0.0008,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "disfluent-40",
+   "share": 0.0044,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "disfluent-41",
+   "share": 0.0128,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-42",
+   "share": 0.0236,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "disfluent-43",
+   "share": 0.0073,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-44",
+   "share": 0.004,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-45",
+   "share": 0.0002,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-46",
+   "share": 0.0066,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "disfluent-47",
+   "share": 0.0007,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "disfluent-48",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "disfluent-49",
+   "share": 0.0039,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-00",
+   "share": 0.0012,
+   "bits": 10,
+   "marked": false
+  },
+  {
+   "id": "slow-01",
+   "share": 0.003,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "slow-02",
+   "share": 0.0002,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-03",
+   "share": 0.0297,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "slow-04",
+   "share": 0.0207,
+   "bits": 11,
+   "marked": false
+  },
+  {
+   "id": "slow-05",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "slow-06",
+   "share": 0.0016,
+   "bits": 10,
+   "marked": false
+  },
+  {
+   "id": "slow-07",
+   "share": 0.0033,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "slow-08",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-09",
+   "share": 0.0003,
+   "bits": 11,
+   "marked": false
+  },
+  {
+   "id": "slow-10",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "slow-11",
+   "share": 0.0013,
+   "bits": 10,
+   "marked": false
+  },
+  {
+   "id": "slow-12",
+   "share": 0.0004,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "slow-13",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "slow-14",
+   "share": 0.0049,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-15",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "slow-16",
+   "share": 0.0043,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "slow-17",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "slow-18",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-19",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-20",
+   "share": 0.0066,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "slow-21",
+   "share": 0.0001,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "slow-22",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "slow-23",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "slow-24",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "slow-25",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-26",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-27",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-28",
+   "share": 0.0,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "slow-29",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-30",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "slow-31",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-32",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "slow-33",
+   "share": 0.0,
+   "bits": 10,
+   "marked": false
+  },
+  {
+   "id": "slow-34",
+   "share": 0.0,
+   "bits": 7,
+   "marked": false
+  },
+  {
+   "id": "slow-35",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "slow-36",
+   "share": 0.0439,
+   "bits": 5,
+   "marked": false
+  },
+  {
+   "id": "slow-37",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "slow-38",
+   "share": 0.0024,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "slow-39",
+   "share": 0.0,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "slow-40",
+   "share": 0.0,
+   "bits": 10,
+   "marked": false
+  },
+  {
+   "id": "slow-41",
+   "share": 0.0,
+   "bits": 6,
+   "marked": false
+  },
+  {
+   "id": "slow-42",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-43",
+   "share": 0.0,
+   "bits": 9,
+   "marked": false
+  },
+  {
+   "id": "slow-44",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-45",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-46",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-47",
+   "share": 0.0011,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-48",
+   "share": 0.0,
+   "bits": 8,
+   "marked": false
+  },
+  {
+   "id": "slow-49",
+   "share": 0.0005,
+   "bits": 8,
+   "marked": false
+  }
+ ]
+}
