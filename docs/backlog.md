@@ -3,11 +3,16 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-20, at commit `20aa981`.
+Last updated 2026-10-20, at commit `8e9d7ce`.
 
-## Chosen next: none
+## Chosen next: M43, the watermark on the synthetic voices
 
-Candidates:
+The author's choice, 2026-10-20, scope B: v1 §9's watermark, on the severity renders and on the replies R0 to R3
+speak in the demo, with AudioSeal (MIT). A development check on the laptop against a rule written first, then the
+mark wired in and the demo deployed (`docs/m43-log.md`). After it, by the author's closure list: a check of the
+repository before it is made public, and a final check of the deployed demo.
+
+Candidates after it:
 
 - **Hand the L40S the browser's recording as it came** (55 kB of WebM for 14 s, not 0.9 MB of 32-bit floats):
   the handoff took 1.9 s on a 14 s clip (`docs/m37-log.md`, entry 14). Measured before it is changed.
@@ -223,7 +228,7 @@ Owed.
 | ~~P2c in CI: the "severity monotonicity passing" badge~~ | v1 §4, §10 | **done in M42**: the severity test in CI in 30 s, its badge in the README; the whole suite in CI too | free |
 | P2c's disentanglement ablation | v1 §4 | not run: it needs listeners | listeners' time |
 | R5's "five conversations per A100" | v1 §4, v2 §8 | not measured | a few dollars |
-| Watermarking the synthetic voices | v1 §9 | renders are named and tagged synthetic; none is watermarked | \$0 |
+| Watermarking the synthetic voices | v1 §9 | renders are named and tagged synthetic; **M43, in progress**: AudioSeal, a development check first | \$0, the demo's check about \$0.06 |
 | Full-Duplex-Bench's protocol for the duplex numbers | v1 §7 | R5 was measured with this harness, not theirs | small |
 | "VAP is what Moshi learned implicitly" | v2 §3.1 | VAP built (M30), PR-014 not run: the engineered side of the comparison has no result | — |
 | The cascade at the plans' sizes: a large-v3-turbo recognizer (int8, L4) and a 7 to 8B LLM (AWQ, A10) | v1 §4 (P1 W1), v2 §3 | built with base.en and Qwen2.5-0.5B on one T4; 1.5B and small.en tried on Colab only. Every cascade number is for the small model, which refused four of eight harmless questions in the demo (`docs/m27-log.md`, entry 31) | a few dollars |

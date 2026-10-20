@@ -1,0 +1,8 @@
+# The watermark on the project's synthetic speech (s2slab.watermark, M43). Installed 2026-10-20 beside base.txt and
+# r0.txt (WSL, Python 3.10); it needs torch, already there (requirements/r0.txt), and installs only these three.
+# Its two models (MIT, facebook/audioseal on Hugging Face, 56.1 MB and 33.1 MB) are fetched on first use into
+# ~/.cache/audioseal. Not in requirements/test.txt: the tests use a stand-in, and the one test with the real
+# models is slow.
+audioseal==0.2.0
+omegaconf==2.4.0
+einops==0.8.2
