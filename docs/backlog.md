@@ -3,14 +3,11 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-19, at commit `12ac0bc`.
+Last updated 2026-10-20, at commit `20aa981`.
 
-## Chosen next: M42, CI and the severity badge
+## Chosen next: none
 
-The author's choice, 2026-10-19: v1's "severity monotonicity passing" badge, and the suite in CI. GitHub Actions on
-the author's account; `requirements/test.txt` writes down the environment the suite needs (`docs/m42-log.md`).
-
-Candidates after it:
+Candidates:
 
 - **Hand the L40S the browser's recording as it came** (55 kB of WebM for 14 s, not 0.9 MB of 32-bit floats):
   the handoff took 1.9 s on a 14 s clip (`docs/m37-log.md`, entry 14). Measured before it is changed.
@@ -19,6 +16,13 @@ Candidates after it:
 - **R4's own compile from the compile cache** (about 30 s of the L40S's wake), left alone in M36: loading the
   cache first once made R4's load 288 s.
 - The repository made public, the author's call.
+
+## Done: M42, CI and the severity badge
+
+v1's "severity monotonicity passing" badge and the suite in CI, on GitHub Actions (`20aa981`): the suite in 2 min 46 s
+on a fresh machine, the severity test alone in 30 s with `requirements/base.txt`, both green on their first push.
+`requirements/test.txt` writes down the five packages the laptop's environment had and no requirements file named;
+two tests skip without their audio, as eight others did (`docs/m42-log.md`).
 
 ## Done: M41, the cold-start write-up
 
@@ -216,7 +220,7 @@ Owed.
 |---|---|---|---|
 | ~~P1b on real disfluent speech~~ | v1 §8 | **done in M40: PR-019 not supported**, on DisfluencySpeech (one speaker, performed; not SEP-28k, whose 3-second clips have no turn ends): T2 cut off one turn the fixed threshold kept, at the same median wait. Real stuttering is still untested | \$0 |
 | P2's controllability and a blinded preference test, duplex against cascade | v1 §8 | not run: it needs listeners, so P2 is undecided (only its latency part is measured) | listeners' time |
-| P2c in CI: the "severity monotonicity passing" badge | v1 §4, §10 | **M42, in progress**: two workflows, the suite and the severity test; `requirements/test.txt` | free (GitHub Actions) |
+| ~~P2c in CI: the "severity monotonicity passing" badge~~ | v1 §4, §10 | **done in M42**: the severity test in CI in 30 s, its badge in the README; the whole suite in CI too | free |
 | P2c's disentanglement ablation | v1 §4 | not run: it needs listeners | listeners' time |
 | R5's "five conversations per A100" | v1 §4, v2 §8 | not measured | a few dollars |
 | Watermarking the synthetic voices | v1 §9 | renders are named and tagged synthetic; none is watermarked | \$0 |
