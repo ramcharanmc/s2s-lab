@@ -1,0 +1,110 @@
+{
+ "run": "M45, the partial flicker rate",
+ "commit": "319e669",
+ "from": {
+  "measured": "runs/bargein/pr003-measured.json",
+  "70ms": "runs/bargein/pr003-70ms.json"
+ },
+ "result": {
+  "measured": {
+   "all": {
+    "events": 38,
+    "partials": 119,
+    "updates": 81,
+    "revisions": 25,
+    "tail": 11,
+    "deep": 14,
+    "withdrawn": 192,
+    "shown": 422,
+    "settled": 26,
+    "settled_revised": 5,
+    "flicker": 0.3086,
+    "flicker_tail": 0.1358,
+    "flicker_deep": 0.1728,
+    "withdrawn_per_word": 0.455
+   },
+   "keep going": {
+    "events": 17,
+    "partials": 44,
+    "updates": 27,
+    "revisions": 6,
+    "tail": 1,
+    "deep": 5,
+    "withdrawn": 153,
+    "shown": 200,
+    "settled": 12,
+    "settled_revised": 3,
+    "flicker": 0.2222,
+    "flicker_tail": 0.037,
+    "flicker_deep": 0.1852,
+    "withdrawn_per_word": 0.765
+   },
+   "stop": {
+    "events": 21,
+    "partials": 75,
+    "updates": 54,
+    "revisions": 19,
+    "tail": 10,
+    "deep": 9,
+    "withdrawn": 39,
+    "shown": 222,
+    "settled": 14,
+    "settled_revised": 2,
+    "flicker": 0.3519,
+    "flicker_tail": 0.1852,
+    "flicker_deep": 0.1667,
+    "withdrawn_per_word": 0.1757
+   }
+  },
+  "70ms": {
+   "all": {
+    "events": 38,
+    "partials": 239,
+    "updates": 201,
+    "revisions": 55,
+    "tail": 29,
+    "deep": 26,
+    "withdrawn": 418,
+    "shown": 1225,
+    "settled": 28,
+    "settled_revised": 0,
+    "flicker": 0.2736,
+    "flicker_tail": 0.1443,
+    "flicker_deep": 0.1294,
+    "withdrawn_per_word": 0.3412
+   },
+   "keep going": {
+    "events": 17,
+    "partials": 88,
+    "updates": 71,
+    "revisions": 18,
+    "tail": 8,
+    "deep": 10,
+    "withdrawn": 338,
+    "shown": 632,
+    "settled": 14,
+    "settled_revised": 0,
+    "flicker": 0.2535,
+    "flicker_tail": 0.1127,
+    "flicker_deep": 0.1408,
+    "withdrawn_per_word": 0.5348
+   },
+   "stop": {
+    "events": 21,
+    "partials": 151,
+    "updates": 130,
+    "revisions": 37,
+    "tail": 21,
+    "deep": 16,
+    "withdrawn": 80,
+    "shown": 593,
+    "settled": 14,
+    "settled_revised": 0,
+    "flicker": 0.2846,
+    "flicker_tail": 0.1615,
+    "flicker_deep": 0.1231,
+    "withdrawn_per_word": 0.1349
+   }
+  }
+ }
+}

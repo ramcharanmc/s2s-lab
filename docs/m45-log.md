@@ -14,7 +14,10 @@ logs: `docs/m44-log.md` and those it names.
 | 5 | 10-21 | `python -m s2slab.p1clatency`, the author, laptop, free, at 6091653 | **NOT MET, as predicted**: the serial sum's p90 195.3 ms against the bar 30 ms; eGeMAPS alone 170.5 ms at p90 (section 6) | — | — |
 | 6 | 10-21 | the run file read again, exploratory | eGeMAPS never took longer than this laptop's recognizer, so beside it the side-channel would add only the longer prompt: 23.2 ms at p50, 42.4 at p90, over the bar too; the tagger said "angry" on 116 of the 200 clips (section 6) | — | — |
 | 7 | 10-21 | — | P1c's latency recorded | records | 028a3ed (its message names the flicker rate's definition by mistake; the definition is the next commit) |
-| 8 | 10-21 | — | the flicker rate's definition, written before the count (section 7) | `flicker.py`, tests | this commit |
+| 8 | 10-21 | — | the flicker rate's definition, written before the count (section 7) | `flicker.py`, tests | 319e669 |
+| 9 | 10-21 | `python -m s2slab.flicker`, the author, laptop, free, at 319e669 | about **3 in 10 updates take back words already shown**: 30.9% with the recognizer's own time, 27.4% at 70 ms a call; deep revisions 17.3% and 12.9%; a settled partial changed the words 5 times of 26, and 0 of 28 (section 8) | — | — |
+| 10 | 10-21 | the deep revisions read, exploratory | two kinds: a misheard word corrected as more audio came, and on three short "keep going" items Whisper's repetition loops ("Okay." 29 times) replaced whole; the loops carry most of the words withdrawn on those items (section 8) | — | — |
+| 11 | 10-21 | — | the flicker rate recorded | records | this commit |
 
 ## 1. The deployed demo (rows 1 and 2)
 
@@ -182,3 +185,33 @@ previous partial's last word; a **deep** one an earlier word.
 
 **What it cannot show:** twenty short items in one voice, not the eval set; no rung's reply reads partials, so this
 is the flicker the barge-in policy reads, nothing else.
+
+## 8. The partial flicker rate: the count (rows 9 and 10)
+
+`runs/bargein/flicker.json`, counted at `319e669` from PR-003's two committed runs; nothing was run.
+
+| Run | Items | Updates | Flicker | Tail | Deep | Withdrawn per word shown | Settled, words changed |
+|---|---|---:|---:|---:|---:|---:|---:|
+| the recognizer's own time (about 500 ms a call) | all | 81 | **30.9%** | 13.6% | 17.3% | 45.5% | 5 of 26 |
+| | should keep going | 27 | 22.2% | 3.7% | 18.5% | 76.5% | 3 of 12 |
+| | should stop | 54 | 35.2% | 18.5% | 16.7% | 17.6% | 2 of 14 |
+| charged 70 ms a call (a T4's) | all | 201 | **27.4%** | 14.4% | 12.9% | 34.1% | 0 of 28 |
+| | should keep going | 71 | 25.4% | 11.3% | 14.1% | 53.5% | 0 of 14 |
+| | should stop | 130 | 28.5% | 16.2% | 12.3% | 13.5% | 0 of 14 |
+
+- **About 3 in 10 updates take back words already shown**, with either cadence; about half of those change an
+  earlier word, not only the last.
+- **Settling**: at the faster cadence no settled partial changed the words of the one before it (0 of 28); at the
+  laptop's own pace 5 of 26 did. More looks at the audio before it ends in quiet leave less to change.
+
+**The deep revisions, read (row 10), exploratory.** Two kinds:
+- **A misheard word corrected as more audio came**: "Let me think, I mode wrist." -> "I removed recently." -> "I
+  moved recently so it might be." (`sl05`); "The first day does not work." -> "Doesn't it does not work?" (`sl01`).
+  The word is not settled until the audio after it is heard.
+- **Whisper's repetition loops on short sounds**: on `cs01`, `cs02` and `cs04`, short backchannels, a partial read
+  "Okay." or "I'm sorry." 29 times over before the next replaced it whole. These carry most of the words withdrawn
+  on the "keep going" items (76.5% and 53.5%), so that column measures the loops more than the flicker. The barge-in
+  policy that won PR-003 (B2) reads the recognizer's no-speech probability as well as the words.
+
+**What it cannot show** (as written first): twenty short items in one voice; the flicker the barge-in policy reads,
+not anything a rung's reply reads.
