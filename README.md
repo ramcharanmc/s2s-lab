@@ -180,7 +180,8 @@ The fine-tunes are their own project with their own environment: `ft/README.md`.
 
 - **No clinical validity is claimed and no diagnostic capability is implied.** The severity render
   maps a score to acoustic targets and measures whether the audio reached them. Every synthesized
-  file is named and tagged synthetic; none is watermarked.
+  file is named and tagged synthetic. None is watermarked: AudioSeal was tried (M43) and not adopted, since at a
+  strength it can be found at it moved the render's measured pitch past the bar set before the check.
 - **Continuous dimensions, not labels.** A system that renders disorders as discrete labels produces
   caricatures a clinician rejects on first listen. The render here maps a PHQ-9 or YMRS score to
   continuous acoustic targets, and makes no claim that the result sounds like any person with the condition.

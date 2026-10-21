@@ -3,16 +3,16 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-20, at commit `8e9d7ce`.
+Last updated 2026-10-20, at commit `dbeb681`.
 
-## Chosen next: M43, the watermark on the synthetic voices
+## Chosen next: the author's closure list
 
-The author's choice, 2026-10-20, scope B: v1 §9's watermark, on the severity renders and on the replies R0 to R3
-speak in the demo, with AudioSeal (MIT). A development check on the laptop against a rule written first, then the
-mark wired in and the demo deployed (`docs/m43-log.md`). After it, by the author's closure list: a check of the
-repository before it is made public, and a final check of the deployed demo.
+Agreed 2026-10-20, in this order: a check of the repository before it is made public (secrets, personal details,
+licences, audio in git and in its history); then a final check of the deployed demo, one Send to each machine and the
+Measured tab; then the author's own owed items (below, "Owed"); then the plans' open items each closed or written
+down as not done, with why.
 
-Candidates after it:
+Candidates:
 
 - **Hand the L40S the browser's recording as it came** (55 kB of WebM for 14 s, not 0.9 MB of 32-bit floats):
   the handoff took 1.9 s on a 14 s clip (`docs/m37-log.md`, entry 14). Measured before it is changed.
@@ -21,6 +21,14 @@ Candidates after it:
 - **R4's own compile from the compile cache** (about 30 s of the L40S's wake), left alone in M36: loading the
   cache first once made R4's load 288 s.
 - The repository made public, the author's call.
+
+## Done: M43, the watermark, tried and not adopted
+
+v1 §9's watermark on the synthetic voices, with AudioSeal (MIT), against a rule written before each check
+(`b45bd26`, `dbeb681`, the laptop, \$0). The full mark was found on every clip and on none unmarked, and survived a
+16-bit WAV, 16 kHz and Opus; but it moved the severity render's measured pitch past the bar (the range up to 8.19%,
+the bar 1%): STOP. Weaker marks were found only at half strength and above, where the pitch still moved: STOP. The
+renders keep their synthetic labels (`docs/m43-log.md`).
 
 ## Done: M42, CI and the severity badge
 
@@ -228,7 +236,7 @@ Owed.
 | ~~P2c in CI: the "severity monotonicity passing" badge~~ | v1 §4, §10 | **done in M42**: the severity test in CI in 30 s, its badge in the README; the whole suite in CI too | free |
 | P2c's disentanglement ablation | v1 §4 | not run: it needs listeners | listeners' time |
 | R5's "five conversations per A100" | v1 §4, v2 §8 | not measured | a few dollars |
-| Watermarking the synthetic voices | v1 §9 | renders are named and tagged synthetic; **M43, in progress**: the full AudioSeal mark found everywhere but moved the render's pitch over its bars (STOP); a weaker mark next, confirmed on PR-009's held-out set | \$0, the demo's check about \$0.06 |
+| ~~Watermarking the synthetic voices~~ | v1 §9 | **tried in M43, not adopted**: AudioSeal's mark, at any strength it is found at, moved the severity render's measured pitch past the bar written first; the renders keep their synthetic labels | \$0 |
 | Full-Duplex-Bench's protocol for the duplex numbers | v1 §7 | R5 was measured with this harness, not theirs | small |
 | "VAP is what Moshi learned implicitly" | v2 §3.1 | VAP built (M30), PR-014 not run: the engineered side of the comparison has no result | — |
 | The cascade at the plans' sizes: a large-v3-turbo recognizer (int8, L4) and a 7 to 8B LLM (AWQ, A10) | v1 §4 (P1 W1), v2 §3 | built with base.en and Qwen2.5-0.5B on one T4; 1.5B and small.en tried on Colab only. Every cascade number is for the small model, which refused four of eight harmless questions in the demo (`docs/m27-log.md`, entry 31) | a few dollars |
