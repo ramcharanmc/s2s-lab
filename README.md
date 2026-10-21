@@ -198,5 +198,29 @@ The fine-tunes are their own project with their own environment: `ft/README.md`.
 
 ## Licences
 
-The code is under the MIT licence (`LICENSE`). Models and datasets keep their own: each is named in the README
-of the part that uses it.
+The code is under the MIT licence (`LICENSE`). Models and datasets keep their own, and none of their weights or
+audio is in this repository: each is fetched from its source. Files under `evalset/`, `probes/` and `runs/` that hold
+a dataset's text (transcripts, sentences, pairs) keep that dataset's licence. Checked against each source's own card
+on 2026-10-20 (`docs/m44-log.md`).
+
+| Model or dataset | Used by | Licence |
+|---|---|---|
+| Whisper base.en, small.en (`Systran/faster-whisper-*`); large-v3-turbo (`mobiuslabsgmbh/faster-whisper-large-v3-turbo`) | R0 to R2, the slow tier | MIT |
+| `openai/whisper-small.en` | FT-2's LoRA | MIT (OpenAI's release); Apache-2.0 on its Hugging Face card |
+| Qwen2.5-0.5B-Instruct, Qwen2.5-1.5B-Instruct | the cascades' LLM | Apache-2.0 |
+| Qwen2-Audio-7B-Instruct | R3 | Apache-2.0 |
+| Qwen2.5-Omni-7B | R4, R4 streamed | Apache-2.0 |
+| Kokoro-82M (`hexgrad/Kokoro-82M`), its ONNX copy (`onnx-community/Kokoro-82M-v1.0-ONNX`) | the TTS of R0 to R3; the severity render; PR-013 | Apache-2.0 |
+| Moshi (`kyutai/moshiko-pytorch-bf16`) | R5, FT-1 | CC BY 4.0 |
+| PersonaPlex (`nvidia/personaplex-7b-v1`) | R5 | NVIDIA Open Model License |
+| NeMo FastPitch and HiFi-GAN checkpoints | FT-3 | CC BY 4.0 |
+| Piper voices (`rhasspy/piper-voices`) | M38 | MIT |
+| AudioSeal (`facebook/audioseal`) | M43, tried | MIT, code and weights |
+| Voice activity projection (`ErikEkstedt/VoiceActivityProjection`) | M30 | MIT |
+| openSMILE (the `opensmile` package) | the affect tagger (`requirements/affect.txt`) | audEERING's research licence: **private, research and educational use only; no commercial use** without audEERING's licence |
+| LibriSpeech test-clean | the eval set's clean and slow cohorts | CC BY 4.0 |
+| EdAcc | the eval set's accented cohort | CC BY-SA 4.0 (its dataset card) |
+| DisfluencySpeech | the eval set's disfluent cohort; FT-2; M40 | Apache-2.0 |
+| CREMA-D | the prosody probe set | ODbL 1.0, contents DbCL 1.0 (`probes/README.md`) |
+| DailyTalk (`kyutai/DailyTalkContiguous`) | FT-1 | CC BY-SA 4.0 |
+| Hi-Fi TTS | FT-3 | CC BY 4.0 |

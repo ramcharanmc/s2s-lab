@@ -3,14 +3,13 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-20, at commit `dbeb681`.
+Last updated 2026-10-20, at commit `097e423`.
 
 ## Chosen next: the author's closure list
 
-Agreed 2026-10-20, in this order: a check of the repository before it is made public (secrets, personal details,
-licences, audio in git and in its history); then a final check of the deployed demo, one Send to each machine and the
-Measured tab; then the author's own owed items (below, "Owed"); then the plans' open items each closed or written
-down as not done, with why.
+Agreed 2026-10-20, in this order: ~~a check of the repository before it is made public~~ (M44, done); then a final
+check of the deployed demo, one Send to each machine and the Measured tab; then the author's own owed items (below,
+"Owed"); then the plans' open items each closed or written down as not done, with why.
 
 Candidates:
 
@@ -21,6 +20,13 @@ Candidates:
 - **R4's own compile from the compile cache** (about 30 s of the L40S's wake), left alone in M36: loading the
   cache first once made R4's load 288 s.
 - The repository made public, the author's call.
+
+## Done: M44, the check before the repository is made public
+
+Read-only scans of every tracked file and the whole history: no secret, no audio or weights, no large file, no local
+path or e-mail in any file now. The author's name and e-mail are on all 201 commits, and 22 lines of old commits hold
+the local path: the author chose to publish with the history as it is, since a rewrite would break every cited hash.
+Every model's and dataset's licence checked and put in one table in the README (`docs/m44-log.md`).
 
 ## Done: M43, the watermark, tried and not adopted
 
@@ -216,7 +222,7 @@ the earlier cost column mixed mean and median.
 
 | What | Why |
 |---|---|
-| Making the repository public | pushed private on 2026-09-29: the author wants to choose first which of the experiments below to run. Making it public is one setting and changes no commit. The history holds his local path, and every commit his name and e-mail address (`docs/m27-log.md`, entries 29 and 33) |
+| Making the repository public | **checked in M44** (`docs/m44-log.md`): nothing in the files to remove; the author's e-mail is on every commit and stays, by the author's choice. Left: the private e-mail setting and the switch to public, both in GitHub's settings, the author's |
 | `probes/README.md`, "Recording notes" | microphone and room are still to fill in |
 | A warm turn's time outside the cards | with every machine up, R3's, R4's and R5's requests took 4 to 7.3 s more than their cards' times, the T4's 0.3 s (`docs/m27-log.md`, entry 31). Seen once; not looked into |
 | The severity render at the scores that carry a warning | the author heard depression at 10: "sounded well". Nobody has listened at depression from 20 or mania from 26 |
