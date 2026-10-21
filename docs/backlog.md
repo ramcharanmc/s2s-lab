@@ -29,7 +29,9 @@ Candidates:
 Items 2 to 4 of the closure list (`docs/m45-log.md`). **Done:** the deployed demo checked on 2026-10-21, every machine
 answering two Sends, cold and warm, no card in error, R4 streamed never dry, \$0.543; one sentence said two ways
 through the voice card; the severity render heard at depression 20 and mania 40, mania's pitch overshooting as in
-PR-009's run. The owed items each done or written down (below). **Next:** the plans' open items.
+PR-009's run. The owed items each done or written down (below). **The plans' open items:** the author chose
+three to do (P1c's latency, the flicker rate, the cascade at the plans' sizes) and five written down as not done
+(below, "From the plans, not done"). **Next:** P1c's latency, its rule written first.
 
 ## Done: M44, the check before the repository is made public
 
@@ -248,16 +250,16 @@ Owed.
 | What | Plan | State | Cost |
 |---|---|---|---|
 | ~~P1b on real disfluent speech~~ | v1 §8 | **done in M40: PR-019 not supported**, on DisfluencySpeech (one speaker, performed; not SEP-28k, whose 3-second clips have no turn ends): T2 cut off one turn the fixed threshold kept, at the same median wait. Real stuttering is still untested | \$0 |
-| P2's controllability and a blinded preference test, duplex against cascade | v1 §8 | not run: it needs listeners, so P2 is undecided (only its latency part is measured) | listeners' time |
+| ~~P2's controllability and a blinded preference test, duplex against cascade~~ | v1 §8 | **written down in M45 as not done**: it needs listeners, so P2 stays undecided (only its latency part is measured) | listeners' time |
 | ~~P2c in CI: the "severity monotonicity passing" badge~~ | v1 §4, §10 | **done in M42**: the severity test in CI in 30 s, its badge in the README; the whole suite in CI too | free |
-| P2c's disentanglement ablation | v1 §4 | not run: it needs listeners | listeners' time |
-| R5's "five conversations per A100" | v1 §4, v2 §8 | not measured | a few dollars |
+| ~~P2c's disentanglement ablation~~ | v1 §4 | **written down in M45 as not done**: it needs listeners | listeners' time |
+| ~~R5's "five conversations per A100"~~ | v1 §4, v2 §8 | **written down in M45 as not done**: it needs a batched duplex step nothing here has | a few dollars |
 | ~~Watermarking the synthetic voices~~ | v1 §9 | **tried in M43, not adopted**: AudioSeal's mark, at any strength it is found at, moved the severity render's measured pitch past the bar written first; the renders keep their synthetic labels | \$0 |
-| Full-Duplex-Bench's protocol for the duplex numbers | v1 §7 | R5 was measured with this harness, not theirs | small |
-| "VAP is what Moshi learned implicitly" | v2 §3.1 | VAP built (M30), PR-014 not run: the engineered side of the comparison has no result | — |
-| The cascade at the plans' sizes: a large-v3-turbo recognizer (int8, L4) and a 7 to 8B LLM (AWQ, A10) | v1 §4 (P1 W1), v2 §3 | built with base.en and Qwen2.5-0.5B on one T4; 1.5B and small.en tried on Colab only. Every cascade number is for the small model, which refused four of eight harmless questions in the demo (`docs/m27-log.md`, entry 31) | a few dollars |
-| The harness's entity-F1, B-WER against U-WER, and partial flicker rate | v1 §2 | not built; WER raw and normalized, per-stage latency, first audio and first sound, leading silence, RTF and the overlap ratio are | \$0 |
-| P1c's latency criterion: the side-channel adds under 30 ms | v1 §8 | not measured (PR-005: "no latency measured"); one eGeMAPS pass takes about 0.1 s on the laptop's CPU, not timed on a GPU | \$0 to a few cents |
+| ~~Full-Duplex-Bench's protocol for the duplex numbers~~ | v1 §7 | **written down in M45 as not done**: R5 was measured with this harness, not theirs, and says so | small |
+| ~~"VAP is what Moshi learned implicitly"~~ | v2 §3.1 | **written down in M45 as not done**: VAP built (M30), PR-014 not run: the engineered side of the comparison has no result | — |
+| The cascade at the plans' sizes: a large-v3-turbo recognizer (int8, L4) and a 7 to 8B LLM (AWQ, A10) | v1 §4 (P1 W1), v2 §3 | **M45, to do third**; built with base.en and Qwen2.5-0.5B on one T4; 1.5B and small.en tried on Colab only. Every cascade number is for the small model, which refused four of eight harmless questions in the demo (`docs/m27-log.md`, entry 31) | a few dollars |
+| The harness's entity-F1, B-WER against U-WER, and partial flicker rate | v1 §2 | **M45: the flicker rate to do second; entity-F1 and B-WER against U-WER written down as not done** (no entity labels, no biased-word list); not built; WER raw and normalized, per-stage latency, first audio and first sound, leading silence, RTF and the overlap ratio are | \$0 |
+| P1c's latency criterion: the side-channel adds under 30 ms | v1 §8 | **M45, to do first** (`docs/m45-log.md`, section 5); not measured (PR-005: "no latency measured"); one eGeMAPS pass takes about 0.1 s on the laptop's CPU, not timed on a GPU | \$0 to a few cents |
 
 Recorded, nothing to do: v2's week 1 expected R1 to be "a 4× win" over R0; it was 26% sooner (PR-002, not
 supported). v1's P3 named TensorRT and F0 RMSE; PR-013 ran ONNX on a CPU and measured the median's shift. v1 §7's

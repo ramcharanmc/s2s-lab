@@ -9,7 +9,8 @@ logs: `docs/m44-log.md` and those it names.
 |---|---|---|---|---|---|
 | 1 | 10-20 | the deployed page read from a browser: `/api/status`, the Measured tab, its six replay clips; no code entered, no machine woken | open, \$3.00 of \$3.00 left, the access code set; every panel renders, every clip loads, no error in the console (section 1) | — | — |
 | 2 | 10-21 | the deployed demo, the author, a laptop's microphone in a quiet room: Send A (every box ticked, every machine cold), Send B (the same sentence said another way, every machine warm), two severity renders | every machine answered both Sends and no card showed an error; R4 streamed never ran dry; Moshi answered neither call; the renders heard at two warning scores; \$0.543 by the app's count (sections 1 and 2) | — | — |
-| 3 | 10-21 | — | the owed items closed or written down (section 3) | records | this commit |
+| 3 | 10-21 | — | the owed items closed or written down (section 3) | records | 99f6597 |
+| 4 | 10-21 | — | the author's choice for the plans' open items: three done (P1c's latency, the flicker rate, the cascade at the plans' sizes), five written down as not done (section 4); P1c's latency rule written before its run (section 5) | `p1clatency.py`, tests | this commit |
 
 ## 1. The deployed demo (rows 1 and 2)
 
@@ -81,6 +82,43 @@ severity render" (PR-009), not a new fault. Not listened to: depression at 27, m
 | `probes/README.md`, "Recording notes" | **done**: the own-voice set (M17, 2026-09-22) was recorded on the laptop's built-in microphone in a quiet room, the author's answer, now in `probes/README.md` |
 | Making the repository public | the author's, in GitHub's settings (`docs/m44-log.md`, section 3) |
 
-## 4. The plans' open items
+## 4. The plans' open items (row 4)
 
-To come: each of `docs/backlog.md`'s "From the plans, not done" closed or written down as not done, with why.
+The eight open rows of `docs/backlog.md`'s "From the plans, not done", each with what doing it would take. The
+author's choice, 2026-10-21: **three done**, the rest **written down as not done**, with why.
+
+| Item | Plan | Now | Why |
+|---|---|---|---|
+| P2's controllability and a blinded preference test, duplex against cascade | v1 §8 | **not done** | it needs listeners other than the author, since a test rated by its builder is not blind. **P2 stays undecided**: of its three conditions only the latency is measured (page 20 §20) |
+| P2c's disentanglement ablation | v1 §4 | **not done** | it needs listeners, as above |
+| R5's "five conversations per A100" | v1 §4, v2 §8 | **not done** | several Moshi calls at once on one card needs a batched duplex step that nothing here has: engineering, not a measurement of what exists |
+| Full-Duplex-Bench's protocol for the duplex numbers | v1 §7 | **not done** | R5 was measured with this project's own harness (response gap, overlap, backchannels, interruptions in stream time, page 20 §20), said so wherever its numbers appear; adopting the benchmark's data and scoring is its own piece of work |
+| "VAP is what Moshi learned implicitly" | v2 §3.1 | **not done** | its engineered side has no result: PR-014 was not run, no setting met its rule on development (M30); VAP on real two-party dialogue stays parked |
+| P1c's latency criterion: the side-channel adds under 30 ms | v1 §8 | **to do**, first (section 5) | \$0, the laptop |
+| The harness's partial flicker rate | v1 §2 | **to do**, second | \$0, the laptop: from R1's streamed partials. Entity-F1 and B-WER against U-WER **not done**: they need entity labels and a list of biased words the eval set does not have |
+| The cascade at the plans' sizes: a large-v3-turbo recognizer (int8) and a 7 to 8B LLM (AWQ) | v1 §4, v2 §3 | **to do**, third | a few dollars of Modal: every cascade number rests on Qwen2.5-0.5B, which refused four of eight harmless questions in the demo (`docs/m27-log.md`, entry 31) |
+
+## 5. P1c's latency criterion: the rule, written before the run
+
+v1 §8, P1c: the affect condition beats the baseline **and** the shuffled-tag control, **and** "added latency
+< 30 ms". PR-005 decided the first half (not supported) and recorded "no latency measured".
+
+**What "added" covers**: what the side-channel puts in front of R1's reply that R1 does not do already, per turn.
+(a) eGeMAPS, openSMILE's 88 functionals over the turn's audio (`affect.egemaps`); (b) the tagger (`Tagger.tag`);
+(c) the longer prompt: R1's LLM (`r0.QwenLLM`, Qwen2.5-0.5B) given the transcript and " Their tone of voice was
+<word>." (the tagger's word for that clip), one forward pass, less the same pass without the sentence; floored at 0.
+
+**On**: the eval set's 200 clips, the laptop's CPU, its transcripts R0's from the same laptop
+(`runs/r0/evalset-laptop-cpu.json`), so no recognizer runs. Warmed up once; each part timed three times a clip and
+the median kept; (c)'s two passes alternate which goes first.
+
+**The rule:** the serial sum (a) + (b) + (c), as if the side-channel ran after the recognizer. **MET** if its p90
+over the 200 clips is under 30 ms; **NOT MET** otherwise. Its p50 and maximum beside it.
+**Exploratory, outside the rule:** the parallel bound, max(0, (a) - the recognizer's time) + (b) + (c), since eGeMAPS
+needs only the audio and could run beside the recognizer; the recognizer's time R0's on this laptop.
+
+**The prediction, written first: NOT MET** on the serial sum. One eGeMAPS pass took about 0.1 s on this CPU
+(`docs/backlog.md`), so (a) alone should be 50 to 150 ms.
+
+**What it cannot show:** the laptop's CPU is not the T4 container's; (c) on a CPU overstates a GPU's prefill; a
+streaming eGeMAPS, its features taken while the caller speaks, is not built and would change the answer.
