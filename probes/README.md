@@ -532,7 +532,8 @@ not the knob's. The five calm takes were recorded first, back to back, then
 the five upset ones; one take each; no trimming, normalizing, noise reduction
 or fades. The delivery cues came from the CREMA-D dev medians in "First look"
 above: sad softer and slower with more pitch movement, fearful much higher and
-louder, angry louder and clipped. Microphone and room: (fill in).
+louder, angry louder and clipped. Microphone and room: the laptop's built-in microphone, a quiet room (the author,
+2026-10-21).
 
 As recorded: 5.8-7.8 s per file with 0.8-2.3 s of speech inside, peaks -18.2
 to -0.1 dBFS, no clipped samples, and the click of the record button at the

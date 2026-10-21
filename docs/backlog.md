@@ -3,23 +3,33 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-20, at commit `097e423`.
+Last updated 2026-10-21, at commit `f90d5e2`.
 
 ## Chosen next: the author's closure list
 
-Agreed 2026-10-20, in this order: ~~a check of the repository before it is made public~~ (M44, done); then a final
-check of the deployed demo, one Send to each machine and the Measured tab; then the author's own owed items (below,
-"Owed"); then the plans' open items each closed or written down as not done, with why.
+Agreed 2026-10-20, in this order: ~~a check of the repository before it is made public~~ (M44, done); then ~~a final
+check of the deployed demo, one Send to each machine and the Measured tab~~ (M45, done); then ~~the author's own owed
+items~~ (below, "Owed"; M45, each done or written down); then the plans' open items each closed or written down as
+not done, with why (M45, next).
 
 Candidates:
 
 - **Hand the L40S the browser's recording as it came** (55 kB of WebM for 14 s, not 0.9 MB of 32-bit floats):
   the handoff took 1.9 s on a 14 s clip (`docs/m37-log.md`, entry 14). Measured before it is changed.
 - **The browser's first audio, later than a laptop client's** by 1.5 to 4.5 s on two turns, unexplained: a page
-  that times when the response began and when each event came would say where.
+  that times when the response began and when each event came would say where. A third sighting in M45: a warm
+  Send's first audio 6.33 s after Send in the browser, the model's at 2.19 s (`docs/m45-log.md`). The warm turn's
+  4 to 7 s outside the cards, once owed, is this item since M37's one request per Send.
 - **R4's own compile from the compile cache** (about 30 s of the L40S's wake), left alone in M36: loading the
   cache first once made R4's load 288 s.
 - The repository made public, the author's call.
+
+## In progress: M45, the closure
+
+Items 2 to 4 of the closure list (`docs/m45-log.md`). **Done:** the deployed demo checked on 2026-10-21, every machine
+answering two Sends, cold and warm, no card in error, R4 streamed never dry, \$0.543; one sentence said two ways
+through the voice card; the severity render heard at depression 20 and mania 40, mania's pitch overshooting as in
+PR-009's run. The owed items each done or written down (below). **Next:** the plans' open items.
 
 ## Done: M44, the check before the repository is made public
 
@@ -223,11 +233,11 @@ the earlier cost column mixed mean and median.
 | What | Why |
 |---|---|
 | Making the repository public | **checked in M44** (`docs/m44-log.md`): nothing in the files to remove; the author's e-mail is on every commit and stays, by the author's choice. Left: the private e-mail setting and the switch to public, both in GitHub's settings, the author's |
-| `probes/README.md`, "Recording notes" | microphone and room are still to fill in |
-| A warm turn's time outside the cards | with every machine up, R3's, R4's and R5's requests took 4 to 7.3 s more than their cards' times, the T4's 0.3 s (`docs/m27-log.md`, entry 31). Seen once; not looked into |
-| The severity render at the scores that carry a warning | the author heard depression at 10: "sounded well". Nobody has listened at depression from 20 or mania from 26 |
-| One sentence said two ways, through the voice card | the card's comparison has been made between two different sentences only |
-| A live turn with a reference, for the verbatim tier | in the demo's first live turn it wrote "uh" twice and "wanna" where three other recognizers wrote none; what was said is not known. The committed data says it adds no filler to read speech (`docs/m27-log.md`, entry 11). Still open: a recording whose words are known, a script read once plainly and once with fillers put in |
+| ~~`probes/README.md`, "Recording notes"~~ | **done in M45**: the own-voice set's, the laptop's built-in microphone in a quiet room |
+| ~~A warm turn's time outside the cards~~ | **written down in M45**: measured when each machine had its own request, a path gone since M37; folded into the candidate "the browser's first audio" (above), which M45 saw once more |
+| ~~The severity render at the scores that carry a warning~~ | **done in M45**: heard at depression 20 ("slower and lower", every target met) and mania 40 ("high speaking rate... faster"; pitch over its target, as in PR-009's run). Not heard: depression 27, mania 26 and 60 |
+| ~~One sentence said two ways, through the voice card~~ | **done in M45**: +5.3 semitones, the range -1.9, 0.5 fewer words a second; the second take had "I think" in front |
+| ~~A live turn with a reference, for the verbatim tier~~ | **not done, the author's choice** (2026-10-21, M45). Known: it adds no filler to read speech, and writes fillers `small.en` drops on other speakers' spontaneous speech (`docs/m27-log.md`, entry 11) |
 
 ## From the plans, not done
 

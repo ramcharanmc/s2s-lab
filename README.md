@@ -23,7 +23,7 @@ on one set of weights, and the streamed reply plays as it arrives (M32a), on a T
 the turn (M34, PR-016), its start timed from the turn (M37, PR-017). R1 starts its reply without Kokoro's
 0.3 s of leading silence (M39, PR-018).
 Every rung was also measured on one card, the L40S, R0 to R4 in one
-container (M28, below). About \$50 spent: \$26.27 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+container (M28, below). About \$51 spent: \$26.81 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 
@@ -168,7 +168,7 @@ The fine-tunes are their own project with their own environment: `ft/README.md`.
 |---|---|
 | `docs/preregistration.md` | every registration: criteria, predictions, deviations, results |
 | `docs/cost-ledger.md` | one row per paid run, failed runs included |
-| `docs/ft1-log.md`, `ft2-log.md`, `ft3-log.md`, `m26-log.md` to `m41-log.md` | run logs, by event: what ran, what failed, the cause, the fix |
+| `docs/ft1-log.md`, `ft2-log.md`, `ft3-log.md`, `m26-log.md` to `m45-log.md` | run logs, by event: what ran, what failed, the cause, the fix |
 | `docs/cold-start.md` | what a wake takes and costs on each of the demo's machines, and cold against warm |
 | `docs/backlog.md` | what is not done, and what was chosen next |
 | `docs/colab.md` | the Colab route for interactive GPU work |

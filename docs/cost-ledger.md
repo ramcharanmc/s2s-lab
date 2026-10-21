@@ -96,6 +96,7 @@ one. A failed run is still a row, since it was still billed.
 | 2026-10-18 | `ee15442` | `modal run modal_app/r0_bench.py::trimdev` | T4 | 53 s | 59 s | \$0.010 | **M38, step 2, development**: `r1-gpu-trim` on the 30 probe clips; first sound 517 ms against R1's 807 on the same turns (p50), no stall; GO (`docs/m38-log.md`, entry 5) |
 | 2026-10-18 | `39c5e1b` | `modal run modal_app/r0_bench.py::pr018 --confirm PR-018` | T4 | 165 s | 171 s | \$0.028 | **PR-018, the registered run**: `r1-gpu-trim` on the 200 eval clips; first sound 498 ms against R1's 797 on the same turns (p50), no stall; supported (`docs/m38-log.md`, entry 7) |
 | 2026-10-18 | `3c54204` | `modal serve modal_app/demo.py` (one cold Send), then `modal deploy` | T4, and a CPU container for the page | — | 48.8 s (the cold Send) | ≈ \$0.06 (estimated from the T4's rate, the wake and its 300 s window) | **M39, the demo**: R1 as `r1-gpu-trim`; its first sound 20 ms after its first audio, R0's 320; deployed (`docs/m39-log.md`, entries 3 and 4) |
+| 2026-10-21 | `f90d5e2` | the deployed demo, by the author: two Sends with every box ticked (one cold, one warm), two severity renders | T4, A10, L40S, a second A10, and the CPU container for the page | — | 108.0 s (R4 streamed's first audio in the browser, the cold Send) | \$0.543 (the app's count for the day) | **M45, the closure**: every machine answered both Sends, R4 streamed never ran dry, Moshi answered neither; the renders \$0.020 and \$0.028 (`docs/m45-log.md`, entry 2) |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -104,5 +105,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$26.268 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
+| Modal | \$26.811 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
 | Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |
