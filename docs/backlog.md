@@ -32,7 +32,7 @@ through the voice card; the severity render heard at depression 20 and mania 40,
 PR-009's run. The owed items each done or written down (below). **The plans' open items:** the author chose
 three to do (P1c's latency, the flicker rate, the cascade at the plans' sizes) and five written down as not done
 (below, "From the plans, not done"). **P1c's latency: not met** (195 ms at p90 against 30; eGeMAPS the
-cost). **Next:** the flicker rate.
+cost). **Next:** the flicker rate, its definition written first.
 
 ## Done: M44, the check before the repository is made public
 

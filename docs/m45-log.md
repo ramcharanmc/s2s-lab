@@ -13,7 +13,8 @@ logs: `docs/m44-log.md` and those it names.
 | 4 | 10-21 | — | the author's choice for the plans' open items: three done (P1c's latency, the flicker rate, the cascade at the plans' sizes), five written down as not done (section 4); P1c's latency rule written before its run (section 5) | `p1clatency.py`, tests | 6091653 |
 | 5 | 10-21 | `python -m s2slab.p1clatency`, the author, laptop, free, at 6091653 | **NOT MET, as predicted**: the serial sum's p90 195.3 ms against the bar 30 ms; eGeMAPS alone 170.5 ms at p90 (section 6) | — | — |
 | 6 | 10-21 | the run file read again, exploratory | eGeMAPS never took longer than this laptop's recognizer, so beside it the side-channel would add only the longer prompt: 23.2 ms at p50, 42.4 at p90, over the bar too; the tagger said "angry" on 116 of the 200 clips (section 6) | — | — |
-| 7 | 10-21 | — | P1c's latency recorded | records | this commit |
+| 7 | 10-21 | — | P1c's latency recorded | records | 028a3ed (its message names the flicker rate's definition by mistake; the definition is the next commit) |
+| 8 | 10-21 | — | the flicker rate's definition, written before the count (section 7) | `flicker.py`, tests | this commit |
 
 ## 1. The deployed demo (rows 1 and 2)
 
@@ -158,3 +159,26 @@ accented 119.1, disfluent 122.0, slow 145.6 (the slow cohort's clips are the lon
 **P1c, both halves now decided:** the side-channel did not beat the shuffled-tag control on all three emotions
 (PR-005, not supported) and it adds more than 30 ms (here, not met). A streaming eGeMAPS, taking its features while
 the caller speaks, is the one change named that could bring (a) off the critical path; not built.
+
+## 7. The partial flicker rate: the definition, written before the count
+
+v1 §2 lists "flicker rate" among the harness's metrics, with no bar: a measurement, not a test.
+
+**The data**, committed, nothing run: PR-003's two runs, `runs/bargein/pr003-measured.json` (the recognizer charged
+what it took on the laptop, about 500 ms a call) and `runs/bargein/pr003-70ms.json` (charged a T4's 70 ms). Each saved
+every streamed partial for the 20 barge-in items: when it was delivered, its words, whether settled, which sound
+event it transcribes. The fast tier, R0's and R1's recognizer run again and again on the growing audio, is the only
+thing here that streams partials.
+
+**The definition** (`s2slab.flicker`): words as the barge-in policies read them (`bargein_policies.words_of`: lower
+case, punctuation dropped). Within one sound event, each partial after the first is an **update**; an update is a
+**revision** when the previous partial's words are not a prefix of its own. A **tail** revision changes only the
+previous partial's last word; a **deep** one an earlier word.
+- the flicker rate: revisions / updates, tail and deep apart;
+- words withdrawn per word shown: the words taken back / the previous partials' words, over every update;
+- a settled partial against the unsettled one before it: how often settling changed the words;
+- per run, and per kind of item: should stop (stop-long, stop-short), should keep going (continue-short,
+  continue-long).
+
+**What it cannot show:** twenty short items in one voice, not the eval set; no rung's reply reads partials, so this
+is the flicker the barge-in policy reads, nothing else.
