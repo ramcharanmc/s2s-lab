@@ -17,7 +17,8 @@ logs: `docs/m44-log.md` and those it names.
 | 8 | 10-21 | — | the flicker rate's definition, written before the count (section 7) | `flicker.py`, tests | 319e669 |
 | 9 | 10-21 | `python -m s2slab.flicker`, the author, laptop, free, at 319e669 | about **3 in 10 updates take back words already shown**: 30.9% with the recognizer's own time, 27.4% at 70 ms a call; deep revisions 17.3% and 12.9%; a settled partial changed the words 5 times of 26, and 0 of 28 (section 8) | — | — |
 | 10 | 10-21 | the deep revisions read, exploratory | two kinds: a misheard word corrected as more audio came, and on three short "keep going" items Whisper's repetition loops ("Okay." 29 times) replaced whole; the loops carry most of the words withdrawn on those items (section 8) | — | — |
-| 11 | 10-21 | — | the flicker rate recorded | records | this commit |
+| 11 | 10-21 | — | the flicker rate recorded | records | 72869dc |
+| 12 | 10-21 | — | the cascade at the plans' sizes: the rung and its A10 app, the rule and the predictions written before any run (section 9) | `r1.PlanSizedCascadeGPU`, `plansize.py`, `modal_app/plansize_bench.py`, tests | this commit |
 
 ## 1. The deployed demo (rows 1 and 2)
 
@@ -215,3 +216,47 @@ is the flicker the barge-in policy reads, nothing else.
 
 **What it cannot show** (as written first): twenty short items in one voice; the flicker the barge-in policy reads,
 not anything a rung's reply reads.
+
+## 9. The cascade at the plans' sizes: the rule, written before any run
+
+v1 §4 (P1, week 1) and v2 §3 build R1 with **faster-whisper large-v3-turbo in int8** and **a 7 to 8B LLM in AWQ**
+(Qwen2.5-7B), Kokoro, the reply chunked by clause; v1 names the deliverable "the measured latency budget table". No
+bar: a measurement, its predictions written first, nothing registered.
+
+**Why it matters.** Every cascade number so far is for base.en and Qwen2.5-0.5B. R1's committed A10 run
+(`runs/r1-gpu/evalset-modal-a10.json`, M19) answers *"I'm sorry, but I can't assist with that request"* to **16 of the
+200 eval clips**, every one a harmless sentence. That count was made with the pattern below before this was written;
+the plans' side has not run.
+
+**The rung** `r1-gpu-plan` (`r1.PlanSizedCascadeGPU`): R1's prompt, chunker, greedy decoding and Kokoro, with
+`WhisperASR("large-v3-turbo", cuda, int8_float16)` and `StreamingQwenLLM("Qwen/Qwen2.5-7B-Instruct", cuda)`.
+
+**One deviation, decided before any run: fp16, not AWQ.** transformers loads AWQ weights only through AutoAWQ, which
+its authors have deprecated and whose install pins transformers 4.47.1 (the transformers AWQ guide, v5.3.0); this
+stack is transformers 5.17.0 and torch 2.14.0 in every image. Qwen2.5-7B-Instruct in fp16 is the same model at the
+plans' size, about 15 GB, and fits the A10 beside R1. Its words are the full model's, not a 4-bit copy's, and it
+decodes slower than 4-bit would, so its first audio here **overstates** what AWQ would give. (The design note had
+AWQ tried first with fp16 as the fallback; reading the guide settled it before any image was built.)
+
+**On** one A10, `modal_app/plansize_bench.py`: `r1-gpu-plan` then `r1-gpu` in **one container**, since two
+containers of one card differ by up to 27% (M28). The plans put the recognizer on an L4 and the LLM on an A10; one
+card holds both here.
+- `::dev`: the 30 probe clips, both rungs, every reply printed. **Go on** to the eval set if the plans' rung loads
+  and answers every clip with a reply in English that reads as a reply; otherwise **stop**, recorded.
+- `::evalset`: the 200 eval clips, both rungs, once, from a clean commit; `runs/r1-gpu-plan/evalset-modal-a10.json`
+  and `runs/r1-gpu/evalset-modal-a10-plan.json`, never overwritten; `s2slab.plansize` prints them side by side.
+
+**Reported, both rungs on the same 200 turns:** first audio and first sound, p50 and p90; the whole reply; each
+stage; WER raw, per cohort and in all; peak GPU memory; **refusals**: replies matching, case aside,
+*(can't | cannot | can not | won't | unable to | not able to) (help | assist | provide | answer | do that)*.
+
+**Predictions, written first:**
+1. refusals far fewer than R1's: at most 2 of 200;
+2. WER lower, most on the accented cohort (turbo, against base.en; as R2's slow tier, PR-004 saw 4.3 points there);
+3. first audio slower than R1's, a 7B's prefill and first clause, but under 1 s at p50.
+
+**What it cannot show:** one card, not the plans' three; fp16, not AWQ; replies judged only by the refusal pattern,
+not by how good they are; no registration.
+
+**Cost:** under \$1 on Modal by the A10's rate and the timeouts (dev 20 minutes, the eval set 40); the 7B's 15 GB
+fetched on Modal's CPUs at the image's build.

@@ -156,6 +156,25 @@ class StreamingCascadeGPU(StreamingCascade):
                          StreamingQwenLLM(device="cuda"), KokoroTTS(device="cuda"))
 
 
+class PlanSizedCascadeGPU(StreamingCascade):
+    """R1 at the plans' sizes (M45; v1 §4, P1 week 1; v2 §3): the plans' recognizer and LLM size, the rest R1's own.
+
+    large-v3-turbo in int8 (CTranslate2's int8_float16 on a GPU), as the plans ask; Qwen2.5-7B-Instruct in fp16, not
+    the plans' AWQ: transformers loads AWQ weights only through AutoAWQ, deprecated, whose install pins an older
+    transformers than this stack's 5.17 (docs/m45-log.md). The prompt, the chunker, the greedy decoding and Kokoro are
+    R1's, so any difference from r1-gpu is the two models'.
+    """
+
+    rung_id = "r1-gpu-plan"
+    description = ("R1 at the plans' sizes: Whisper large-v3-turbo (int8) -> Qwen2.5-7B-Instruct (fp16, streamed) "
+                   "-> Kokoro-82M per clause")
+    LLM = "Qwen/Qwen2.5-7B-Instruct"
+
+    def __init__(self):
+        super().__init__(WhisperASR("large-v3-turbo", device="cuda", compute_type="int8_float16"),
+                         StreamingQwenLLM(self.LLM, device="cuda"), KokoroTTS(device="cuda"))
+
+
 class FirstTrimmed:
     """A reply's first piece cut to leadsilence.KEEP_MS before its first frame within 50 dB (M38): the padding
     Kokoro's duration predictor puts before the first phoneme, 320 ms at the median (docs/m38-log.md). Later

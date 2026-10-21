@@ -33,7 +33,8 @@ PR-009's run. The owed items each done or written down (below). **The plans' ope
 three to do (P1c's latency, the flicker rate, the cascade at the plans' sizes) and five written down as not done
 (below, "From the plans, not done"). **P1c's latency: not met** (195 ms at p90 against 30; eGeMAPS the
 cost). **The flicker rate:** about 3 in 10 of the fast tier's updates take back words already shown.
-**Next:** the cascade at the plans' sizes.
+**Next:** the cascade at the plans' sizes, its rule written first (fp16, not
+AWQ).
 
 ## Done: M44, the check before the repository is made public
 
@@ -259,7 +260,7 @@ Owed.
 | ~~Watermarking the synthetic voices~~ | v1 §9 | **tried in M43, not adopted**: AudioSeal's mark, at any strength it is found at, moved the severity render's measured pitch past the bar written first; the renders keep their synthetic labels | \$0 |
 | ~~Full-Duplex-Bench's protocol for the duplex numbers~~ | v1 §7 | **written down in M45 as not done**: R5 was measured with this harness, not theirs, and says so | small |
 | ~~"VAP is what Moshi learned implicitly"~~ | v2 §3.1 | **written down in M45 as not done**: VAP built (M30), PR-014 not run: the engineered side of the comparison has no result | — |
-| The cascade at the plans' sizes: a large-v3-turbo recognizer (int8, L4) and a 7 to 8B LLM (AWQ, A10) | v1 §4 (P1 W1), v2 §3 | **M45, to do third**; built with base.en and Qwen2.5-0.5B on one T4; 1.5B and small.en tried on Colab only. Every cascade number is for the small model, which refused four of eight harmless questions in the demo (`docs/m27-log.md`, entry 31) | a few dollars |
+| The cascade at the plans' sizes: a large-v3-turbo recognizer (int8, L4) and a 7 to 8B LLM (AWQ, A10) | v1 §4 (P1 W1), v2 §3 | **M45, to do third**, its rule written (`docs/m45-log.md`, section 9); built with base.en and Qwen2.5-0.5B on one T4; 1.5B and small.en tried on Colab only. Every cascade number is for the small model, which refused four of eight harmless questions in the demo (`docs/m27-log.md`, entry 31) | a few dollars |
 | ~~The harness's entity-F1, B-WER against U-WER, and partial flicker rate~~ | v1 §2 | **M45: the flicker rate counted**, about 3 in 10 of the fast tier's updates take back words already shown (`docs/m45-log.md`, section 8); **entity-F1 and B-WER against U-WER written down as not done** (no entity labels, no biased-word list); before M45 none built; WER raw and normalized, per-stage latency, first audio and first sound, leading silence, RTF and the overlap ratio are | \$0 |
 | ~~P1c's latency criterion: the side-channel adds under 30 ms~~ | v1 §8 | **done in M45: NOT MET**, 195.3 ms at p90 on the laptop's CPU, eGeMAPS 170.5 of it; beside the recognizer, the longer prompt alone, 42.4 ms (`docs/m45-log.md`, section 6) | \$0 |
 
