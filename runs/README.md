@@ -28,6 +28,7 @@ history, at the commits this table names. No JSON file was touched.
 | `r2-gpu-turbo/evalset-modal-t4-pr004.json` | R2 with large-v3-turbo as the slow tier, the PR-004 run | `91048b3` | Modal Tesla T4 | page 20 §12 |
 | `prosody/pr005.json` | PR-005, the registered run: the affect side-channel on the 39 locked prosody pairs, four conditions | `4b50017` | laptop CPU (WSL) | page 20 §14 |
 | `prosody/pr005-report.md` | the same run's complete printed output, with the per-pair table | `4b50017` | laptop CPU (WSL) | page 20 §14 |
+| `prosody/p1c-latency.json` | **M45**: v1 §8's P1c latency criterion, the side-channel's added time on the eval set's 200 clips: eGeMAPS, the tagger and the longer prompt's prefill, each the median of three. NOT MET: 195.3 ms at p90 against 30 | `6091653` | laptop CPU (WSL, 16 threads) | `docs/m45-log.md` |
 | `prosody/pr006.json` | PR-006, the registered run: R3 (Qwen2-Audio) hears the 39 locked prosody pairs, `upset` wording | `5c1f3aa` | Modal NVIDIA A10 | page 20 §15 |
 | `prosody/pr006-report.md` | the same run's complete printed output, with both per-pair tables | `5c1f3aa` | Modal NVIDIA A10 | page 20 §15 |
 | `prosody/ownvoice-r3.json` | the own-voice mini set (dev-only, not registered): R3 on the author's five pairs, every take windowed and as recorded, every wording | `4c5905d-dirty` | Modal NVIDIA A10 | page 20 §16 |

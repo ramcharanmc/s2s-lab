@@ -10,7 +10,10 @@ logs: `docs/m44-log.md` and those it names.
 | 1 | 10-20 | the deployed page read from a browser: `/api/status`, the Measured tab, its six replay clips; no code entered, no machine woken | open, \$3.00 of \$3.00 left, the access code set; every panel renders, every clip loads, no error in the console (section 1) | — | — |
 | 2 | 10-21 | the deployed demo, the author, a laptop's microphone in a quiet room: Send A (every box ticked, every machine cold), Send B (the same sentence said another way, every machine warm), two severity renders | every machine answered both Sends and no card showed an error; R4 streamed never ran dry; Moshi answered neither call; the renders heard at two warning scores; \$0.543 by the app's count (sections 1 and 2) | — | — |
 | 3 | 10-21 | — | the owed items closed or written down (section 3) | records | 99f6597 |
-| 4 | 10-21 | — | the author's choice for the plans' open items: three done (P1c's latency, the flicker rate, the cascade at the plans' sizes), five written down as not done (section 4); P1c's latency rule written before its run (section 5) | `p1clatency.py`, tests | this commit |
+| 4 | 10-21 | — | the author's choice for the plans' open items: three done (P1c's latency, the flicker rate, the cascade at the plans' sizes), five written down as not done (section 4); P1c's latency rule written before its run (section 5) | `p1clatency.py`, tests | 6091653 |
+| 5 | 10-21 | `python -m s2slab.p1clatency`, the author, laptop, free, at 6091653 | **NOT MET, as predicted**: the serial sum's p90 195.3 ms against the bar 30 ms; eGeMAPS alone 170.5 ms at p90 (section 6) | — | — |
+| 6 | 10-21 | the run file read again, exploratory | eGeMAPS never took longer than this laptop's recognizer, so beside it the side-channel would add only the longer prompt: 23.2 ms at p50, 42.4 at p90, over the bar too; the tagger said "angry" on 116 of the 200 clips (section 6) | — | — |
+| 7 | 10-21 | — | P1c's latency recorded | records | this commit |
 
 ## 1. The deployed demo (rows 1 and 2)
 
@@ -95,7 +98,7 @@ author's choice, 2026-10-21: **three done**, the rest **written down as not done
 | Full-Duplex-Bench's protocol for the duplex numbers | v1 §7 | **not done** | R5 was measured with this project's own harness (response gap, overlap, backchannels, interruptions in stream time, page 20 §20), said so wherever its numbers appear; adopting the benchmark's data and scoring is its own piece of work |
 | "VAP is what Moshi learned implicitly" | v2 §3.1 | **not done** | its engineered side has no result: PR-014 was not run, no setting met its rule on development (M30); VAP on real two-party dialogue stays parked |
 | P1c's latency criterion: the side-channel adds under 30 ms | v1 §8 | **to do**, first (section 5) | \$0, the laptop |
-| The harness's partial flicker rate | v1 §2 | **to do**, second | \$0, the laptop: from R1's streamed partials. Entity-F1 and B-WER against U-WER **not done**: they need entity labels and a list of biased words the eval set does not have |
+| The harness's partial flicker rate | v1 §2 | **to do**, second | \$0, the laptop: from the streamed partials of the fast tier (R0's and R1's recognizer, re-run on the growing audio for barge-in), saved in PR-003's committed runs; no rung streams partials otherwise. Entity-F1 and B-WER against U-WER **not done**: they need entity labels and a list of biased words the eval set does not have |
 | The cascade at the plans' sizes: a large-v3-turbo recognizer (int8) and a 7 to 8B LLM (AWQ) | v1 §4, v2 §3 | **to do**, third | a few dollars of Modal: every cascade number rests on Qwen2.5-0.5B, which refused four of eight harmless questions in the demo (`docs/m27-log.md`, entry 31) |
 
 ## 5. P1c's latency criterion: the rule, written before the run
@@ -122,3 +125,36 @@ needs only the audio and could run beside the recognizer; the recognizer's time 
 
 **What it cannot show:** the laptop's CPU is not the T4 container's; (c) on a CPU overstates a GPU's prefill; a
 streaming eGeMAPS, its features taken while the caller speaks, is not built and would change the answer.
+
+## 6. P1c's latency: the result (rows 5 and 6)
+
+`runs/prosody/p1c-latency.json`: the eval set's 200 clips, the laptop's CPU (16 threads), the median of three
+timings a clip, at `6091653`.
+
+| Part | p50 | p90 | max |
+|---|---:|---:|---:|
+| (a) eGeMAPS | 103.8 ms | 170.5 ms | 252.8 ms |
+| (b) the tagger | 0.02 ms | 0.03 ms | 0.06 ms |
+| (c) the longer prompt | 23.2 ms | 42.4 ms | 175.6 ms |
+| **(a) + (b) + (c), the rule** | **125.3 ms** | **195.3 ms** | 319.7 ms |
+| parallel bound, exploratory | 23.2 ms | 42.4 ms | 175.6 ms |
+
+**NOT MET by the rule**: 195.3 ms at p90 against 30, as predicted. By cohort, the sum's p50: clean 128.6 ms,
+accented 119.1, disfluent 122.0, slow 145.6 (the slow cohort's clips are the longest).
+
+**Read again (row 6), exploratory:**
+- **eGeMAPS is the cost**, about 16 ms a second of audio (the clips' median 6.3 s). It never took longer than this
+  laptop's recognizer on the same clip (0 of 200), so run beside the recognizer it would add nothing, and the
+  parallel bound is the longer prompt alone. That is over the bar too at p90 (42.4 ms), and at p50 under it
+  (23.2 ms).
+- **The longer prompt** adds about 4% to a 550 ms prefill on this CPU (572 against 550 at the median); the
+  difference is noisy, 23 of 200 below zero and floored. A GPU's prefill is far shorter; not measured here.
+- **Seen, outside the question:** the tagger's word was "angry" on 116 of the 200 clips, "neutral" on 77, "sad" on
+  4, "fearful" on 3, in every cohort but the disfluent one mostly "angry". Fitted on CREMA-D's acted clips, it reads
+  the eval set's ordinary read and spontaneous speech as angry more often than not: in a live cascade it would tell
+  the LLM most callers sound angry. PR-005 tested it on CREMA-D pairs only, and its own-voice look (M17) on five
+  pairs; this is the first look at its words on speech of another kind.
+
+**P1c, both halves now decided:** the side-channel did not beat the shuffled-tag control on all three emotions
+(PR-005, not supported) and it adds more than 30 ms (here, not met). A streaming eGeMAPS, taking its features while
+the caller speaks, is the one change named that could bring (a) off the critical path; not built.

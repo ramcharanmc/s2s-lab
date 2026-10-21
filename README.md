@@ -86,7 +86,7 @@ results are appended whatever they say.
 | PR-002 | Does streaming the reply cut the wait for first audio? | not supported: 26% sooner, under its bars |
 | PR-003 | Does a barge-in policy that reads the caller's words beat a duration threshold? | **supported**: wrong on 1 of 20 against 8 |
 | PR-004 | Does a slow-tier recognizer cut WER by 3 points, and 5 on accented speech? | not supported: -3.4 overall, -4.3 accented |
-| PR-005 | Does a \$0 tone tag let the LLM tell an upset caller from a calm one? | not supported, by one pair on fear |
+| PR-005 | Does a \$0 tone tag let the LLM tell an upset caller from a calm one? | not supported, by one pair on fear; v1's latency bar for it (under 30 ms) not met either, 195 ms at p90 on the laptop (M45) |
 | PR-006 | Does a speech-LLM that hears the audio rank the upset clip higher? | **Claim A supported**: 39 of 39; Claim B not |
 | PR-007 | Does a per-caller baseline help the tone tagger, on fresh pairs? | not supported: 26 of 38 either way |
 | PR-008 | Does a speech-to-speech model's voice move with the caller's? | not supported: no consistent direction |
