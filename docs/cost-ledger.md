@@ -97,6 +97,8 @@ one. A failed run is still a row, since it was still billed.
 | 2026-10-18 | `39c5e1b` | `modal run modal_app/r0_bench.py::pr018 --confirm PR-018` | T4 | 165 s | 171 s | \$0.028 | **PR-018, the registered run**: `r1-gpu-trim` on the 200 eval clips; first sound 498 ms against R1's 797 on the same turns (p50), no stall; supported (`docs/m38-log.md`, entry 7) |
 | 2026-10-18 | `3c54204` | `modal serve modal_app/demo.py` (one cold Send), then `modal deploy` | T4, and a CPU container for the page | — | 48.8 s (the cold Send) | ≈ \$0.06 (estimated from the T4's rate, the wake and its 300 s window) | **M39, the demo**: R1 as `r1-gpu-trim`; its first sound 20 ms after its first audio, R0's 320; deployed (`docs/m39-log.md`, entries 3 and 4) |
 | 2026-10-21 | `f90d5e2` | the deployed demo, by the author: two Sends with every box ticked (one cold, one warm), two severity renders | T4, A10, L40S, a second A10, and the CPU container for the page | — | 108.0 s (R4 streamed's first audio in the browser, the cold Send) | \$0.543 (the app's count for the day) | **M45, the closure**: every machine answered both Sends, R4 streamed never ran dry, Moshi answered neither; the renders \$0.020 and \$0.028 (`docs/m45-log.md`, entry 2) |
+| 2026-10-21 | `72869dc-dirty` | `modal run modal_app/plansize_bench.py::dev` (the image's first build: about 17 GB of weights fetched on Modal's CPUs) | A10G | 85 s | 89 s | \$0.027 | **M45, the cascade at the plans' sizes, dev**: `r1-gpu-plan` loaded in 29 s and answered all 30 probe clips, refusing none; GO (`docs/m45-log.md`, entry 13) |
+| 2026-10-21 | `1d9d7fc` | `modal run modal_app/plansize_bench.py::evalset` | A10G | 394 s | 403 s | \$0.123 | **M45, the eval set**: `r1-gpu-plan` beside `r1-gpu` in one container: refusals 0 against 16, normalized WER 8.5% against 12.0%, first audio 773 ms against 405 (p50) (`docs/m45-log.md`, entry 14) |
 
 **Not in the rows:** image builds on Modal's CPUs (weights download, pip
 installs), billed separately at CPU rates. See the dashboard.
@@ -105,5 +107,5 @@ installs), billed separately at CPU rates. See the dashboard.
 
 | | GPU estimate | Plan budget (v2 §8) |
 |---|---:|---:|
-| Modal | \$26.811 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
+| Modal | \$26.961 (\$0.261 of it FT-3's FastPitch training, timed from its log) + ten failed runs, one CPU export and FT-3's two data stages on CPU | \$36.93 |
 | Vast.ai | \$24.29 (FT-1, billed) | \$5.86 -- **spent four times over** by FT-1 alone |

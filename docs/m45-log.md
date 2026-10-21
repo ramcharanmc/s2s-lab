@@ -18,7 +18,10 @@ logs: `docs/m44-log.md` and those it names.
 | 9 | 10-21 | `python -m s2slab.flicker`, the author, laptop, free, at 319e669 | about **3 in 10 updates take back words already shown**: 30.9% with the recognizer's own time, 27.4% at 70 ms a call; deep revisions 17.3% and 12.9%; a settled partial changed the words 5 times of 26, and 0 of 28 (section 8) | — | — |
 | 10 | 10-21 | the deep revisions read, exploratory | two kinds: a misheard word corrected as more audio came, and on three short "keep going" items Whisper's repetition loops ("Okay." 29 times) replaced whole; the loops carry most of the words withdrawn on those items (section 8) | — | — |
 | 11 | 10-21 | — | the flicker rate recorded | records | 72869dc |
-| 12 | 10-21 | — | the cascade at the plans' sizes: the rung and its A10 app, the rule and the predictions written before any run (section 9) | `r1.PlanSizedCascadeGPU`, `plansize.py`, `modal_app/plansize_bench.py`, tests | this commit |
+| 12 | 10-21 | — | the cascade at the plans' sizes: the rung and its A10 app, the rule and the predictions written before any run (section 9) | `r1.PlanSizedCascadeGPU`, `plansize.py`, `modal_app/plansize_bench.py`, tests | 1d9d7fc |
+| 13 | 10-21 | `modal run modal_app/plansize_bench.py::dev`, the author, the image's first build (about 17 GB of weights on Modal's CPUs), then an A10G, \$0.027 | **GO by the dev rule**: the plans' rung loaded in 29 s and answered all 30 probe clips, every reply in English and a reply; it refused none, R1 one. Run at `72869dc-dirty`: before row 12's commit, with its code as applied, so the dev look came before the rule was committed; the eval set's run refuses a tree that is not committed, and waited for it (section 10) | — | — |
+| 14 | 10-21 | `modal run modal_app/plansize_bench.py::evalset`, the author, one A10G, at 1d9d7fc, \$0.123 | **all three predictions right**: refusals 0 of 200 against R1's 16; normalized WER 8.5% against 12.0%, the accented cohort's raw WER 4.0 points lower, the most; first audio 773 ms at p50 against 405, under 1 s (section 10) | — | — |
+| 15 | 10-21 | — | the cascade at the plans' sizes recorded; **M45 closed, and with it the closure list** (section 11) | records | this commit |
 
 ## 1. The deployed demo (rows 1 and 2)
 
@@ -260,3 +263,55 @@ not by how good they are; no registration.
 
 **Cost:** under \$1 on Modal by the A10's rate and the timeouts (dev 20 minutes, the eval set 40); the 7B's 15 GB
 fetched on Modal's CPUs at the image's build.
+
+## 10. The cascade at the plans' sizes: the result (rows 13 and 14)
+
+**The dev look (row 13).** `r1-gpu-plan` loaded in 29 s and answered all 30 probe clips; it refused none, and R1
+beside it one (`f04`). First audio 753 ms against 301 at the median. It ran before row 12's commit was made, from
+the tree with that commit's code applied (`72869dc-dirty`): the dev look came before its rule was on record, which
+the order written in section 9 did not intend. The eval set's run, the evidence, refused to start until the tree was
+committed, and ran at `1d9d7fc`.
+
+**The eval set (row 14).** `runs/r1-gpu-plan/evalset-modal-a10.json` and `runs/r1-gpu/evalset-modal-a10-plan.json`:
+the 200 clips, one A10G container (driver 610.57.04), the plans' rung first, R1 as built beside it.
+
+| | R1 as built | R1 at the plans' sizes |
+|---|---:|---:|
+| first audio, p50 / p90 | 405 / 601 ms | **773 / 1,039 ms** |
+| first sound, p50 / p90 | 723 / 903 ms | 1,078 / 1,359 ms |
+| the whole reply, p50 / p90 | 565 / 957 ms | 1,015 / 1,371 ms |
+| recognizer, p50 | 51 ms (base.en, fp16) | 151 ms (large-v3-turbo, int8) |
+| the LLM's wait, p50 | 326 ms (0.5B) | 649 ms (7B, fp16) |
+| Kokoro, p50 | 213 ms | 233 ms |
+| WER raw: clean, accented, disfluent, slow | 6.3, 29.1, 12.1, 6.2% | **3.2, 25.1, 9.9, 2.7%** |
+| WER, all: raw / normalized | 13.5 / 12.0% | **10.4 / 8.5%** |
+| refusals, of 200 | **16** | **0** |
+| peak GPU memory | 1.7 GB | 15.3 GB |
+| playback stalls | 0 of 200 | 0 of 200 |
+
+**The predictions, written first:**
+1. *Refusals at most 2 of 200*: **right**, none. R1 refused the same 16 clips as in its M19 run (187 of its 200
+   replies word for word the same); to those 16 the plans' rung answered, as in "That's quite a while! It must
+   feel like a long time to you." (`accented-43`).
+2. *WER lower, most on the accented cohort*: **right**, lower in every cohort, the accented the most in points (4.0
+   raw), then slow (3.4), clean (3.1), disfluent (2.2). The accented cohort stays the hardest by far, 25% raw:
+   EdAcc's spontaneous speech is hard for the larger recognizer too.
+3. *First audio slower, under 1 s at the median*: **right**, 773 ms against 405. Its p90 is 1,039 ms.
+
+**Read with it:** the plans' rung keeps Kokoro's 320 ms of leading silence (PR-018's trim was tested on R1 alone),
+so its first sound is 1.08 s; the LLM's wait is half its first audio, fp16 on an A10, and AWQ would be faster (not
+measured). Two of the plans' changes are in one rung, so the recognizer's part and the LLM's are not separated
+here; the recognizer's alone, as R2's slow tier, is PR-004's result.
+
+A test of row 12 asserted that R1's tagged run file did not exist yet, true only before the run; it failed once the run wrote it, and now checks only that M19's run keeps its own name.
+
+M45's cost on Modal: \$0.150 by the A10's rate (\$0.027 and \$0.123), and the deployed demo's \$0.543 (row 2):
+\$0.693; the image's build on Modal's CPUs is billed apart.
+
+## 11. M45, closed: the closure list done
+
+The author's closure list of 2026-10-20 is done: the check before the repository is made public (M44); the deployed
+demo checked (section 1); the owed items each done or written down (section 3); the plans' eight open items, three
+done (sections 6, 8 and 10) and five written down as not done, with why (section 4). Left, the author's, in GitHub's
+settings: making the repository public (`docs/m44-log.md`, section 3). What else stays in `docs/backlog.md` is a
+candidate, each citing the result it came from; none is chosen.

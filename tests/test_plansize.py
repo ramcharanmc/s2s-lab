@@ -44,7 +44,8 @@ def test_the_a10_image_holds_both_rungs_models_and_the_runs_are_saved_once(bench
         assert f"voices/{rung.tts.voice}.pt" in bench.MODELS["hexgrad/Kokoro-82M"]
     assert bench.results_path("r1-gpu-plan").relative_to(ROOT).parts == ("runs", "r1-gpu-plan", "evalset-modal-a10.json")
     assert bench.results_path("r1-gpu").name == "evalset-modal-a10-plan.json"           # M19's A10 run keeps its name
-    assert not bench.results_path("r1-gpu").exists() and (ROOT / "runs" / "r1-gpu" / "evalset-modal-a10.json").exists()
+    assert bench.results_path("r1-gpu") != ROOT / "runs" / "r1-gpu" / "evalset-modal-a10.json"
+    assert (ROOT / "runs" / "r1-gpu" / "evalset-modal-a10.json").exists()
     assert bench.results_path("r1-gpu-plan", limit=8).relative_to(ROOT).parts[0] == "results"
     assert plansize.PLAN == bench.results_path("r1-gpu-plan").relative_to(ROOT)
     assert plansize.BASE == bench.results_path("r1-gpu").relative_to(ROOT)

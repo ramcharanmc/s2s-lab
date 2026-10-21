@@ -3,16 +3,16 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-21, at commit `f90d5e2`.
+Last updated 2026-10-21, at commit `1d9d7fc`.
 
-## Chosen next: the author's closure list
+## Chosen next: none
 
-Agreed 2026-10-20, in this order: ~~a check of the repository before it is made public~~ (M44, done); then ~~a final
-check of the deployed demo, one Send to each machine and the Measured tab~~ (M45, done); then ~~the author's own owed
-items~~ (below, "Owed"; M45, each done or written down); then the plans' open items each closed or written down as
-not done, with why (M45, next).
+The author's closure list of 2026-10-20 is done (M44, M45): ~~a check of the repository before it is made public~~;
+~~a final check of the deployed demo~~; ~~the author's own owed items~~, each done or written down; ~~the plans'
+open items~~, three done and five written down as not done, with why. Left, the author's: making the repository
+public, in GitHub's settings (`docs/m44-log.md`, section 3).
 
-Candidates:
+Candidates, none chosen, each citing the result it came from:
 
 - **Hand the L40S the browser's recording as it came** (55 kB of WebM for 14 s, not 0.9 MB of 32-bit floats):
   the handoff took 1.9 s on a 14 s clip (`docs/m37-log.md`, entry 14). Measured before it is changed.
@@ -24,17 +24,18 @@ Candidates:
   cache first once made R4's load 288 s.
 - The repository made public, the author's call.
 
-## In progress: M45, the closure
+## Done: M45, the closure
 
-Items 2 to 4 of the closure list (`docs/m45-log.md`). **Done:** the deployed demo checked on 2026-10-21, every machine
+Items 2 to 4 of the closure list (`docs/m45-log.md`). The deployed demo checked on 2026-10-21, every machine
 answering two Sends, cold and warm, no card in error, R4 streamed never dry, \$0.543; one sentence said two ways
 through the voice card; the severity render heard at depression 20 and mania 40, mania's pitch overshooting as in
 PR-009's run. The owed items each done or written down (below). **The plans' open items:** the author chose
 three to do (P1c's latency, the flicker rate, the cascade at the plans' sizes) and five written down as not done
 (below, "From the plans, not done"). **P1c's latency: not met** (195 ms at p90 against 30; eGeMAPS the
 cost). **The flicker rate:** about 3 in 10 of the fast tier's updates take back words already shown.
-**Next:** the cascade at the plans' sizes, its rule written first (fp16, not
-AWQ).
+**The cascade at the plans' sizes** (large-v3-turbo in int8, Qwen2.5-7B in fp16, not AWQ; one A10): refused no eval
+clip against R1's 16, normalized WER 8.5% against 12.0%, first audio 773 ms against 405; all three predictions
+right. \$0.693 on Modal.
 
 ## Done: M44, the check before the repository is made public
 
@@ -260,7 +261,7 @@ Owed.
 | ~~Watermarking the synthetic voices~~ | v1 §9 | **tried in M43, not adopted**: AudioSeal's mark, at any strength it is found at, moved the severity render's measured pitch past the bar written first; the renders keep their synthetic labels | \$0 |
 | ~~Full-Duplex-Bench's protocol for the duplex numbers~~ | v1 §7 | **written down in M45 as not done**: R5 was measured with this harness, not theirs, and says so | small |
 | ~~"VAP is what Moshi learned implicitly"~~ | v2 §3.1 | **written down in M45 as not done**: VAP built (M30), PR-014 not run: the engineered side of the comparison has no result | — |
-| The cascade at the plans' sizes: a large-v3-turbo recognizer (int8, L4) and a 7 to 8B LLM (AWQ, A10) | v1 §4 (P1 W1), v2 §3 | **M45, to do third**, its rule written (`docs/m45-log.md`, section 9); built with base.en and Qwen2.5-0.5B on one T4; 1.5B and small.en tried on Colab only. Every cascade number is for the small model, which refused four of eight harmless questions in the demo (`docs/m27-log.md`, entry 31) | a few dollars |
+| ~~The cascade at the plans' sizes: a large-v3-turbo recognizer (int8, L4) and a 7 to 8B LLM (AWQ, A10)~~ | v1 §4 (P1 W1), v2 §3 | **done in M45**, on one A10, the LLM in fp16, not AWQ: refused no eval clip against R1's 16, normalized WER 8.5% against 12.0%, first audio 773 ms against 405 (`docs/m45-log.md`, section 10). Before it, built with base.en and Qwen2.5-0.5B on one T4; 1.5B and small.en tried on Colab only. Every cascade number is for the small model, which refused four of eight harmless questions in the demo (`docs/m27-log.md`, entry 31) | a few dollars |
 | ~~The harness's entity-F1, B-WER against U-WER, and partial flicker rate~~ | v1 §2 | **M45: the flicker rate counted**, about 3 in 10 of the fast tier's updates take back words already shown (`docs/m45-log.md`, section 8); **entity-F1 and B-WER against U-WER written down as not done** (no entity labels, no biased-word list); before M45 none built; WER raw and normalized, per-stage latency, first audio and first sound, leading silence, RTF and the overlap ratio are | \$0 |
 | ~~P1c's latency criterion: the side-channel adds under 30 ms~~ | v1 §8 | **done in M45: NOT MET**, 195.3 ms at p90 on the laptop's CPU, eGeMAPS 170.5 of it; beside the recognizer, the longer prompt alone, 42.4 ms (`docs/m45-log.md`, section 6) | \$0 |
 

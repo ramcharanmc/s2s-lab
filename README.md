@@ -23,7 +23,7 @@ on one set of weights, and the streamed reply plays as it arrives (M32a), on a T
 the turn (M34, PR-016), its start timed from the turn (M37, PR-017). R1 starts its reply without Kokoro's
 0.3 s of leading silence (M39, PR-018).
 Every rung was also measured on one card, the L40S, R0 to R4 in one
-container (M28, below). About \$51 spent: \$26.81 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
+container (M28, below). About \$51 spent: \$26.96 on Modal, \$24.29 on Vast.ai (`docs/cost-ledger.md`).
 
 ## The ladder
 
@@ -34,6 +34,7 @@ Every rung is defined by which information-destroying boundary it removes.
 | R0 | naive cascade: Whisper, then an LLM, then Kokoro, all blocking | Modal T4 | 0.66 s | 11.9% | 1.9 GB |
 | R1 | streaming cascade: the reply handed out clause by clause | Modal T4 | 0.49 s | 11.9% | 1.7 GB |
 | R1 trimmed | R1, its first clause's leading silence (Kokoro's padding, 0.3 s) cut (PR-018) | Modal T4 | 0.48 s (heard 0.50 s, against R1's 0.80) | 11.9% | R1's |
+| R1 at the plans' sizes | large-v3-turbo (int8) and Qwen2.5-7B (fp16): refused no eval clip, against R1's 16 (M45) | Modal A10 | 0.77 s (R1 beside it 0.40) | 8.5% (R1 beside it 12.0%) | 15.3 GB |
 | R2 | two-tier: a slow recognizer (large-v3-turbo) drives the reply | Modal T4 | 0.89 s | 8.6% | not measured |
 | R3 | speech-LLM: Qwen2-Audio hears the turn, no transcript in the loop | Modal A10 | 1.06 s | none in the loop | 17.0 GB |
 | R4 | speech-to-speech, half duplex: Qwen2.5-Omni speaks the reply itself | Modal L40S | 9.17 s | none in the loop | 22.5 GB |
@@ -192,7 +193,10 @@ The fine-tunes are their own project with their own environment: `ft/README.md`.
 - **The cascades' language model is small.** The plans named a 7 to 8B model (AWQ, on an A10) and a
   large-v3-turbo recognizer; R0 to R2 run Qwen2.5-0.5B-Instruct and base.en on one T4 (Qwen2.5-1.5B and
   small.en were tried on Colab, `r0-gpu-bigger`). Every cascade latency here is for that model. In the demo it
-  refused four of eight harmless questions (`docs/m27-log.md`, entry 31).
+  refused four of eight harmless questions (`docs/m27-log.md`, entry 31). **At the plans' sizes** (M45:
+  large-v3-turbo in int8, Qwen2.5-7B in fp16, not AWQ, on one A10): no refusal on the 200 eval clips against the
+  small model's 16, normalized WER 8.5% against 12.0%, first audio 0.77 s against 0.40 beside it
+  (`docs/m45-log.md`, section 10).
 - **T4, voice activity projection, was built (M30) but gave no result:** on real speech it rated the
   speaker's own pauses above the end of the turn, and PR-014 was not run.
 
