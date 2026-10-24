@@ -3,14 +3,14 @@
 What is not done, what was chosen next, and what is owed. Updated at every milestone. The results
 are in `docs/preregistration.md` and `runs/`; this file is only the list of what comes after them.
 
-Last updated 2026-10-21, at commit `1d9d7fc`.
+Last updated 2026-10-24, at commit `79e9167`.
 
 ## Chosen next: none
 
 The author's closure list of 2026-10-20 is done (M44, M45): ~~a check of the repository before it is made public~~;
 ~~a final check of the deployed demo~~; ~~the author's own owed items~~, each done or written down; ~~the plans'
-open items~~, three done and five written down as not done, with why. Left, the author's: making the repository
-public, in GitHub's settings (`docs/m44-log.md`, section 3).
+open items~~, three done and five written down as not done, with why. ~~Making the repository public~~: done by
+the author on 2026-10-24, and the author's page links it and the demo (`docs/m44-log.md`, section 4).
 
 Candidates, none chosen, each citing the result it came from:
 
@@ -22,7 +22,6 @@ Candidates, none chosen, each citing the result it came from:
   4 to 7 s outside the cards, once owed, is this item since M37's one request per Send.
 - **R4's own compile from the compile cache** (about 30 s of the L40S's wake), left alone in M36: loading the
   cache first once made R4's load 288 s.
-- The repository made public, the author's call.
 
 ## Done: M45, the closure
 
@@ -224,7 +223,7 @@ live turns second. The design and what has run are in `docs/m27-log.md`.
 | commit 14 | the MIT licence; the author's local path out of nine files | done |
 | deployed | `modal deploy`: https://ramcharanmc--s2s-lab-demo-web.modal.run | done, by the author (`docs/m27-log.md`, entry 32) |
 | pushed | a private repository on GitHub, `ramcharanmc/s2s-lab` | done, by the author (`docs/m27-log.md`, entry 33) |
-| after it | a link in the portfolio's `index.html` (drafted in entry 32); the repository made public when the author chooses | the author's |
+| after it | a link in the portfolio's `index.html` (drafted in entry 32); the repository made public when the author chooses | **done 2026-10-24**: public, and a card on https://ramcharanmc.github.io linking the demo and the code (`docs/m44-log.md`, section 4) |
 | left out | a conversation with R5, and barge-in while a reply plays: both need the microphone open while the machine speaks (`docs/m27-log.md`, entry 19) | can follow; not planned |
 
 ## Done since: M28, the ladder on one card
@@ -238,7 +237,7 @@ the earlier cost column mixed mean and median.
 
 | What | Why |
 |---|---|
-| Making the repository public | **checked in M44** (`docs/m44-log.md`): nothing in the files to remove; the author's e-mail is on every commit and stays, by the author's choice. Left: the private e-mail setting and the switch to public, both in GitHub's settings, the author's |
+| ~~Making the repository public~~ | **done 2026-10-24**, after M44's check (`docs/m44-log.md`): the private e-mail setting, then public; the author's e-mail stays on the earlier commits, by the author's choice |
 | ~~`probes/README.md`, "Recording notes"~~ | **done in M45**: the own-voice set's, the laptop's built-in microphone in a quiet room |
 | ~~A warm turn's time outside the cards~~ | **written down in M45**: measured when each machine had its own request, a path gone since M37; folded into the candidate "the browser's first audio" (above), which M45 saw once more |
 | ~~The severity render at the scores that carry a warning~~ | **done in M45**: heard at depression 20 ("slower and lower", every target met) and mania 40 ("high speaking rate... faster"; pitch over its target, as in PR-009's run). Not heard: depression 27, mania 26 and 60 |

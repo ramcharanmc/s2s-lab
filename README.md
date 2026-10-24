@@ -9,9 +9,11 @@ built and measured against one frozen benchmark, with every claim registered bef
 The point is the measurement, not the demo. Each rung is thin: get it working, measure it, say what
 it bought and what it cost, and report the result whether or not it went the way it was predicted.
 
-**Status, 2026-10-19** (commit `39e4d7c`, PR-019's run): rungs R0 to R5 built and measured, and R4 streamed; three
-fine-tunes run; nineteen registrations, all reported, nine with a supported claim. A demo that shows
-the measured turns and answers a live one is deployed on Modal (`docs/m27-log.md`):
+**Status, 2026-10-24**: rungs R0 to R5 built and measured, and R4 streamed; three fine-tunes run; nineteen
+registrations, all reported, nine with a supported claim; R1 also measured at the plans' model sizes (M45). Every
+item the two plans asked for is done or written down as not done, with why (`docs/backlog.md`). The repository is
+public since 2026-10-24. A demo that shows the measured turns and answers a live one is deployed on Modal
+(`docs/m27-log.md`), and linked from the author's page, https://ramcharanmc.github.io:
 
 **https://ramcharanmc--s2s-lab-demo-web.modal.run**
 

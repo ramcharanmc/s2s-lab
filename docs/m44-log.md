@@ -6,7 +6,10 @@ What happened, in order. The earlier logs: `docs/m43-log.md` and those it names.
 |---|---|---|---|---|---|
 | 1 | 10-20 | read-only scans of the tracked files and the whole history, laptop | no secret, no audio or weights, no large file; no local path or e-mail in any file now; the author's name and e-mail on all 201 commits; 22 added lines in old commits with the author's local path (section 1) | — | — |
 | 2 | 10-20 | each model's and dataset's licence, read from its own card | all named in one table in the README (section 2) | — | — |
-| 3 | 10-20 | — | the author's choice: publish with the history as it is (section 3) | README's licences, records | this commit |
+| 3 | 10-20 | — | the author's choice: publish with the history as it is (section 3) | README's licences, records | f90d5e2 |
+| 4 | 10-24 | GitHub's settings, the author | the private e-mail address set, and `git config user.email` to it, so later commits carry GitHub's no-reply address; **the repository made public** | — | — |
+| 5 | 10-24 | the repository read signed out, from a browser | public; the README, its badges and the MIT licence shown; nothing else changed (section 4) | — | — |
+| 6 | 10-24 | — | recorded; the author's page links the repository and the demo (section 4) | README's status, records | this commit |
 
 ## 1. The scans (row 1)
 
@@ -46,3 +49,14 @@ hundreds of times. The author's name as the author is intended.
 3. Then, if wanted, "Block command line pushes that expose my email", in the same place.
 4. **Settings, General, Danger Zone: Change visibility, Public.** The CI badges then show to everyone, and Actions
    minutes are free for a public repository.
+
+## 4. Made public (rows 4 to 6)
+
+On 2026-10-24 the author set GitHub's private e-mail address and pointed `git config user.email` at it, then made
+`ramcharanmc/s2s-lab` public. Read signed out the same day, it shows as public with the README, the badges and the
+licence; the files are those checked in section 1. The 209 commits before it keep the author's name and Gmail
+address, as chosen in section 3.
+
+The author's page, https://ramcharanmc.github.io, has a card for the project since the same day (its repository's
+commit `c8ffd7c`): the ladder's first-audio medians, three findings, and links to the demo, this repository and its
+ladder. The live turns stay behind the access code, given on request; the measured tab is open to anyone.
